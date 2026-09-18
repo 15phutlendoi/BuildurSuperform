@@ -677,6 +677,18 @@
   .player-card .player-badges{ display:flex; gap:2px; position:absolute; top:6px; right:6px; }
   .player-card .player-badges img{ width:16px; height:16px; border-radius:50%; background:#fff; padding:1px; }
   .player-card .btn-remove{ position:absolute; top:4px; left:4px; background:rgba(0,0,0,.4); color:#fff; border:none; border-radius:50%; width:18px; height:18px; font-size:11px; cursor:pointer; line-height:1; }
+  .player-card .pc-body{ display:flex; flex-direction:column; align-items:center; gap:4px; width:100%; }
+  .player-card.has-art{ padding:0; overflow:hidden; border-color:#8A5A00; background:linear-gradient(180deg,#0B1B2A,#132C45); }
+  .player-card.has-art .pc-body{ padding:7px 8px 9px; }
+  .player-card.has-art .player-name{ color:#fff; }
+  .player-card.has-art .player-pos{ color:#CBD5E1; }
+  .player-card.has-art .player-stats span{ color:#E2E8F0; }
+  .player-card .pc-art{ position:relative; width:100%; aspect-ratio:3/4; overflow:hidden; background:#0B1B2A; }
+  .player-card .pc-bg{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
+  .player-card .pc-render{ position:absolute; inset:0; width:100%; height:100%; object-fit:contain; object-position:50% 100%; }
+  .player-card .pc-logos{ position:absolute; left:5px; bottom:5px; display:flex; gap:4px; }
+  .player-card .pc-logos img{ width:18px; height:18px; object-fit:contain; filter:drop-shadow(0 1px 2px rgba(0,0,0,.65)); }
+  .player-card .pc-art .player-avatar{ position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); }
   .collection-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(110px,1fr)); gap:10px; }
   .empty-collection{ text-align:center; color:var(--ink-soft); padding:20px; font-size:14px; }
   .picker-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(100px,1fr)); gap:8px; max-height:50vh; overflow-y:auto; }
@@ -1531,6 +1543,32 @@
   ];
   var BENCH_SIZE = 7;
 
+  /* ===== Ảnh cầu thủ trên Cloudinary =====
+     cloudName: lấy trong Cloudinary Console (Dashboard > Cloud name).
+     folder   : thư mục đã upload ảnh vào, để '' nếu upload ở thư mục gốc.
+     Kiểm tra nhanh: mở 1 ảnh trong Media Library, copy URL, phải khớp dạng:
+     https://res.cloudinary.com/<cloudName>/image/upload/<folder>/<ten_file>.png  */
+  var CLOUDINARY = {
+    cloudName: 'tgvj8prc',
+    folder: '',
+    transform: 'f_auto,q_auto'
+  };
+  function cdnReady(){
+    return !!(CLOUDINARY.cloudName && CLOUDINARY.cloudName !== 'YOUR_CLOUD_NAME');
+  }
+  function cdnUrl(file){
+    if(!file || !cdnReady()) return '';
+    var t = CLOUDINARY.transform ? CLOUDINARY.transform + '/' : '';
+    var f = CLOUDINARY.folder ? CLOUDINARY.folder.replace(/^\/+|\/+$/g,'') + '/' : '';
+    return 'https://res.cloudinary.com/' + CLOUDINARY.cloudName + '/image/upload/' + t + f + encodeURIComponent(file);
+  }
+  window.pcArtFail = function(img){
+    var card = img.closest ? img.closest('.player-card') : null;
+    var art  = img.closest ? img.closest('.pc-art') : null;
+    if(card) card.classList.remove('has-art');
+    if(art) art.remove();
+  };
+
   var FAMOUS_PLAYERS = [
     {name:'Lionel Messi', pos:'RW', nation:'Argentina', club:'Inter Miami', color:'#75AADB'},
     {name:'Cristiano Ronaldo', pos:'ST', nation:'Bồ Đào Nha', club:'Al Nassr', color:'#046A38'},
@@ -1575,8 +1613,33 @@
     {name:'Gareth Bale', pos:'RW', nation:'Xứ Wales', club:'Real Madrid', color:'#C8102E'},
     {name:'Yaya Touré', pos:'CDM', nation:'Bờ Biển Ngà', club:'Man City', color:'#F77F00'}
   ];
+  // Danh sách cầu thủ: ưu tiên players.json (có tên file ảnh), nếu không tải được thì dùng danh sách mặc định
+  var PLAYER_DB = FAMOUS_PLAYERS.slice();
+  function dbRecordToPlayer(r){
+    return {
+      name: r.name,
+      pos: r.position || '',
+      nation: '',
+      club: '',
+      color: '#0A4D8C',
+      image: r.image || '',
+      background: r.background || '',
+      clubLogo: r.clubLogo || '',
+      nationFlag: r.nationFlag || ''
+    };
+  }
+  try{
+    var dbRes = await fetch('players.json', { cache: 'no-cache' });
+    if(dbRes && dbRes.ok){
+      var dbJson = await dbRes.json();
+      var recs = Object.keys((dbJson && dbJson.players) || {}).map(function(k){ return dbJson.players[k]; });
+      if(recs.length) PLAYER_DB = recs.map(dbRecordToPlayer);
+    }
+  }catch(e){
+    console.warn('Khong tai duoc players.json, dung danh sach mac dinh.', e);
+  }
   // Đẩy danh sách cầu thủ (cơ sở dữ liệu) lên Firebase để lưu trữ tham chiếu chung
-  safeSet('kidchart_player_db', FAMOUS_PLAYERS);
+  safeSet('kidchart_player_db', PLAYER_DB);
 
   function pad4(n){ return String(n).padStart(4,'0'); }
   function makePlayerId(){ return 'p'+Date.now().toString(36)+Math.floor(Math.random()*9999).toString(36); }
@@ -1660,9 +1723,9 @@
     return stats;
   }
   function pickTwoDistinctPlayers(){
-    var a = FAMOUS_PLAYERS[Math.floor(Math.random()*FAMOUS_PLAYERS.length)];
+    var a = PLAYER_DB[Math.floor(Math.random()*PLAYER_DB.length)];
     var b;
-    do{ b = FAMOUS_PLAYERS[Math.floor(Math.random()*FAMOUS_PLAYERS.length)]; } while(b.name===a.name);
+    do{ b = PLAYER_DB[Math.floor(Math.random()*PLAYER_DB.length)]; } while(b.name===a.name);
     return [a,b];
   }
   function activatedSkillKeysOf(month){
@@ -1686,6 +1749,8 @@
       var p = {
         id: makePlayerId(),
         name: base.name, pos: base.pos, nation: base.nation, club: base.club, color: base.color,
+        image: base.image || '', background: base.background || '',
+        clubLogo: base.clubLogo || '', nationFlag: base.nationFlag || '',
         stats: stats, ovr: ovr, skillBadges: skillBadges,
         cycleKey: monthKey, cycleLabel: cycleLabel
       };
@@ -1710,6 +1775,20 @@
     if(isNew && !reducedMotion()) triggerCelebration('great');
   }
 
+  function playerArtHTML(p){
+    if(!cdnReady() || !p.image) return '';
+    var bg = p.background ? '<img class="pc-bg" src="'+cdnUrl(p.background)+'" alt="" onerror="this.remove()">' : '';
+    var logos = [p.clubLogo, p.nationFlag].filter(Boolean).map(function(f){
+      return '<img src="'+cdnUrl(f)+'" alt="" onerror="this.remove()">';
+    }).join('');
+    return '<div class="pc-art">'
+      + bg
+      + playerAvatarSVG(p, 60)
+      + '<img class="pc-render" src="'+cdnUrl(p.image)+'" alt="'+p.name+'" loading="lazy" onerror="window.pcArtFail(this)">'
+      + (logos ? '<div class="pc-logos">'+logos+'</div>' : '')
+      + '</div>';
+  }
+
   function playerCardHTML(p, removable, extraAttr){
     var badgesHtml = (p.skillBadges||[]).map(function(k){
       var icon = SKILL_ICONS[k];
@@ -1718,14 +1797,18 @@
     var statsHtml = STAT_KEYS.map(function(k){
       return '<span>'+STAT_LABELS[k].slice(0,3)+'<b style="color:'+statColor(p.stats[k])+'">'+p.stats[k]+'</b></span>';
     }).join('');
-    return '<div class="player-card" data-player-id="'+p.id+'" '+(extraAttr||'')+'>'
+    var art = playerArtHTML(p);
+    var sub = p.pos + (p.club ? ' · ' + p.club : '');
+    return '<div class="player-card'+(art?' has-art':'')+'" data-player-id="'+p.id+'" '+(extraAttr||'')+'>'
       + (badgesHtml ? '<div class="player-badges">'+badgesHtml+'</div>' : '')
       + (removable ? '<button type="button" class="btn-remove" data-remove-player="'+p.id+'">✕</button>' : '')
-      + playerAvatarSVG(p, 60)
+      + (art || playerAvatarSVG(p, 60))
+      + '<div class="pc-body">'
       + '<div class="player-name">'+p.name+'</div>'
-      + '<div class="player-pos">'+p.pos+' · '+p.club+'</div>'
+      + '<div class="player-pos">'+sub+'</div>'
       + '<div class="player-ovr" style="background:'+ovrColor(p.ovr)+'">OVR '+p.ovr+'</div>'
       + '<div class="player-stats">'+statsHtml+'</div>'
+      + '</div>'
       + '</div>';
   }
 
