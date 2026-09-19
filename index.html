@@ -271,18 +271,35 @@
   .modal-box input[type=number], .modal-box input[type=text]{ font-family:var(--font-body); font-size:14.5px; padding:10px 10px; border-radius:var(--radius-sm); border:2px solid var(--line); background:var(--card); color:var(--ink); }
   .settings-label{ font-size:13.5px; color:var(--ink-soft); font-weight:600; display:block; margin-bottom:6px; }
 
-  /* ---- Menu Cài đặt: chữ đậm & tương phản cao hơn cho dễ đọc ---- */
-  #settings-modal .modal-box label,
-  #settings-modal .settings-label,
-  #settings-modal .hint-text{ color:var(--ink); font-weight:700; }
-  #settings-modal .modal-box input[type=number],
-  #settings-modal .modal-box input[type=text]{ color:var(--ink); font-weight:600; }
-  :root[data-theme="dark"] #settings-modal .modal-box label,
-  :root[data-theme="dark"] #settings-modal .settings-label,
-  :root[data-theme="dark"] #settings-modal .hint-text,
-  :root:not([data-theme="light"]) #settings-modal .modal-box label,
-  :root:not([data-theme="light"]) #settings-modal .settings-label,
-  :root:not([data-theme="light"]) #settings-modal .hint-text{ color:var(--ink); }
+  /* ---- Menu Cài đặt: làm lại theo phong cách vui tươi, rực rỡ, luôn đọc rõ bất kể theme ----
+     Không dựa vào biến --ink/--card (đổi theo theme) nữa: dùng nền đặc + chữ đậm cố định,
+     để chữ không bao giờ "chìm" vào ô nền như trước. */
+  #settings-modal .modal-box{ gap:14px; }
+  #settings-modal .modal-box h3{
+    font-size:20px; color:#fff; background:linear-gradient(135deg,var(--fcb-red-lt),var(--fcb-red-dk));
+    margin:-24px -24px 0; padding:16px 24px 12px; border-radius:22px 22px 0 0;
+    text-shadow:0 1px 2px rgba(0,0,0,.3);
+  }
+  #settings-modal .modal-box label{
+    display:flex; flex-direction:column; gap:8px; font-family:var(--font-display);
+    font-size:14.5px; font-weight:800; color:#0C1B2A !important;
+    background:rgba(255,255,255,.78); border:2px solid rgba(255,255,255,.9);
+    border-radius:16px; padding:10px 14px 12px;
+  }
+  #settings-modal .settings-label{
+    display:inline-flex; align-items:center; gap:6px; font-family:var(--font-display);
+    font-weight:800; font-size:13.5px; color:#fff !important;
+    background:linear-gradient(135deg,var(--fcb-navy-lt),var(--fcb-navy));
+    padding:7px 14px; border-radius:999px; margin-bottom:8px;
+  }
+  #settings-modal .hint-text{
+    color:#0C1B2A !important; font-weight:700; background:rgba(255,255,255,.78);
+    border-radius:12px; padding:7px 12px; display:block;
+  }
+  #settings-modal .btn-secondary{
+    background:linear-gradient(135deg,#FFC94D,var(--gold)); color:#3D2500 !important;
+    border:none; box-shadow:0 3px 0 #A9720A; font-weight:800;
+  }
   .chips{ display:flex; flex-wrap:wrap; gap:6px; margin-bottom:10px; min-height:24px; }
   .chip{ display:inline-flex; align-items:center; gap:6px; background:var(--deep-soft); color:var(--deep-text); border-radius:999px; padding:6px 6px 6px 12px; font-size:13.5px; font-weight:600; }
   .chip-x{ border:none; background:transparent; color:var(--deep-text); cursor:pointer; font-size:12px; padding:2px; }
@@ -570,7 +587,16 @@
   }
   :root[data-theme="dark"] .bonus-form select, :root[data-theme="dark"] .bonus-form input,
   :root[data-theme="dark"] .modal-box input[type=number], :root[data-theme="dark"] .modal-box input[type=text],
-  :root[data-theme="dark"] .skill-score-row input{ background:rgba(16,23,33,.85); }
+  :root[data-theme="dark"] .skill-score-row input,
+  :root:not([data-theme="light"]) .bonus-form select, :root:not([data-theme="light"]) .bonus-form input,
+  :root:not([data-theme="light"]) .modal-box input[type=number], :root:not([data-theme="light"]) .modal-box input[type=text],
+  :root:not([data-theme="light"]) .skill-score-row input{ background:rgba(16,23,33,.85); }
+  /* Ô nhập trong Cài đặt: luôn nền sáng đặc + chữ tối đậm, không phụ thuộc theme, để không bao giờ bị "chữ chìm vào nền" */
+  #settings-modal input[type=number], #settings-modal input[type=text]{
+    background:#FFFFFF !important; color:#0C1B2A !important; border:2.5px solid var(--fcb-navy-lt,#1B4A8A) !important;
+    font-weight:800 !important; -webkit-text-fill-color:#0C1B2A;
+  }
+  #settings-modal input[type=number]::placeholder, #settings-modal input[type=text]::placeholder{ color:#7A8AA0 !important; opacity:1; }
 
   /* ---- Skill lab ---- */
   .skill-head .skill-count{ background:linear-gradient(135deg,var(--fcb-navy),var(--fcb-red)); }
@@ -580,7 +606,7 @@
       linear-gradient(45deg,var(--dia-2) 25%,transparent 25%,transparent 75%,var(--dia-2) 75%) 13px 13px/26px 26px,
       linear-gradient(165deg,rgba(255,255,255,.26),rgba(255,255,255,.12));
   }
-  :root[data-theme="dark"] .skill-card{
+  :root[data-theme="dark"] .skill-card, :root:not([data-theme="light"]) .skill-card{
     background:
       linear-gradient(45deg,var(--dia-1) 25%,transparent 25%,transparent 75%,var(--dia-1) 75%) 0 0/26px 26px,
       linear-gradient(45deg,var(--dia-2) 25%,transparent 25%,transparent 75%,var(--dia-2) 75%) 13px 13px/26px 26px,
@@ -599,7 +625,7 @@
     -webkit-backdrop-filter:blur(18px) saturate(140%); backdrop-filter:blur(18px) saturate(140%);
     border-top:6px solid var(--fcb-red);
   }
-  :root[data-theme="dark"] .modal-box{
+  :root[data-theme="dark"] .modal-box, :root:not([data-theme="light"]) .modal-box{
     background:
       linear-gradient(45deg,var(--dia-1) 25%,transparent 25%,transparent 75%,var(--dia-1) 75%) 0 0/30px 30px,
       linear-gradient(45deg,var(--dia-2) 25%,transparent 25%,transparent 75%,var(--dia-2) 75%) 15px 15px/30px 30px,
@@ -678,7 +704,10 @@
   .pitch-slot.filled .slot-circle{ background:linear-gradient(135deg,#FFE1A8,#FFB100); border-color:#8A5A00; }
   .pitch-slot .slot-circle.has-art{ background:#0B1B2A; }
   .slot-circle .slot-bg{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:0; }
-  .slot-circle .slot-render{ position:absolute; inset:0; width:100%; height:100%; object-fit:contain; object-position:50% 100%; z-index:1; transform:scale(1.12); transform-origin:50% 100%; }
+  .slot-circle .slot-render{ position:absolute; inset:0; width:100%; height:100%; object-fit:contain; object-position:50% 100%; z-index:1; }
+  .slot-circle .slot-logos{ position:absolute; left:2px; bottom:2px; z-index:2; display:flex; gap:2px; }
+  .slot-circle .slot-logos img{ width:13px; height:13px; object-fit:contain; border-radius:50%; background:rgba(255,255,255,.88); padding:1px; box-shadow:0 1px 2px rgba(0,0,0,.5); }
+  .bench-slot .slot-circle.small .slot-logos img{ width:10px; height:10px; }
   .slot-circle .slot-plus{ position:relative; z-index:1; font-family:var(--font-display); font-weight:800; font-size:min(5.5vw,22px); color:var(--deep-text); }
   .bench-slot .slot-circle.small .slot-plus{ font-size:18px; color:var(--ink-soft); }
   .pitch-slot .slot-label{ font-size:min(2.6vw,11px); font-weight:700; color:#fff; text-shadow:0 1px 2px rgba(0,0,0,.6); }
@@ -717,9 +746,15 @@
   .daily-box-cell{ position:relative; aspect-ratio:1/1; border-radius:var(--radius-sm); overflow:hidden; cursor:pointer; border:3px solid var(--line); background:#0B1B2A; transition:transform .15s ease, border-color .15s ease; }
   .daily-box-cell:hover{ transform:scale(1.05); border-color:var(--gold); }
   .daily-box-cell img{ width:100%; height:100%; object-fit:cover; display:block; }
-  .daily-box-cell.picked{ border-color:var(--gold); box-shadow:0 0 0 3px rgba(255,177,0,.55); }
+  .daily-box-cell.picked{ border-color:var(--gold); box-shadow:0 0 0 3px rgba(255,177,0,.55); cursor:default; background:#0B1B2A; }
   .daily-box-cell.disabled{ opacity:.35; pointer-events:none; }
-  .daily-box-grid.locked .daily-box-cell:not(.picked){ pointer-events:none; }
+  .daily-box-grid.locked .daily-box-cell:not(.picked){ pointer-events:none; opacity:.45; }
+  .daily-box-cell .box-bg{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
+  .daily-box-cell .box-render{ position:absolute; inset:0; width:100%; height:100%; object-fit:contain; object-position:50% 100%; }
+  .daily-box-cell .box-ovr{ position:absolute; left:4px; top:4px; z-index:2; font-family:var(--font-display); font-weight:800; font-size:14px; line-height:1.3; color:#fff; text-shadow:0 1px 3px rgba(0,0,0,.8); background:rgba(0,0,0,.4); border-radius:6px; padding:0 5px; }
+  .daily-box-cell .box-logos{ position:absolute; right:3px; top:3px; z-index:2; display:flex; gap:2px; }
+  .daily-box-cell .box-logos img{ width:14px; height:14px; object-fit:contain; border-radius:50%; background:rgba(255,255,255,.88); padding:1px; box-shadow:0 1px 2px rgba(0,0,0,.5); }
+  .daily-box-cell .box-name{ position:absolute; left:0; right:0; bottom:0; z-index:2; text-align:center; font-size:9.5px; font-weight:800; color:#fff; text-shadow:0 1px 2px rgba(0,0,0,.9); background:rgba(0,0,0,.55); padding:2px 2px; line-height:1.15; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
   .reveal-card{ position:relative; width:min(240px,72vw); margin:6px auto 0; aspect-ratio:0.72; border-radius:var(--radius-md); overflow:hidden; background:linear-gradient(160deg,#3a2a00,#7A4E00 45%,#3a2a00); box-shadow:0 14px 30px rgba(0,0,0,.5); border:3px solid #FFD979; }
   .reveal-card .reveal-bg{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
   .reveal-card .reveal-render{ position:absolute; inset:0; width:100%; height:100%; object-fit:contain; object-position:50% 100%; }
@@ -760,6 +795,81 @@
   .pd-info-row:last-child{ border-bottom:none; }
   .pd-info-row span{ color:var(--ink-soft); font-weight:700; }
   .pd-info-row b{ color:var(--ink); font-weight:800; text-align:right; }
+
+  /* ==== Thẻ cầu thủ thống nhất (kiểu FC Mobile) — dùng cho MỌI nơi hiển thị cầu thủ ====
+     Chỉnh nhanh: đổi các biến --fc-* bên dưới nếu ảnh nền/ảnh chân dung lệch khung. */
+  :root{ --fc-ar:.74; }
+  .fc-card{
+    --fc-r-top:6%; --fc-r-h:67%; --fc-r-side:3%;
+    --fc-name-top:67.5%; --fc-foot-top:78%;
+    position:relative; width:100%; aspect-ratio:var(--fc-ar);
+    container-type:inline-size; isolation:isolate; user-select:none; -webkit-user-select:none;
+  }
+  .fc-card.no-bg{ background:linear-gradient(170deg,#1b2f55,#0B1B2A 60%,#2a2110); border-radius:8% / 5.5%; border:2px solid #8A5A00; }
+  .fc-card .fc-bg{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:0; }
+  .fc-card .fc-render{
+    position:absolute; z-index:1; left:var(--fc-r-side); width:calc(100% - 2*var(--fc-r-side));
+    top:var(--fc-r-top); height:var(--fc-r-h); object-fit:contain; object-position:50% 100%;
+  }
+  .fc-card .fc-initials{
+    position:absolute; z-index:1; left:50%; top:24%; transform:translateX(-50%); width:38cqw; height:38cqw; border-radius:50%;
+    display:flex; align-items:center; justify-content:center; background:rgba(255,255,255,.16); color:#fff;
+    font-family:var(--font-display); font-weight:800; font-size:16cqw;
+  }
+  /* Góc trái: overall + vị trí chính + playstyles */
+  .fc-card .fc-ovr{
+    position:absolute; z-index:3; left:6.5%; top:5%; display:flex; flex-direction:column; align-items:center; line-height:1;
+    color:#fff; font-family:var(--font-display); font-weight:800;
+    text-shadow:0 .5cqw 1.4cqw rgba(0,0,0,.75), 0 0 .5cqw rgba(0,0,0,.55);
+  }
+  .fc-card .fc-ovr b{ font-size:max(21cqw,11px); letter-spacing:-.02em; }
+  .fc-card .fc-ovr span{ font-size:max(11.5cqw,7px); margin-top:1cqw; }
+  .fc-card .fc-ps{
+    position:absolute; z-index:3; left:5%; top:30%; display:flex; flex-direction:column; gap:1.4cqw; padding:1.6cqw;
+    border-radius:3cqw; background:linear-gradient(160deg,rgba(60,62,90,.86),rgba(14,15,30,.9));
+    border:.4cqw solid rgba(255,255,255,.22); box-shadow:0 1cqw 2.4cqw rgba(0,0,0,.45);
+  }
+  .fc-card .fc-ps img{ width:max(12.5cqw,8px); height:max(12.5cqw,8px); object-fit:contain; display:block; }
+  /* Tên cầu thủ */
+  .fc-card .fc-name{ position:absolute; z-index:3; left:0; right:0; top:var(--fc-name-top); height:9%; display:flex; align-items:center; justify-content:center; padding:0 4%; }
+  .fc-card .fc-name span{
+    max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; text-transform:uppercase; letter-spacing:.02em;
+    font-family:var(--font-display); font-weight:800; font-size:max(9.5cqw,6.5px); line-height:1.25; color:#3d2500; padding:.4cqw 9cqw;
+    background:linear-gradient(90deg,rgba(255,231,150,0) 0%,rgba(255,231,150,.93) 14%,rgba(255,206,84,.96) 50%,rgba(255,231,150,.93) 86%,rgba(255,231,150,0) 100%);
+  }
+  /* Dưới tên: cờ quốc gia + logo CLB */
+  .fc-card .fc-foot{ position:absolute; z-index:3; left:0; right:0; top:var(--fc-foot-top); height:8.5%; display:flex; align-items:center; justify-content:center; gap:3cqw; }
+  .fc-card .fc-foot img{ object-fit:contain; display:block; filter:drop-shadow(0 .5cqw 1cqw rgba(0,0,0,.55)); }
+  .fc-card .fc-foot .fc-flag{ width:max(12.5cqw,9px); height:max(8.5cqw,6px); }
+  .fc-card .fc-foot .fc-club{ width:max(10cqw,8px); height:max(10cqw,8px); }
+  .fc-card .fc-foot .fc-sep{ width:.5cqw; min-width:1px; height:8cqw; background:rgba(255,255,255,.55); border-radius:1px; }
+
+  /* Sân đấu + ghế dự bị */
+  .pitch-slot{ width:15.5%; }
+  .pitch-slot .slot-circle{ width:100%; aspect-ratio:var(--fc-ar); }
+  .pitch-slot .slot-label{ width:100%; text-align:center; white-space:nowrap; }
+  .pitch-slot .slot-circle.has-art, .bench-slot .slot-circle.has-art,
+  .pitch-slot.filled .slot-circle.has-art, .bench-slot.filled .slot-circle.has-art{
+    background:none; border:none; box-shadow:none; overflow:visible; border-radius:0; aspect-ratio:var(--fc-ar);
+  }
+  .bench-slot .slot-circle.small.has-art{ width:82px; }
+  .slot-circle.has-art .fc-card{ filter:drop-shadow(0 3px 5px rgba(0,0,0,.5)); }
+
+  /* Kho cầu thủ / chọn vị trí / mở rương */
+  .player-card.fc-only, .picker-grid .player-card.fc-only{ padding:0; border:none; background:none; border-radius:0; gap:0; align-items:stretch; overflow:visible; transition:transform .15s ease; }
+  .player-card.fc-only:hover, .collection-grid .player-card.fc-only:hover, .pack-reveal .player-card.fc-only:hover, .picker-grid .player-card.fc-only:hover{ transform:translateY(-3px) scale(1.03); border-color:transparent; }
+  .player-card.fc-only .fc-card{ filter:drop-shadow(0 4px 8px rgba(0,0,0,.35)); }
+  .player-card.fc-only .btn-remove{ left:auto; right:6%; top:4%; z-index:6; width:22px; height:22px; font-size:12px; }
+  .collection-grid{ grid-template-columns:repeat(auto-fill,minmax(120px,1fr)); }
+  .picker-grid{ grid-template-columns:repeat(auto-fill,minmax(116px,1fr)); }
+  .pack-reveal .player-card.fc-only{ width:min(200px,42vw); }
+
+  /* Popup chi tiết + thẻ vừa bốc từ hộp quà 9 ô */
+  .pd-art-wrap{ width:150px; }
+  .pd-art-wrap .fc-card{ filter:drop-shadow(0 6px 12px rgba(0,0,0,.4)); }
+  #daily-box-reveal .fc-card{ width:min(250px,68vw); margin:6px auto 0; cursor:pointer; filter:drop-shadow(0 14px 26px rgba(0,0,0,.5)); animation:fc-pop .55s cubic-bezier(.2,1.3,.4,1) both; }
+  @keyframes fc-pop{ from{ transform:scale(.55) rotate(-4deg); opacity:0; } to{ transform:none; opacity:1; } }
+  @media (prefers-reduced-motion: reduce){ #daily-box-reveal .fc-card{ animation:none; } }
 </style>
 </head>
 <body>
@@ -869,14 +979,14 @@
 <div id="settings-modal" class="modal">
   <div id="settings-backdrop" class="modal-backdrop"></div>
   <div class="modal-box">
-    <h3>Cài đặt</h3>
-    <label>Mức điểm đạt thưởng trong tháng
+    <h3>⚙️ Cài đặt</h3>
+    <label>🎯 Mức điểm đạt thưởng trong tháng
       <input type="number" id="settings-goal" min="1" step="1">
     </label>
-    <label>Điểm thưởng mỗi skill được kích hoạt
+    <label>⭐ Điểm thưởng mỗi skill được kích hoạt
       <input type="number" id="settings-skillpts" min="0" step="50">
     </label>
-    <label>Kỳ tính điểm hàng tháng bắt đầu từ ngày
+    <label>📅 Kỳ tính điểm hàng tháng bắt đầu từ ngày
       <input type="number" id="settings-period-start" min="1" max="31" step="1">
     </label>
     <p class="hint-text" id="settings-period-preview" style="margin:-6px 0 0"></p>
@@ -4740,10 +4850,15 @@ var PLAYERS_JSON_EMBEDDED = {
   var currentPeriod = getPeriodRange(new Date());
   var currentPlayerDate = ymd(new Date());
 
+  // Tổng trọng số của toàn bộ nhiệm vụ. Bình thường = 100.
+  // Nếu sau này chỉnh điểm nhiệm vụ mà tổng lệch 100, điểm ngày vẫn được quy về thang 100
+  // để tích đủ mọi nhiệm vụ luôn ra đúng 100 (Cúp Vô Địch, mốc 90/100 của hộp quà không bị hụt).
+  var TASKS_MAX = TASKS.reduce(function(a,t){ return a + t.points; }, 0);
   function computeDayTotal(dayObj){
     if(!dayObj) return 0;
     var sum = 0;
     TASKS.forEach(function(t){ if(dayObj[t.id]) sum += t.points; });
+    if(TASKS_MAX > 0 && TASKS_MAX !== 100) sum = Math.round(sum * 100 / TASKS_MAX);
     return sum;
   }
 
@@ -5070,6 +5185,14 @@ var PLAYERS_JSON_EMBEDDED = {
     if(art) art.remove();
   };
 
+  window.fcRenderFail = function(img){
+    var par = img.parentNode; if(!par) return;
+    var d = document.createElement('div');
+    d.className = 'fc-initials';
+    d.textContent = img.getAttribute('data-ini') || '?';
+    par.replaceChild(d, img);
+  };
+
   var FAMOUS_PLAYERS = [
     {name:'Lionel Messi', pos:'RW', nation:'Argentina', club:'Inter Miami', color:'#75AADB'},
     {name:'Cristiano Ronaldo', pos:'ST', nation:'Bồ Đào Nha', club:'Al Nassr', color:'#046A38'},
@@ -5181,8 +5304,7 @@ var PLAYERS_JSON_EMBEDDED = {
       .replace(/\b\w/g, function(c){ return c.toUpperCase(); });
   }
   function playerDetailHTML(p){
-    var artInner = playerArtHTML(p);
-    var art = artInner ? '<div class="player-card has-art">'+artInner+'</div>' : '';
+    var art = fcCardHTML(p);
     var ovrVal = p.ovr || p.realOvr || 0;
     var statsSrc = p.stats || p.realStats || {};
     var statsBlock = '<div class="pd-stat-grid">' + STAT_KEYS.map(function(k){
@@ -5378,6 +5500,9 @@ var PLAYERS_JSON_EMBEDDED = {
     openModalTop('daily-box-modal');
   }
   function revealCardHTML(base){
+    return fcCardHTML(base, 'fc-reveal') || revealCardLegacyHTML(base);
+  }
+  function revealCardLegacyHTML(base){
     var hasArt = cdnReady() && base.image;
     var bg = (hasArt && base.background) ? '<img class="reveal-bg" src="'+cdnUrl(base.background)+'" alt="" onerror="this.remove()">' : '';
     var render = hasArt ? '<img class="reveal-render" src="'+cdnUrl(base.image)+'" alt="'+base.name+'" onerror="this.remove()">' : '';
@@ -5432,50 +5557,63 @@ var PLAYERS_JSON_EMBEDDED = {
       saveMonth(dailyBoxContext.monthKey);
     }
     renderWeek();
-    document.getElementById('daily-box-grid').style.display = 'none';
+    var grid = document.getElementById('daily-box-grid');
     var reveal = document.getElementById('daily-box-reveal');
-    reveal.innerHTML = revealCardHTML(base);
-    reveal.style.display = '';
-    var revealCardEl = reveal.querySelector('.reveal-card');
-    if(revealCardEl) revealCardEl.addEventListener('click', function(){ openPlayerDetailModal(p); });
+    if(grid && reveal){
+      grid.style.display = 'none';
+      reveal.innerHTML = revealCardHTML(base) + '<div class="reveal-tap-hint">Chạm vào thẻ để xem chi tiết</div>';
+      reveal.style.display = '';
+      var rc = reveal.querySelector('.fc-card, .reveal-card');
+      if(rc) rc.addEventListener('click', function(){ openPlayerDetailModal(p); });
+    }
     document.getElementById('daily-box-lead').innerHTML = '🎉 Con đã nhận được <b>'+p.name+'</b>! Vào "Kho cầu thủ" để xem thẻ nhé.';
     if(!reducedMotion()) bigExplosion(window.innerWidth/2, window.innerHeight*0.4);
-    setTimeout(function(){ openPlayerDetailModal(p); }, reducedMotion() ? 150 : 950);
   }
-
-  function playerArtHTML(p){
-    if(!cdnReady() || !p.image) return '';
-    var bg = p.background ? '<img class="pc-bg" src="'+cdnUrl(p.background)+'" alt="" onerror="this.remove()">' : '';
-    var logos = [p.clubLogo, p.nationFlag].filter(Boolean).map(function(f){
-      return '<img src="'+cdnUrl(f)+'" alt="" onerror="this.remove()">';
+  /* ---- Thẻ cầu thủ thống nhất: overall + vị trí + playstyles (góc trái), ảnh chân dung lớn
+          vừa khung nền, tên, và cờ quốc gia + logo CLB bên dưới. Dùng cho mọi nơi hiển thị cầu thủ. ---- */
+  function escHtml(v){
+    return String(v==null ? '' : v).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; });
+  }
+  function fcCardHTML(p, extraCls){
+    if(!p || !cdnReady() || !p.image) return '';
+    var name = escHtml(p.name);
+    var ovr = p.ovr || p.realOvr || 0;
+    var bg = p.background
+      ? '<img class="fc-bg" src="'+cdnUrl(p.background)+'" alt="" onerror="this.parentNode.classList.add(\'no-bg\');this.remove()">'
+      : '';
+    var ps = (p.playstyleIcons||[]).filter(Boolean).slice(0,3).map(function(f){
+      return '<img src="'+cdnUrl(f)+'" alt="" loading="lazy" onerror="this.remove()">';
     }).join('');
-    var playstyles = (p.playstyleIcons||[]).filter(Boolean).map(function(f){
-      return '<img src="'+cdnUrl(f)+'" alt="" onerror="this.remove()">';
-    }).join('');
-    return '<div class="pc-art">'
+    var flag = p.nationFlag ? '<img class="fc-flag" src="'+cdnUrl(p.nationFlag)+'" alt="" loading="lazy" onerror="this.remove()">' : '';
+    var club = p.clubLogo ? '<img class="fc-club" src="'+cdnUrl(p.clubLogo)+'" alt="" loading="lazy" onerror="this.remove()">' : '';
+    var foot = (flag || club) ? '<div class="fc-foot">'+flag+((flag && club) ? '<i class="fc-sep"></i>' : '')+club+'</div>' : '';
+    return '<div class="fc-card'+(p.background ? '' : ' no-bg')+(extraCls ? ' '+extraCls : '')+'">'
       + bg
-      + '<img class="pc-render" src="'+cdnUrl(p.image)+'" alt="'+p.name+'" loading="lazy" onerror="window.pcArtFail(this)">'
-      + (logos ? '<div class="pc-logos">'+logos+'</div>' : '')
-      + (playstyles ? '<div class="pc-playstyles">'+playstyles+'</div>' : '')
+      + '<img class="fc-render" src="'+cdnUrl(p.image)+'" alt="'+name+'" data-ini="'+escHtml(initialsOf(p.name || '?'))+'" loading="lazy" onerror="window.fcRenderFail(this)">'
+      + '<div class="fc-ovr"><b>'+ovr+'</b><span>'+escHtml(p.pos || '')+'</span></div>'
+      + (ps ? '<div class="fc-ps">'+ps+'</div>' : '')
+      + '<div class="fc-name"><span>'+name+'</span></div>'
+      + foot
       + '</div>';
   }
 
-  function slotArtHTML(p){
-    var bg = p.background ? '<img class="slot-bg" src="'+cdnUrl(p.background)+'" alt="" onerror="this.remove()">' : '';
-    return bg + '<img class="slot-render" src="'+cdnUrl(p.image)+'" alt="" loading="lazy" onerror="this.remove()">';
-  }
+  function slotArtHTML(p){ return fcCardHTML(p); }
 
   function playerCardHTML(p, removable, extraAttr){
+    var art = fcCardHTML(p);
+    var rm = removable ? '<button type="button" class="btn-remove" data-remove-player="'+p.id+'">✕</button>' : '';
+    if(art){
+      return '<div class="player-card fc-only" data-player-id="'+p.id+'" '+(extraAttr||'')+'>' + rm + art + '</div>';
+    }
+    // Không có ảnh: dùng thẻ chữ dự phòng
     var statsHtml = STAT_KEYS.map(function(k){
       return '<span>'+STAT_LABELS[k].slice(0,3)+'<b style="color:'+statColor(p.stats[k])+'">'+p.stats[k]+'</b></span>';
     }).join('');
-    var art = playerArtHTML(p);
     var sub = p.pos + (p.club ? ' · ' + p.club : '');
-    return '<div class="player-card'+(art?' has-art':'')+'" data-player-id="'+p.id+'" '+(extraAttr||'')+'>'
-      + (removable ? '<button type="button" class="btn-remove" data-remove-player="'+p.id+'">✕</button>' : '')
-      + art
+    return '<div class="player-card" data-player-id="'+p.id+'" '+(extraAttr||'')+'>'
+      + rm
       + '<div class="pc-body">'
-      + '<div class="player-name">'+p.name+'</div>'
+      + '<div class="player-name">'+escHtml(p.name)+'</div>'
       + '<div class="player-pos">'+sub+'</div>'
       + '<div class="player-ovr" style="background:'+ovrColor(p.ovr)+'">OVR '+p.ovr+'</div>'
       + '<div class="player-stats">'+statsHtml+'</div>'
