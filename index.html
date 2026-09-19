@@ -794,11 +794,14 @@
   /* Tên cầu thủ */
   .fc-card .fc-name{ position:absolute; z-index:3; left:0; right:0; top:var(--fc-name-top); height:9%; display:flex; align-items:center; justify-content:center; padding:0 4%; }
   .fc-card .fc-name span{
-    max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; text-transform:uppercase; letter-spacing:.02em;
-    font-family:var(--font-display); font-weight:800; font-size:max(9.5cqw,6.5px); line-height:1.25; color:#3d2500; padding:.4cqw 9cqw;
+    max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; text-transform:uppercase; letter-spacing:.02em; text-align:center;
+    /* --nf: cỡ chữ mong muốn (cqw), --nfit: cỡ lớn nhất còn vừa bề ngang dải tên — JS tính theo độ dài tên (fcNameLayout) */
+    font-family:var(--font-display); font-weight:800; font-size:min(max(calc(var(--nf,9.5)*1cqw),6.5px),calc(var(--nfit,9.5)*1cqw)); line-height:1.25; color:#3d2500; padding:.4cqw 9cqw;
     background:linear-gradient(90deg,rgba(255,231,150,0) 0%,rgba(255,231,150,.93) 14%,rgba(255,206,84,.96) 50%,rgba(255,231,150,.93) 86%,rgba(255,231,150,0) 100%);
   }
   /* Dưới tên: cờ quốc gia + logo CLB */
+  .fc-card .fc-name.two{ top:calc(var(--fc-name-top) - 1.5%); }
+  .fc-card .fc-name.two span{ line-height:1.08; }
   .fc-card .fc-foot{ position:absolute; z-index:3; left:0; right:0; top:var(--fc-foot-top); height:8.5%; display:flex; align-items:center; justify-content:center; gap:3cqw; }
   .fc-card .fc-foot img{ object-fit:contain; display:block; filter:drop-shadow(0 .5cqw 1cqw rgba(0,0,0,.55)); }
   .fc-card .fc-foot .fc-flag{ width:max(12.5cqw,9px); height:max(8.5cqw,6px); }
@@ -5967,7 +5970,7 @@ var PLAYERS_JSON_EMBEDDED = {
     return '<div class="fc-card no-bg">'
       + '<div class="fc-initials">'+escHtml(initialsOf(base.name || '?'))+'</div>'
       + '<div class="fc-ovr"><b>'+(base.realOvr || base.ovr || '')+'</b><span>'+escHtml(base.pos || '')+'</span></div>'
-      + '<div class="fc-name"><span>'+escHtml(base.name || '')+'</span></div>'
+      + fcNameHTML(base.name || '')
       + '</div>';
   }
   function ownedPlayerFromBase(base){
@@ -6239,6 +6242,70 @@ var PLAYERS_JSON_EMBEDDED = {
   function escHtml(v){
     return String(v==null ? '' : v).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; });
   }
+  /* ---- Tên trên thẻ: tự vừa khít, không bị cắt "..." ----
+     Đo bề rộng tên (theo em) bằng phần tử ẩn cùng font, rồi:
+       - vừa 1 dòng ở cỡ chuẩn  -> giữ cỡ chuẩn
+       - hơi dài                -> thu nhỏ chữ cho vừa 1 dòng
+       - rất dài & nhiều từ     -> xuống 2 dòng (ngắt cân bằng), chữ gần cỡ chuẩn
+     Cỡ chữ tính theo cqw của thẻ nên đúng ở mọi kích thước thẻ (sân, dự bị, kho, popup). */
+  var _nmProbe = null, _nmCache = null;
+  function nameWidthEm(txt){
+    if(!_nmCache) _nmCache = {};
+    if(_nmCache[txt] != null) return _nmCache[txt];
+    if(!_nmProbe){
+      _nmProbe = document.createElement('span');
+      _nmProbe.setAttribute('aria-hidden', 'true');
+      _nmProbe.style.cssText = 'position:fixed;left:-9999px;top:0;visibility:hidden;white-space:nowrap;text-transform:uppercase;'
+        + 'letter-spacing:.02em;font-family:var(--font-display);font-weight:800;font-size:100px;line-height:1;pointer-events:none;';
+      document.body.appendChild(_nmProbe);
+    }
+    _nmProbe.textContent = txt;
+    var w = _nmProbe.getBoundingClientRect().width / 100;
+    if(!(w > 0)) w = txt.length * 0.66;   /* dự phòng nếu chưa đo được */
+    _nmCache[txt] = w;
+    return w;
+  }
+  function fcNameLayout(raw){
+    var FC_NAME_AVAIL = 74;      /* bề rộng chữ tối đa trong dải tên (cqw) */
+    var FC_NAME_MAX = 9.5;       /* cỡ chuẩn 1 dòng (cqw) */
+    var FC_NAME_2LINE_MAX = 8.2; /* cỡ tối đa khi xuống 2 dòng (cqw) */
+    var FC_NAME_1LINE_MIN = 8.0; /* nhỏ hơn mức này mà có nhiều từ -> xuống 2 dòng */
+    var name = String(raw == null ? '' : raw).replace(/\s+/g, ' ').trim();
+    if(!name) return { html:'', two:false, fs:FC_NAME_MAX, fit:FC_NAME_MAX };
+    var fit1 = FC_NAME_AVAIL / nameWidthEm(name);
+    if(fit1 >= FC_NAME_1LINE_MIN || name.indexOf(' ') < 0){
+      return { html:escHtml(name), two:false, fs:Math.min(FC_NAME_MAX, fit1), fit:fit1 };
+    }
+    var words = name.split(' '), best = null;
+    for(var k = 1; k < words.length; k++){
+      var a = words.slice(0, k).join(' '), b = words.slice(k).join(' ');
+      var m = Math.max(nameWidthEm(a), nameWidthEm(b));
+      if(!best || m < best.m) best = { a:a, b:b, m:m };
+    }
+    var fit2 = FC_NAME_AVAIL / best.m;
+    return { html:escHtml(best.a) + '<br>' + escHtml(best.b), two:true, fs:Math.min(FC_NAME_2LINE_MAX, fit2), fit:fit2 };
+  }
+  function fcNameHTML(raw){
+    var L = fcNameLayout(raw);
+    return '<div class="fc-name'+(L.two ? ' two' : '')+'"><span data-nm="'+escHtml(raw)+'" style="--nf:'+L.fs.toFixed(2)+';--nfit:'+L.fit.toFixed(2)+'">'+L.html+'</span></div>';
+  }
+  /* Font web tải xong có thể làm bề rộng đổi -> tính lại tên trên mọi thẻ đang hiển thị */
+  function refitCardNames(){
+    _nmCache = null;
+    var list = document.querySelectorAll('.fc-name span[data-nm]');
+    for(var i = 0; i < list.length; i++){
+      var sp = list[i], L = fcNameLayout(sp.getAttribute('data-nm'));
+      sp.innerHTML = L.html;
+      sp.style.setProperty('--nf', L.fs.toFixed(2));
+      sp.style.setProperty('--nfit', L.fit.toFixed(2));
+      sp.parentNode.classList.toggle('two', L.two);
+    }
+  }
+  if(document.fonts){
+    if(document.fonts.ready) document.fonts.ready.then(refitCardNames);
+    if(document.fonts.addEventListener) document.fonts.addEventListener('loadingdone', refitCardNames);
+  }
+
   function fcCardHTML(p, extraCls){
     if(!p || !cdnReady() || !p.image) return '';
     var name = escHtml(p.name);
@@ -6257,7 +6324,7 @@ var PLAYERS_JSON_EMBEDDED = {
       + '<img class="fc-render" src="'+cdnUrl(p.image)+'" alt="'+name+'" data-ini="'+escHtml(initialsOf(p.name || '?'))+'" loading="lazy" onerror="window.fcRenderFail(this)">'
       + '<div class="fc-ovr"><b>'+ovr+'</b><span>'+escHtml(p.pos || '')+'</span></div>'
       + (ps ? '<div class="fc-ps">'+ps+'</div>' : '')
-      + '<div class="fc-name"><span>'+name+'</span></div>'
+      + fcNameHTML(p.name)
       + foot
       + '</div>';
   }
