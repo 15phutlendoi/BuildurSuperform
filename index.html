@@ -6445,7 +6445,9 @@ var PLAYERS_JSON_EMBEDDED = {
     var month = loadMonth(monthKey);
     var t = periodTotals(period);
     var goal = settings.monthlyGoal;
-    var pct = Math.min(100, Math.round(t.total/goal*100));
+    var reached = t.total>=goal;
+    // Không làm tròn lên 100% khi chưa thực sự đạt goal (tránh lệch giữa hiển thị % và trạng thái "ready" của bóng)
+    var pct = reached ? 100 : Math.min(99, Math.floor(goal>0 ? (t.total/goal*100) : 0));
 
     var sceneImg0 = document.getElementById('month-scene-img');
     if(sceneImg0 && !sceneImg0.src){ sceneImg0.src = KICK_FRAMES[0]; }
@@ -6456,7 +6458,6 @@ var PLAYERS_JSON_EMBEDDED = {
     var ringFill = document.getElementById('month-ring-fill');
     ringFill.style.strokeDasharray = ringLen;
     ringFill.style.strokeDashoffset = ringLen*(1-pct/100);
-    var reached = t.total>=goal;
     ringFill.classList.toggle('goal-reached', reached);
     document.getElementById('month-pct-label').textContent = pct+'%';
     var ballBtn = document.getElementById('month-ball-btn');
