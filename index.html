@@ -666,23 +666,9 @@
   @keyframes fx-ring-pass{ 0%,100%{ box-shadow:0 3px 8px rgba(0,0,0,.32), 0 0 0 2px rgba(255,255,255,.55), 0 0 0 0 rgba(59,130,246,0); } 50%{ box-shadow:0 3px 8px rgba(0,0,0,.32), 0 0 0 2px rgba(255,255,255,.55), 0 0 0 5px rgba(59,130,246,.55); } }
   @keyframes fx-ring-shoot{ 0%,100%{ box-shadow:0 3px 8px rgba(0,0,0,.32), 0 0 0 2px rgba(255,255,255,.55), 0 0 0 0 rgba(255,90,30,0); } 50%{ box-shadow:0 3px 8px rgba(0,0,0,.32), 0 0 0 2px rgba(255,255,255,.55), 0 0 0 6px rgba(255,90,30,.6); } }
   @keyframes fx-ring-tackle{ 0%,100%{ box-shadow:0 3px 8px rgba(0,0,0,.32), 0 0 0 2px rgba(255,255,255,.55), 0 0 0 0 rgba(180,60,255,0); } 50%{ box-shadow:0 3px 8px rgba(0,0,0,.32), 0 0 0 2px rgba(255,255,255,.55), 0 0 0 5px rgba(180,60,255,.55); } }
-  .slot-fx{ position:absolute; top:-7px; left:50%; transform:translateX(-50%); display:flex; gap:3px; z-index:4; pointer-events:none; }
-  .fx-badge{ width:16px; height:16px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:9.5px; line-height:1;
-    background:#0B1B2A; box-shadow:0 0 0 1.5px #fff, 0 2px 4px rgba(0,0,0,.4); }
-  .fx-badge.fx-move{ animation:fx-badge-move .9s ease-in-out infinite; }
-  @keyframes fx-badge-move{ 0%,100%{ transform:translateX(0); } 50%{ transform:translateX(3px); } }
-  .fx-badge.fx-pass{ animation:fx-badge-pass 1s ease-in-out infinite; }
-  @keyframes fx-badge-pass{ 0%,100%{ transform:rotate(0deg) scale(1); } 50%{ transform:rotate(180deg) scale(1.1); } }
-  .fx-badge.fx-shoot{ animation:fx-badge-shoot .7s ease-in-out infinite; }
-  @keyframes fx-badge-shoot{ 0%,100%{ transform:scale(1); } 50%{ transform:scale(1.3); } }
-  .fx-badge.fx-tackle{ animation:fx-badge-tackle 1.2s ease-in-out infinite; }
-  @keyframes fx-badge-tackle{ 0%,100%{ transform:scale(1) rotate(0deg); } 50%{ transform:scale(1.12) rotate(-8deg); } }
   @media (prefers-reduced-motion: reduce){
-    .pitch-slot.fx-move .slot-circle, .pitch-slot.fx-pass .slot-circle, .pitch-slot.fx-shoot .slot-circle, .pitch-slot.fx-tackle .slot-circle,
-    .fx-badge.fx-move, .fx-badge.fx-pass, .fx-badge.fx-shoot, .fx-badge.fx-tackle{ animation:none !important; }
+    .pitch-slot.fx-move .slot-circle, .pitch-slot.fx-pass .slot-circle, .pitch-slot.fx-shoot .slot-circle, .pitch-slot.fx-tackle .slot-circle{ animation:none !important; }
   }
-  .fx-legend{ display:flex; flex-wrap:wrap; gap:10px; justify-content:center; font-size:11.5px; font-weight:700; color:var(--ink-soft); margin:8px 0 0; }
-  .fx-legend span{ display:inline-flex; align-items:center; gap:4px; }
   .player-avatar{ border-radius:50%; flex:none; }
   .player-card{ background:var(--card); border-radius:var(--radius-md); border:2px solid var(--line); padding:10px; display:flex; flex-direction:column; align-items:center; gap:4px; text-align:center; position:relative; }
   .player-card .player-name{ font-family:var(--font-display); font-weight:800; font-size:13px; color:var(--ink); line-height:1.15; }
@@ -1416,11 +1402,8 @@
         <span id="formation-select-zone"></span>
       </div>
       <div class="pitch-scroll"><div class="pitch-wrap" id="pitch-wrap"></div></div>
-      <p class="fx-legend">
-        <span>💨 Di chuyển</span><span>🔁 Chuyền bóng</span><span>🔥 Sút bóng</span><span>🛡️ Đánh chặn</span>
-      </p>
       <div class="bench-row" id="bench-row"></div>
-      <p class="hint-text" style="margin-top:8px">Chạm vào một vị trí trên sân hoặc một ô dự bị để xếp cầu thủ. Đổi sơ đồ để có nhiều kiểu xếp hình khác nhau — mỗi đội hình chính luôn 11 cầu thủ, cộng thêm tối đa 7 dự bị. Biểu tượng nhỏ nhấp nháy trên cầu thủ đá chính thể hiện lối chơi (playstyle) của bé đó.</p>
+      <p class="hint-text" style="margin-top:8px">Chạm vào một vị trí trên sân hoặc một ô dự bị để xếp cầu thủ. Đổi sơ đồ để có nhiều kiểu xếp hình khác nhau — mỗi đội hình chính luôn 11 cầu thủ, cộng thêm tối đa 7 dự bị.</p>
     </div>
     <div id="tab-collection" style="display:none">
       <div class="collection-grid" id="collection-grid"></div>
@@ -5569,6 +5552,16 @@ var PLAYERS_JSON_EMBEDDED = {
       {pos:'CM',x:25,y:46},{pos:'CM',x:50,y:46},{pos:'CM',x:74,y:46},
       {pos:'LW',x:27,y:16},{pos:'ST',x:50,y:13},{pos:'RW',x:72,y:16}
     ]},
+    {id:'433_2cdm1cam', name:'4-3-3 (2 CDM+1 CAM)', positions:[
+      {pos:'GK',x:50,y:90},{pos:'LB',x:10,y:73},{pos:'CB',x:30,y:75},{pos:'CB',x:69,y:75},{pos:'RB',x:89,y:73},
+      {pos:'CDM',x:35,y:52},{pos:'CDM',x:65,y:52},{pos:'CAM',x:50,y:31},
+      {pos:'LW',x:27,y:16},{pos:'ST',x:50,y:13},{pos:'RW',x:72,y:16}
+    ]},
+    {id:'433_1cdm2cm', name:'4-3-3 (1 CDM+2 CM)', positions:[
+      {pos:'GK',x:50,y:90},{pos:'LB',x:10,y:73},{pos:'CB',x:30,y:75},{pos:'CB',x:69,y:75},{pos:'RB',x:89,y:73},
+      {pos:'CDM',x:50,y:54},{pos:'CM',x:30,y:39},{pos:'CM',x:70,y:39},
+      {pos:'LW',x:27,y:16},{pos:'ST',x:50,y:13},{pos:'RW',x:72,y:16}
+    ]},
     {id:'442', name:'4-4-2', positions:[
       {pos:'GK',x:50,y:90},{pos:'LB',x:10,y:73},{pos:'CB',x:30,y:75},{pos:'CB',x:69,y:75},{pos:'RB',x:89,y:73},
       {pos:'LM',x:14,y:41},{pos:'CM',x:38,y:44},{pos:'CM',x:62,y:44},{pos:'RM',x:86,y:41},
@@ -5645,6 +5638,34 @@ var PLAYERS_JSON_EMBEDDED = {
       {pos:'GK',x:50,y:90},{pos:'LB',x:10,y:73},{pos:'CB',x:30,y:75},{pos:'CB',x:69,y:75},{pos:'RB',x:89,y:73},
       {pos:'CM',x:38,y:50},{pos:'CM',x:62,y:50},
       {pos:'LW',x:15,y:15},{pos:'ST',x:38,y:11},{pos:'ST',x:62,y:11},{pos:'RW',x:85,y:15}
+    ]},
+    {id:'442dia', name:'4-4-2 (Kim Cương)', positions:[
+      {pos:'GK',x:50,y:90},{pos:'LB',x:10,y:73},{pos:'CB',x:30,y:75},{pos:'CB',x:69,y:75},{pos:'RB',x:89,y:73},
+      {pos:'CDM',x:50,y:55},{pos:'CM',x:28,y:42},{pos:'CM',x:72,y:42},{pos:'CAM',x:50,y:28},
+      {pos:'ST',x:37,y:12},{pos:'ST',x:62,y:12}
+    ]},
+    {id:'4321', name:'4-3-2-1 (Cây Thông)', positions:[
+      {pos:'GK',x:50,y:90},{pos:'LB',x:10,y:73},{pos:'CB',x:30,y:75},{pos:'CB',x:69,y:75},{pos:'RB',x:89,y:73},
+      {pos:'CM',x:25,y:52},{pos:'CM',x:50,y:55},{pos:'CM',x:75,y:52},
+      {pos:'CAM',x:35,y:30},{pos:'CAM',x:65,y:30},
+      {pos:'ST',x:50,y:12}
+    ]},
+    {id:'3412', name:'3-4-1-2', positions:[
+      {pos:'GK',x:50,y:90},{pos:'CB',x:26,y:62},{pos:'CB',x:50,y:64},{pos:'CB',x:73,y:62},
+      {pos:'LM',x:16,y:40},{pos:'CM',x:38,y:44},{pos:'CM',x:61,y:44},{pos:'RM',x:84,y:40},
+      {pos:'CAM',x:50,y:26},
+      {pos:'ST',x:38,y:11},{pos:'ST',x:62,y:11}
+    ]},
+    {id:'4231n', name:'4-2-3-1 (Hẹp)', positions:[
+      {pos:'GK',x:50,y:90},{pos:'LB',x:10,y:73},{pos:'CB',x:30,y:75},{pos:'CB',x:69,y:75},{pos:'RB',x:89,y:73},
+      {pos:'CDM',x:35,y:50},{pos:'CDM',x:65,y:50},
+      {pos:'CAM',x:34,y:32},{pos:'CAM',x:50,y:26},{pos:'CAM',x:66,y:32},
+      {pos:'ST',x:50,y:11}
+    ]},
+    {id:'523', name:'5-2-3', positions:[
+      {pos:'GK',x:50,y:90},{pos:'LWB',x:10,y:60},{pos:'CB',x:30,y:64},{pos:'CB',x:50,y:66},{pos:'CB',x:70,y:64},{pos:'RWB',x:90,y:60},
+      {pos:'CM',x:38,y:42},{pos:'CM',x:62,y:42},
+      {pos:'LW',x:20,y:15},{pos:'ST',x:50,y:11},{pos:'RW',x:80,y:15}
     ]}
   ];
   var BENCH_SIZE = 7;
@@ -5671,24 +5692,11 @@ var PLAYERS_JSON_EMBEDDED = {
     PLAYSTYLE_SUPER_RUSH: 'tackle'
   };
   var FX_ORDER = ['shoot','pass','move','tackle'];
-  var FX_META = {
-    move:   {icon:'💨', cls:'fx-move'},
-    pass:   {icon:'🔁', cls:'fx-pass'},
-    shoot:  {icon:'🔥', cls:'fx-shoot'},
-    tackle: {icon:'🛡️', cls:'fx-tackle'}
-  };
   function playerFx(p){
     if(!p || !Array.isArray(p.playstyles)) return [];
     var set = {};
     p.playstyles.forEach(function(code){ var fx = PLAYSTYLE_EFFECT_MAP[code]; if(fx) set[fx] = true; });
     return FX_ORDER.filter(function(fx){ return set[fx]; });
-  }
-  function slotFxHTML(p){
-    var fx = playerFx(p);
-    if(!fx.length) return '';
-    return '<div class="slot-fx">' + fx.slice(0,2).map(function(k){
-      return '<span class="fx-badge '+FX_META[k].cls+'" aria-hidden="true">'+FX_META[k].icon+'</span>';
-    }).join('') + '</div>';
   }
 
   /* ===== Ảnh cầu thủ trên Cloudinary =====
@@ -6351,9 +6359,7 @@ var PLAYERS_JSON_EMBEDDED = {
       var hasArt = filled && cdnReady() && main.image;
       var inner = filled ? (hasArt ? slotArtHTML(main) : '') : '<span class="slot-plus">+</span>';
       var fx = filled ? playerFx(main) : [];
-      var fxHtml = filled ? slotFxHTML(main) : '';
       return '<div class="pitch-slot'+(filled?' filled':'')+(fx.length?' has-fx fx-'+fx[0]:'')+'" data-slot-type="pitch" data-slot-index="'+i+'" style="left:'+posObj.x+'%;top:'+posObj.y+'%">'
-        + fxHtml
         + '<div class="slot-circle'+(hasArt?' has-art':'')+'">'+inner+'</div>'
         + '<div class="slot-label">'+posObj.pos+'</div>'
         + '</div>';
