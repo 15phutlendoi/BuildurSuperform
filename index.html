@@ -901,12 +901,24 @@
   .sk-cheer  { --t1:#E4FFEE; --t2:#6BE79A; --t3:#1FAE55; --t4:#0B6030; --tink:#053B1B; --tglow:80,225,140;  --tplate:#F3FFF7; --tflash:#DFFFEA; }
   .sk-mystery{ --t1:#F3F6FB; --t2:#C3CEDF; --t3:#7D8EAB; --t4:#3E4E6A; --tink:#1B2B45; --tglow:150,170,200; --tplate:#F8FAFF; }
 
-  .skill-legend{ display:flex; flex-wrap:wrap; gap:8px; margin:10px 0 0; }
-  .sk-leg{ flex:1 1 150px; display:flex; flex-direction:column; gap:1px; padding:8px 12px; border-radius:var(--radius-sm); border:2px solid var(--t3);
-    background:linear-gradient(160deg,var(--t1),var(--t2)); color:var(--tink); text-shadow:none; font-size:12.5px; font-weight:700; line-height:1.3; box-shadow:0 3px 8px rgba(6,20,40,.18); }
-  .sk-leg b{ font-family:var(--font-display); font-weight:800; font-size:13.5px; }
-  .sk-leg em{ font-style:normal; font-family:var(--font-display); font-weight:800; font-size:14px; }
 
+  /* ===== KHUNG PHÒNG KỸ NĂNG: tách biệt hẳn khỏi khu sút penalty (nền xanh đêm + viền vàng) ===== */
+  .skill-room{ position:relative; margin:0 0 24px; padding:14px 12px 14px; border-radius:var(--radius-lg); color:#fff; text-shadow:none;
+    border:3px solid #F5B700;
+    background:
+      radial-gradient(120% 70% at 50% 0%,rgba(255,193,7,.24),transparent 62%),
+      linear-gradient(45deg,rgba(255,255,255,.05) 25%,transparent 25%,transparent 75%,rgba(255,255,255,.05) 75%) 0 0/30px 30px,
+      linear-gradient(170deg,#13294B,#0A1730 62%,#070F20);
+    box-shadow:0 14px 34px rgba(6,20,40,.5), 0 0 0 4px rgba(255,177,0,.2), inset 0 1px 0 rgba(255,255,255,.18); }
+  .skill-room-head{ display:flex; align-items:center; justify-content:space-between; gap:10px; }
+  .skill-room-title{ display:flex; align-items:center; gap:10px; min-width:0; }
+  .skill-room-ico{ flex:none; width:46px; height:46px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:25px;
+    background:linear-gradient(135deg,#FFE083,#FFB100 55%,#FF8F00); box-shadow:0 3px 0 #A9720A, 0 0 18px rgba(255,177,0,.65); }
+  .skill-room-text h3{ margin:0; font-family:var(--font-display); font-size:21px; line-height:1.15; letter-spacing:.03em; color:#FFD54A; text-shadow:0 2px 6px rgba(0,0,0,.55); }
+  .skill-room-text p{ margin:1px 0 0; font-size:12.5px; font-weight:700; color:rgba(255,255,255,.88); text-shadow:none; }
+  .skill-room .skill-count{ flex:none; font-family:var(--font-display); font-weight:800; font-size:13px; white-space:nowrap; color:#3D2500; text-shadow:none;
+    background:linear-gradient(135deg,#FFE083,#FFB100); border-radius:999px; padding:5px 13px; box-shadow:0 2px 0 #A9720A; }
+  .skill-room .skill-grid{ margin-top:14px; }
   .skill-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-top:12px; }
   @media (max-width:760px){ .skill-grid{ grid-template-columns:1fr; } }
 
@@ -1177,6 +1189,16 @@
       <h2 id="month-label">10/09 – 09/10/2026</h2>
       <button id="bonus-month-next" class="nav-btn">›</button>
     </div>
+    <div class="skill-room" id="skill-room">
+      <div class="skill-room-head">
+        <div class="skill-room-title">
+          <span class="skill-room-ico">⚡</span>
+          <div class="skill-room-text"><h3>Phòng Kỹ Năng</h3><p>Điểm thi cuối tháng</p></div>
+        </div>
+        <span class="skill-count" id="skill-count">0/3 đã mở</span>
+      </div>
+      <div class="skill-grid" id="skill-grid"></div>
+    </div>
     <div class="progress-wrap">
       <div class="month-ball-scene">
         <div class="month-pitch-mini">
@@ -1195,14 +1217,7 @@
         <div class="month-reward locked" id="month-goal-banner" aria-live="polite"></div>
       </div>
     </div>
-    <div class="bonus-section skill-section">
-      <div class="skill-head">
-        <h3>⚡ Phòng Kỹ Năng — Điểm thi cuối tháng</h3>
-        <span class="skill-count" id="skill-count">3/3 skill</span>
-      </div>
-      <p class="hint-text">Nhập điểm thi cuối tháng của từng môn để nhận <b>hộp quà bí mật</b>: đạt từ <b>8/10</b> → Play Style <b>VÀNG</b>; từ <b>7/10</b> đến dưới 8/10 → Play Style <b>BẠC</b>; dưới <b>7/10</b> → lời khích lệ kèm bí quyết học. Mở hộp để cộng điểm thưởng thẳng vào tổng điểm của tháng!<br>Kỳ thi thường rơi vào cuối tháng trước — dùng nút ‹ › phía trên để chọn đúng tháng cần cộng điểm.</p>
-      <div class="skill-legend" id="skill-legend"></div>
-      <div class="skill-grid" id="skill-grid"></div>
+    <div class="bonus-section">
       <p class="month-total-line" id="month-total-line"><span>Nhiệm vụ ngày: <b>0</b></span><span>· Skill: <b>+1500</b></span></p>
       <div id="bonus-list" class="bonus-list"></div>
     </div>
@@ -6350,9 +6365,7 @@ var PLAYERS_JSON_EMBEDDED = {
     return '<div class="skill-card is-empty" data-skill="'+s.key+'">'
       + packHTML('mystery', '')
       + '<p class="skill-name">'+s.icon+' Môn '+s.subject+'</p>'
-      + '<p class="skill-sub">Thang '+s.scale+' điểm</p>'
-      + '<p class="skill-lock-note">Nhập điểm thi để nhận hộp quà bí mật!<br>'
-      +   'Từ <b>'+skillNeed(s,'gold')+'/'+s.scale+'</b> → Play Style <b>Vàng</b> · từ <b>'+skillNeed(s,'silver')+'/'+s.scale+'</b> → <b>Bạc</b></p>'
+      + '<p class="skill-lock-note">Nhập điểm thi để mở hộp bí mật! ✨</p>'
       + '<div class="skill-score-row">'
       +   '<input type="number" min="0" max="'+s.scale+'" step="0.25" placeholder="Điểm" data-input="'+s.key+'">'
       +   '<span class="scale-tag">/'+s.scale+'</span>'
@@ -6407,15 +6420,6 @@ var PLAYERS_JSON_EMBEDDED = {
     }).join('');
     document.getElementById('skill-grid').innerHTML = html;
     document.getElementById('skill-count').textContent = opened+'/'+SKILL_DEFS.length+' đã mở';
-
-    var lg = document.getElementById('skill-legend');
-    if(lg){
-      var cr = cheerRange();
-      lg.innerHTML =
-        '<div class="sk-leg sk-gold"><b>🥇 Từ 8/10 trở lên</b><span>Play Style Vàng</span><em>+'+settings.skillGoldPts+' điểm</em></div>'
-      + '<div class="sk-leg sk-silver"><b>🥈 7 → dưới 8/10</b><span>Play Style Bạc</span><em>+'+settings.skillSilverPts+' điểm</em></div>'
-      + '<div class="sk-leg sk-cheer"><b>💚 Dưới 7/10</b><span>Lời khích lệ + bí quyết học</span><em>+'+cr[0]+(cr[1]!==cr[0] ? ' – '+cr[1] : '')+' điểm</em></div>';
-    }
   }
 
   function renderMonthly(){
