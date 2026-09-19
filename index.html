@@ -274,7 +274,7 @@
   /* ---- Menu Cài đặt: làm lại theo phong cách vui tươi, rực rỡ, luôn đọc rõ bất kể theme ----
      Không dựa vào biến --ink/--card (đổi theo theme) nữa: dùng nền đặc + chữ đậm cố định,
      để chữ không bao giờ "chìm" vào ô nền như trước. */
-  #settings-modal .modal-box{ gap:14px; }
+  #settings-modal .modal-box{ gap:14px; max-height:92vh; overflow-y:auto; }
   #settings-modal .modal-box h3{
     font-size:20px; color:#fff; background:linear-gradient(135deg,var(--fcb-red-lt),var(--fcb-red-dk));
     margin:-24px -24px 0; padding:16px 24px 12px; border-radius:22px 22px 0 0;
@@ -1096,6 +1096,10 @@
       <input type="number" id="settings-period-start" min="1" max="31" step="1">
     </label>
     <p class="hint-text" id="settings-period-preview" style="margin:-6px 0 0"></p>
+    <label>🎁 Mức điểm ngày để mở hộp quà (trên thang 10)
+      <input type="number" id="settings-daily-goal" min="1" max="10" step="1">
+    </label>
+    <p class="hint-text" style="margin:-6px 0 0">VD: nhập 9 nghĩa là đạt 9/10 điểm trong ngày sẽ mở được hộp quà.</p>
     <div>
       <span class="settings-label">☁️ Đồng bộ dữ liệu (dùng chung mã để xem trên nhiều máy)</span>
       <p class="hint-text" id="sync-status" style="margin:2px 0 8px">☁️ Đã đồng bộ · Mã: VBDCT9</p>
@@ -4904,6 +4908,7 @@ var PLAYERS_JSON_EMBEDDED = {
   if(typeof settings.monthlyGoal !== 'number') settings.monthlyGoal = 2700;
   if(typeof settings.skillPoints !== 'number') settings.skillPoints = 500;
   if(typeof settings.periodStartDay !== 'number' || settings.periodStartDay<1 || settings.periodStartDay>31) settings.periodStartDay = 1;
+  if(typeof settings.dailyGoal !== 'number' || settings.dailyGoal<1 || settings.dailyGoal>10) settings.dailyGoal = 9;
   if(!Array.isArray(settings.rewards) || !settings.rewards.length) settings.rewards = DEFAULT_REWARDS.slice();
   function saveSettings(){ safeSet('kidchart_settings', settings); }
 
@@ -4978,7 +4983,7 @@ var PLAYERS_JSON_EMBEDDED = {
       var total = computeDayTotal(dayObj);
       var tier = tierFor(total);
       var isToday = ymd(d)===todayStr;
-      var pending = total>=90 && !dayObj._dailyBoxClaimed;
+      var pending = total>=(settings.dailyGoal*10) && !dayObj._dailyBoxClaimed;
       stripHtml += '<div class="day-badge tier-'+tier.key+(isToday?' is-today':'')+(pending?' pending-box':'')+'"'
         + (pending ? ' data-box-month="'+ymKey+'" data-box-day="'+dk+'" title="Chạm để chọn quà cầu thủ!"' : '') + '>'
         + '<span class="badge-icon-circle">'+tier.emoji+'</span>'
@@ -5515,7 +5520,7 @@ var PLAYERS_JSON_EMBEDDED = {
       return '<button type="button" class="daily-box-cell" data-box-index="'+i+'" aria-label="Ô bí ẩn số '+(i+1)+'">'+art+'</button>';
     }).join('');
     var boxDateLabel = fmtDDMM(new Date(monthKey+'-'+dk+'T00:00:00'));
-    document.getElementById('daily-box-lead').textContent = 'Ngày '+boxDateLabel+' đã đạt 9/10 điểm! Chọn 1 trong 9 ô bí ẩn để nhận cầu thủ nhé!';
+    document.getElementById('daily-box-lead').textContent = 'Ngày '+boxDateLabel+' đã đạt '+settings.dailyGoal+'/10 điểm! Chọn 1 trong 9 ô bí ẩn để nhận cầu thủ nhé!';
     openModalTop('daily-box-modal');
   }
 
@@ -6454,6 +6459,7 @@ var PLAYERS_JSON_EMBEDDED = {
     document.getElementById('settings-goal').value = settings.monthlyGoal;
     document.getElementById('settings-skillpts').value = settings.skillPoints;
     document.getElementById('settings-period-start').value = settings.periodStartDay;
+    document.getElementById('settings-daily-goal').value = settings.dailyGoal;
     updatePeriodPreview();
     renderRewardList();
     document.getElementById('sync-code-input').value = syncId;
@@ -6575,6 +6581,8 @@ var PLAYERS_JSON_EMBEDDED = {
     if(!isNaN(sp) && sp>=0) settings.skillPoints = sp;
     var psd = parseInt(document.getElementById('settings-period-start').value, 10);
     if(!isNaN(psd) && psd>=1 && psd<=31) settings.periodStartDay = psd;
+    var dg = parseInt(document.getElementById('settings-daily-goal').value, 10);
+    if(!isNaN(dg) && dg>=1 && dg<=10) settings.dailyGoal = dg;
     saveSettings();
     currentPeriod = getPeriodRange(new Date());
     closeSettings();
