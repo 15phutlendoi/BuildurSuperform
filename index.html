@@ -5552,12 +5552,17 @@ var PLAYERS_JSON_EMBEDDED = {
       {pos:'CM',x:25,y:46},{pos:'CM',x:50,y:46},{pos:'CM',x:74,y:46},
       {pos:'LW',x:27,y:16},{pos:'ST',x:50,y:13},{pos:'RW',x:72,y:16}
     ]},
-    {id:'433_2cdm1cam', name:'4-3-3 (2 CDM+1 CAM)', positions:[
+    {id:'433_2cm1cam', name:'4-3-3 tấn công', positions:[
+      {pos:'GK',x:50,y:90},{pos:'LB',x:10,y:73},{pos:'CB',x:30,y:75},{pos:'CB',x:69,y:75},{pos:'RB',x:89,y:73},
+      {pos:'CM',x:33,y:47},{pos:'CM',x:67,y:47},{pos:'CAM',x:50,y:31},
+      {pos:'LW',x:27,y:16},{pos:'ST',x:50,y:13},{pos:'RW',x:72,y:16}
+    ]},
+    {id:'433_2cdm1cam', name:'4-3-3 phòng ngự', positions:[
       {pos:'GK',x:50,y:90},{pos:'LB',x:10,y:73},{pos:'CB',x:30,y:75},{pos:'CB',x:69,y:75},{pos:'RB',x:89,y:73},
       {pos:'CDM',x:35,y:52},{pos:'CDM',x:65,y:52},{pos:'CAM',x:50,y:31},
       {pos:'LW',x:27,y:16},{pos:'ST',x:50,y:13},{pos:'RW',x:72,y:16}
     ]},
-    {id:'433_1cdm2cm', name:'4-3-3 (1 CDM+2 CM)', positions:[
+    {id:'433_1cdm2cm', name:'4-3-3 cầm nhịp', positions:[
       {pos:'GK',x:50,y:90},{pos:'LB',x:10,y:73},{pos:'CB',x:30,y:75},{pos:'CB',x:69,y:75},{pos:'RB',x:89,y:73},
       {pos:'CDM',x:50,y:54},{pos:'CM',x:30,y:39},{pos:'CM',x:70,y:39},
       {pos:'LW',x:27,y:16},{pos:'ST',x:50,y:13},{pos:'RW',x:72,y:16}
@@ -6389,6 +6394,27 @@ var PLAYERS_JSON_EMBEDDED = {
     document.getElementById('squad-count-line').textContent = counts.starters+'/'+formation.positions.length+' đá chính · '+counts.reserves+'/'+BENCH_SIZE+' dự bị';
   }
 
+  /* Lọc cầu thủ theo vị trí ô trên sân: khớp vị trí chính hoặc vị trí phụ.
+     Dữ liệu cầu thủ không có LWB/RWB/CF nên các ô này lấy theo vị trí gần nhất (LB/RB/ST). */
+  var SLOT_POS_ALIAS = { LWB:['LWB','LB'], RWB:['RWB','RB'], CF:['CF','ST'] };
+  function playerPosList(p){
+    var list = [String(p.pos||'').trim().toUpperCase()];
+    String(p.altPositions||'').split(/[,;\/]/).forEach(function(x){
+      x = x.trim().toUpperCase();
+      if(x) list.push(x);
+    });
+    return list;
+  }
+  function playerFitsSlot(p, slotPos){
+    var want = SLOT_POS_ALIAS[slotPos] || [slotPos];
+    var have = playerPosList(p);
+    return want.some(function(w){ return have.indexOf(w) >= 0; });
+  }
+  function playerIsMainAt(p, slotPos){
+    var want = SLOT_POS_ALIAS[slotPos] || [slotPos];
+    return want.indexOf(String(p.pos||'').trim().toUpperCase()) >= 0;
+  }
+
   function openPosPicker(slotType, slotIndex){
     var squad = loadSquad();
     var players = loadPlayers();
@@ -6406,10 +6432,21 @@ var PLAYERS_JSON_EMBEDDED = {
       if(cp) html += playerCardHTML(cp, true);
     } else {
       var available = players.filter(function(p){ return !placedIds[p.id]; });
+      var slotPos = slotType==='pitch' ? formation.positions[slotIndex].pos : null;
+      var candidates = slotPos ? available.filter(function(p){ return playerFitsSlot(p, slotPos); }) : available;
+      if(slotPos){
+        candidates.sort(function(a, b){
+          var ma = playerIsMainAt(a, slotPos) ? 0 : 1, mb = playerIsMainAt(b, slotPos) ? 0 : 1;
+          if(ma !== mb) return ma - mb;
+          return (b.ovr||0) - (a.ovr||0);
+        });
+      }
       if(available.length===0){
         html += '<p class="empty-collection">Chưa có cầu thủ nào để xếp. Hãy vượt mốc điểm tháng để nhận cầu thủ nhé!</p>';
+      } else if(candidates.length===0){
+        html += '<p class="empty-collection">Chưa có cầu thủ nào chơi được vị trí '+slotPos+' (vị trí chính hoặc phụ). Hãy nhận thêm cầu thủ nhé!</p>';
       } else {
-        available.forEach(function(p){ html += playerCardHTML(p, false, 'data-add-player="'+p.id+'"'); });
+        candidates.forEach(function(p){ html += playerCardHTML(p, false, 'data-add-player="'+p.id+'"'); });
       }
     }
     grid.innerHTML = html;
@@ -6430,7 +6467,7 @@ var PLAYERS_JSON_EMBEDDED = {
         if(slotType==='pitch') s2.pitch[slotIndex] = id; else s2.bench[slotIndex] = id;
         saveSquad(s2);
         renderPitch();
-        openPosPicker(slotType, slotIndex);
+        document.getElementById('pos-picker-modal').classList.remove('open');
       });
     });
     openModalTop('pos-picker-modal');
