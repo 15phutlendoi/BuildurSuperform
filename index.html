@@ -3,7 +3,7 @@
 <html lang="vi"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Đội Bóng Của Đốm ⚽ Nhật Ký Cầu Thủ</title>
+<title>Đội Bóng Của Bé ⚽ Nhật Ký Cầu Thủ Nhỏ</title>
 <link rel="preconnect" href="https://fonts.googleapis.com/">
 <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
 <link href="./index_files/css2" rel="stylesheet">
@@ -143,7 +143,8 @@
   .badge-icon-circle{ width:34px; height:34px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:17px; margin-bottom:1px; background:var(--line); }
   .day-badge .badge-label{ font-family:var(--font-display); font-weight:700; font-size:13px; color:var(--ink); }
   .day-badge .badge-date{ font-size:11px; color:var(--ink-soft); }
-  .day-badge .badge-score{ font-family:var(--font-display); font-weight:800; font-size:20px; line-height:1.1; }
+  .day-badge .badge-score{ font-family:var(--font-display); font-weight:800; font-size:20px; line-height:1.1; white-space:nowrap; }
+  .day-badge .badge-score .badge-pct{ font-size:.6em; font-weight:800; margin-left:1px; opacity:.85; }
   .day-badge.is-today{ border-color:var(--brand); box-shadow:0 0 0 3px var(--brand-soft); }
   @keyframes badge-pending-blink{
     0%,100%{ box-shadow:0 0 0 0 rgba(255,177,0,.75); border-color:var(--gold); }
@@ -5239,14 +5240,18 @@ var PLAYERS_JSON_EMBEDDED = {
       var total = computeDayTotal(dayObj);
       var tier = tierFor(total);
       var isToday = ymd(d)===todayStr;
-      var pending = total>=(settings.dailyGoal*10) && !dayObj._dailyBoxClaimed;
-      stripHtml += '<div class="day-badge tier-'+tier.key+(isToday?' is-today':'')+(pending?' pending-box':'')+'"'
-        + (pending ? ' data-box-month="'+ymKey+'" data-box-day="'+dk+'" title="Chạm để chọn quà cầu thủ!"' : '') + '>'
+      // Mốc điểm trong ngày để mở hộp quà (mặc định 9/10 → 90 điểm). Hiển thị % tiến độ tới mốc này.
+      var boxTarget = settings.dailyGoal*10;
+      var pending = total>=boxTarget && !dayObj._dailyBoxClaimed;
+      var goalPct = boxTarget>0 ? Math.min(100, Math.floor(total*100/boxTarget)) : 0;
+      var goalTip = goalPct>=100 ? ('Đã đạt mốc nhận quà ('+total+'/'+boxTarget+' điểm)') : (total+'/'+boxTarget+' điểm để nhận quà');
+      stripHtml += '<div class="day-badge tier-'+tier.key+(isToday?' is-today':'')+(pending?' pending-box':'')+(goalPct>=100?' goal-hit':'')+'"'
+        + (pending ? ' data-box-month="'+ymKey+'" data-box-day="'+dk+'" title="Chạm để chọn quà cầu thủ! ('+total+'/'+boxTarget+' điểm)"' : ' title="'+goalTip+'"') + '>'
         + '<span class="badge-icon-circle">'+tier.emoji+'</span>'
         + (pending ? '<span class="badge-pending-dot">🎁</span>' : '')
         + '<span class="badge-label">'+DAY_SHORT[i]+'</span>'
         + '<span class="badge-date">'+fmtDDMM(d)+'</span>'
-        + '<span class="badge-score">'+total+'</span></div>';
+        + '<span class="badge-score">'+goalPct+'<small class="badge-pct">%</small></span></div>';
     });
     document.getElementById('day-strip').innerHTML = stripHtml;
 
