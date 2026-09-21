@@ -530,6 +530,17 @@
   #settings-modal .range-sep{ font-weight:700; color:#94A3B8; }
   .reward-row{ display:flex; align-items:center; gap:8px; }
   .reward-row input{ flex:1; min-width:0; }
+  .reward-row select{
+    flex:1; min-width:0; background:#0F172A; border:1px solid #475569; border-radius:12px;
+    padding:8px 12px; font-size:14px; color:#fff; font-family:inherit; font-weight:600;
+  }
+  .reward-row select:focus{ outline:none; border-color:var(--stadium); box-shadow:0 0 0 2px rgba(16,185,129,.25); }
+  .user-box{ background:rgba(59,130,246,.10); border:1px solid rgba(59,130,246,.35); border-radius:14px; padding:12px; }
+  .user-current{ font-size:13px; font-weight:800; color:#BFDBFE; margin:0 0 8px; }
+  .user-current b{ color:#fff; }
+  .user-sep{ display:flex; align-items:center; gap:8px; margin:10px 0 8px; color:#64748B; font-size:11px; font-weight:800; }
+  .user-sep::before, .user-sep::after{ content:''; flex:1; height:1px; background:#334155; }
+  .user-warn{ color:#FCA5A5; font-weight:700; }
   .reward-list{ display:flex; flex-direction:column; gap:6px; margin-bottom:8px; }
   .reward-item{ display:flex; align-items:center; gap:8px; background:rgba(245,158,11,.12); border:1px solid rgba(245,158,11,.3); border-radius:12px; padding:7px 10px; font-size:13px; font-weight:600; color:#FDE68A; }
   .reward-item span{ flex:1; }
@@ -1407,11 +1418,21 @@
     </label>
     <p class="hint-text" style="margin:-6px 0 0">VD: nhập 9 nghĩa là đạt 9/10 điểm trong ngày sẽ mở được hộp quà.</p>
     <div>
-      <span class="settings-label">☁️ Đồng bộ dữ liệu (dùng chung mã để xem trên nhiều máy)</span>
+      <span class="settings-label">👤 Người dùng — tạo mới hoặc mở hồ sơ có sẵn</span>
       <p class="hint-text" id="sync-status" style="margin:2px 0 8px">☁️ Đang kiểm tra đồng bộ…</p>
-      <div class="reward-row">
-        <input type="text" id="sync-code-input" placeholder="Mã đồng bộ" maxlength="12" style="text-transform:uppercase">
-        <button type="button" id="btn-sync-apply" class="btn-secondary">Dùng mã này</button>
+      <div class="user-box">
+        <p class="user-current" id="current-user-label">👤 Đang dùng: <b>…</b></p>
+        <div class="reward-row">
+          <select id="user-select"><option value="">— Đang tải danh sách… —</option></select>
+          <button type="button" id="btn-user-load" class="btn-secondary">Mở hồ sơ</button>
+        </div>
+        <p class="hint-text" style="margin:6px 0 0">Mở hồ sơ có sẵn sẽ tải toàn bộ dữ liệu của người dùng đó từ đám mây về máy này.</p>
+        <div class="user-sep">HOẶC</div>
+        <div class="reward-row">
+          <input type="text" id="new-user-name" placeholder="Tên người dùng mới (VD: Bé Bo)" maxlength="24">
+          <button type="button" id="btn-user-create" class="btn-secondary">Tạo mới</button>
+        </div>
+        <p class="hint-text" style="margin:6px 0 0"><span class="user-warn">⚠️ Tạo mới = dữ liệu trắng hoàn toàn:</span> xóa sạch điểm ngày, huy hiệu, kỹ năng, cầu thủ, đội hình và quà trên máy này rồi bắt đầu lại từ đầu. Hồ sơ cũ vẫn nằm trên đám mây và mở lại được bằng danh sách ở trên.</p>
       </div>
     </div>
     <div>
@@ -5488,7 +5509,97 @@ var PLAYERS_JSON_EMBEDDED = {
     });
   }
 
+  /* ---- Sổ người dùng (mỗi người dùng = 1 hồ sơ dữ liệu riêng trên đám mây) ---- */
+  var USERS_BASE = FIREBASE_BASE + '/kidchart_users';
+  var userDirectory = {};
+  function uEsc(v){
+    return String(v==null ? '' : v).replace(/[&<>"]/g, function(c){
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];
+    });
+  }
+  function localUserName(){
+    try{ return localStorage.getItem('kidchart_username') || ''; }catch(e){ return ''; }
+  }
+  function setLocalUserName(n){
+    try{ localStorage.setItem('kidchart_username', n || ''); }catch(e){}
+  }
+  function userNameOf(code){
+    var u = userDirectory[code];
+    if(u && u.name) return u.name;
+    if(code === syncId && localUserName()) return localUserName();
+    return 'Người dùng ' + code;
+  }
+  function userLabel(code){ return userNameOf(code) + ' · ' + code; }
+  function fetchUserDirectory(){
+    return fetch(USERS_BASE + '.json')
+      .then(function(res){ return res.ok ? res.json() : null; })
+      .then(function(data){
+        if(data && typeof data === 'object') userDirectory = data;
+        return data;
+      })
+      .catch(function(e){ console.warn('user list failed', e); return null; });
+  }
+  function registerUser(code, name){
+    var rec = { name: name || ('Người dùng ' + code), created: Date.now() };
+    userDirectory[code] = rec;
+    return fetch(USERS_BASE + '/' + encodeURIComponent(code) + '.json', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(rec)
+    }).catch(function(e){ console.warn('user register failed', e); });
+  }
+  function ensureCurrentUserRegistered(){
+    return fetchUserDirectory().then(function(data){
+      if(data === null) return;                 // offline: bỏ qua
+      if(!userDirectory[syncId]) return registerUser(syncId, localUserName());
+    });
+  }
+  function makeUniqueUserCode(){
+    var code = makeSyncCode(), guard = 0;
+    while(userDirectory[code] && guard++ < 60) code = makeSyncCode();
+    return code;
+  }
+  /* Xóa sạch mọi dữ liệu hồ sơ trên máy (giữ lại mã để ghi đè sau đó) */
+  function wipeLocalProfileData(){
+    try{
+      var keys = [];
+      for(var i=0;i<localStorage.length;i++){
+        var k = localStorage.key(i);
+        if(k && k.indexOf('kidchart_')===0 && k!=='kidchart_syncid') keys.push(k);
+      }
+      keys.forEach(function(k){ localStorage.removeItem(k); });
+    }catch(e){ console.warn('wipe failed', e); }
+  }
+  function switchToUser(code, name){
+    wipeLocalProfileData();
+    try{ localStorage.setItem('kidchart_syncid', code); }catch(e){}
+    setLocalUserName(name || '');
+    location.reload();
+  }
+  function renderUserPanel(){
+    var cur = document.getElementById('current-user-label');
+    var sel = document.getElementById('user-select');
+    if(cur) cur.innerHTML = '\ud83d\udc64 Đang dùng: <b>' + uEsc(userLabel(syncId)) + '</b>';
+    if(!sel) return;
+    sel.innerHTML = '<option value="">— Đang tải danh sách… —</option>';
+    fetchUserDirectory().then(function(data){
+      var codes = Object.keys(userDirectory);
+      if(codes.indexOf(syncId) === -1) codes.push(syncId);
+      if(data === null && codes.length <= 1){
+        sel.innerHTML = '<option value="">— Không có mạng, chưa tải được danh sách —</option>';
+        return;
+      }
+      codes.sort(function(a,b){ return userNameOf(a).localeCompare(userNameOf(b), 'vi'); });
+      sel.innerHTML = codes.map(function(c){
+        return '<option value="' + uEsc(c) + '"' + (c===syncId ? ' selected' : '') + '>'
+             + uEsc(userLabel(c)) + (c===syncId ? ' (đang dùng)' : '') + '</option>';
+      }).join('');
+      if(cur) cur.innerHTML = '\ud83d\udc64 Đang dùng: <b>' + uEsc(userLabel(syncId)) + '</b>';
+    });
+  }
+
   await bootstrapCloudSync();
+  ensureCurrentUserRegistered();
 
   var settings = safeGet('kidchart_settings') || {};
   if(typeof settings.monthlyGoal !== 'number') settings.monthlyGoal = 2700;
@@ -7986,7 +8097,7 @@ var PLAYERS_JSON_EMBEDDED = {
     document.getElementById('settings-daily-goal').value = settings.dailyGoal;
     updatePeriodPreview();
     renderRewardList();
-    document.getElementById('sync-code-input').value = syncId;
+    renderUserPanel();
     openModalTop('settings-modal');
   }
   function closeSettings(){ document.getElementById('settings-modal').classList.remove('open'); }
@@ -8089,13 +8200,26 @@ var PLAYERS_JSON_EMBEDDED = {
     input.value = '';
     renderRewardList();
   });
-  document.getElementById('btn-sync-apply').addEventListener('click', function(){
-    var raw = document.getElementById('sync-code-input').value.trim().toUpperCase();
-    if(!raw){ alert('Vui lòng nhập mã đồng bộ.'); return; }
-    if(raw === syncId) return;
-    if(!confirm('Chuyển sang mã đồng bộ "'+raw+'"? Trang sẽ tải lại và lấy dữ liệu của mã này.')) return;
-    try{ localStorage.setItem('kidchart_syncid', raw); }catch(e){}
-    location.reload();
+  /* ---- Mở hồ sơ người dùng có sẵn ---- */
+  document.getElementById('btn-user-load').addEventListener('click', function(){
+    var code = document.getElementById('user-select').value.trim().toUpperCase();
+    if(!code){ alert('Chưa chọn hồ sơ người dùng nào.'); return; }
+    if(code === syncId){ alert('Đây đang là hồ sơ hiện tại rồi.'); return; }
+    if(!confirm('Mở hồ sơ "' + userLabel(code) + '"?\n\nTrang sẽ tải lại và lấy toàn bộ dữ liệu của hồ sơ này từ đám mây.')) return;
+    switchToUser(code, userNameOf(code));
+  });
+  /* ---- Tạo người dùng mới: dữ liệu trắng hoàn toàn ---- */
+  document.getElementById('btn-user-create').addEventListener('click', function(){
+    var input = document.getElementById('new-user-name');
+    var name = input.value.trim();
+    if(!name){ alert('Nhập tên người dùng mới trước nhé.'); return; }
+    var code = makeUniqueUserCode();
+    if(!confirm('Tạo người dùng mới "' + name + '" (mã ' + code + ')?\n\n⚠️ Hồ sơ mới bắt đầu với DỮ LIỆU TRẮNG HOÀN TOÀN: không điểm ngày, không huy hiệu, không kỹ năng, không cầu thủ, không đội hình, không quà.\n\nDữ liệu của hồ sơ hiện tại vẫn được giữ trên đám mây và mở lại được bằng danh sách phía trên.')) return;
+    input.disabled = true;
+    setSyncStatus('⚙️ Đang tạo người dùng mới…');
+    registerUser(code, name).then(function(){
+      switchToUser(code, name);
+    });
   });
   document.getElementById('settings-period-start').addEventListener('input', updatePeriodPreview);
   document.getElementById('settings-save').addEventListener('click', function(){
