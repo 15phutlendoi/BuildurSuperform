@@ -2,10 +2,10 @@
 <html lang="vi"><head><meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#0F172A">
-<title>Đội Bóng Của Bé ⚽ Nhật Ký Cầu Thủ Nhỏ</title>
+<title>Đội Bóng Của Đốm ⚽ Nhật Ký Đội Hình Trong Mơ</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Lexend:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
   /* ===== Thành phần chức năng giữ nguyên từ bản gốc (hoạt ảnh linh vật, ô ngày chờ quà, bóng bơm căng, hiệu ứng) ===== */
   .mascot-avatar.bounce{ animation:mascot-bounce .8s ease; }
@@ -75,7 +75,7 @@
   .prize-result .pr-name{ font-family:var(--font-display); font-weight:800; font-size:19px; color:#7A4E00; margin:6px 0 0; line-height:1.25; }
   .prize-result .pr-note{ font-size:12.5px; color:#8A5A00; font-weight:600; margin:6px 0 0; }
   /* =====================================================================
-     STADIUM NIGHT — giao diện mới theo mẫu "Đội Bóng Của Bé"
+     STADIUM NIGHT — giao diện mới cho "Đội Bóng Của Đốm"
      Nền đêm sân vận động + font Lexend + thẻ night-card, viền slate,
      nút phẳng (xanh sân cỏ / vàng), tab dạng viên thuốc.
      Các biến cũ (--ink, --card, --brand, --deep …) được ánh xạ sang bảng màu mới
@@ -1189,6 +1189,281 @@
     .panel h2{ font-size:16px; }
   }
 
+
+  /* =====================================================================
+     NHIỆM VỤ TRONG NGÀY — thanh chọn lịch + thẻ nhiệm vụ + khối tổng quan
+     ===================================================================== */
+  .day-nav{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+  .day-arrow{ width:38px; height:38px; padding:0; display:inline-flex; align-items:center; justify-content:center; font-size:16px; }
+  .date-pill{
+    position:relative; display:flex; align-items:center; gap:8px; padding:8px 16px; border-radius:999px;
+    background:#334155; border:1px solid #475569; cursor:pointer; user-select:none; min-width:190px; justify-content:center;
+  }
+  .date-pill:hover{ background:#3c4a61; }
+  .date-pill-ico{ font-size:15px; line-height:1; }
+  .date-pill span#day-date-label{ font-weight:800; font-size:13px; color:#fff; white-space:nowrap; }
+  .date-pill input[type=date]{
+    position:absolute; inset:0; width:100%; height:100%; opacity:0; border:0; padding:0; margin:0; cursor:pointer;
+    color-scheme:dark;
+  }
+
+  .day-summary-panel{ padding:14px 16px; }
+  .day-summary{ display:flex; align-items:center; gap:14px; flex-wrap:wrap; }
+  .ds-badge{
+    flex:none; width:60px; height:60px; border-radius:16px; display:flex; align-items:center; justify-content:center;
+    font-size:30px; background:#334155; box-shadow:var(--shadow-card);
+  }
+  .ds-badge.tier-perfect{ background:linear-gradient(135deg,#FBBF24,#D97706); }
+  .ds-badge.tier-excellent{ background:linear-gradient(135deg,#3B82F6,#1D4ED8); }
+  .ds-badge.tier-great{ background:linear-gradient(135deg,#34D399,#059669); }
+  .ds-badge.tier-okay{ background:linear-gradient(135deg,#FCD34D,#B45309); }
+  .ds-badge.tier-low{ background:linear-gradient(135deg,#475569,#334155); }
+  .ds-mid{ flex:1 1 220px; min-width:180px; }
+  .ds-top-line{ display:flex; justify-content:space-between; align-items:baseline; gap:8px; font-size:12px; font-weight:700; color:#CBD5E1; margin-bottom:4px; }
+  .ds-score{ font-size:16px; font-weight:900; color:#fff; }
+  .ds-score b{ color:var(--gold-light); font-size:19px; }
+  .ds-bar{ position:relative; width:100%; height:12px; border-radius:999px; background:#0F172A; border:1px solid #334155; overflow:hidden; }
+  .ds-bar i{ display:block; height:100%; border-radius:999px; background:linear-gradient(90deg,var(--stadium),var(--gold)); transition:width .4s ease; }
+  .ds-hint{ margin-top:4px; font-size:11.5px; font-weight:600; color:#94A3B8; }
+
+  .ds-gift{
+    flex:none; display:flex; align-items:center; gap:8px; padding:10px 16px; border-radius:14px; font-weight:800; font-size:12.5px;
+    background:rgba(51,65,85,.6); border:1px solid #475569; color:#94A3B8; cursor:default; text-align:left; max-width:220px;
+  }
+  .ds-gift.is-pending{
+    background:rgba(245,158,11,.16); border:2px dashed rgba(245,158,11,.75); color:#FDE68A; cursor:pointer;
+    animation:mr-glow 1.6s ease-in-out infinite;
+  }
+  .ds-gift.is-claimed{ background:rgba(16,185,129,.14); border-color:rgba(16,185,129,.5); color:#A7F3D0; }
+  .ds-gift-ico{ font-size:22px; line-height:1; }
+
+  .day-tasklist{ display:flex; flex-direction:column; gap:10px; }
+  .task-card{
+    position:relative; display:flex; align-items:center; gap:12px; padding:12px 14px; border-radius:16px; cursor:pointer;
+    background:rgba(15,23,42,.55); border:1.5px solid #334155; transition:background .15s ease, border-color .15s ease, transform .08s ease;
+    overflow:hidden;
+  }
+  .task-card:hover{ border-color:#475569; }
+  .task-card:active{ transform:scale(.985); }
+  .task-check{ position:absolute; opacity:0; width:0; height:0; }
+  .task-card-icon{ flex:none; width:42px; height:42px; border-radius:12px; background:#1E293B; border:1px solid #334155; display:flex; align-items:center; justify-content:center; font-size:21px; }
+  .task-card-body{ flex:1; min-width:0; display:flex; flex-direction:column; gap:2px; }
+  .task-card-name{ font-weight:700; font-size:13.5px; color:#F1F5F9; line-height:1.35; }
+  .task-card-hint{ font-size:11.5px; font-weight:500; color:#94A3B8; line-height:1.4; }
+  .task-card-pts{ flex:none; display:inline-flex; align-items:center; gap:3px; background:rgba(245,158,11,.15); color:#FBBF24; border:1px solid rgba(245,158,11,.35); font-weight:800; font-size:12px; border-radius:999px; padding:4px 10px; white-space:nowrap; }
+  .task-card-check{ flex:none; width:26px; height:26px; border-radius:9px; border:2px solid #475569; background:rgba(15,23,42,.6); display:flex; align-items:center; justify-content:center; font-size:14px; color:transparent; transition:background .15s, border-color .15s; }
+
+  .task-card.is-done{ background:rgba(16,185,129,.12); border-color:rgba(16,185,129,.55); }
+  .task-card.is-done .task-card-name{ color:#fff; }
+  .task-card.is-done .task-card-hint{ color:#A7F3D0; }
+  .task-card.is-done .task-card-icon{ background:rgba(16,185,129,.18); border-color:rgba(16,185,129,.5); }
+  .task-card.is-done .task-card-check{ background:linear-gradient(135deg,var(--stadium-light),var(--stadium-dark)); border-color:var(--stadium); color:#fff; }
+  .task-card.is-done .task-card-pts{ background:rgba(16,185,129,.18); color:#6EE7B7; border-color:rgba(16,185,129,.4); }
+
+  .task-card.celebrate{ animation:taskPop .55s ease; }
+  @keyframes taskPop{
+    0%{ transform:scale(1); }
+    35%{ transform:scale(1.035); box-shadow:0 0 0 3px rgba(16,185,129,.35); }
+    100%{ transform:scale(1); }
+  }
+  .task-praise{
+    position:absolute; right:14px; top:50%; transform:translateY(-50%) scale(.7); z-index:3; pointer-events:none;
+    background:linear-gradient(135deg,var(--stadium-light),var(--stadium-dark)); color:#fff; font-weight:900; font-size:12.5px;
+    padding:6px 12px; border-radius:999px; box-shadow:0 6px 14px rgba(0,0,0,.4); white-space:nowrap;
+    animation:praisePop 1.3s ease forwards;
+  }
+  @keyframes praisePop{
+    0%{ opacity:0; transform:translateY(-50%) scale(.6); }
+    18%{ opacity:1; transform:translate(0,-130%) scale(1.05); }
+    75%{ opacity:1; transform:translate(0,-130%) scale(1); }
+    100%{ opacity:0; transform:translate(0,-165%) scale(.95); }
+  }
+  @media (prefers-reduced-motion: reduce){
+    .task-card.celebrate{ animation:none; }
+    .task-praise{ animation:none; opacity:0; }
+  }
+
+  @media (max-width:560px){
+    .day-nav{ width:100%; justify-content:space-between; }
+    .date-pill{ min-width:0; flex:1; }
+    .day-summary{ gap:10px; }
+    .ds-gift{ max-width:none; width:100%; }
+    .task-praise{ right:8px; font-size:11px; padding:5px 9px; }
+  }
+
+  /* =====================================================================
+     NÂNG CẤP UX CHO TRẺ 8 TUỔI — chỉ thêm hiệu ứng/khoảng chạm, KHÔNG đổi
+     class, id hay logic JS nào ở trên. Toàn bộ tính năng giữ nguyên 100%.
+     ===================================================================== */
+
+  /* Bo tròn "mềm" hơn toàn site — cảm giác thân thiện, ít góc cạnh */
+  :root{
+    --radius-sm:14px;
+    --radius-md:20px;
+    --radius-lg:22px;
+  }
+
+  /* Khoảng chạm rộng hơn cho ngón tay nhỏ + bấm "nảy" như nút đồ chơi */
+  .icon-btn{ min-width:44px; min-height:44px; }
+  .tab-btn{ padding:10px 16px; min-height:42px; }
+  .nav-btn, .btn-mini{ min-height:40px; }
+
+  .btn-primary, .btn-secondary, .btn-mini, .btn-gold, .nav-btn, .icon-btn, .tab-btn{
+    transition:transform .16s cubic-bezier(.34,1.56,.64,1), background .15s ease, box-shadow .15s ease !important;
+  }
+  .btn-primary, .btn-gold, .nav-btn.today-btn{
+    box-shadow:0 4px 0 rgba(0,0,0,.28), 0 10px 15px -3px rgba(0,0,0,.35) !important;
+  }
+  .btn-primary:hover, .btn-gold:hover, .nav-btn.today-btn:hover{ transform:translateY(-1px); }
+  .btn-primary:active, .btn-gold:active, .nav-btn.today-btn:active{
+    transform:translateY(3px) scale(.97) !important;
+    box-shadow:0 1px 0 rgba(0,0,0,.28) !important;
+  }
+  .btn-secondary, .btn-mini{ box-shadow:0 3px 0 rgba(0,0,0,.22) !important; }
+  .btn-secondary:active, .btn-mini:active{
+    transform:translateY(2px) scale(.97) !important;
+    box-shadow:0 1px 0 rgba(0,0,0,.22) !important;
+  }
+  .icon-btn:active{ transform:scale(.9) rotate(-4deg) !important; }
+
+  /* Tab đang chọn nảy nhẹ khi đổi, dễ nhận biết đang ở đâu */
+  @keyframes tabPop{ 0%{ transform:scale(.82); } 55%{ transform:scale(1.1); } 100%{ transform:scale(1); } }
+  .tab-btn.active{ animation:tabPop .35s cubic-bezier(.34,1.56,.64,1); }
+
+  /* Hộp quà bí ẩn: nhấp nháy mời gọi bấm + nảy vui khi chọn trúng */
+  @keyframes boxInvite{
+    0%,100%{ box-shadow:0 0 0 0 rgba(245,158,11,0); border-color:var(--line); }
+    50%{ box-shadow:0 0 16px 4px rgba(245,158,11,.5); border-color:var(--gold-light); }
+  }
+  .daily-box-grid:not(.locked) .daily-box-cell:not(.picked){ animation:boxInvite 2.4s ease-in-out infinite; }
+  @keyframes cellPickedPop{
+    0%{ transform:scale(1) rotate(0); }
+    40%{ transform:scale(1.18) rotate(4deg); }
+    70%{ transform:scale(.96) rotate(-2deg); }
+    100%{ transform:scale(1) rotate(0); }
+  }
+  .daily-box-cell.picked{ animation:cellPickedPop .5s cubic-bezier(.34,1.56,.64,1); }
+  .daily-box-cell:active{ transform:scale(.9) rotate(-2deg) !important; }
+
+  /* Thẻ cầu thủ khi lật ra: bung ra vui mắt thay vì hiện đột ngột */
+  @keyframes cardPopIn{
+    0%{ transform:scale(.35) rotate(-10deg); opacity:0; }
+    55%{ transform:scale(1.1) rotate(4deg); opacity:1; }
+    80%{ transform:scale(.97) rotate(-1deg); }
+    100%{ transform:scale(1) rotate(0); opacity:1; }
+  }
+  .reveal-card{ animation:cardPopIn .6s cubic-bezier(.34,1.56,.64,1); }
+
+  /* Cửa sổ popup mở ra mềm mại, nảy nhẹ, không giật cục */
+  @keyframes modalBackdropIn{ from{ opacity:0; } to{ opacity:1; } }
+  @keyframes modalBoxIn{
+    0%{ transform:scale(.85) translateY(14px); opacity:0; }
+    60%{ transform:scale(1.03) translateY(-3px); opacity:1; }
+    100%{ transform:scale(1) translateY(0); opacity:1; }
+  }
+  .modal.open .modal-backdrop{ animation:modalBackdropIn .18s ease; }
+  .modal.open .modal-box{ animation:modalBoxIn .32s cubic-bezier(.34,1.56,.64,1); }
+
+  /* Pháo giấy thêm hình sao xen kẽ hình vuông cho sinh động */
+  .confetti-piece:nth-child(3n){ border-radius:50%; }
+  .confetti-piece:nth-child(4n){
+    width:12px; height:12px; border-radius:0;
+    clip-path:polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%);
+  }
+
+  /* Quả bóng chỉ tiêu hàng ngày: viền sáng rõ hơn khi sẵn sàng đá */
+  .month-ball-btn.ready .ball-emoji{ filter:drop-shadow(0 0 10px rgba(255,177,0,.65)) saturate(var(--inflate)); }
+
+  @media (prefers-reduced-motion: reduce){
+    .daily-box-grid:not(.locked) .daily-box-cell:not(.picked),
+    .tab-btn.active, .daily-box-cell.picked, .reveal-card,
+    .modal.open .modal-backdrop, .modal.open .modal-box{ animation:none !important; }
+  }
+
+  /* =====================================================================
+     CÁ NHÂN HÓA THEO TỪNG MÀN HÌNH — mỗi tab có "màu riêng" nhưng vẫn
+     dùng chung khung/hiệu ứng đã thiết lập ở trên -> thống nhất toàn trang.
+     Chỉ đổi biến CSS + thêm hiệu ứng trang trí, không đụng JS/markup.
+     ===================================================================== */
+
+  /* Kiểu chữ mới: Baloo 2 (tròn, vui, hợp trẻ nhỏ) cho toàn bộ chữ "hiển thị"
+     lớn (điểm số, tên cầu thủ, tiêu đề...) đã dùng var(--font-display);
+     phần chữ đọc dài vẫn giữ Lexend (var(--font-body)) để dễ đọc. */
+  :root{ --font-display:'Baloo 2','Lexend','Segoe UI',system-ui,sans-serif; }
+  h1, h2, h3, .panel-title, .modal-box h3, .tab-btn, #squad-power-value{
+    font-family:var(--font-display);
+    letter-spacing:.01em;
+  }
+
+  /* Mỗi tab một màu nhận diện riêng cho nút đang chọn */
+  #tabBtn-week.active{ background:linear-gradient(135deg,var(--stadium-light),var(--stadium)); color:#04140D; }
+  #tabBtn-skills.active{ background:linear-gradient(135deg,#FBBF24,#D97706); color:#3D2500; }
+  #tabBtn-shoot.active{ background:linear-gradient(135deg,#FB923C,#EA580C); color:#3A1503; }
+  #tabBtn-squad.active{ background:linear-gradient(135deg,#C4B5FD,#8B5CF6); color:#241242; }
+  #tabBtn-badges.active{ background:linear-gradient(135deg,var(--gold-light),var(--gold-dark)); color:#3D2500; }
+
+  /* Sắc thái nền nhẹ riêng cho từng màn hình (chỉ lấp vào khoảng trống
+     quanh các thẻ/panel, không đổi bố cục) */
+  #view-week.tab-content.active{ background:radial-gradient(ellipse 120% 55% at 50% 0%, rgba(16,185,129,.12), transparent 65%); border-radius:20px; }
+  #view-skills.tab-content.active{ background:radial-gradient(ellipse 120% 55% at 50% 0%, rgba(245,158,11,.12), transparent 65%); border-radius:20px; }
+  #view-shoot.tab-content.active{ background:radial-gradient(ellipse 120% 55% at 50% 0%, rgba(251,146,60,.14), transparent 65%); border-radius:20px; }
+  #view-squad.tab-content.active{ background:radial-gradient(ellipse 120% 55% at 50% 0%, rgba(167,139,250,.14), transparent 65%); border-radius:20px; }
+  #view-badges.tab-content.active{ background:radial-gradient(ellipse 120% 55% at 50% 0%, rgba(245,158,11,.12), transparent 65%); border-radius:20px; }
+
+  /* ĐỘI HÌNH TRONG MƠ — đổi hẳn tông "xanh dương thông tin" mặc định
+     sang tím ánh kim, giống cảm giác thẻ bài quý hiếm/legendary */
+  #view-squad{
+    --deep:#8B5CF6; --deep-dark:#7C3AED; --deep-soft:rgba(139,92,246,.16); --deep-text:#C4B5FD;
+  }
+  #squad-modal, #pos-picker-modal, #player-detail-modal{
+    --deep:#8B5CF6; --deep-soft:rgba(139,92,246,.16); --deep-text:#C4B5FD;
+  }
+  /* Thẻ cầu thủ: khi chạm vào sáng bừng nhẹ như ánh holo trên thẻ bài thật */
+  #view-squad .player-card, #view-badges .player-card, .collection-grid .player-card{
+    transition:filter .15s ease, transform .15s ease, box-shadow .2s ease !important;
+  }
+  #view-squad .player-card:active, .collection-grid .player-card:active{
+    filter:brightness(1.18) saturate(1.15);
+    box-shadow:0 0 16px rgba(196,181,253,.6);
+  }
+
+  /* PHÒNG KỸ NĂNG — icon tia sét lấp lánh mời gọi mở hộp, thẻ đã sẵn
+     sàng chấm điểm phát sáng vàng ấm để nổi bật giữa lưới thẻ */
+  @keyframes sparkPulse{
+    0%,100%{ filter:drop-shadow(0 0 0 rgba(255,214,74,0)); transform:scale(1) rotate(0deg); }
+    50%{ filter:drop-shadow(0 0 9px rgba(255,214,74,.85)); transform:scale(1.14) rotate(-6deg); }
+  }
+  .skill-room-ico{ display:inline-flex; animation:sparkPulse 2s ease-in-out infinite; }
+  .skill-grid .skill-card.is-ready{ box-shadow:0 0 0 3px rgba(255,214,74,.55), 0 0 16px rgba(255,177,0,.45) !important; }
+
+  /* SÚT QUYẾT ĐỊNH — vầng nắng xoay chậm phía sau quả bóng, tạo cảm
+     giác hồi hộp/adrenaline khi sắp đến lượt sút ăn mừng */
+  .month-ball-scene{ position:relative; }
+  .month-ball-scene::before{
+    content:''; position:absolute; top:44%; left:50%; width:230px; height:230px;
+    transform:translate(-50%,-50%); border-radius:50%; z-index:0; pointer-events:none;
+    background:repeating-conic-gradient(rgba(251,146,60,.16) 0deg 8deg, transparent 8deg 32deg);
+    animation:sunRayRotate 22s linear infinite;
+  }
+  @keyframes sunRayRotate{ to{ transform:translate(-50%,-50%) rotate(360deg); } }
+
+  /* HUY HIỆU · TỦ TRƯNG BÀY — mặt kính tủ có ánh sáng lướt qua nhẹ nhàng
+     như ánh đèn phản chiếu, hợp với không khí "phòng trưng bày cúp" */
+  @keyframes cabShineSweep{
+    0%{ background-position:-140% 0; }
+    60%,100%{ background-position:240% 0; }
+  }
+  .cab-glass{
+    background-image:linear-gradient(75deg, transparent 40%, rgba(255,255,255,.16) 50%, transparent 60%) !important;
+    background-size:60% 100%;
+    background-repeat:no-repeat;
+    animation:cabShineSweep 5.5s ease-in-out infinite;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .skill-room-ico, .month-ball-scene::before, .cab-glass{ animation:none !important; }
+  }
+
 </style>
 </head>
 <body>
@@ -1251,7 +1526,7 @@
   </div>
 
   <nav class="tab-bar" role="tablist" aria-label="Các mục chính">
-    <button type="button" id="tabBtn-week" class="tab-btn active" role="tab" aria-selected="true" aria-controls="view-week" data-tab="week">📋 Nhiệm Vụ Tuần</button>
+    <button type="button" id="tabBtn-week" class="tab-btn active" role="tab" aria-selected="true" aria-controls="view-week" data-tab="week">📋 Nhiệm Vụ Ngày</button>
     <button type="button" id="tabBtn-skills" class="tab-btn" role="tab" aria-selected="false" aria-controls="view-skills" data-tab="skills">⚡ Phòng Kỹ Năng</button>
     <button type="button" id="tabBtn-shoot" class="tab-btn" role="tab" aria-selected="false" aria-controls="view-shoot" data-tab="shoot">⚽ Sút Quyết Định</button>
     <button type="button" id="tabBtn-squad" class="tab-btn" role="tab" aria-selected="false" aria-controls="view-squad" data-tab="squad">🎴 Đội Hình Trong Mơ</button>
@@ -1265,30 +1540,32 @@
     <button id="bonus-month-next" class="nav-btn" aria-label="Kỳ sau">›</button>
   </div>
 
-  <!-- ========== NHIỆM VỤ TUẦN ========== -->
+  <!-- ========== NHIỆM VỤ NGÀY ========== -->
   <section id="view-week" class="tab-content active" role="tabpanel" aria-labelledby="tabBtn-week">
     <div class="panel panel-head">
       <div>
-        <h2>🎯 Nhiệm Vụ Trong Tuần</h2>
-        <p class="panel-sub">Làm việc tốt mỗi ngày — ghi điểm, ghi bàn!</p>
+        <h2>🎯 Nhiệm Vụ Trong Ngày</h2>
+        <p class="panel-sub">Hoàn thành từng nhiệm vụ nhỏ mỗi ngày để ghi điểm, ghi bàn!</p>
       </div>
-      <div class="week-nav">
-        <button id="week-prev" class="nav-btn">‹ Tuần trước</button>
-        <span id="week-range">—</span>
-        <button id="week-next" class="nav-btn">Tuần sau ›</button>
-        <button id="week-today" class="nav-btn today-btn">Về hôm nay</button>
+      <div class="day-nav">
+        <button id="day-prev" class="nav-btn day-arrow" aria-label="Ngày trước">‹</button>
+        <div class="date-pill" id="day-date-pill">
+          <span class="date-pill-ico">📅</span>
+          <span id="day-date-label">—</span>
+          <input type="date" id="day-date-input" aria-label="Chọn ngày trên lịch">
+        </div>
+        <button id="day-next" class="nav-btn day-arrow" aria-label="Ngày sau">›</button>
+        <button id="day-today" class="nav-btn today-btn">Về hôm nay</button>
       </div>
     </div>
 
+    <div class="panel day-summary-panel" id="day-summary-panel">
+      <div id="day-summary" class="day-summary"></div>
+    </div>
+
     <div class="panel">
-      <div id="day-strip" class="day-strip"></div>
-      <p class="legend">🥅 dưới 50 · 👟 50–80 · ⚽ trên 80 · 🏃 trên 90 · 🏆 tròn 100</p>
-      <div class="table-scroll">
-        <table class="week-table">
-          <thead id="week-thead"></thead>
-          <tbody id="week-tbody"></tbody>
-        </table>
-      </div>
+      <p class="legend">👉 Chạm vào một nhiệm vụ để đánh dấu đã hoàn thành nhé!</p>
+      <div id="day-tasklist" class="day-tasklist"></div>
     </div>
   </section>
 
@@ -1382,7 +1659,7 @@
 </main>
 
 <footer class="app-footer">
-  <p>Đội Bóng Của Bé ⚽ Nhật Ký Cầu Thủ Nhỏ</p>
+  <p>Đội Bóng Của Đốm ⚽ Nhật Ký Đội Hình Trong Mơ</p>
 </footer>
 
 <div id="toast"></div>
@@ -5911,7 +6188,126 @@ var PLAYERS_JSON_EMBEDDED = {
   }
   function saveMonth(ymKey){ safeSet('kidchart_month_'+ymKey, monthCache[ymKey]); }
 
-  var currentMonday = getMonday(new Date());
+  /* Mỗi nhiệm vụ có nhiều gợi ý khác nhau, đổi theo từng ngày (chọn theo hạt giống = ngày + mã việc)
+     để hôm nay và ngày mai không lặp lại y hệt nhau. Một số gợi ý ví von với cầu thủ/CLB quen thuộc
+     (Olise, Raphinha, Bayern Munich, Barca...) cho gần gũi với một bạn nhỏ 8 tuổi mê bóng đá. */
+  var TASK_HINTS = {
+    t1: [
+      'Xem lại bài trước khi nộp và hỏi cô nếu chưa chắc chắn nhé! 📝✅',
+      'Làm bài như một cầu thủ dứt điểm: bình tĩnh, ngắm kỹ rồi mới "sút"! 🎯⚽',
+      'Đọc kỹ đề 2 lần trước khi làm, giống thủ môn quan sát kỹ trước khi đổ người. 🧤👀',
+      'Kiểm tra lại bài như Raphinha ngoái đầu nhìn bóng trước khi tạt — chắc ăn hơn nhiều! 🇧🇷🔍',
+      'Bình tĩnh như De Bruyne trước khi chuyền quyết định — chậm mà chắc con nhé! 🧠🎯 Con làm rất tốt rồi! 💖'
+    ],
+    t2: [
+      'Dành 5–10 phút giãn cơ, vươn tay chạm trần mỗi buổi sáng. 🤸‍♂️☀️',
+      'Khởi động như trước một trận đấu: vươn vai, xoay cổ tay cổ chân cho tỉnh táo. ⚽🔥',
+      'Thử bật nhảy chạm cao như đang tranh chấp bóng bổng nhé! 🦘⚡',
+      'Cầu thủ nhà nghề nào cũng khởi động kỹ — con cũng vươn cao như vậy nào! 💪🌟',
+      'Bật cao như Ronaldo tranh bóng bổng — mỗi ngày một chút, con sẽ khỏe hơn hẳn! 🚀💫'
+    ],
+    t3: [
+      'Rủ em chơi xếp hình, đá bóng hoặc đọc truyện cùng nhau. 🧩⚽',
+      'Làm "đàn anh" dẫn dắt em nhỏ như đội trưởng dẫn dắt cả đội vậy. 🎽👦',
+      'Cùng em chơi trò gì đó vui, nhường nhịn như một đồng đội tốt. 🤝😊',
+      'Thử làm huấn luyện viên nhí, bày em chơi một trò mới xem sao! 📋🧢',
+      'Yêu thương em như các cầu thủ Liverpool luôn sát cánh bên nhau — "You\'ll Never Walk Alone"! ❤️🎶'
+    ],
+    t4: [
+      'Thử đọc sách hoặc chơi lắp ráp thay cho việc xem TV hôm nay. 📚🧱',
+      'Dành thời gian đó để luyện thêm vài động tác khởi động cho chắc chân. 🦵⚡',
+      'Nghỉ mắt khỏi màn hình, ra sân tưởng tượng một pha đi bóng thật đẹp nào! 👀⚽',
+      'Cất điều khiển TV lại, dành thời gian cho một trò chơi vận động nhé. 📺➡️🏃',
+      'Nghỉ màn hình một chút để mắt khỏe như một "vệ tinh" quan sát sân đấu vậy! 👁️✨ Con tự giác quá!'
+    ],
+    t5: [
+      'Sắp sách vở đúng ngăn, bỏ rác vào thùng trước khi học bài. 📚🗑️',
+      'Dọn bàn học gọn như sân cỏ Camp Nou trước giờ bóng lăn — sạch và ngăn nắp! 🏟️✨',
+      'Xếp sách vở thẳng hàng như hàng thủ đứng đúng vị trí vậy. 📏🛡️',
+      'Một góc học tập gọn gàng giúp con tập trung hơn khi "vào trận" đó! 🧠📖',
+      'Gọn gàng như phòng thay đồ của Man City trước trận — ngăn nắp là nửa chiến thắng rồi! 🔵🧹'
+    ],
+    t6: [
+      'Học mỗi ứng dụng khoảng 10–15 phút, đừng bỏ dở bài đang học. ⏱️📱',
+      'Luyện từng chút một mỗi ngày, giống cầu thủ tập chuyền bóng đều đặn vậy. ⚽🔁',
+      'Cố hoàn thành trọn bài đang học, đừng bỏ dở giữa hiệp nhé! 🕐✅',
+      'Chăm học mỗi ngày một ít để "lên trình" nhanh như Olise cải thiện từng trận đó! ⚡📈',
+      'Kiên trì như Haaland luyện dứt điểm mỗi ngày — chăm chỉ rồi sẽ giỏi thôi! 🦾💚'
+    ],
+    t7: [
+      'Chọn cuốn sách yêu thích và đọc chậm rãi trước giờ đi ngủ. 📖🌙',
+      'Đọc vài trang mỗi tối, như cầu thủ xem lại băng trận đấu để học hỏi thêm. 🎥⚽',
+      'Thử đọc to một đoạn mình thích cho cả nhà cùng nghe nhé! 🔊😄',
+      'Một chương truyện mỗi tối giúp đầu óc con sắc bén như một tiền vệ giỏi đọc trận đấu. 🧠🎯',
+      'Đọc sách mỗi tối như Messi rèn tư duy chơi bóng — nhỏ mà có võ đó nha! 🐐📚'
+    ],
+    t8: [
+      'Phụ mang bát đũa ra bàn và dọn lại sau khi ăn xong. 🍽️🤲',
+      'Cùng cả nhà dọn mâm cơm như một đội bóng — mỗi người một việc, xong nhanh gọn! 👨‍👩‍👧‍👦⚽',
+      'Giúp ba mẹ bê chén đĩa, nhớ đi cẩn thận kẻo "phạm lỗi" làm rơi vỡ nhé. 🚫🥣',
+      'Thu dọn nhanh gọn để cả nhà có thêm thời gian nghỉ ngơi, xem bóng đá cùng nhau! 🛋️📺',
+      'Làm việc nhà chăm chỉ như một "cầu thủ chăm chỉ" ngoài đời — ba mẹ thương con lắm! 🥰🏡'
+    ],
+    t9: [
+      'Bắt đầu làm bài sớm, đừng để dồn đến sát giờ đi ngủ. ⏰📚',
+      'Hoàn thành bài tập sớm như ghi bàn ngay hiệp một, đỡ áp lực về cuối! ⚽🥅',
+      'Làm bài trước 10 giờ tối để có giấc ngủ ngon, sáng mai tràn đầy năng lượng ra sân. 😴🔋',
+      'Đừng để bài tập dồn vào phút bù giờ — làm sớm cho chắc ăn nhé! ⏱️✅',
+      'Sắp xếp thời gian gọn gàng như Mbappé bứt tốc về đích sớm — con làm được mà! ⚡🏁'
+    ],
+    t10: [
+      'Nhớ lại lỗi hôm qua và cố gắng không mắc lại nhé. 🔁💡',
+      'Cầu thủ giỏi là người biết rút kinh nghiệm sau mỗi trận đấu, con cũng vậy nhé! ⚽📘',
+      'Sai một lần không sao, quan trọng là ngày mai mình chơi hay hơn hôm qua. 🌈💪',
+      'Xem lại lỗi cũ như xem lại pha bóng hỏng, để lần sau xử lý tốt hơn. 🎥🔍',
+      'Không sao nếu chưa hoàn hảo — mỗi ngày cố gắng một chút, con đang tiến bộ rồi đó! 🌱💖'
+    ],
+    t11: [
+      'Giữ lưng thẳng, vai thả lỏng khi ngồi học hoặc đứng. 🧍‍♂️✨',
+      'Đứng thẳng, tự tin như đội trưởng ra sân nhận cúp vậy! 🏆🎽',
+      'Tư thế chuẩn giúp con thoải mái học bài lâu mà không mỏi lưng đâu. 🪑💚',
+      'Ngồi ngay ngắn như đang trên băng ghế dự bị, sẵn sàng vào sân bất cứ lúc nào! 🔜⚽',
+      'Tự tin, ngẩng cao đầu như Vinicius Jr bước ra sân Santiago Bernabéu! 👑⚡'
+    ]
+  };
+  /* Chọn 1 gợi ý cho một nhiệm vụ, cố định theo từng ngày (không đổi lung tung mỗi lần vẽ lại). */
+  function pickHintForTask(taskId, d){
+    var arr = TASK_HINTS[taskId];
+    if(!arr || !arr.length) return '';
+    var idx = hashStr(ymd(d) + ':' + taskId) % arr.length;
+    return arr[idx];
+  }
+
+  var PRAISE_LINES = [
+    // -- Vui nhộn, đơn giản, nhiều emoji --
+    'Giỏi quá! 👏🎉','Tuyệt vời ông mặt trời! 🌟😄','Ghi bàn rồi! ⚽🥅','Cố lên, sắp thắng rồi! 🔥💪',
+    'Xuất sắc! 💪✨','Đỉnh của chóp! 🏆👑','Con làm được rồi! 🎉🙌','Quá đỉnh luôn! ✨⭐',
+    'Vào sân là ghi điểm! ⚽🥅🎯','Con là ngôi sao sân cỏ hôm nay! 🌟🥇','Một pha xử lý đẹp mắt! 🎯👌',
+    'Con vừa "ghi bàn" thêm 1 nhiệm vụ rồi đó! 🥳🎊','Tung lưới thành công! 🥅🎉','Ăn mừng thôi nào! 🙌🎇',
+    // -- Ví von với cầu thủ / CLB nổi tiếng, kèm nét đặc trưng riêng --
+    'Đẳng cấp như Raphinha! 🇧🇷🔥','Kỹ thuật như Olise! ⚡🎩','Chuẩn phong độ Barca! 🔵🔴⚽',
+    'Máu lửa như Bayern Munich! 🔴🦁','Chắc chân như hậu vệ thép! 🛡️💥','Nhanh như một cú nước rút cánh biên! 💨🏃',
+    'Khéo léo như Messi đi bóng qua 3 người! 🐐✨','Bật cao dứt điểm như Ronaldo! 🚀🦅',
+    'Săn bàn máu lạnh như Haaland! 🦾⚽','Tốc độ chớp nhoáng như Mbappé! ⚡🐆',
+    'Đi bóng lắt léo như Vinicius Jr! 🌀🕺','Chuyền bóng tinh tế như De Bruyne! 🎯🧠',
+    'Dứt điểm gọn gàng như Salah! 🎯🥇','Kỹ thuật hoa mỹ như Neymar! 🎩✨',
+    'Tinh thần không bỏ cuộc kiểu Liverpool "You\'ll Never Walk Alone"! ❤️🎶',
+    'Lì đòn, ngược dòng như Real Madrid ở Champions League! 👑⚡',
+    'Phối hợp ăn ý như dàn sao Man City! 🔵🧩','Tấn công bùng nổ như dàn sao PSG! 🔴🔵💫',
+    'Trẻ trung, máu lửa như các cầu thủ Arsenal! 🔴⚪🔥',
+    // -- Giọng văn khích lệ tinh thần, động viên cố gắng --
+    'Không cần hoàn hảo, chỉ cần cố gắng — con đang làm rất tốt! 💖🌱',
+    'Mỗi nhiệm vụ nhỏ là một bước tiến lớn đó con! 🚶‍♂️➡️🏆',
+    'Con đang tiến bộ từng ngày, cứ như vậy nhé! 📈😊',
+    'Dù khó đến đâu con cũng không bỏ cuộc — thế mới là nhà vô địch thực thụ! 🏅💪',
+    'Ba mẹ tự hào về con lắm luôn! 🥰👏','Cứ cố gắng là con đã chiến thắng chính mình rồi! 🌟🧡',
+    'Tinh thần thép, ý chí kim cương! 💎🔥','Hôm nay con giỏi hơn hôm qua rồi đó! 📅⬆️',
+    'Một bước nhỏ hôm nay, một nhà vô địch tương lai! 🐣➡️🦅'
+  ];
+  var WEEKDAY_FULL = ['Chủ Nhật','Thứ Hai','Thứ Ba','Thứ Tư','Thứ Năm','Thứ Sáu','Thứ Bảy'];
+  function weekdayFullVN(d){ return WEEKDAY_FULL[d.getDay()]; }
+
+  var currentDay = new Date(); currentDay.setHours(0,0,0,0);
   var currentPeriod = getPeriodRange(new Date());
   var currentPlayerDate = ymd(new Date());
 
@@ -5935,79 +6331,75 @@ var PLAYERS_JSON_EMBEDDED = {
     return {key:'low', emoji:'🥅'};
   }
 
+  /* Vẽ lại toàn bộ tab "Nhiệm Vụ Trong Ngày": thanh chọn lịch, khối tổng quan (điểm/hộp quà)
+     và danh sách thẻ nhiệm vụ của currentDay. */
   function renderWeek(){
-    var days = [];
-    for(var i=0;i<7;i++){ days.push(addDays(currentMonday,i)); }
+    var d = currentDay;
     var todayStr = ymd(new Date());
+    var isToday = ymd(d) === todayStr;
+    var ymKey = ym(d), dk = dkey(d);
+    var dayObj = loadMonth(ymKey).days[dk] || {};
+    var total = computeDayTotal(dayObj);
+    var tier = tierFor(total);
 
-    document.getElementById('week-range').textContent =
-      fmtDDMM(days[0]) + ' – ' + fmtDDMM(days[6]) + '/' + days[6].getFullYear();
+    document.getElementById('day-date-label').textContent = weekdayFullVN(d) + ' • ' + fmtDDMM(d) + '/' + d.getFullYear() + (isToday ? ' (hôm nay)' : '');
+    document.getElementById('day-date-input').value = ymd(d);
 
-    var stripHtml = '';
-    days.forEach(function(d,i){
-      var ymKey = ym(d), dk = dkey(d);
-      var dayObj = loadMonth(ymKey).days[dk] || {};
-      var total = computeDayTotal(dayObj);
-      var tier = tierFor(total);
-      var isToday = ymd(d)===todayStr;
-      // Mốc điểm trong ngày để mở hộp quà (mặc định 9/10 → 90 điểm). Hiển thị % tiến độ tới mốc này.
-      var boxTarget = settings.dailyGoal*10;
-      var pending = total>=boxTarget && !dayObj._dailyBoxClaimed;
-      var goalPct = boxTarget>0 ? Math.min(100, Math.floor(total*100/boxTarget)) : 0;
-      var goalTip = goalPct>=100 ? ('Đã đạt mốc nhận quà ('+total+'/'+boxTarget+' điểm)') : (total+'/'+boxTarget+' điểm để nhận quà');
-      stripHtml += '<div class="day-badge tier-'+tier.key+(isToday?' is-today':'')+(pending?' pending-box':'')+(goalPct>=100?' goal-hit':'')+'"'
-        + (pending ? ' data-box-month="'+ymKey+'" data-box-day="'+dk+'" title="Chạm để chọn quà cầu thủ! ('+total+'/'+boxTarget+' điểm)"' : ' title="'+goalTip+'"') + '>'
-        + '<span class="badge-icon-circle">'+tier.emoji+'</span>'
-        + (pending ? '<span class="badge-pending-dot">🎁</span>' : '')
-        + '<span class="badge-label">'+DAY_SHORT[i]+'</span>'
-        + '<span class="badge-date">'+fmtDDMM(d)+'</span>'
-        + '<span class="badge-score">'+goalPct+'<small class="badge-pct">%</small></span></div>';
-    });
-    document.getElementById('day-strip').innerHTML = stripHtml;
+    var boxTarget = settings.dailyGoal*10;
+    var pending = total>=boxTarget && !dayObj._dailyBoxClaimed;
+    var claimed = !!dayObj._dailyBoxClaimed;
+    var goalPct = boxTarget>0 ? Math.min(100, Math.floor(total*100/boxTarget)) : 0;
 
-    var thead = '<tr><th class="task-col">Nhiệm vụ</th><th class="energy-col">⚡ Điểm</th>';
-    days.forEach(function(d,i){
-      var isToday = ymd(d)===todayStr;
-      thead += '<th class="'+(isToday?'col-today':'')+'"><div>'+DAY_SHORT[i]+'</div><div class="th-date">'+fmtDDMM(d)+'</div></th>';
-    });
-    thead += '<th class="stat-col">Số ngày</th></tr>';
+    var giftHtml;
+    if(pending){
+      giftHtml = '<div class="ds-gift is-pending" data-box-month="'+ymKey+'" data-box-day="'+dk+'" title="Chạm để chọn quà cầu thủ!">'
+        + '<span class="ds-gift-ico">🎁</span><span>Đã đủ điểm!<br>Chạm để nhận quà</span></div>';
+    } else if(claimed){
+      giftHtml = '<div class="ds-gift is-claimed"><span class="ds-gift-ico">✅</span><span>Đã nhận quà<br>hôm nay rồi!</span></div>';
+    } else {
+      giftHtml = '<div class="ds-gift"><span class="ds-gift-ico">🎁</span><span>Còn '+Math.max(0,boxTarget-total)+' điểm nữa<br>để mở hộp quà</span></div>';
+    }
 
-    var tbody = '';
+    document.getElementById('day-summary').innerHTML =
+      '<div class="ds-badge tier-'+tier.key+'">'+tier.emoji+'</div>'
+      + '<div class="ds-mid">'
+      +   '<div class="ds-top-line"><span>Điểm hôm nay</span><span class="ds-score"><b>'+total+'</b>/100</span></div>'
+      +   '<div class="ds-bar"><i style="width:'+total+'%"></i></div>'
+      +   '<div class="ds-hint">🥅 dưới 50 · 👟 50–80 · ⚽ trên 80 · 🏃 trên 90 · 🏆 tròn 100</div>'
+      + '</div>'
+      + giftHtml;
+
+    var listHtml = '';
     TASKS.forEach(function(t){
-      tbody += '<tr><td class="task-col"><span class="task-row-inner"><span class="task-icon">'+t.icon+'</span><span class="task-name">'+t.label+'</span></span></td>'
-        + '<td class="energy-col"><span class="energy-pill">⚡+'+t.points+'</span></td>';
-      var doneCount = 0;
-      days.forEach(function(d){
-        var ymKey = ym(d), dk = dkey(d);
-        var dayObj = loadMonth(ymKey).days[dk] || {};
-        var checked = !!dayObj[t.id];
-        if(checked) doneCount++;
-        var isToday = ymd(d)===todayStr;
-        tbody += '<td class="chk-cell '+(isToday?'col-today':'')+'"><label class="chk">'
-          + '<input type="checkbox" data-date="'+ymd(d)+'" data-task="'+t.id+'" '+(checked?'checked':'')+'>'
-          + '<span class="chk-box"></span></label></td>';
-      });
-      tbody += '<td class="stat-col">'+doneCount+'/7</td></tr>';
+      var checked = !!dayObj[t.id];
+      listHtml += '<label class="task-card'+(checked?' is-done':'')+'" data-task="'+t.id+'">'
+        + '<input type="checkbox" class="task-check" data-date="'+ymd(d)+'" data-task="'+t.id+'" '+(checked?'checked':'')+'>'
+        + '<span class="task-card-icon">'+t.icon+'</span>'
+        + '<span class="task-card-body"><span class="task-card-name">'+t.label+'</span><span class="task-card-hint">💡 '+pickHintForTask(t.id, d)+'</span></span>'
+        + '<span class="task-card-pts">⚡+'+t.points+'</span>'
+        + '<span class="task-card-check">✓</span>'
+        + '</label>';
     });
-
-    tbody += '<tr class="total-row"><td class="task-col">Tổng điểm ngày</td><td class="energy-col"></td>';
-    var weekTotal = 0;
-    days.forEach(function(d){
-      var dayObj = loadMonth(ym(d)).days[dkey(d)] || {};
-      var total = computeDayTotal(dayObj);
-      weekTotal += total;
-      var tier = tierFor(total);
-      var isToday = ymd(d)===todayStr;
-      tbody += '<td class="total-cell tier-'+tier.key+' '+(isToday?'col-today':'')+'">'+total+'</td>';
-    });
-    tbody += '<td class="stat-col total-week">'+weekTotal+'</td></tr>';
-
-    document.getElementById('week-thead').innerHTML = thead;
-    document.getElementById('week-tbody').innerHTML = tbody;
+    document.getElementById('day-tasklist').innerHTML = listHtml;
 
     renderBadges();
     renderPlayer();
     renderMonthly();
+  }
+
+  /* Hiệu ứng vui mừng khi hoàn thành 1 nhiệm vụ: thẻ nảy nhẹ + bong bóng lời khen bay lên. */
+  function celebrateTaskCard(cardEl){
+    if(!cardEl) return;
+    var msg = PRAISE_LINES[Math.floor(Math.random()*PRAISE_LINES.length)];
+    if(!reducedMotion()){
+      cardEl.classList.remove('celebrate'); void cardEl.offsetWidth; cardEl.classList.add('celebrate');
+      var bubble = document.createElement('span');
+      bubble.className = 'task-praise';
+      bubble.textContent = msg;
+      cardEl.appendChild(bubble);
+      bubble.addEventListener('animationend', function(){ bubble.remove(); });
+    }
+    playPop();
   }
 
   function handleDayEffect(oldTotal, newTotal, monthKey, dk){
@@ -8103,8 +8495,8 @@ var PLAYERS_JSON_EMBEDDED = {
   function closeSettings(){ document.getElementById('settings-modal').classList.remove('open'); }
 
   // ---- events ----
-  document.getElementById('week-tbody').addEventListener('change', function(e){
-    var input = e.target.closest('input[type=checkbox]');
+  document.getElementById('day-tasklist').addEventListener('change', function(e){
+    var input = e.target.closest('input.task-check');
     if(!input) return;
     var dateStr = input.dataset.date, taskId = input.dataset.task;
     var d = new Date(dateStr+'T00:00:00');
@@ -8112,21 +8504,31 @@ var PLAYERS_JSON_EMBEDDED = {
     var month = loadMonth(ymKey);
     if(!month.days[dk]) month.days[dk] = {};
     var oldTotal = computeDayTotal(month.days[dk]);
-    month.days[dk][taskId] = input.checked;
+    var willBeDone = input.checked;
+    month.days[dk][taskId] = willBeDone;
     var newTotal = computeDayTotal(month.days[dk]);
     saveMonth(ymKey);
     currentPlayerDate = dateStr;
     try{ handleDayEffect(oldTotal, newTotal, ymKey, dk); }
     catch(err){ console.warn('day effect failed', err); }
     renderWeek();
+    if(willBeDone){
+      var card = document.querySelector('.task-card[data-task="'+taskId+'"]');
+      celebrateTaskCard(card);
+    }
   });
 
-  document.getElementById('week-prev').addEventListener('click', function(){ currentMonday = addDays(currentMonday,-7); renderWeek(); });
-  document.getElementById('week-next').addEventListener('click', function(){ currentMonday = addDays(currentMonday,7); renderWeek(); });
-  document.getElementById('week-today').addEventListener('click', function(){ currentMonday = getMonday(new Date()); renderWeek(); });
+  document.getElementById('day-prev').addEventListener('click', function(){ currentDay = addDays(currentDay,-1); renderWeek(); });
+  document.getElementById('day-next').addEventListener('click', function(){ currentDay = addDays(currentDay,1); renderWeek(); });
+  document.getElementById('day-today').addEventListener('click', function(){ currentDay = new Date(); currentDay.setHours(0,0,0,0); renderWeek(); });
+  document.getElementById('day-date-input').addEventListener('change', function(e){
+    if(!e.target.value) return;
+    currentDay = new Date(e.target.value+'T00:00:00');
+    renderWeek();
+  });
 
-  document.getElementById('day-strip').addEventListener('click', function(e){
-    var el = e.target.closest('.day-badge.pending-box');
+  document.getElementById('day-summary').addEventListener('click', function(e){
+    var el = e.target.closest('.ds-gift.is-pending');
     if(!el) return;
     var monthKey = el.getAttribute('data-box-month'), dk = el.getAttribute('data-box-day');
     if(monthKey && dk) openDailyBoxModal(monthKey, dk);
