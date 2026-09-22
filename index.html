@@ -1203,9 +1203,38 @@
   .date-pill-ico{ font-size:15px; line-height:1; }
   .date-pill span#day-date-label{ font-weight:800; font-size:13px; color:#fff; white-space:nowrap; }
   .date-pill input[type=date]{
-    position:absolute; inset:0; width:100%; height:100%; opacity:0; border:0; padding:0; margin:0; cursor:pointer;
-    color-scheme:dark;
+    position:absolute; inset:0; width:100%; height:100%; opacity:0; border:0; padding:0; margin:0;
+    color-scheme:dark; pointer-events:none;
   }
+
+  .date-cal-popup{
+    position:absolute; top:calc(100% + 8px); left:50%; transform:translateX(-50%);
+    width:282px; max-width:88vw; z-index:60; padding:12px; border-radius:var(--radius-md,16px);
+    background:var(--card); border:2px solid var(--line); box-shadow:var(--shadow-card);
+    cursor:default; text-align:left;
+  }
+  .date-cal-popup[hidden]{ display:none; }
+  .date-cal-head{ display:flex; align-items:center; justify-content:space-between; gap:6px; margin-bottom:8px; }
+  .cal-nav-btn{ width:32px; height:32px; flex:none; border-radius:10px; border:2px solid var(--line); background:transparent; color:var(--ink); font-size:16px; cursor:pointer; }
+  .cal-nav-btn:active{ transform:scale(.9); }
+  .date-cal-selects{ display:flex; gap:6px; flex:1; justify-content:center; min-width:0; }
+  #cal-month-select, #cal-year-input{ font-family:var(--font-display); font-weight:700; font-size:13px; border:2px solid var(--line); border-radius:10px; padding:4px 2px; background:var(--card); color:var(--ink); text-align:center; }
+  #cal-month-select{ min-width:0; flex:1; }
+  #cal-year-input{ width:60px; flex:none; }
+  .date-cal-weekdays{ display:grid; grid-template-columns:repeat(7,1fr); text-align:center; font-size:11px; font-weight:800; color:var(--ink-soft); margin-bottom:4px; }
+  .date-cal-grid{ display:grid; grid-template-columns:repeat(7,1fr); gap:4px; }
+  .cal-day{ aspect-ratio:1; display:flex; align-items:center; justify-content:center; border-radius:10px; font-size:13px; font-weight:700; cursor:pointer; border:2px solid transparent; background:transparent; color:var(--ink); position:relative; }
+  .cal-day:hover{ background:rgba(255,255,255,.08); }
+  .cal-day.is-empty{ visibility:hidden; cursor:default; }
+  .cal-day.is-today{ border-color:var(--gold); }
+  .cal-day.is-selected{ background:var(--stadium); color:#04140D; }
+  .cal-day.is-locked::after{ content:'🔒'; position:absolute; font-size:7px; bottom:0; right:1px; }
+  .date-cal-foot{ display:flex; justify-content:space-between; margin-top:8px; gap:8px; }
+  .date-cal-foot .btn-mini{ flex:1; }
+
+  #admin-toggle-btn.is-admin{ background:linear-gradient(135deg,#FBBF24,#D97706); color:#3D2500; border-color:#D97706; }
+  .task-card.is-locked{ opacity:.55; cursor:not-allowed; }
+  .task-card.is-locked .task-check{ cursor:not-allowed; }
 
   .day-summary-panel{ padding:14px 16px; }
   .day-summary{ display:flex; align-items:center; gap:14px; flex-wrap:wrap; }
@@ -1552,12 +1581,32 @@
         <div class="date-pill" id="day-date-pill">
           <span class="date-pill-ico">📅</span>
           <span id="day-date-label">—</span>
-          <input type="date" id="day-date-input" aria-label="Chọn ngày trên lịch">
+          <input type="date" id="day-date-input" aria-label="Chọn ngày trên lịch" tabindex="-1">
+          <div class="date-cal-popup" id="date-cal-popup" hidden>
+            <div class="date-cal-head">
+              <button type="button" id="cal-prev-month" class="cal-nav-btn" aria-label="Tháng trước">‹</button>
+              <div class="date-cal-selects">
+                <select id="cal-month-select" aria-label="Chọn tháng"></select>
+                <input type="number" id="cal-year-input" aria-label="Chọn năm" min="2000" max="2100" step="1">
+              </div>
+              <button type="button" id="cal-next-month" class="cal-nav-btn" aria-label="Tháng sau">›</button>
+            </div>
+            <div class="date-cal-weekdays">
+              <span>T2</span><span>T3</span><span>T4</span><span>T5</span><span>T6</span><span>T7</span><span>CN</span>
+            </div>
+            <div class="date-cal-grid" id="date-cal-grid"></div>
+            <div class="date-cal-foot">
+              <button type="button" id="cal-today-btn" class="btn-mini">📍 Hôm nay</button>
+              <button type="button" id="cal-close-btn" class="btn-mini">Đóng</button>
+            </div>
+          </div>
         </div>
         <button id="day-next" class="nav-btn day-arrow" aria-label="Ngày sau">›</button>
         <button id="day-today" class="nav-btn today-btn">Về hôm nay</button>
+        <button type="button" id="admin-toggle-btn" class="nav-btn" aria-label="Chế độ quản trị" title="Chế độ quản trị: mở khóa để sửa ngày cũ">🔒</button>
       </div>
     </div>
+    <p class="hint-text" id="day-lock-note" style="margin:2px 0 0;display:none"></p>
 
     <div class="panel day-summary-panel" id="day-summary-panel">
       <div id="day-summary" class="day-summary"></div>
@@ -1711,6 +1760,11 @@
         </div>
         <p class="hint-text" style="margin:6px 0 0"><span class="user-warn">⚠️ Tạo mới = dữ liệu trắng hoàn toàn:</span> xóa sạch điểm ngày, huy hiệu, kỹ năng, cầu thủ, đội hình và quà trên máy này rồi bắt đầu lại từ đầu. Hồ sơ cũ vẫn nằm trên đám mây và mở lại được bằng danh sách ở trên.</p>
       </div>
+    </div>
+    <div>
+      <span class="settings-label">🔒 Mã PIN Quản trị viên</span>
+      <p class="hint-text" style="margin:2px 0 6px">Dùng mã này để mở khóa và sửa lại nhiệm vụ của những ngày đã qua. Chỉ ba mẹ nên biết mã này. Lưu ý: đây là khóa mềm cho gia đình, không phải bảo mật tuyệt đối vì đây là trang web tĩnh.</p>
+      <input type="text" id="settings-admin-pin" inputmode="numeric" maxlength="12" placeholder="VD: 0000">
     </div>
     <div>
       <span class="settings-label">Kho phần thưởng (quay khi vượt mốc)</span>
@@ -5888,6 +5942,7 @@ var PLAYERS_JSON_EMBEDDED = {
   if(typeof settings.cheerMax !== 'number') settings.cheerMax = 50;
   if(typeof settings.periodStartDay !== 'number' || settings.periodStartDay<1 || settings.periodStartDay>31) settings.periodStartDay = 1;
   if(typeof settings.dailyGoal !== 'number' || settings.dailyGoal<1 || settings.dailyGoal>10) settings.dailyGoal = 9;
+  if(typeof settings.adminPin !== 'string' || !settings.adminPin) settings.adminPin = '0000';
   if(!Array.isArray(settings.rewards) || !settings.rewards.length) settings.rewards = DEFAULT_REWARDS.slice();
   function saveSettings(){ safeSet('kidchart_settings', settings); }
 
@@ -6307,6 +6362,11 @@ var PLAYERS_JSON_EMBEDDED = {
   var WEEKDAY_FULL = ['Chủ Nhật','Thứ Hai','Thứ Ba','Thứ Tư','Thứ Năm','Thứ Sáu','Thứ Bảy'];
   function weekdayFullVN(d){ return WEEKDAY_FULL[d.getDay()]; }
 
+  /* ---- Khóa dữ liệu ngày cũ: chỉ hôm nay được sửa bình thường, ngày khác
+     (đã qua hoặc chưa tới) phải bật "Chế độ quản trị" bằng mã PIN mới sửa được. ---- */
+  var isAdmin = false;
+  function isDayEditable(d){ return isAdmin || ymd(d) === ymd(new Date()); }
+
   var currentDay = new Date(); currentDay.setHours(0,0,0,0);
   var currentPeriod = getPeriodRange(new Date());
   var currentPlayerDate = ymd(new Date());
@@ -6337,6 +6397,7 @@ var PLAYERS_JSON_EMBEDDED = {
     var d = currentDay;
     var todayStr = ymd(new Date());
     var isToday = ymd(d) === todayStr;
+    var editable = isDayEditable(d);
     var ymKey = ym(d), dk = dkey(d);
     var dayObj = loadMonth(ymKey).days[dk] || {};
     var total = computeDayTotal(dayObj);
@@ -6345,15 +6406,31 @@ var PLAYERS_JSON_EMBEDDED = {
     document.getElementById('day-date-label').textContent = weekdayFullVN(d) + ' • ' + fmtDDMM(d) + '/' + d.getFullYear() + (isToday ? ' (hôm nay)' : '');
     document.getElementById('day-date-input').value = ymd(d);
 
+    var lockNote = document.getElementById('day-lock-note');
+    if(isToday){
+      lockNote.style.display = 'none';
+    } else if(editable){
+      lockNote.style.display = '';
+      lockNote.textContent = '🔓 Đang sửa với quyền Quản trị viên — nhớ tắt chế độ này lại khi xong nhé!';
+    } else if(ymd(d) < todayStr){
+      lockNote.style.display = '';
+      lockNote.textContent = '🔒 Ngày đã qua nên dữ liệu đã được khóa lại. Chỉ Quản trị viên mới sửa được.';
+    } else {
+      lockNote.style.display = '';
+      lockNote.textContent = '🔒 Chưa tới ngày này nên chưa thể đánh dấu nhiệm vụ. Chỉ Quản trị viên mới sửa được.';
+    }
+
     var boxTarget = settings.dailyGoal*10;
     var pending = total>=boxTarget && !dayObj._dailyBoxClaimed;
     var claimed = !!dayObj._dailyBoxClaimed;
     var goalPct = boxTarget>0 ? Math.min(100, Math.floor(total*100/boxTarget)) : 0;
 
     var giftHtml;
-    if(pending){
+    if(pending && editable){
       giftHtml = '<div class="ds-gift is-pending" data-box-month="'+ymKey+'" data-box-day="'+dk+'" title="Chạm để chọn quà cầu thủ!">'
         + '<span class="ds-gift-ico">🎁</span><span>Đã đủ điểm!<br>Chạm để nhận quà</span></div>';
+    } else if(pending && !editable){
+      giftHtml = '<div class="ds-gift is-locked-gift"><span class="ds-gift-ico">🔒</span><span>Đã đủ điểm nhưng<br>ngày này đã khóa</span></div>';
     } else if(claimed){
       giftHtml = '<div class="ds-gift is-claimed"><span class="ds-gift-ico">✅</span><span>Đã nhận quà<br>hôm nay rồi!</span></div>';
     } else {
@@ -6372,12 +6449,12 @@ var PLAYERS_JSON_EMBEDDED = {
     var listHtml = '';
     TASKS.forEach(function(t){
       var checked = !!dayObj[t.id];
-      listHtml += '<label class="task-card'+(checked?' is-done':'')+'" data-task="'+t.id+'">'
-        + '<input type="checkbox" class="task-check" data-date="'+ymd(d)+'" data-task="'+t.id+'" '+(checked?'checked':'')+'>'
+      listHtml += '<label class="task-card'+(checked?' is-done':'')+(editable?'':' is-locked')+'" data-task="'+t.id+'">'
+        + '<input type="checkbox" class="task-check" data-date="'+ymd(d)+'" data-task="'+t.id+'" '+(checked?'checked':'')+(editable?'':' disabled')+'>'
         + '<span class="task-card-icon">'+t.icon+'</span>'
         + '<span class="task-card-body"><span class="task-card-name">'+t.label+'</span><span class="task-card-hint">💡 '+pickHintForTask(t.id, d)+'</span></span>'
         + '<span class="task-card-pts">⚡+'+t.points+'</span>'
-        + '<span class="task-card-check">✓</span>'
+        + '<span class="task-card-check">'+(editable?'✓':'🔒')+'</span>'
         + '</label>';
     });
     document.getElementById('day-tasklist').innerHTML = listHtml;
@@ -8487,6 +8564,7 @@ var PLAYERS_JSON_EMBEDDED = {
     document.getElementById('settings-cheer-max').value = settings.cheerMax;
     document.getElementById('settings-period-start').value = settings.periodStartDay;
     document.getElementById('settings-daily-goal').value = settings.dailyGoal;
+    document.getElementById('settings-admin-pin').value = settings.adminPin;
     updatePeriodPreview();
     renderRewardList();
     renderUserPanel();
@@ -8500,6 +8578,7 @@ var PLAYERS_JSON_EMBEDDED = {
     if(!input) return;
     var dateStr = input.dataset.date, taskId = input.dataset.task;
     var d = new Date(dateStr+'T00:00:00');
+    if(!isDayEditable(d)){ renderWeek(); return; }
     var ymKey = ym(d), dk = dkey(d);
     var month = loadMonth(ymKey);
     if(!month.days[dk]) month.days[dk] = {};
@@ -8525,6 +8604,121 @@ var PLAYERS_JSON_EMBEDDED = {
     if(!e.target.value) return;
     currentDay = new Date(e.target.value+'T00:00:00');
     renderWeek();
+  });
+
+  /* ---- Lịch tháng tùy chỉnh: bấm vào ô ngày sẽ mở lịch để chọn ngày/tháng/năm bất kỳ ---- */
+  var calViewDate = new Date(currentDay);
+  var MONTH_NAMES_VN = ['Tháng 1','Tháng 2','Tháng 3','Tháng 4','Tháng 5','Tháng 6','Tháng 7','Tháng 8','Tháng 9','Tháng 10','Tháng 11','Tháng 12'];
+  (function initCalMonthSelect(){
+    document.getElementById('cal-month-select').innerHTML = MONTH_NAMES_VN.map(function(name, i){
+      return '<option value="'+i+'">'+name+'</option>';
+    }).join('');
+  })();
+  function renderCalPopup(){
+    var y = calViewDate.getFullYear(), m = calViewDate.getMonth();
+    document.getElementById('cal-month-select').value = String(m);
+    document.getElementById('cal-year-input').value = y;
+    var first = new Date(y, m, 1);
+    var startOffset = (first.getDay() + 6) % 7; // 0 = Thứ Hai
+    var daysInMonth = new Date(y, m+1, 0).getDate();
+    var todayStr = ymd(new Date());
+    var selStr = ymd(currentDay);
+    var html = '';
+    for(var i=0;i<startOffset;i++){ html += '<span class="cal-day is-empty"></span>'; }
+    for(var day=1; day<=daysInMonth; day++){
+      var dStr = y+'-'+pad2(m+1)+'-'+pad2(day);
+      var cls = 'cal-day';
+      if(dStr === todayStr) cls += ' is-today';
+      if(dStr === selStr) cls += ' is-selected';
+      if(dStr < todayStr) cls += ' is-locked';
+      html += '<button type="button" class="'+cls+'" data-date="'+dStr+'">'+day+'</button>';
+    }
+    document.getElementById('date-cal-grid').innerHTML = html;
+  }
+  function openCalPopup(){
+    calViewDate = new Date(currentDay);
+    renderCalPopup();
+    document.getElementById('date-cal-popup').hidden = false;
+  }
+  function closeCalPopup(){ document.getElementById('date-cal-popup').hidden = true; }
+  document.getElementById('day-date-pill').addEventListener('click', function(e){
+    if(e.target.closest('.date-cal-popup')) return;
+    var popup = document.getElementById('date-cal-popup');
+    if(popup.hidden) openCalPopup(); else closeCalPopup();
+  });
+  document.getElementById('date-cal-grid').addEventListener('click', function(e){
+    var btn = e.target.closest('.cal-day');
+    if(!btn || !btn.dataset.date) return;
+    currentDay = new Date(btn.dataset.date+'T00:00:00');
+    renderWeek();
+    closeCalPopup();
+  });
+  document.getElementById('cal-prev-month').addEventListener('click', function(e){
+    e.stopPropagation();
+    calViewDate.setMonth(calViewDate.getMonth()-1);
+    renderCalPopup();
+  });
+  document.getElementById('cal-next-month').addEventListener('click', function(e){
+    e.stopPropagation();
+    calViewDate.setMonth(calViewDate.getMonth()+1);
+    renderCalPopup();
+  });
+  document.getElementById('cal-month-select').addEventListener('change', function(e){
+    calViewDate.setMonth(parseInt(e.target.value,10));
+    renderCalPopup();
+  });
+  document.getElementById('cal-year-input').addEventListener('change', function(e){
+    var y = parseInt(e.target.value,10);
+    if(!isNaN(y) && y>=1970 && y<=2200){ calViewDate.setFullYear(y); renderCalPopup(); }
+  });
+  document.getElementById('cal-today-btn').addEventListener('click', function(e){
+    e.stopPropagation();
+    currentDay = new Date(); currentDay.setHours(0,0,0,0);
+    renderWeek();
+    closeCalPopup();
+  });
+  document.getElementById('cal-close-btn').addEventListener('click', function(e){
+    e.stopPropagation();
+    closeCalPopup();
+  });
+  document.addEventListener('click', function(e){
+    var popup = document.getElementById('date-cal-popup');
+    if(popup.hidden) return;
+    if(e.target.closest('#day-date-pill')) return;
+    closeCalPopup();
+  });
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape') closeCalPopup();
+  });
+
+  /* ---- Chế độ Quản trị viên: mở khóa bằng mã PIN để sửa ngày cũ ---- */
+  function updateAdminBtn(){
+    var btn = document.getElementById('admin-toggle-btn');
+    if(isAdmin){
+      btn.textContent = '🔓'; btn.classList.add('is-admin');
+      btn.title = 'Đang ở chế độ Quản trị — bấm để khóa lại';
+    } else {
+      btn.textContent = '🔒'; btn.classList.remove('is-admin');
+      btn.title = 'Chế độ quản trị: mở khóa để sửa ngày cũ';
+    }
+  }
+  document.getElementById('admin-toggle-btn').addEventListener('click', function(){
+    if(isAdmin){
+      isAdmin = false;
+      updateAdminBtn();
+      renderWeek();
+      return;
+    }
+    var pin = prompt('Nhập mã PIN Quản trị viên để sửa dữ liệu ngày cũ:');
+    if(pin === null) return;
+    if(pin === settings.adminPin){
+      isAdmin = true;
+      updateAdminBtn();
+      renderWeek();
+      triggerToast('okay', '🔓 Đã mở chế độ Quản trị viên!');
+    } else {
+      triggerToast('low', '🔒 Mã PIN không đúng.');
+    }
   });
 
   document.getElementById('day-summary').addEventListener('click', function(e){
@@ -8640,6 +8834,8 @@ var PLAYERS_JSON_EMBEDDED = {
     if(!isNaN(psd) && psd>=1 && psd<=31) settings.periodStartDay = psd;
     var dg = parseInt(document.getElementById('settings-daily-goal').value, 10);
     if(!isNaN(dg) && dg>=1 && dg<=10) settings.dailyGoal = dg;
+    var pin = (document.getElementById('settings-admin-pin').value || '').trim();
+    if(pin) settings.adminPin = pin;
     saveSettings();
     currentPeriod = getPeriodRange(new Date());
     closeSettings();
