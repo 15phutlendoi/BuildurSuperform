@@ -856,10 +856,19 @@
   .dbx-stage.is-boom .dbx-star{ animation:dbx-twinkle 1.7s ease-in-out infinite; animation-delay:var(--d,0s); }
 
   .dbx-fx{ position:absolute; inset:0; z-index:4; width:100%; height:100%; pointer-events:none; }
+  /* Tia sét nền: nằm THẤP hơn thẻ (z-index 0, dưới .dbx-center z-index:1) để lan rộng và
+     lặp lại phía sau/xung quanh thẻ trong suốt lúc thẻ đang showoff, giống ảnh tia sét thật. */
+  .dbx-bolts{ position:absolute; inset:0; z-index:0; width:100%; height:100%; pointer-events:none; }
   .dbx-flash{ position:absolute; inset:0; z-index:3; background:#fff; opacity:0; pointer-events:none; }
   .dbx-stage.is-boom .dbx-flash{ animation:dbx-flash .65s ease-out backwards; }
 
   /* Thông tin dưới thẻ: chừa sẵn chỗ để thẻ không bị nhảy vị trí khi hiện */
+  /* Gợi ý chạm lần 2 để "kích nổ" thẻ, chỉ hiện trong lúc đang tích năng lượng */
+  .dbx-taphint{ position:absolute; left:0; right:0; bottom:6%; z-index:3; text-align:center; font-family:var(--font-display); font-weight:800;
+    font-size:14px; color:#FFE9B8; text-shadow:0 2px 8px rgba(0,0,0,.6); opacity:0; pointer-events:none; }
+  .dbx-stage.is-charge .dbx-taphint{ opacity:1; animation:dbx-taphint-pulse 1s ease-in-out infinite; }
+  .dbx-stage.is-boom .dbx-taphint, .dbx-stage.is-done .dbx-taphint{ display:none; }
+  @keyframes dbx-taphint-pulse{ 0%,100%{ transform:translateY(0); opacity:.65; } 50%{ transform:translateY(-4px); opacity:1; } }
   .dbx-info{ min-height:154px; display:flex; flex-direction:column; align-items:center; gap:5px; opacity:0; transform:translateY(18px); pointer-events:none;
     transition:opacity .45s ease, transform .45s cubic-bezier(.2,1.2,.4,1); }
   .dbx-stage.is-done .dbx-info{ opacity:1; transform:none; pointer-events:auto; }
@@ -896,6 +905,36 @@
     .dbx-stage *{ animation:none !important; transition:none !important; }
     .dbx-rays, .dbx-glow, .dbx-ring{ display:none; }
   }
+
+  /* Biến thể "huyền bí" cho màn hình cầu thủ bí ẩn mở ra từ Play Style (#skp-stage):
+     cùng hiệu ứng mở thẻ với hộp quà ngày, nhưng tông màu tím-lam huyền ảo thay vì
+     vàng-cam, gợi cảm giác triệu hồi một cầu thủ hiếm thay vì mở quà thông thường. */
+  .dbx-stage.is-mystic .dbx-dim{ background:radial-gradient(ellipse at 50% 42%, rgba(88,28,135,.92), rgba(8,6,24,.97) 72%); }
+  .dbx-stage.is-mystic .dbx-rays{ background:repeating-conic-gradient(from 0deg, rgba(196,181,253,.55) 0deg 5deg, rgba(196,181,253,0) 5deg 16deg); }
+  .dbx-stage.is-mystic .dbx-glow{ background:radial-gradient(circle, rgba(216,180,254,.9), rgba(124,58,237,.42) 38%, rgba(124,58,237,0) 68%); }
+  .dbx-stage.is-mystic .dbx-ring{ border-color:#C4B5FD; }
+  .dbx-stage.is-mystic .dbx-ring.r2{ border-color:#22D3EE; }
+  .dbx-stage.is-mystic .dbx-q{ color:rgba(233,213,255,.95); text-shadow:0 4px 20px rgba(139,92,246,.9), 0 0 10px rgba(103,232,249,.6); }
+  .dbx-stage.is-mystic .dbx-star{ color:#D8B4FE; text-shadow:0 0 10px rgba(196,181,253,.9); }
+  .dbx-stage.is-mystic .dbx-kicker{ color:#E9D5FF; text-shadow:0 2px 14px rgba(139,92,246,.6); }
+  .dbx-stage.is-mystic .dbx-kicker .k-charge{ color:#C4B5FD; }
+  .dbx-stage.is-mystic .dbx-name{ color:#D8B4FE; }
+  .dbx-stage.is-mystic .dbx-btn.primary{ background:linear-gradient(180deg,#C4B5FD,#8B5CF6); border-color:#7C3AED; color:#241242; }
+  .dbx-stage.is-mystic .dbx-back .fc-card{ filter:drop-shadow(0 10px 22px rgba(88,28,135,.6)) drop-shadow(0 0 18px rgba(139,92,246,.5)); }
+
+  /* Lưới thẻ úp trong màn "cầu thủ bí ẩn": phát sáng tím mời gọi thay vì vàng-cam mặc định */
+  #skp-grid.daily-box-grid:not(.locked) .daily-box-cell:not(.picked){ animation:skpInvite 2.4s ease-in-out infinite; }
+  @keyframes skpInvite{
+    0%,100%{ box-shadow:0 0 0 0 rgba(139,92,246,0); border-color:var(--line); }
+    50%{ box-shadow:0 0 16px 4px rgba(139,92,246,.55); border-color:#C4B5FD; }
+  }
+  /* Màn "đã nhận đủ thẻ": thay lưới ô úp bằng lưới ảnh các thẻ cầu thủ vừa nhận */
+  #skp-grid.gallery{ position:static; display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin:14px 0; }
+  #skp-grid.gallery .skp-gallery-item{ position:static; width:auto; margin:0; transform:none; animation:skpGalleryPop .45s cubic-bezier(.34,1.56,.64,1) backwards; }
+  #skp-grid.gallery .skp-gallery-item:nth-child(1){ animation-delay:.05s; }
+  #skp-grid.gallery .skp-gallery-item:nth-child(2){ animation-delay:.15s; }
+  #skp-grid.gallery .skp-gallery-item:nth-child(3){ animation-delay:.25s; }
+  @keyframes skpGalleryPop{ 0%{ opacity:0; transform:scale(.6) translateY(10px); } 100%{ opacity:1; transform:none; } }
 
   /* =====================================================================
      PHÒNG KỸ NĂNG v2 — Hộp quà Play Style (vàng / bạc / khích lệ)
@@ -1493,6 +1532,48 @@
     .skill-room-ico, .month-ball-scene::before, .cab-glass{ animation:none !important; }
   }
 
+  /* CẦU THỦ BÍ ẨN TỪ PLAY STYLE — xếp 5 thẻ theo hình ngôi sao 5 cánh quanh tâm
+     phát sáng, thay vì lưới ô vuông, để cảm giác như đang mở ra một siêu sao. */
+  #skp-grid{
+    display:block; position:relative;
+    width:min(320px,86vw); aspect-ratio:1; margin:18px auto 10px;
+  }
+  #skp-grid::before{
+    content:''; position:absolute; inset:8%; border-radius:50%; pointer-events:none; z-index:0;
+    background:radial-gradient(circle, rgba(196,181,253,.38), rgba(139,92,246,.14) 55%, transparent 72%);
+    animation:skpStarGlow 3.2s ease-in-out infinite;
+  }
+  #skp-grid::after{
+    content:'★'; position:absolute; left:50%; top:50%; z-index:0; pointer-events:none;
+    font-size:34px; line-height:1; color:rgba(233,213,255,.4);
+    text-shadow:0 0 18px rgba(196,181,253,.75);
+    animation:skpStarSpin 14s linear infinite;
+  }
+  @keyframes skpStarGlow{ 0%,100%{ opacity:.55; transform:scale(.94); } 50%{ opacity:1; transform:scale(1.05); } }
+  @keyframes skpStarSpin{ from{ transform:translate(-50%,-50%) rotate(0deg); } to{ transform:translate(-50%,-50%) rotate(360deg); } }
+
+  #skp-grid .daily-box-cell{ position:absolute; width:31%; margin:0; z-index:1; }
+  #skp-grid .daily-box-cell:nth-child(1){ left:50%; top:15%; transform:translate(-50%,-50%) rotate(0deg); }
+  #skp-grid .daily-box-cell:nth-child(2){ left:84%; top:39%; transform:translate(-50%,-50%) rotate(16deg); }
+  #skp-grid .daily-box-cell:nth-child(3){ left:71%; top:80%; transform:translate(-50%,-50%) rotate(7deg); }
+  #skp-grid .daily-box-cell:nth-child(4){ left:29%; top:80%; transform:translate(-50%,-50%) rotate(-7deg); }
+  #skp-grid .daily-box-cell:nth-child(5){ left:16%; top:39%; transform:translate(-50%,-50%) rotate(-16deg); }
+  #skp-grid .daily-box-cell:nth-child(1):active{ transform:translate(-50%,-50%) rotate(0deg) scale(.92); }
+  #skp-grid .daily-box-cell:nth-child(2):active{ transform:translate(-50%,-50%) rotate(16deg) scale(.92); }
+  #skp-grid .daily-box-cell:nth-child(3):active{ transform:translate(-50%,-50%) rotate(7deg) scale(.92); }
+  #skp-grid .daily-box-cell:nth-child(4):active{ transform:translate(-50%,-50%) rotate(-7deg) scale(.92); }
+  #skp-grid .daily-box-cell:nth-child(5):active{ transform:translate(-50%,-50%) rotate(-16deg) scale(.92); }
+  @media (hover:hover) and (pointer:fine){
+    #skp-grid .daily-box-cell:nth-child(1):hover{ transform:translate(-50%,-50%) rotate(0deg) scale(1.08); }
+    #skp-grid .daily-box-cell:nth-child(2):hover{ transform:translate(-50%,-50%) rotate(16deg) scale(1.08); }
+    #skp-grid .daily-box-cell:nth-child(3):hover{ transform:translate(-50%,-50%) rotate(7deg) scale(1.08); }
+    #skp-grid .daily-box-cell:nth-child(4):hover{ transform:translate(-50%,-50%) rotate(-7deg) scale(1.08); }
+    #skp-grid .daily-box-cell:nth-child(5):hover{ transform:translate(-50%,-50%) rotate(-16deg) scale(1.08); }
+  }
+  @media (prefers-reduced-motion: reduce){
+    #skp-grid::before, #skp-grid::after{ animation:none !important; }
+  }
+
 </style>
 </head>
 <body>
@@ -1842,6 +1923,19 @@
     </div>
   </div>
   <div id="dbx-stage" class="dbx-stage" aria-live="polite"></div>
+</div>
+
+<div id="skill-player-modal" class="modal">
+  <div id="skill-player-backdrop" class="modal-backdrop"></div>
+  <div class="modal-box daily-box-modal skp-box">
+    <h3 id="skp-title">✨ Cầu thủ bí ẩn đang chờ!</h3>
+    <p class="hint-text" id="skp-lead"></p>
+    <div class="daily-box-grid" id="skp-grid"></div>
+    <div class="modal-actions center">
+      <button type="button" id="skp-close" class="btn-secondary">Đóng</button>
+    </div>
+  </div>
+  <div id="skp-stage" class="dbx-stage" aria-live="polite"></div>
 </div>
 
 <div id="player-detail-modal" class="modal">
@@ -7149,6 +7243,8 @@ var PLAYERS_JSON_EMBEDDED = {
   var dailyBoxBusy = false;
   var dbxTimers = [];
   var dbxRaf = 0;
+  var dbxBoltRaf = 0;      /* vòng lặp riêng cho hiệu ứng tia sét nền, chạy suốt lúc thẻ showoff */
+  var dbxBoltStop = null;  /* hàm dừng vòng lặp tia sét hiện tại, gọi khi đóng/đổi sân khấu */
 
   function pickNinePlayers(){
     var pool = PLAYER_DB.slice();
@@ -7168,10 +7264,14 @@ var PLAYERS_JSON_EMBEDDED = {
     dbxTimers.forEach(function(id){ clearTimeout(id); });
     dbxTimers = [];
     if(dbxRaf){ cancelAnimationFrame(dbxRaf); dbxRaf = 0; }
+    if(dbxBoltStop){ try{ dbxBoltStop(); }catch(e){} dbxBoltStop = null; }
+    if(dbxBoltRaf){ cancelAnimationFrame(dbxBoltRaf); dbxBoltRaf = 0; }
   }
-  function dbxResetStage(){
-    var stage = document.getElementById('dbx-stage');
+  function dbxResetStage(stageId){
+    var stage = document.getElementById(stageId || 'dbx-stage');
     if(!stage) return;
+    if(dbxBoltStop){ try{ dbxBoltStop(); }catch(e){} dbxBoltStop = null; }
+    if(dbxBoltRaf){ cancelAnimationFrame(dbxBoltRaf); dbxBoltRaf = 0; }
     stage.onclick = null;
     stage.className = 'dbx-stage';
     stage.innerHTML = '';
@@ -7288,28 +7388,34 @@ var PLAYERS_JSON_EMBEDDED = {
     });
   }
 
-  function dbxStageHTML(base, p){
+  function dbxStageHTML(base, p, mystic){
     var name = escHtml(base.name || p.name);
     var ovr = base.realOvr || base.ovr || 0;
     var meta = escHtml(base.pos || '') + (ovr ? ' · OVR ' + ovr : '');
     var backBg = (cdnReady() && base.background)
       ? '<img class="fc-bg" src="'+cdnUrl(base.background)+'" alt="" onerror="this.remove()">'
       : '';
+    var starGlyphs = mystic ? ['✧','⟡','✦','⟡','✧','⋆'] : ['✦','✦','✦','✦','✦','✦'];
     var stars = [
       ['-4%','8%','0s'], ['98%','14%','.35s'], ['-8%','52%','.7s'],
       ['102%','58%','1.05s'], ['6%','96%','.5s'], ['92%','98%','.9s']
-    ].map(function(s){
-      return '<i class="dbx-star" style="left:'+s[0]+';top:'+s[1]+';--d:'+s[2]+'">✦</i>';
+    ].map(function(s, i){
+      return '<i class="dbx-star" style="left:'+s[0]+';top:'+s[1]+';--d:'+s[2]+'">'+starGlyphs[i]+'</i>';
     }).join('');
+    var qMark = '?';
+    var kickerCharge = mystic ? 'Đang triệu hồi…' : 'Đang tích năng lượng…';
+    var kickerWin = mystic ? 'Xuất hiện rồi!' : 'Chúc mừng!';
     return '<div class="dbx-dim"></div>'
       + '<div class="dbx-flash"></div>'
+      + '<canvas class="dbx-bolts"></canvas>'
       + '<div class="dbx-center">'
-      +   '<div class="dbx-kicker"><span class="k-charge">Đang mở thẻ…</span><span class="k-win">Chúc mừng!</span></div>'
+      +   '<div class="dbx-kicker"><span class="k-charge">'+kickerCharge+'</span><span class="k-win">'+kickerWin+'</span></div>'
       +   '<div class="dbx-cardwrap">'
       +     '<div class="dbx-rays"></div><div class="dbx-glow"></div>'
       +     '<div class="dbx-ring"></div><div class="dbx-ring r2"></div>'
-      +     '<div class="dbx-back"><div class="fc-card no-bg">'+backBg+'</div><div class="dbx-q">?</div></div>'
+      +     '<div class="dbx-back"><div class="fc-card no-bg">'+backBg+'</div><div class="dbx-q">'+qMark+'</div></div>'
       +     '<div class="dbx-front" role="button" tabindex="0" data-dbx="detail" aria-label="Xem chi tiết '+name+'">'+dbxCardHTML(base)+'</div>'
+      +     '<div class="dbx-taphint">👆 Chạm thẻ lần nữa để mở!</div>'
       +     stars
       +   '</div>'
       +   '<div class="dbx-info">'
@@ -7325,63 +7431,77 @@ var PLAYERS_JSON_EMBEDDED = {
       + '<canvas class="dbx-fx"></canvas>';
   }
 
-  function playDailyBoxReveal(base, p){
-    var stage = document.getElementById('dbx-stage');
-    if(!stage) throw new Error('thieu #dbx-stage');
+  function playDailyBoxReveal(base, p, stageId, onDone, mystic, instant){
+    stageId = stageId || 'dbx-stage';
+    var stage = document.getElementById(stageId);
+    if(!stage) throw new Error('thieu #'+stageId);
+    var finish = onDone || closeDailyBoxModal;
     var rm = reducedMotion();
     dbxStop();
-    stage.className = 'dbx-stage';
-    stage.innerHTML = dbxStageHTML(base, p);
+    stage.className = 'dbx-stage' + (mystic ? ' is-mystic' : '');
+    stage.innerHTML = dbxStageHTML(base, p, mystic);
 
-    var boomed = false, minWaitDone = false, imgsReady = false;
+    /* Mặc định: 2 lần chạm rõ ràng để tạo cảm giác hồi hộp (chạm 1 = thẻ bay ra giữa màn
+       hình, phóng to, tích năng lượng; chạm 2 = "kích nổ" thẻ, bung tia lửa điện/sấm chớp
+       rồi hiện thông tin). Với instant=true (chọn thẻ trong 5 ô hình ngôi sao của Skill):
+       chạm 1 lần DUY NHẤT là chọn được thẻ ngay — bỏ qua hẳn bước tích năng lượng chờ
+       chạm lần 2, đi thẳng vào hiệu ứng bung thẻ rồi hiện thông tin luôn. */
+    var boomed = false, armed = false, imgsReady = false;
     function boom(){
-      if(boomed) return;
+      if(boomed || !armed) return;
       boomed = true;
       stage.classList.remove('is-charge');
       stage.classList.add('is-boom');
       try{ playBoom(); }catch(e){}
       try{ if(navigator.vibrate) navigator.vibrate([40, 30, 90]); }catch(e){}
-      if(!rm){ try{ dbxBurst(stage); }catch(e){ console.warn('dbxBurst loi', e); } }
+      if(!rm){
+        try{ dbxBurst(stage, mystic); }catch(e){ console.warn('dbxBurst loi', e); }
+        try{ dbxBoltLoop(stage, mystic); }catch(e){ console.warn('dbxBoltLoop loi', e); }
+      }
       dbxLater(function(){ stage.classList.add('is-done'); }, rm ? 60 : 950);
     }
-    function tryBoom(){ if(minWaitDone && imgsReady) boom(); }
 
     stage.onclick = function(e){
       var t = e.target && e.target.closest ? e.target.closest('[data-dbx]') : null;
       var act = t ? t.getAttribute('data-dbx') : '';
-      if(act === 'done'){ closeDailyBoxModal(); return; }
+      if(act === 'done'){ finish(); return; }
       if(act === 'detail' && boomed){ openPlayerDetailModal(p); return; }
-      if(!boomed) boom(); // chạm khi đang dồn năng lượng = bỏ qua chờ, nổ luôn
+      if(!boomed && !instant) boom(); // chạm lần 2 vào thẻ đang tích năng lượng = kích nổ (không áp dụng khi instant)
     };
     stage.onkeydown = function(e){
-      if((e.key === 'Enter' || e.key === ' ') && e.target && e.target.getAttribute('data-dbx') === 'detail' && boomed){
-        e.preventDefault(); openPlayerDetailModal(p);
-      }
+      if(e.key !== 'Enter' && e.key !== ' ') return;
+      var actNow = e.target && e.target.getAttribute ? e.target.getAttribute('data-dbx') : '';
+      if(actNow === 'detail' && boomed){ e.preventDefault(); openPlayerDetailModal(p); return; }
+      if(!boomed && !instant){ e.preventDefault(); boom(); }
     };
 
     stage.classList.add('is-on');
-    dbxLater(function(){ stage.classList.add('is-charge'); }, 30);
-    dbxLater(function(){ minWaitDone = true; tryBoom(); }, rm ? 200 : 1150);
-    dbxLater(boom, 3300); // chốt hạ: ảnh chậm mấy cũng phải mở thẻ
-    dbxPreload(base, function(){ imgsReady = true; tryBoom(); });
+    if(rm || instant){
+      dbxLater(function(){ armed = true; boom(); }, 30);
+    } else {
+      dbxLater(function(){ stage.classList.add('is-charge'); armed = true; }, 30);
+    }
+    dbxPreload(base, function(){ imgsReady = true; }); // chỉ để tránh giật ảnh, không quyết định thời điểm nổ
   }
 
   /* Dự phòng cuối cùng: nếu sân khấu hiệu ứng lỗi thì hiện thẻ trơn, không hiệu ứng. */
-  function dbxShowPlain(base, p){
-    var stage = document.getElementById('dbx-stage');
+  function dbxShowPlain(base, p, stageId, onDone, mystic){
+    stageId = stageId || 'dbx-stage';
+    var stage = document.getElementById(stageId);
     if(!stage) return;
-    stage.innerHTML = dbxStageHTML(base, p);
-    stage.className = 'dbx-stage is-on is-boom is-done';
+    var finish = onDone || closeDailyBoxModal;
+    stage.innerHTML = dbxStageHTML(base, p, mystic);
+    stage.className = 'dbx-stage is-on is-boom is-done' + (mystic ? ' is-mystic' : '');
     stage.onclick = function(e){
       var t = e.target && e.target.closest ? e.target.closest('[data-dbx]') : null;
       var act = t ? t.getAttribute('data-dbx') : '';
-      if(act === 'done') closeDailyBoxModal();
+      if(act === 'done') finish();
       else if(act === 'detail') openPlayerDetailModal(p);
     };
   }
 
   /* Pháo hoa + confetti vẽ bằng canvas (mượt trên điện thoại, và nằm trong sân khấu nên không bị modal che). */
-  function dbxBurst(stage){
+  function dbxBurst(stage, mystic){
     var cv = stage.querySelector('.dbx-fx');
     if(!cv || !cv.getContext) return;
     var W = stage.clientWidth, H = stage.clientHeight;
@@ -7393,7 +7513,9 @@ var PLAYERS_JSON_EMBEDDED = {
     var wrap = stage.querySelector('.dbx-cardwrap');
     var r = wrap.getBoundingClientRect(), sr = stage.getBoundingClientRect();
     var cx = r.left - sr.left + r.width/2, cy = r.top - sr.top + r.height/2;
-    var COLORS = ['#FFD979','#FFB100','#E2001A','#FFFFFF','#3E8EDE','#22C55E','#FF6FA5'];
+    var COLORS = mystic
+      ? ['#C4B5FD','#8B5CF6','#67E8F9','#F0ABFC','#FFFFFF','#7C3AED','#A5F3FC']
+      : ['#FFD979','#FFB100','#E2001A','#FFFFFF','#3E8EDE','#22C55E','#FF6FA5'];
     var parts = [];
     function rnd(a, b){ return a + Math.random()*(b-a); }
     function col(){ return COLORS[Math.floor(Math.random()*COLORS.length)]; }
@@ -7451,6 +7573,110 @@ var PLAYERS_JSON_EMBEDDED = {
     dbxRaf = requestAnimationFrame(tick);
   }
 
+  /* ---- Tia sét nền phía sau thẻ (mô phỏng ảnh tia sét thật: nhiều nhánh chính toả ra
+     từ một điểm sáng trung tâm, mỗi nhánh chính lại rẽ thêm nhánh phụ nhỏ hơn, mảnh hơn,
+     mờ dần ra ngoài). Vẽ trên lớp .dbx-bolts (nằm THẤP hơn thẻ) và lặp lại theo chu kỳ
+     ngẫu nhiên (như chớp thật) suốt thời gian thẻ đang showoff, tới khi sân khấu bị đóng.
+     Bản nhẹ hoá: bỏ shadowBlur (rất tốn trên di động, gây giật khung hình), bỏ nhấp nháy
+     ngẫu nhiên MỖI khung hình (gây cảm giác giật/xé hình), thay bằng 1 đường cong mờ dần
+     mượt theo thời gian thực (không phụ thuộc tốc độ khung hình), ít nhánh + ít điểm hơn
+     để nhẹ máy hơn, và giãn chu kỳ chớp ra để đỡ dồn dập. ---- */
+  function dbxBoltLoop(stage, mystic){
+    var cv = stage.querySelector('.dbx-bolts');
+    if(!cv || !cv.getContext) return;
+    var ctx = cv.getContext('2d');
+    if(!ctx) return;
+    var wrap = stage.querySelector('.dbx-cardwrap');
+    var dims = {W:0, H:0, dpr:1};
+    function resize(){
+      dims.W = stage.clientWidth; dims.H = stage.clientHeight;
+      dims.dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+      cv.width = Math.round(dims.W * dims.dpr); cv.height = Math.round(dims.H * dims.dpr);
+    }
+    resize();
+    function center(){
+      var r = (wrap || stage).getBoundingClientRect(), sr = stage.getBoundingClientRect();
+      return {x:r.left - sr.left + r.width/2, y:r.top - sr.top + r.height/2};
+    }
+    function rnd(a, b){ return a + Math.random()*(b-a); }
+    var PAL = mystic
+      ? ['#E9D5FF','#B9F3FF','#C4B5FD']
+      : ['#EAF6FF','#BFE3FF','#8FD4FF'];
+
+    /* Đệ quy 1 nhánh: chia thành các đoạn zíc-zắc, thỉnh thoảng nảy ra nhánh con
+       mỏng hơn/ngắn hơn. Ít điểm + ít tầng nhánh hơn bản trước để vẽ nhẹ hơn nhiều. */
+    function growBranch(x0, y0, ang, len, depth, out){
+      var segs = Math.max(3, Math.round(len / 34));
+      var pts = [[x0, y0]];
+      for(var i = 1; i <= segs; i++){
+        var t = i / segs;
+        var mx = x0 + Math.cos(ang) * len * t;
+        var my = y0 + Math.sin(ang) * len * t;
+        var jitter = rnd(-13, 13) * (1 - t * 0.25);
+        var qx = mx + Math.cos(ang + Math.PI/2) * jitter;
+        var qy = my + Math.sin(ang + Math.PI/2) * jitter;
+        pts.push([qx, qy]);
+        if(depth > 0 && i > 1 && i < segs && Math.random() < 0.28){
+          growBranch(qx, qy, ang + rnd(-1.0, 1.0), len * rnd(0.3, 0.5) * (1 - t*0.3), depth - 1, out);
+        }
+      }
+      out.push({pts:pts, w: Math.max(0.8, 2.6 - depth * 0.9), c: PAL[Math.floor(Math.random()*PAL.length)]});
+    }
+    function makeBolts(){
+      var out = [], c = center();
+      var mainCount = 3 + Math.floor(Math.random()*2); // 3-4 nhánh chính (nhẹ hơn hẳn 5-7 trước đây)
+      var span = Math.max(dims.W, dims.H);
+      for(var i = 0; i < mainCount; i++){
+        var ang = (Math.PI*2 / mainCount) * i + rnd(-0.3, 0.3);
+        var len = rnd(span*0.4, span*0.65);
+        growBranch(c.x, c.y, ang, len, 1, out); // giảm độ sâu nhánh phụ 2 -> 1
+      }
+      return out;
+    }
+
+    var bolts = [], flashT = 0, flashDur = 240, nextAt = 0, running = true;
+    function draw(alpha){
+      ctx.setTransform(dims.dpr, 0, 0, dims.dpr, 0, 0);
+      ctx.clearRect(0, 0, dims.W, dims.H);
+      if(alpha <= 0.015) return;
+      ctx.globalCompositeOperation = 'lighter';
+      for(var i = 0; i < bolts.length; i++){
+        var b = bolts[i];
+        /* Quầng sáng nhẹ = nét dày, mờ; lõi sáng = nét mảnh, đậm — thay cho shadowBlur (tốn CPU). */
+        ctx.strokeStyle = b.c;
+        ctx.beginPath();
+        for(var j = 0; j < b.pts.length; j++){ var pt = b.pts[j]; if(j===0) ctx.moveTo(pt[0], pt[1]); else ctx.lineTo(pt[0], pt[1]); }
+        ctx.globalAlpha = alpha * 0.3; ctx.lineWidth = b.w + 3; ctx.stroke();
+        ctx.globalAlpha = alpha;       ctx.lineWidth = b.w;     ctx.stroke();
+      }
+      ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over';
+    }
+    var lastTs = 0;
+    function loop(ts){
+      if(!running) return;
+      if(!lastTs) lastTs = ts;
+      var dt = ts - lastTs; lastTs = ts;
+      if(ts >= nextAt){
+        bolts = makeBolts();
+        flashT = 0;
+        nextAt = ts + rnd(1800, 3200); // giãn chu kỳ chớp ra, đỡ dồn dập/giật
+      }
+      if(bolts.length){
+        flashT += dt;
+        var p = flashT / flashDur;
+        if(p >= 1){ bolts = []; draw(0); }
+        else{
+          // sáng nhanh (15% đầu) rồi mờ dần đều theo thời gian thực — mượt, không random mỗi khung hình
+          var alpha = p < 0.15 ? (p/0.15) : (1 - (p-0.15)/0.85);
+          draw(Math.max(0, alpha));
+        }
+      }
+      dbxBoltRaf = requestAnimationFrame(loop);
+    }
+    dbxBoltRaf = requestAnimationFrame(loop);
+    dbxBoltStop = function(){ running = false; try{ ctx.clearRect(0,0,dims.W,dims.H); }catch(e){} };
+  }
+
   function wireDailyBox(){
     var grid = document.getElementById('daily-box-grid');
     // Ủy quyền sự kiện trên lưới: ô là <button> nên iOS luôn bắn click, không phụ thuộc :hover.
@@ -7462,6 +7688,194 @@ var PLAYERS_JSON_EMBEDDED = {
     });
     document.getElementById('daily-box-close').addEventListener('click', closeDailyBoxModal);
     document.getElementById('daily-box-backdrop').addEventListener('click', closeDailyBoxModal);
+  }
+
+  /* ---- Cầu thủ bí ẩn từ Play Style: sau khi nhận thưởng skill (Bạc/Vàng), random tối đa 5
+     cầu thủ trong CSDL đang sở hữu đúng Play Style vừa nhận, hiện dưới dạng thẻ úp (giống
+     hộp quà 9 ô hằng ngày). Skill Bạc -> lật 1 thẻ nhận 1 cầu thủ; Skill Vàng -> lật 3 thẻ
+     nhận 3 cầu thủ. Dùng lại đúng hiệu ứng mở thẻ (playDailyBoxReveal) qua sân khấu riêng
+     #skp-stage để không đụng tới luồng hộp quà ngày (#dbx-stage). ---- */
+  var skpPicks = null;
+  var skpNeeded = 0;
+  var skpFlipped = 0;
+  var skpOpenedIdx = [];
+  var skpReceived = [];   /* các thẻ (base) vừa nhận trong lượt này, để hiện ảnh khi mở hết */
+  var skpBusy = false;
+  var SKP_CTX = null; /* {monthKey,key} của skill đang gắn với minigame lật thẻ, để lưu tiến độ nhận thẻ */
+
+  function pickPlayersWithPlaystyle(code, max){
+    max = max || 5;
+    var wanted = 'PLAYSTYLE_' + code;
+    var matches = PLAYER_DB.filter(function(p){ return (p.playstyles || []).indexOf(wanted) >= 0; });
+    for(var i = matches.length - 1; i > 0; i--){
+      var j = Math.floor(Math.random() * (i + 1));
+      var tmp = matches[i]; matches[i] = matches[j]; matches[j] = tmp;
+    }
+    var picks = matches.slice(0, max);
+    var matched = picks.length;
+    // Chưa đủ số ô mong muốn -> bốc thêm cầu thủ khác (bất kỳ) trong CSDL để lấp đầy, không trùng người đã chọn.
+    if(picks.length < max){
+      var pickedIds = {};
+      picks.forEach(function(p){ pickedIds[p.dbId || p.name] = true; });
+      var rest = PLAYER_DB.filter(function(p){ return !pickedIds[p.dbId || p.name]; });
+      for(var k = rest.length - 1; k > 0; k--){
+        var m = Math.floor(Math.random() * (k + 1));
+        var tmp2 = rest[k]; rest[k] = rest[m]; rest[m] = tmp2;
+      }
+      while(picks.length < max && rest.length){ picks.push(rest.pop()); }
+    }
+    return { picks: picks, matched: matched };
+  }
+
+  function renderSkpGrid(){
+    var grid = document.getElementById('skp-grid');
+    var done = skpFlipped >= skpNeeded;
+    grid.className = 'daily-box-grid' + (done ? ' locked' : '');
+    grid.innerHTML = skpPicks.map(function(p, i){
+      var opened = skpOpenedIdx.indexOf(i) >= 0;
+      var art = (cdnReady() && p.background)
+        ? '<img src="'+cdnUrl(p.background)+'" alt="" loading="lazy" draggable="false" onerror="this.remove()">'
+        : '';
+      return '<button type="button" class="daily-box-cell'+(opened?' picked':'')+'" data-skp-index="'+i+'" '+(opened?'disabled':'')+' aria-label="Ô bí ẩn số '+(i+1)+'">'+art+'</button>';
+    }).join('');
+  }
+
+  /* Số thẻ cầu thủ còn phải nhận cho 1 skill (tier bạc/vàng). cheer thì không cần thẻ nên luôn coi là đã xong. */
+  function skillCardsPending(st){
+    if(!st || (st.tier !== 'silver' && st.tier !== 'gold')) return false;
+    if(!st.activated) return false;
+    if(st.cardsDone) return false;
+    var total = st.cardsTotal || (st.tier === 'gold' ? 3 : 1);
+    var got = st.cardsGot || 0;
+    return got < total;
+  }
+  /* Trả về true nếu có mở được minigame (CSDL có ít nhất 1 cầu thủ để random); false = bỏ qua.
+     monthKey/key (nếu có) dùng để lưu lại tiến độ nhận thẻ, cho phép mở lại đúng phần còn thiếu
+     nếu người dùng đã tắt popup trước khi lật hết thẻ. */
+  function openSkillPlayerModal(code, tier, monthKey, key){
+    var st = (monthKey && key) ? skillState(monthKey, key) : null;
+    var total = (st && st.cardsTotal) ? st.cardsTotal : (tier === 'gold' ? 3 : 1);
+    var got = (st && st.cardsGot) ? st.cardsGot : 0;
+    var remaining = Math.max(0, total - got);
+    if(st && remaining <= 0){
+      st.cardsDone = true;
+      setSkillState(monthKey, key, st);
+      return false;
+    }
+    var result = pickPlayersWithPlaystyle(code, 5);
+    var picks = result.picks;
+    if(!picks.length){
+      if(st){ st.cardsDone = true; setSkillState(monthKey, key, st); }
+      return false;
+    }
+    var need = Math.min(remaining || (tier === 'gold' ? 3 : 1), picks.length);
+    SKP_CTX = (monthKey && key) ? {monthKey:monthKey, key:key} : null;
+    skpPicks = picks;
+    skpNeeded = need;
+    skpFlipped = 0;
+    skpOpenedIdx = [];
+    skpReceived = [];
+    skpBusy = false;
+    dbxStop();
+    dbxResetStage('skp-stage');
+    var ps = psByCode(code);
+    var psName = ps ? ps.name : playstyleLabel(code);
+    document.getElementById('skp-title').textContent = need >= 3 ? '🥇 3 Cầu Thủ Bí Ẩn Đang Chờ!' : (need > 1 ? '🥇 '+need+' Cầu Thủ Bí Ẩn Đang Chờ!' : '🥈 1 Cầu Thủ Bí Ẩn Đang Chờ!');
+    var introText = result.matched > 0
+      ? 'Những cầu thủ sở hữu Play Style <b>'+escHtml(psName)+'</b> đang ẩn mình trong '+picks.length+' thẻ bí ẩn.'
+      : 'Không có cầu thủ nào sở hữu Play Style <b>'+escHtml(psName)+'</b> lúc này, nhưng '+picks.length+' cầu thủ đặc biệt khác đang ẩn mình trong thẻ bí ẩn!';
+    document.getElementById('skp-lead').innerHTML = introText + ' '
+      + (need > 1 ? 'Lật mở <b>'+need+' thẻ bất kỳ</b> để chiêu mộ họ nhé!' : 'Lật mở <b>1 thẻ bất kỳ</b> để chiêu mộ cầu thủ đó nhé!');
+    renderSkpGrid();
+    openModalTop('skill-player-modal');
+    return true;
+  }
+
+  function closeSkillPlayerModal(){
+    dbxStop();
+    dbxResetStage('skp-stage');
+    document.getElementById('skill-player-modal').classList.remove('open');
+    skpPicks = null;
+    SKP_CTX = null;
+  }
+
+  /* Đã lật đủ số thẻ quy định: thay lưới ô úp bằng ảnh các thẻ cầu thủ vừa nhận,
+     để con thấy rõ "chiến lợi phẩm" thay vì popup tự đóng luôn. */
+  function renderSkpGallery(){
+    var grid = document.getElementById('skp-grid');
+    grid.className = 'daily-box-grid gallery';
+    grid.innerHTML = skpReceived.map(function(base){
+      return '<div class="skp-gallery-item">'+dbxCardHTML(base)+'</div>';
+    }).join('');
+    var titleEl = document.getElementById('skp-title'), leadEl = document.getElementById('skp-lead');
+    if(titleEl) titleEl.textContent = '🎉 Đã nhận đủ thẻ!';
+    if(leadEl) leadEl.innerHTML = 'Con đã mở đủ <b>'+skpReceived.length+' thẻ cầu thủ</b> rồi! Vào "Kho cầu thủ" để xem chi tiết nhé.';
+  }
+
+  function skpAfterReveal(isLast){
+    dbxResetStage('skp-stage');
+    skpBusy = false;
+    if(isLast){ renderSkpGallery(); }
+    else { renderSkpGrid(); }
+  }
+
+  function claimSkillPlayerCard(idx, cell){
+    if(skpBusy || skpFlipped >= skpNeeded) return;
+    if(skpOpenedIdx.indexOf(idx) >= 0) return;
+    var base = skpPicks && skpPicks[idx];
+    if(!base) return;
+    skpBusy = true;
+    skpOpenedIdx.push(idx);
+    if(cell) cell.classList.add('picked');
+
+    var p = ownedPlayerFromBase(base);
+    var saved = false;
+    try{
+      var players = loadPlayers();
+      players.push(p);
+      saved = (savePlayers(players) !== false);
+    }catch(err){ console.warn('Khong luu duoc the cau thu (skill)', err); }
+    if(!saved){
+      skpBusy = false;
+      skpOpenedIdx.pop();
+      if(cell) cell.classList.remove('picked');
+      triggerToast('low', 'Chưa lưu được thẻ vào máy. Con chạm lại một ô nữa nhé!');
+      return;
+    }
+    skpFlipped++;
+    skpReceived.push(base);
+    if(SKP_CTX){
+      try{
+        var stClaim = skillState(SKP_CTX.monthKey, SKP_CTX.key);
+        if(!stClaim.cardsTotal) stClaim.cardsTotal = skpNeeded + (stClaim.cardsGot || 0);
+        stClaim.cardsGot = (stClaim.cardsGot || 0) + 1;
+        if(stClaim.cardsGot >= stClaim.cardsTotal) stClaim.cardsDone = true;
+        setSkillState(SKP_CTX.monthKey, SKP_CTX.key, stClaim);
+      }catch(err){ console.warn('Khong cap nhat tien do nhan the (skill)', err); }
+    }
+    try{ renderWeek(); }catch(err){ console.warn('renderWeek loi', err); }
+
+    var isLast = skpFlipped >= skpNeeded;
+    document.getElementById('skp-lead').innerHTML = '🎉 Con đã nhận được <b>'+escHtml(base.name)+'</b>!'
+      + (isLast ? ' Vào "Kho cầu thủ" để xem thẻ nhé.' : ' Còn '+(skpNeeded - skpFlipped)+' thẻ nữa để lật!');
+    try{
+      playDailyBoxReveal(base, p, 'skp-stage', function(){ skpAfterReveal(isLast); }, true, true);
+    }catch(err){
+      console.warn('Hieu ung mo the loi (skill)', err);
+      dbxShowPlain(base, p, 'skp-stage', function(){ skpAfterReveal(isLast); }, true);
+    }
+  }
+
+  function wireSkillPlayerModal(){
+    var grid = document.getElementById('skp-grid');
+    grid.addEventListener('click', function(e){
+      if(grid.classList.contains('locked')) return;
+      var cell = e.target && e.target.closest ? e.target.closest('.daily-box-cell') : null;
+      if(!cell) return;
+      claimSkillPlayerCard(parseInt(cell.getAttribute('data-skp-index'), 10), cell);
+    });
+    document.getElementById('skp-close').addEventListener('click', closeSkillPlayerModal);
+    document.getElementById('skill-player-backdrop').addEventListener('click', closeSkillPlayerModal);
   }
 
   /* ---- Thẻ cầu thủ thống nhất: overall + vị trí + playstyles (góc trái), ảnh chân dung lớn
@@ -7853,6 +8267,7 @@ var PLAYERS_JSON_EMBEDDED = {
   function openedCardHTML(s, st){
     var t = SKILL_TIERS[st.tier];
     var rt = rewardText(s, st);
+    var pending = skillCardsPending(st);
     var h = '<div class="skill-card is-opened sk-'+st.tier+'" data-skill="'+s.key+'">'
       + '<span class="sk-tier-badge">'+t.badge+'</span>'
       + '<div class="sk-plate">'+skIconHTML(st)+'</div>'
@@ -7863,10 +8278,17 @@ var PLAYERS_JSON_EMBEDDED = {
     } else {
       h += '<p class="skill-desc">'+escHtml(rt.desc)+'</p>';
     }
+    if(pending){
+      h += '<p class="skill-desc"><b>⏳ Còn '+((st.cardsTotal||(st.tier==='gold'?3:1)) - (st.cardsGot||0))+' thẻ cầu thủ chưa nhận!</b></p>';
+    }
     h += '<span class="skill-pts">+'+st.pts+' điểm</span>'
-      + '<div class="sk-actions-row">'
-      +   '<button type="button" class="btn-ghost" data-act="replay" data-skill="'+s.key+'">✨ Xem lại</button>'
-      +   '<button type="button" class="btn-ghost" data-act="reset" data-skill="'+s.key+'">Nhập lại điểm</button>'
+      + '<div class="sk-actions-row">';
+    if(pending){
+      h += '<button type="button" class="btn-open" data-act="claim" data-skill="'+s.key+'">🎁 Nhận thưởng</button>';
+    } else {
+      h += '<button type="button" class="btn-ghost" data-act="replay" data-skill="'+s.key+'">✨ Xem lại</button>';
+    }
+    h +=   '<button type="button" class="btn-ghost" data-act="reset" data-skill="'+s.key+'">Nhập lại điểm</button>'
       + '</div></div>';
     return h;
   }
@@ -8177,7 +8599,9 @@ var PLAYERS_JSON_EMBEDDED = {
       later.textContent = 'Để lát nữa';
       main.textContent = CE.tier==='cheer' ? '💌 MỞ QUÀ NGAY!' : '🎁 MỞ SKILL NGAY!';
     } else if(phase === 'done'){
-      later.textContent = '✨ Xem lại';
+      var stDone = skillState(CE.monthKey, CE.key);
+      var pendingDone = skillCardsPending(stDone);
+      later.textContent = pendingDone ? '🎁 Nhận thưởng' : '✨ Xem lại';
       main.textContent = CE.fresh ? '🎉 NHẬN THƯỞNG!' : 'Đóng';
     }
   }
@@ -8234,6 +8658,10 @@ var PLAYERS_JSON_EMBEDDED = {
       if(st.tier === 'cheer') triggerToast('okay', '+'+st.pts+' điểm khích lệ môn '+C.s.subject+' — con giỏi lắm! 💚');
       else triggerToast('perfect', 'Đã nhận Play Style '+SKILL_TIERS[st.tier].label.toLowerCase()+' “'+rt.name+'”! +'+st.pts+' điểm 🌟');
       renderWeek();
+      if(st.tier === 'silver' || st.tier === 'gold'){
+        try{ openSkillPlayerModal(st.reward.code, st.tier, C.monthKey, C.key); }
+        catch(err){ console.warn('Khong mo duoc minigame cau thu bi an', err); }
+      }
     }
   }
 
@@ -8247,6 +8675,9 @@ var PLAYERS_JSON_EMBEDDED = {
     } else {
       st.reward = {type:'ps', code:pickPlaystyle(st.tier, month, C.key)};
       st.pts = st.tier === 'gold' ? settings.skillGoldPts : settings.skillSilverPts;
+      st.cardsTotal = st.tier === 'gold' ? 3 : 1;
+      st.cardsGot = 0;
+      st.cardsDone = false;
     }
     st.activated = true;
     st.activatedAt = ymd(new Date());
@@ -8358,7 +8789,24 @@ var PLAYERS_JSON_EMBEDDED = {
   function ceLaterBtn(){
     if(!CE) return;
     if(CE.phase === 'idle'){ closeSkillModal(); }
-    else if(CE.phase === 'done'){ ceCleanup(); ceRenderIdle(); ceStart(); }   // "Xem lại": chạy lại hiệu ứng, KHÔNG random lại, KHÔNG cộng thêm điểm
+    else if(CE.phase === 'done'){
+      var C = CE;
+      var st = skillState(C.monthKey, C.key);
+      if(skillCardsPending(st)){
+        // "Nhận thưởng": còn thẻ cầu thủ chưa lật hết (ví dụ popup từng bị đóng giữa chừng) -> mở lại minigame lật thẻ, không random lại phần thưởng
+        var code = st.reward && st.reward.code, tier = st.tier, mk = C.monthKey, k = C.key;
+        closeSkillModal();
+        var ok = openSkillPlayerModal(code, tier, mk, k);
+        if(!ok){
+          var st2 = skillState(mk, k);
+          st2.cardsDone = true;
+          setSkillState(mk, k, st2);
+          renderWeek();
+        }
+      } else {
+        ceCleanup(); ceRenderIdle(); ceStart();   // "Xem lại": chạy lại hiệu ứng, KHÔNG random lại, KHÔNG cộng thêm điểm
+      }
+    }
   }
   function ceMainBtn(){
     if(!CE) return;
@@ -8867,6 +9315,17 @@ var PLAYERS_JSON_EMBEDDED = {
       }
     } else if(act === 'open' || act === 'replay'){
       openSkillModal(key);
+    } else if(act === 'claim'){
+      var stClaimBtn = skillState(currentPeriod.key, key);
+      if(stClaimBtn.reward && stClaimBtn.reward.type === 'ps'){
+        var okClaim = openSkillPlayerModal(stClaimBtn.reward.code, stClaimBtn.tier, currentPeriod.key, key);
+        if(!okClaim){
+          stClaimBtn.cardsDone = true;
+          setSkillState(currentPeriod.key, key, stClaimBtn);
+          triggerToast('okay', 'Không có cầu thủ để nhận lúc này.');
+          renderWeek();
+        }
+      }
     } else if(act === 'reset'){
       var st2 = skillState(currentPeriod.key, key);
       if(st2.activated && !confirm('Gỡ phần thưởng đã mở (trừ '+st2.pts+' điểm khỏi tổng tháng) và nhập lại điểm môn '+s.subject+'?')) return;
@@ -8892,6 +9351,7 @@ var PLAYERS_JSON_EMBEDDED = {
   document.getElementById('tab-pitch-btn').addEventListener('click', function(){ switchSquadTab('pitch'); });
   document.getElementById('tab-collection-btn').addEventListener('click', function(){ switchSquadTab('collection'); renderCollection(); });
   wireDailyBox();
+  wireSkillPlayerModal();
   document.getElementById('pos-picker-close').addEventListener('click', function(){
     document.getElementById('pos-picker-modal').classList.remove('open');
   });
