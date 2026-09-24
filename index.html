@@ -1532,47 +1532,31 @@
     .skill-room-ico, .month-ball-scene::before, .cab-glass{ animation:none !important; }
   }
 
-  /* CẦU THỦ BÍ ẨN TỪ PLAY STYLE — xếp 5 thẻ theo hình ngôi sao 5 cánh quanh tâm
-     phát sáng, thay vì lưới ô vuông, để cảm giác như đang mở ra một siêu sao. */
+  /* CẦU THỦ BÍ ẨN TỪ PLAY STYLE — 5 thẻ nằm ngang 1 hàng, tỉ lệ hình chữ nhật giống thẻ cầu thủ
+     thật (kể cả lúc còn úp). Khung popup mở rộng tối đa (ưu tiên hiển thị đẹp trên iPad) để
+     LUÔN hiện đủ cả 5 thẻ trong 1 hàng, không cắt/ẩn thẻ nào. Dùng minmax(0,1fr) thay vì 1fr
+     trần — 1fr trần khiến cột co theo kích thước NỘI DUNG thẻ (rỗng lúc chưa tải ảnh) và có
+     thể tụt về gần 0px; minmax(0,1fr) buộc trình duyệt luôn CHIA ĐỀU không gian sẵn có cho 5
+     cột bất kể nội dung bên trong, nên thẻ luôn to vừa khít khung, không co rúm lại nữa. Vẫn
+     dùng chung hiệu ứng thẻ (hover/chạm/picked) với toàn trang. */
+  #skill-player-modal{ padding:8px; }
+  .skp-box{ width:min(920px,100%); padding:18px 10px 20px; overflow:hidden; }
   #skp-grid{
-    display:block; position:relative;
-    width:min(320px,86vw); aspect-ratio:1; margin:18px auto 10px;
+    grid-template-columns:repeat(5,minmax(0,1fr));
+    gap:6px;
+    margin:18px auto 10px;
+    align-items:start;
   }
-  #skp-grid::before{
-    content:''; position:absolute; inset:8%; border-radius:50%; pointer-events:none; z-index:0;
-    background:radial-gradient(circle, rgba(196,181,253,.38), rgba(139,92,246,.14) 55%, transparent 72%);
-    animation:skpStarGlow 3.2s ease-in-out infinite;
+  #skp-grid .daily-box-cell{ aspect-ratio:var(--fc-ar,.74); width:100%; min-width:0; }
+  @media (max-width:460px){
+    #skp-grid{ gap:4px; }
   }
-  #skp-grid::after{
-    content:'★'; position:absolute; left:50%; top:50%; z-index:0; pointer-events:none;
-    font-size:34px; line-height:1; color:rgba(233,213,255,.4);
-    text-shadow:0 0 18px rgba(196,181,253,.75);
-    animation:skpStarSpin 14s linear infinite;
+  /* Thẻ đã lật mở: bỏ khung viền/nền ô úp, hiện trọn thẻ cầu thủ */
+  #skp-grid .daily-box-cell.picked{
+    border:none; background:transparent; box-shadow:none; overflow:visible; cursor:default;
+    animation:skpCardPop .45s cubic-bezier(.34,1.56,.64,1) backwards;
   }
-  @keyframes skpStarGlow{ 0%,100%{ opacity:.55; transform:scale(.94); } 50%{ opacity:1; transform:scale(1.05); } }
-  @keyframes skpStarSpin{ from{ transform:translate(-50%,-50%) rotate(0deg); } to{ transform:translate(-50%,-50%) rotate(360deg); } }
-
-  #skp-grid .daily-box-cell{ position:absolute; width:31%; margin:0; z-index:1; }
-  #skp-grid .daily-box-cell:nth-child(1){ left:50%; top:15%; transform:translate(-50%,-50%) rotate(0deg); }
-  #skp-grid .daily-box-cell:nth-child(2){ left:84%; top:39%; transform:translate(-50%,-50%) rotate(16deg); }
-  #skp-grid .daily-box-cell:nth-child(3){ left:71%; top:80%; transform:translate(-50%,-50%) rotate(7deg); }
-  #skp-grid .daily-box-cell:nth-child(4){ left:29%; top:80%; transform:translate(-50%,-50%) rotate(-7deg); }
-  #skp-grid .daily-box-cell:nth-child(5){ left:16%; top:39%; transform:translate(-50%,-50%) rotate(-16deg); }
-  #skp-grid .daily-box-cell:nth-child(1):active{ transform:translate(-50%,-50%) rotate(0deg) scale(.92); }
-  #skp-grid .daily-box-cell:nth-child(2):active{ transform:translate(-50%,-50%) rotate(16deg) scale(.92); }
-  #skp-grid .daily-box-cell:nth-child(3):active{ transform:translate(-50%,-50%) rotate(7deg) scale(.92); }
-  #skp-grid .daily-box-cell:nth-child(4):active{ transform:translate(-50%,-50%) rotate(-7deg) scale(.92); }
-  #skp-grid .daily-box-cell:nth-child(5):active{ transform:translate(-50%,-50%) rotate(-16deg) scale(.92); }
-  @media (hover:hover) and (pointer:fine){
-    #skp-grid .daily-box-cell:nth-child(1):hover{ transform:translate(-50%,-50%) rotate(0deg) scale(1.08); }
-    #skp-grid .daily-box-cell:nth-child(2):hover{ transform:translate(-50%,-50%) rotate(16deg) scale(1.08); }
-    #skp-grid .daily-box-cell:nth-child(3):hover{ transform:translate(-50%,-50%) rotate(7deg) scale(1.08); }
-    #skp-grid .daily-box-cell:nth-child(4):hover{ transform:translate(-50%,-50%) rotate(-7deg) scale(1.08); }
-    #skp-grid .daily-box-cell:nth-child(5):hover{ transform:translate(-50%,-50%) rotate(-16deg) scale(1.08); }
-  }
-  @media (prefers-reduced-motion: reduce){
-    #skp-grid::before, #skp-grid::after{ animation:none !important; }
-  }
+  @keyframes skpCardPop{ 0%{ opacity:0; transform:scale(.7) translateY(8px); } 100%{ opacity:1; transform:none; } }
 
 </style>
 </head>
@@ -7366,7 +7350,7 @@ var PLAYERS_JSON_EMBEDDED = {
     try{ renderWeek(); }catch(err){ console.warn('renderWeek loi', err); }
 
     lead.innerHTML = '🎉 Con đã nhận được <b>'+escHtml(base.name)+'</b>! Vào "Kho cầu thủ" để xem thẻ nhé.';
-    try{ playDailyBoxReveal(base, p); }
+    try{ playDailyBoxReveal(base, p, 'dbx-stage', null, false, true); }
     catch(err){
       // Hiệu ứng lỗi thì vẫn phải cho con thấy thẻ.
       console.warn('Hieu ung mo the loi', err);
@@ -7441,11 +7425,9 @@ var PLAYERS_JSON_EMBEDDED = {
     stage.className = 'dbx-stage' + (mystic ? ' is-mystic' : '');
     stage.innerHTML = dbxStageHTML(base, p, mystic);
 
-    /* Mặc định: 2 lần chạm rõ ràng để tạo cảm giác hồi hộp (chạm 1 = thẻ bay ra giữa màn
-       hình, phóng to, tích năng lượng; chạm 2 = "kích nổ" thẻ, bung tia lửa điện/sấm chớp
-       rồi hiện thông tin). Với instant=true (chọn thẻ trong 5 ô hình ngôi sao của Skill):
-       chạm 1 lần DUY NHẤT là chọn được thẻ ngay — bỏ qua hẳn bước tích năng lượng chờ
-       chạm lần 2, đi thẳng vào hiệu ứng bung thẻ rồi hiện thông tin luôn. */
+    /* Mặc định: chạm 1 lần để chọn ô là thẻ tự động mở luôn (tích năng lượng rồi bung thẻ,
+       không cần chạm thêm lần 2 để "kích nổ"). instant=true dùng chung cho cả hộp quà ngày
+       lẫn 5 ô hình chữ nhật của Skill — đi thẳng vào hiệu ứng bung thẻ rồi hiện thông tin luôn. */
     var boomed = false, armed = false, imgsReady = false;
     function boom(){
       if(boomed || !armed) return;
@@ -7733,10 +7715,15 @@ var PLAYERS_JSON_EMBEDDED = {
     grid.className = 'daily-box-grid' + (done ? ' locked' : '');
     grid.innerHTML = skpPicks.map(function(p, i){
       var opened = skpOpenedIdx.indexOf(i) >= 0;
+      if(opened){
+        // Thẻ đã mở: hiện đầy đủ chân dung + chỉ số + playstyle như thẻ cầu thủ chuẩn của toàn trang,
+        // thay vì chỉ giữ ảnh nền nhỏ của ô úp.
+        return '<button type="button" class="daily-box-cell picked" data-skp-index="'+i+'" disabled aria-label="Đã nhận '+escHtml(p.name || '')+'">'+dbxCardHTML(p)+'</button>';
+      }
       var art = (cdnReady() && p.background)
         ? '<img src="'+cdnUrl(p.background)+'" alt="" loading="lazy" draggable="false" onerror="this.remove()">'
         : '';
-      return '<button type="button" class="daily-box-cell'+(opened?' picked':'')+'" data-skp-index="'+i+'" '+(opened?'disabled':'')+' aria-label="Ô bí ẩn số '+(i+1)+'">'+art+'</button>';
+      return '<button type="button" class="daily-box-cell" data-skp-index="'+i+'" aria-label="Ô bí ẩn số '+(i+1)+'">'+art+'</button>';
     }).join('');
   }
 
@@ -7812,6 +7799,28 @@ var PLAYERS_JSON_EMBEDDED = {
     if(leadEl) leadEl.innerHTML = 'Con đã mở đủ <b>'+skpReceived.length+' thẻ cầu thủ</b> rồi! Vào "Kho cầu thủ" để xem chi tiết nhé.';
   }
 
+  /* "Nhận thẻ" khi skill đã nhận đủ thẻ từ trước: mở lại đúng các thẻ cầu thủ đã chiêu mộ
+     (lưu theo dbId lúc nhận), không random lại, không lưu thêm thẻ mới, không cộng thêm điểm.
+     Trả về false nếu skill này chưa có dữ liệu cardsDbIds (ví dụ dữ liệu cũ trước bản cập nhật)
+     để nơi gọi có thể xử lý phương án dự phòng. */
+  function openSkillCardsView(monthKey, key){
+    var st = skillState(monthKey, key);
+    var ids = (st.cardsDbIds || []).filter(function(id){ return id && PLAYER_DB_BY_ID[id]; });
+    if(!ids.length) return false;
+    dbxStop();
+    dbxResetStage('skp-stage');
+    skpPicks = null; skpNeeded = 0; skpFlipped = 0; skpOpenedIdx = []; skpReceived = []; SKP_CTX = null;
+    document.getElementById('skp-title').textContent = '🎴 Thẻ Cầu Thủ Đã Nhận';
+    document.getElementById('skp-lead').innerHTML = 'Đây là những cầu thủ con đã chiêu mộ được từ Play Style này!';
+    var grid = document.getElementById('skp-grid');
+    grid.className = 'daily-box-grid gallery';
+    grid.innerHTML = ids.map(function(id){
+      return '<div class="skp-gallery-item">'+dbxCardHTML(PLAYER_DB_BY_ID[id])+'</div>';
+    }).join('');
+    openModalTop('skill-player-modal');
+    return true;
+  }
+
   function skpAfterReveal(isLast){
     dbxResetStage('skp-stage');
     skpBusy = false;
@@ -7850,6 +7859,8 @@ var PLAYERS_JSON_EMBEDDED = {
         if(!stClaim.cardsTotal) stClaim.cardsTotal = skpNeeded + (stClaim.cardsGot || 0);
         stClaim.cardsGot = (stClaim.cardsGot || 0) + 1;
         if(stClaim.cardsGot >= stClaim.cardsTotal) stClaim.cardsDone = true;
+        if(!stClaim.cardsDbIds) stClaim.cardsDbIds = [];
+        stClaim.cardsDbIds.push(base.dbId || '');
         setSkillState(SKP_CTX.monthKey, SKP_CTX.key, stClaim);
       }catch(err){ console.warn('Khong cap nhat tien do nhan the (skill)', err); }
     }
@@ -8285,6 +8296,8 @@ var PLAYERS_JSON_EMBEDDED = {
       + '<div class="sk-actions-row">';
     if(pending){
       h += '<button type="button" class="btn-open" data-act="claim" data-skill="'+s.key+'">🎁 Nhận thưởng</button>';
+    } else if(st.tier === 'silver' || st.tier === 'gold'){
+      h += '<button type="button" class="btn-ghost" data-act="cards" data-skill="'+s.key+'">🎴 Xem thẻ đã nhận</button>';
     } else {
       h += '<button type="button" class="btn-ghost" data-act="replay" data-skill="'+s.key+'">✨ Xem lại</button>';
     }
@@ -8601,7 +8614,8 @@ var PLAYERS_JSON_EMBEDDED = {
     } else if(phase === 'done'){
       var stDone = skillState(CE.monthKey, CE.key);
       var pendingDone = skillCardsPending(stDone);
-      later.textContent = pendingDone ? '🎁 Nhận thưởng' : '✨ Xem lại';
+      var hasCards = (CE.tier === 'silver' || CE.tier === 'gold');
+      later.textContent = pendingDone ? '🎁 Nhận thẻ' : (hasCards ? '🎴 Xem thẻ đã nhận' : '✨ Xem lại');
       main.textContent = CE.fresh ? '🎉 NHẬN THƯỞNG!' : 'Đóng';
     }
   }
@@ -8678,6 +8692,7 @@ var PLAYERS_JSON_EMBEDDED = {
       st.cardsTotal = st.tier === 'gold' ? 3 : 1;
       st.cardsGot = 0;
       st.cardsDone = false;
+      st.cardsDbIds = [];
     }
     st.activated = true;
     st.activatedAt = ymd(new Date());
@@ -8793,7 +8808,7 @@ var PLAYERS_JSON_EMBEDDED = {
       var C = CE;
       var st = skillState(C.monthKey, C.key);
       if(skillCardsPending(st)){
-        // "Nhận thưởng": còn thẻ cầu thủ chưa lật hết (ví dụ popup từng bị đóng giữa chừng) -> mở lại minigame lật thẻ, không random lại phần thưởng
+        // "Nhận thẻ": còn thẻ cầu thủ chưa lật hết (ví dụ popup từng bị đóng giữa chừng) -> mở lại minigame lật thẻ, không random lại phần thưởng
         var code = st.reward && st.reward.code, tier = st.tier, mk = C.monthKey, k = C.key;
         closeSkillModal();
         var ok = openSkillPlayerModal(code, tier, mk, k);
@@ -8803,8 +8818,13 @@ var PLAYERS_JSON_EMBEDDED = {
           setSkillState(mk, k, st2);
           renderWeek();
         }
+      } else if(C.tier === 'silver' || C.tier === 'gold'){
+        // "Xem thẻ đã nhận": đã nhận đủ thẻ trước đó -> mở lại đúng các thẻ đã chiêu mộ, KHÔNG random lại, KHÔNG cộng thêm điểm
+        var mk2 = C.monthKey, k2 = C.key;
+        closeSkillModal();
+        if(!openSkillCardsView(mk2, k2)) openSkillModal(k2);   // dữ liệu cũ chưa có cardsDbIds -> phát lại hiệu ứng như trước
       } else {
-        ceCleanup(); ceRenderIdle(); ceStart();   // "Xem lại": chạy lại hiệu ứng, KHÔNG random lại, KHÔNG cộng thêm điểm
+        ceCleanup(); ceRenderIdle(); ceStart();   // "Xem lại" (skill khích lệ, không có thẻ): chạy lại hiệu ứng, KHÔNG random lại, KHÔNG cộng thêm điểm
       }
     }
   }
@@ -9315,6 +9335,8 @@ var PLAYERS_JSON_EMBEDDED = {
       }
     } else if(act === 'open' || act === 'replay'){
       openSkillModal(key);
+    } else if(act === 'cards'){
+      if(!openSkillCardsView(currentPeriod.key, key)) openSkillModal(key);   // dữ liệu cũ chưa có cardsDbIds -> phát lại hiệu ứng như trước
     } else if(act === 'claim'){
       var stClaimBtn = skillState(currentPeriod.key, key);
       if(stClaimBtn.reward && stClaimBtn.reward.type === 'ps'){
