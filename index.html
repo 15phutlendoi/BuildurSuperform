@@ -659,6 +659,11 @@
   .player-card .pc-playstyles{ position:absolute; right:5px; top:5px; display:flex; flex-direction:column; gap:4px; }
   .player-card .pc-playstyles img{ width:20px; height:20px; object-fit:contain; background:rgba(255,255,255,.85); border-radius:50%; padding:2px; box-shadow:0 1px 3px rgba(0,0,0,.5); }
   .collection-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(110px,1fr)); gap:10px; }
+  .collection-sort{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:12px; }
+  .collection-sort label{ font-size:12.5px; font-weight:800; color:var(--ink-soft); }
+  .collection-sort select{ background:var(--deep-soft); color:var(--ink); border:2px solid var(--line); border-radius:var(--radius-sm); padding:7px 10px; font:inherit; font-size:13px; font-weight:700; }
+  .collection-sort .btn-secondary{ padding:7px 12px; font-size:12.5px; white-space:nowrap; }
+  .collection-sort .collection-count{ margin-left:auto; font-size:12px; font-weight:700; color:var(--ink-soft); }
   .empty-collection{ text-align:center; color:var(--ink-soft); padding:20px; font-size:14px; }
   .picker-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(100px,1fr)); gap:8px; max-height:50vh; overflow-y:auto; }
   .picker-grid .player-card{ cursor:pointer; padding:8px; }
@@ -1764,6 +1769,17 @@
         <p class="hint-text" style="margin-top:8px">Chạm vào một vị trí trên sân hoặc một ô dự bị để xếp cầu thủ. Đổi sơ đồ để có nhiều kiểu xếp hình khác nhau — mỗi đội hình chính luôn 11 cầu thủ, cộng thêm tối đa 7 dự bị.</p>
       </div>
       <div id="tab-collection" style="display:none">
+        <div class="collection-sort" id="collection-sort">
+          <label for="collection-sort-key">Sắp xếp theo</label>
+          <select id="collection-sort-key">
+            <option value="recent">🕒 Mới nhận</option>
+            <option value="ovr">⭐ Overall</option>
+            <option value="name">🔤 Họ tên</option>
+            <option value="pos">📍 Vị trí</option>
+          </select>
+          <button type="button" id="collection-sort-dir" class="btn-secondary"></button>
+          <span class="collection-count" id="collection-count"></span>
+        </div>
         <div class="collection-grid" id="collection-grid"></div>
       </div>
     </div>
@@ -3391,7 +3407,9 @@
         pace: r.pac || 0, shooting: r.sho || 0, passing: r.pas || 0,
         dribbling: r.dri || 0, defending: r.def || 0, physical: r.phy || 0
       },
-      realOvr: (typeof r.ovr === 'number') ? r.ovr : 0,
+      // OVR hiển thị = baseOvr (gốc, KHÔNG cộng thêm 5). Dữ liệu cũ chưa có baseOvr thì dùng ovr.
+      baseOvr: (typeof r.baseOvr === 'number') ? r.baseOvr : 0,
+      realOvr: (typeof r.baseOvr === 'number') ? r.baseOvr : ((typeof r.ovr === 'number') ? r.ovr : 0),
       weakFoot: r.weakFoot || '-',
       skillMoves: r.skillMoves || 0,
       height: r.height || 0,
@@ -3413,7 +3431,10 @@
     keys.forEach(function(k){
       var r = raw[k];
       if(!r || typeof r !== 'object') return;
-      if(r.realStats && r.dbId){ out.push(r); return; }
+      if(r.realStats && r.dbId){
+        if(typeof r.baseOvr === 'number' && r.realOvr !== r.baseOvr){ r = Object.assign({}, r, { realOvr: r.baseOvr }); }
+        out.push(r); return;
+      }
       var id = r.dbId || (/^p\d+$/.test(k) ? k : '');
       if(id && r.name) out.push(dbRecordToPlayer(r, id));
     });
@@ -4519,18 +4540,78 @@
     openModalTop('pos-picker-modal');
   }
 
+  /* ---- Sắp xếp Kho cầu thủ: mới nhận / overall / họ tên / vị trí (nhớ lựa chọn trên máy này) ---- */
+  var POS_ORDER = ['GK','CB','LB','RB','LWB','RWB','CDM','CM','CAM','LM','RM','LW','RW','CF','ST'];
+  var COLLECTION_SORTS = {
+    recent: { asc:'Cũ nhất trước',   desc:'Mới nhất trước' },
+    ovr:    { asc:'Thấp → cao',      desc:'Cao → thấp' },
+    name:   { asc:'A → Z',           desc:'Z → A' },
+    pos:    { asc:'Thủ môn → tiền đạo', desc:'Tiền đạo → thủ môn' }
+  };
+  var collectionSort = (function(){
+    var st = null;
+    try{ st = JSON.parse(localStorage.getItem('kidchart_collection_sort') || 'null'); }catch(e){}
+    if(!st || !COLLECTION_SORTS[st.key]) st = { key:'recent', desc:true };
+    return { key: st.key, desc: st.desc !== false };
+  })();
+  function saveCollectionSort(){
+    try{ localStorage.setItem('kidchart_collection_sort', JSON.stringify(collectionSort)); }catch(e){}
+  }
+  function posRank(pos){
+    var i = POS_ORDER.indexOf(String(pos || '').toUpperCase());
+    return i < 0 ? POS_ORDER.length : i;
+  }
+  function ovrOf(p){ return Number(p.ovr || p.realOvr || 0); }
+  function nameCmp(a, b){ return String(a.name || '').localeCompare(String(b.name || ''), 'vi', { sensitivity:'base' }); }
+  // Trả về bản sao đã sắp xếp. Mặc định mỗi tiêu chí: mới→cũ, overall cao→thấp, A→Z, thủ môn→tiền đạo.
+  function sortCollection(list, key, desc){
+    var arr = list.map(function(p, i){ return { p:p, i:i }; });
+    arr.sort(function(x, y){
+      var a = x.p, b = y.p, c = 0;
+      if(key === 'recent') c = y.i - x.i;                          // i lớn = nhận sau
+      else if(key === 'ovr') c = (ovrOf(b) - ovrOf(a)) || nameCmp(a, b);
+      else if(key === 'name') c = nameCmp(a, b) || (ovrOf(b) - ovrOf(a));
+      else if(key === 'pos') c = (posRank(a.pos) - posRank(b.pos)) || (ovrOf(b) - ovrOf(a)) || nameCmp(a, b);
+      if(key === 'recent'){ if(!desc) c = -c; }
+      else if(!desc) c = -c;
+      return c || (y.i - x.i);
+    });
+    return arr.map(function(x){ return x.p; });
+  }
+  function syncCollectionSortUI(){
+    var sel = document.getElementById('collection-sort-key');
+    var btn = document.getElementById('collection-sort-dir');
+    if(sel) sel.value = collectionSort.key;
+    if(btn) btn.textContent = (collectionSort.desc ? '⬇️ ' : '⬆️ ') + COLLECTION_SORTS[collectionSort.key][collectionSort.desc ? 'desc' : 'asc'];
+  }
   function renderCollection(){
-    var players = hydratePlayers(loadPlayers());
+    var players = hydratePlayers(loadPlayers()).filter(Boolean);
     var grid = document.getElementById('collection-grid');
+    var bar = document.getElementById('collection-sort');
+    var cnt = document.getElementById('collection-count');
+    if(bar) bar.style.display = players.length ? '' : 'none';
     if(!players.length){
       grid.innerHTML = '<p class="empty-collection">Chưa có cầu thủ nào — hoàn thành nhiệm vụ mỗi ngày và vượt mốc điểm tháng để nhận thẻ cầu thủ nhé! 🎴</p>';
       return;
     }
-    grid.innerHTML = players.slice().reverse().map(function(p){
+    syncCollectionSortUI();
+    if(cnt) cnt.textContent = players.length + ' cầu thủ';
+    grid.innerHTML = sortCollection(players, collectionSort.key, collectionSort.desc).map(function(p){
       return playerCardHTML(p, false) ;
     }).join('');
     wirePlayerDetailClicks(grid, function(id){ return hydratePlayer(loadPlayers().find(function(x){ return x.id===id; })); });
   }
+  document.getElementById('collection-sort-key').addEventListener('change', function(e){
+    collectionSort.key = e.target.value;
+    collectionSort.desc = true; // mỗi tiêu chí bắt đầu theo chiều mặc định
+    saveCollectionSort();
+    renderCollection();
+  });
+  document.getElementById('collection-sort-dir').addEventListener('click', function(){
+    collectionSort.desc = !collectionSort.desc;
+    saveCollectionSort();
+    renderCollection();
+  });
 
   function openSquadModal(){
     switchSquadTab('pitch');
