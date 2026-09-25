@@ -2256,14 +2256,16 @@
     return keys;
   }
   /* Mọi khóa dữ liệu hồ sơ (kho cầu thủ, đội hình, điểm ngày, cài đặt, huy hiệu, ...)
-     TRỪ các định danh chỉ tồn tại trên máy (mã đồng bộ, tên hiển thị cục bộ) —
-     dùng để không bỏ sót dữ liệu nào khi seed lần đầu lên Firebase. */
+     TRỪ: định danh chỉ tồn tại trên máy (mã đồng bộ, tên hiển thị cục bộ), và
+     kidchart_player_db — đây chỉ là bộ nhớ đệm cục bộ của dữ liệu cầu thủ DÙNG CHUNG
+     (đọc từ node Firebase gốc /kidchart_player_db.json), không phải dữ liệu riêng
+     của từng hồ sơ nên không được seed/ghi vào bên trong kidchart/{mã hồ sơ}/. */
   function allLocalKidchartKeys(){
     var keys = [];
     try{
       for(var i=0;i<localStorage.length;i++){
         var k = localStorage.key(i);
-        if(k && k.indexOf('kidchart_')===0 && k!=='kidchart_syncid' && k!=='kidchart_username') keys.push(k);
+        if(k && k.indexOf('kidchart_')===0 && k!=='kidchart_syncid' && k!=='kidchart_username' && k!=='kidchart_player_db') keys.push(k);
       }
     }catch(e){}
     return keys;
@@ -2397,7 +2399,7 @@
       var keys = [];
       for(var i=0;i<localStorage.length;i++){
         var k = localStorage.key(i);
-        if(k && k.indexOf('kidchart_')===0 && k!=='kidchart_syncid') keys.push(k);
+        if(k && k.indexOf('kidchart_')===0 && k!=='kidchart_syncid' && k!=='kidchart_player_db') keys.push(k);
       }
       keys.forEach(function(k){ localStorage.removeItem(k); });
     }catch(e){ console.warn('wipe failed', e); }
@@ -2468,7 +2470,7 @@
       var loadBtn = document.getElementById('btn-login-load');
       var createBtn = document.getElementById('btn-login-create');
       loadBtn.addEventListener('click', function onLoad(){
-        var code = document.getElementById('login-user-select').value.trim().toUpperCase();
+        var code = document.getElementById('login-user-select').value.trim();
         if(!code){ alert('Vui lòng chọn một hồ sơ trong danh sách.'); return; }
         loadBtn.removeEventListener('click', onLoad);
         finish(code, userNameOf(code));
@@ -5833,7 +5835,7 @@
   });
   /* ---- Mở hồ sơ người dùng có sẵn ---- */
   document.getElementById('btn-user-load').addEventListener('click', function(){
-    var code = document.getElementById('user-select').value.trim().toUpperCase();
+    var code = document.getElementById('user-select').value.trim();
     if(!code){ alert('Chưa chọn hồ sơ người dùng nào.'); return; }
     if(code === syncId){ alert('Đây đang là hồ sơ hiện tại rồi.'); return; }
     if(!confirm('Mở hồ sơ "' + userLabel(code) + '"?\n\nTrang sẽ tải lại và lấy toàn bộ dữ liệu của hồ sơ này từ đám mây.')) return;
