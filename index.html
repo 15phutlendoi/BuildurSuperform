@@ -2233,6 +2233,19 @@
     }catch(e){}
     return keys;
   }
+  /* Mọi khóa dữ liệu hồ sơ (kho cầu thủ, đội hình, điểm ngày, cài đặt, huy hiệu, ...)
+     TRỪ các định danh chỉ tồn tại trên máy (mã đồng bộ, tên hiển thị cục bộ) —
+     dùng để không bỏ sót dữ liệu nào khi seed lần đầu lên Firebase. */
+  function allLocalKidchartKeys(){
+    var keys = [];
+    try{
+      for(var i=0;i<localStorage.length;i++){
+        var k = localStorage.key(i);
+        if(k && k.indexOf('kidchart_')===0 && k!=='kidchart_syncid' && k!=='kidchart_username') keys.push(k);
+      }
+    }catch(e){}
+    return keys;
+  }
   function makeSyncCode(){
     var chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
     var s = '';
@@ -2286,7 +2299,7 @@
         setSyncStatus('☁️ Đã tải dữ liệu từ đám mây · Mã: ' + syncId);
       } else if(syncOnline) {
         var seed = {};
-        SYNC_KEYS.concat(allLocalMonthKeys()).forEach(function(key){
+        allLocalKidchartKeys().forEach(function(key){
           var v = safeGet(key);
           if(v !== null) seed[key] = v;
         });
