@@ -5807,6 +5807,14 @@
       }
     } else if(act === 'reset'){
       var st2 = skillState(currentPeriod.key, key);
+      if(!isAdmin){
+        var pinReset = prompt('Nhập mã PIN Quản trị viên để nhập lại điểm môn '+s.subject+':');
+        if(pinReset === null) return;
+        if(pinReset !== settings.adminPin){
+          triggerToast('low', '🔒 Mã PIN không đúng.');
+          return;
+        }
+      }
       if(st2.activated && !confirm('Gỡ phần thưởng đã mở (trừ '+st2.pts+' điểm khỏi tổng tháng) và nhập lại điểm môn '+s.subject+'?')) return;
       setSkillState(currentPeriod.key, key, {score:null, tier:null, activated:false});
       renderWeek();
