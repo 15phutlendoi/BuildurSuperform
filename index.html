@@ -2274,8 +2274,8 @@
     for(var i=0;i<6;i++) s += chars.charAt(Math.floor(Math.random()*chars.length));
     return s;
   }
-  var isFirstConnection = false;
-  try{ isFirstConnection = !localStorage.getItem('kidchart_syncid'); }catch(e){}
+  var storedSyncId = null;
+  try{ storedSyncId = localStorage.getItem('kidchart_syncid'); }catch(e){}
   function getSyncId(){
     var id = null;
     try{ id = localStorage.getItem('kidchart_syncid'); }catch(e){}
@@ -2458,6 +2458,7 @@
       modal.classList.add('open');
       populateLoginSelect();
       function finish(code, name){
+        wipeLocalProfileData();
         syncId = code;
         try{ localStorage.setItem('kidchart_syncid', code); }catch(e){}
         setLocalUserName(name || '');
@@ -2487,9 +2488,23 @@
     });
   }
 
-  if(isFirstConnection){ await runFirstConnectionLogin(); }
+  /* ---- Mỗi lần vào app: kiểm tra mã đồng bộ trên máy có thực sự tồn tại trong
+     Sổ người dùng trên Firebase hay không, TRƯỚC KHI tải/đồng bộ dữ liệu.
+     - Khớp -> dùng luôn hồ sơ đó, tải dữ liệu như bình thường.
+     - Không có mạng -> không thể kiểm tra, tạm dùng hồ sơ đã lưu trên máy (nếu có) để không mất dữ liệu.
+     - Không khớp / chưa có hồ sơ nào trên máy -> bắt buộc chọn hồ sơ có sẵn hoặc tạo hồ sơ mới qua màn hình đăng nhập.
+       Tuyệt đối không tự seed/push dữ liệu máy lên Firebase trong trường hợp này —
+       chỉ khi người dùng chủ động bấm "Tạo hồ sơ mới" thì mới ghi lên Firebase. */
+  var dirData = await fetchUserDirectory();
+  var matchedExisting = !!(storedSyncId && dirData !== null && userDirectory[storedSyncId]);
+  if(matchedExisting){
+    syncId = storedSyncId;
+  } else if(dirData === null && storedSyncId){
+    syncId = storedSyncId; // offline: không kiểm tra được, giữ nguyên hồ sơ đã lưu trên máy
+  } else {
+    await runFirstConnectionLogin();
+  }
   await bootstrapCloudSync();
-  ensureCurrentUserRegistered();
 
   var settings = safeGet('kidchart_settings') || {};
   if(typeof settings.monthlyGoal !== 'number') settings.monthlyGoal = 2700;
