@@ -1803,6 +1803,28 @@
 <div id="toast"></div>
 <div id="effect-layer"></div>
 
+<div id="login-modal" class="modal">
+  <div class="modal-backdrop"></div>
+  <div class="modal-box">
+    <h3>👋 Chào mừng đến Đội Bóng Của Đốm!</h3>
+    <p class="hint-text" style="margin:-6px 0 0">Thiết bị này kết nối lần đầu. Chọn hồ sơ có sẵn để mở lại dữ liệu cũ, hoặc tạo hồ sơ mới nếu đây là người dùng mới.</p>
+    <div class="user-box">
+      <p class="user-current" id="login-existing-label">📂 Hồ sơ có sẵn</p>
+      <div class="reward-row">
+        <select id="login-user-select"><option value="">— Đang tải danh sách… —</option></select>
+        <button type="button" id="btn-login-load" class="btn-secondary">Mở hồ sơ</button>
+      </div>
+      <p class="hint-text" style="margin:6px 0 0">Chọn tên hồ sơ đã dùng trước đây trên thiết bị khác để đồng bộ dữ liệu về đây.</p>
+      <div class="user-sep">HOẶC</div>
+      <div class="reward-row">
+        <input type="text" id="login-new-name" placeholder="Tên người dùng mới (VD: Bé Bo)" maxlength="24">
+        <button type="button" id="btn-login-create" class="btn-secondary">Tạo hồ sơ mới</button>
+      </div>
+      <p class="hint-text" style="margin:6px 0 0"><span class="user-warn">⚠️</span> Tạo hồ sơ mới sẽ bắt đầu với dữ liệu trắng hoàn toàn (không điểm ngày, không huy hiệu, không cầu thủ, không đội hình).</p>
+    </div>
+  </div>
+</div>
+
 <div id="settings-modal" class="modal">
   <div id="settings-backdrop" class="modal-backdrop"></div>
   <div class="modal-box">
@@ -2252,6 +2274,8 @@
     for(var i=0;i<6;i++) s += chars.charAt(Math.floor(Math.random()*chars.length));
     return s;
   }
+  var isFirstConnection = false;
+  try{ isFirstConnection = !localStorage.getItem('kidchart_syncid'); }catch(e){}
   function getSyncId(){
     var id = null;
     try{ id = localStorage.getItem('kidchart_syncid'); }catch(e){}
@@ -2406,6 +2430,64 @@
     });
   }
 
+  /* ---- Đăng nhập khi thiết bị kết nối lần đầu: chọn hồ sơ có sẵn hoặc tạo mới ---- */
+  function populateLoginSelect(){
+    var sel = document.getElementById('login-user-select');
+    if(!sel) return Promise.resolve();
+    sel.innerHTML = '<option value="">— Đang tải danh sách… —</option>';
+    return fetchUserDirectory().then(function(data){
+      var codes = Object.keys(userDirectory);
+      if(data === null && !codes.length){
+        sel.innerHTML = '<option value="">— Không có mạng, chưa tải được danh sách —</option>';
+        return;
+      }
+      if(!codes.length){
+        sel.innerHTML = '<option value="">— Chưa có hồ sơ nào, hãy tạo mới bên dưới —</option>';
+        return;
+      }
+      codes.sort(function(a,b){ return userNameOf(a).localeCompare(userNameOf(b), 'vi'); });
+      sel.innerHTML = '<option value="">— Chọn hồ sơ —</option>' + codes.map(function(c){
+        return '<option value="' + uEsc(c) + '">' + uEsc(userLabel(c)) + '</option>';
+      }).join('');
+    });
+  }
+  function runFirstConnectionLogin(){
+    return new Promise(function(resolve){
+      var modal = document.getElementById('login-modal');
+      if(!modal){ resolve(); return; }
+      modal.classList.add('open');
+      populateLoginSelect();
+      function finish(code, name){
+        syncId = code;
+        try{ localStorage.setItem('kidchart_syncid', code); }catch(e){}
+        setLocalUserName(name || '');
+        modal.classList.remove('open');
+        resolve();
+      }
+      var loadBtn = document.getElementById('btn-login-load');
+      var createBtn = document.getElementById('btn-login-create');
+      loadBtn.addEventListener('click', function onLoad(){
+        var code = document.getElementById('login-user-select').value.trim().toUpperCase();
+        if(!code){ alert('Vui lòng chọn một hồ sơ trong danh sách.'); return; }
+        loadBtn.removeEventListener('click', onLoad);
+        finish(code, userNameOf(code));
+      });
+      createBtn.addEventListener('click', function onCreate(){
+        var input = document.getElementById('login-new-name');
+        var name = input.value.trim();
+        if(!name){ alert('Nhập tên người dùng mới trước nhé.'); return; }
+        createBtn.disabled = true;
+        var code = syncId;
+        if(userDirectory[code]) code = makeUniqueUserCode();
+        registerUser(code, name).then(function(){
+          createBtn.removeEventListener('click', onCreate);
+          finish(code, name);
+        });
+      });
+    });
+  }
+
+  if(isFirstConnection){ await runFirstConnectionLogin(); }
   await bootstrapCloudSync();
   ensureCurrentUserRegistered();
 
