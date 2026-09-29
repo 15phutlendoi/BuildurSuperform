@@ -664,6 +664,12 @@
   .collection-sort select{ background:var(--deep-soft); color:var(--ink); border:2px solid var(--line); border-radius:var(--radius-sm); padding:7px 10px; font:inherit; font-size:13px; font-weight:700; }
   .collection-sort .btn-secondary{ padding:7px 12px; font-size:12.5px; white-space:nowrap; }
   .collection-sort .collection-count{ margin-left:auto; font-size:12px; font-weight:700; color:var(--ink-soft); }
+  .collection-element-filter{ display:flex; gap:6px; flex-wrap:wrap; margin-bottom:10px; }
+  .collection-element-filter button{
+    border:2px solid var(--line); background:var(--deep-soft); color:var(--ink); border-radius:999px;
+    padding:5px 12px; font-size:12.5px; font-weight:700; cursor:pointer;
+  }
+  .collection-element-filter button.active{ background:var(--stadium); border-color:transparent; color:var(--night); }
   .empty-collection{ text-align:center; color:var(--ink-soft); padding:20px; font-size:14px; }
   .picker-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(100px,1fr)); gap:8px; max-height:50vh; overflow-y:auto; }
   .picker-grid .player-card{ cursor:pointer; padding:8px; }
@@ -776,6 +782,13 @@
     border:.4cqw solid rgba(255,255,255,.22); box-shadow:0 1cqw 2.4cqw rgba(0,0,0,.45);
   }
   .fc-card .fc-ps img{ width:max(12.5cqw,8px); height:max(12.5cqw,8px); object-fit:contain; display:block; }
+  /* Góc phải: huy hiệu Hệ (Đấu Thẻ) — chỉ hiện khi thẻ đã có dữ liệu battle */
+  .fc-card .fc-element{
+    position:absolute; z-index:3; right:5.5%; top:4.5%; display:flex; align-items:center; justify-content:center;
+    width:max(15cqw,15px); height:max(15cqw,15px); border-radius:50%; line-height:1;
+    background:linear-gradient(160deg,rgba(60,62,90,.86),rgba(14,15,30,.9)); border:.4cqw solid rgba(255,255,255,.22);
+    font-size:max(10cqw,10px); box-shadow:0 1cqw 2.4cqw rgba(0,0,0,.45);
+  }
   /* Tên cầu thủ */
   .fc-card .fc-name{ position:absolute; z-index:3; left:0; right:0; top:var(--fc-name-top); height:9%; display:flex; align-items:center; justify-content:center; padding:0 4%; }
   .fc-card .fc-name span{
@@ -1769,6 +1782,7 @@
         <p class="hint-text" style="margin-top:8px">Chạm vào một vị trí trên sân hoặc một ô dự bị để xếp cầu thủ. Đổi sơ đồ để có nhiều kiểu xếp hình khác nhau — mỗi đội hình chính luôn 11 cầu thủ, cộng thêm tối đa 7 dự bị.</p>
       </div>
       <div id="tab-collection" style="display:none">
+        <div class="collection-element-filter" id="collection-element-filter" style="display:none"></div>
         <div class="collection-sort" id="collection-sort">
           <label for="collection-sort-key">Sắp xếp theo</label>
           <select id="collection-sort-key">
@@ -1776,6 +1790,7 @@
             <option value="ovr">⭐ Overall</option>
             <option value="name">🔤 Họ tên</option>
             <option value="pos">📍 Vị trí</option>
+            <option value="element">⚔️ Hệ</option>
           </select>
           <button type="button" id="collection-sort-dir" class="btn-secondary"></button>
           <span class="collection-count" id="collection-count"></span>
@@ -1998,6 +2013,8 @@
     </div>
   </div>
 </div>
+
+
 
 
 
@@ -2257,15 +2274,16 @@
   }
   /* Mọi khóa dữ liệu hồ sơ (kho cầu thủ, đội hình, điểm ngày, cài đặt, huy hiệu, ...)
      TRỪ: định danh chỉ tồn tại trên máy (mã đồng bộ, tên hiển thị cục bộ), và
-     kidchart_player_db — đây chỉ là bộ nhớ đệm cục bộ của dữ liệu cầu thủ DÙNG CHUNG
-     (đọc từ node Firebase gốc /kidchart_player_db.json), không phải dữ liệu riêng
-     của từng hồ sơ nên không được seed/ghi vào bên trong kidchart/{mã hồ sơ}/. */
+     kidchart_player_db / kidchart_battle_config — đây chỉ là bộ nhớ đệm cục bộ của dữ liệu
+     DÙNG CHUNG (đọc từ node Firebase gốc /kidchart_player_db.json, /kidchart_battle_config.json),
+     không phải dữ liệu riêng của từng hồ sơ nên không được seed/ghi vào bên trong kidchart/{mã hồ sơ}/. */
   function allLocalKidchartKeys(){
     var keys = [];
+    var SHARED_KEYS = {kidchart_player_db:1, kidchart_battle_config:1};
     try{
       for(var i=0;i<localStorage.length;i++){
         var k = localStorage.key(i);
-        if(k && k.indexOf('kidchart_')===0 && k!=='kidchart_syncid' && k!=='kidchart_username' && k!=='kidchart_player_db') keys.push(k);
+        if(k && k.indexOf('kidchart_')===0 && k!=='kidchart_syncid' && k!=='kidchart_username' && !SHARED_KEYS[k]) keys.push(k);
       }
     }catch(e){}
     return keys;
@@ -3566,8 +3584,51 @@
     }
     return list;
   }
+
+  /* ===== Cấu hình luật Đấu Thẻ (Battle) — dữ liệu DÙNG CHUNG, đọc 1 lần khi mở app =====
+     Nguồn: <FIREBASE_BASE>/kidchart_battle_config.json (xem battle_config.json).
+     Nếu chưa từng đẩy config lên Firebase, hoặc offline lần đầu, BATTLE_CONFIG sẽ là null —
+     mọi chỗ dùng nó phải tự kiểm tra null và ẩn tính năng, KHÔNG được throw lỗi. */
+  var BATTLE_CONFIG = null;
+  function normalizeBattleConfig(raw){
+    return (raw && typeof raw === 'object' && raw.elements && raw.skills) ? raw : null;
+  }
+  async function loadBattleConfig(){
+    var cfg = null;
+    try{
+      var res = await fetch(FIREBASE_BASE + '/kidchart_battle_config.json');
+      if(res.ok) cfg = normalizeBattleConfig(await res.json());
+    }catch(e){ console.warn('Khong tai duoc kidchart_battle_config tu Firebase', e); }
+    if(!cfg) cfg = normalizeBattleConfig(safeGet('kidchart_battle_config'));
+    if(cfg){
+      try{ localStorage.setItem('kidchart_battle_config', JSON.stringify(cfg)); }catch(e){}
+    } else {
+      console.warn('Chua co du lieu luat dau the (kidchart_battle_config) tu Firebase.');
+    }
+    return cfg;
+  }
+  function battleReady(){ return !!BATTLE_CONFIG; }
+  function elementInfo(code){
+    if(!BATTLE_CONFIG || !code) return null;
+    return BATTLE_CONFIG.elements[code] || null;
+  }
+  function elementName(code){
+    var e = elementInfo(code);
+    return e ? e.name : '';
+  }
+  var ELEMENT_ICON = {moc:'🌳', thuy:'🌊', hoa:'🔥', tho:'🛡️', kim:'⚙️'};
+  function elementIcon(code){ return ELEMENT_ICON[code] || '❔'; }
+  var RARITY_LABEL = {LIVE:'Phổ Thông', ICON:'Huyền Thoại', SIG:'Khoảnh Khắc'};
+  function rarityLabel(code){ return RARITY_LABEL[code] || code || ''; }
+  function skillLabel(id, grade){
+    var s = BATTLE_CONFIG && BATTLE_CONFIG.skills && BATTLE_CONFIG.skills[id];
+    var name = s ? s.vi : id;
+    return name + (grade === 'G' ? ' (Vàng)' : ' (Bạc)');
+  }
+
   PLAYER_DB = await loadPlayerDb();
   registerPlayerDb(PLAYER_DB);
+  BATTLE_CONFIG = await loadBattleConfig();
 
   // "Hydrate" một bản ghi cầu thủ đã sở hữu (có thể là bản ghi rút gọn {id, dbId, acquiredAt}
   // hoặc bản ghi đầy đủ kiểu cũ) thành đối tượng đầy đủ dữ liệu để hiển thị. Không ghi ngược
@@ -3657,7 +3718,30 @@
       + '</div>'
       + '</div>'
       + statsBlock
-      + (styleChips ? '<div class="pd-chips">'+styleChips+'</div>' : '');
+      + (styleChips ? '<div class="pd-chips">'+styleChips+'</div>' : '')
+      + battleDetailHTML(p);
+  }
+  /* ---- Khối "Thông số chiến đấu" (Đấu Thẻ) — chỉ hiện khi có dữ liệu battle đã patch
+     vào kidchart_player_db VÀ đã tải được kidchart_battle_config; nếu thiếu 1 trong 2 thì
+     ẩn hẳn khối này, không hiển thị dở dang hay báo lỗi. ---- */
+  function battleDetailHTML(p){
+    var b = p.battle;
+    if(!b || !battleReady()) return '';
+    var rows = [
+      ['Lực chiến (CP)', b.cp],
+      ['Thể lực', b.hp],
+      ['Giáp', b.armor + ' (giảm ' + b.armorPct + '%)'],
+      ['Phẩm chất', rarityLabel(b.rarity)]
+    ];
+    var skillChips = (b.skills||[]).map(function(s){
+      return '<span class="pd-chip">'+escHtml(skillLabel(s.id, s.grade))+'</span>';
+    }).join('');
+    return '<div class="pd-mini-title">⚔️ Thông số chiến đấu</div>'
+      + '<div class="pd-info-list" style="margin-top:6px">'
+      + '<div class="pd-info-row"><span>Hệ</span><b>'+elementIcon(b.element)+' '+escHtml(elementName(b.element))+'</b></div>'
+      + rows.map(function(r){ return '<div class="pd-info-row"><span>'+r[0]+'</span><b>'+escHtml(String(r[1]))+'</b></div>'; }).join('')
+      + '</div>'
+      + (skillChips ? '<div class="pd-mini-title" style="margin-top:10px">Kỹ năng</div><div class="pd-chips">'+skillChips+'</div>' : '');
   }
   function openPlayerDetailModal(p){
     p = hydratePlayer(p);
@@ -4438,10 +4522,13 @@
     var flag = p.nationFlag ? '<img class="fc-flag" src="'+cdnUrl(p.nationFlag)+'" alt="" loading="lazy" onerror="this.remove()">' : '';
     var club = p.clubLogo ? '<img class="fc-club" src="'+cdnUrl(p.clubLogo)+'" alt="" loading="lazy" onerror="this.remove()">' : '';
     var foot = (flag || club) ? '<div class="fc-foot">'+flag+((flag && club) ? '<i class="fc-sep"></i>' : '')+club+'</div>' : '';
+    var elCode = p.battle && p.battle.element;
+    var elBadge = elCode ? '<div class="fc-element" title="'+escHtml(elementName(elCode))+' · CP '+escHtml(String(p.battle.cp))+'">'+elementIcon(elCode)+'</div>' : '';
     return '<div class="fc-card'+(p.background ? '' : ' no-bg')+(extraCls ? ' '+extraCls : '')+'">'
       + bg
       + '<img class="fc-render" src="'+cdnUrl(p.image)+'" alt="'+name+'" data-ini="'+escHtml(initialsOf(p.name || '?'))+'" loading="lazy" onerror="window.fcRenderFail(this)">'
       + '<div class="fc-ovr"><b>'+ovr+'</b><span>'+escHtml(p.pos || '')+'</span></div>'
+      + elBadge
       + (ps ? '<div class="fc-ps">'+ps+'</div>' : '')
       + fcNameHTML(p.name)
       + foot
@@ -4655,11 +4742,17 @@
   /* ---- Sắp xếp Kho cầu thủ: mới nhận / overall / họ tên / vị trí (nhớ lựa chọn trên máy này) ---- */
   var POS_ORDER = ['GK','CB','LB','RB','LWB','RWB','CDM','CM','CAM','LM','RM','LW','RW','CF','ST'];
   var COLLECTION_SORTS = {
-    recent: { asc:'Cũ nhất trước',   desc:'Mới nhất trước' },
-    ovr:    { asc:'Thấp → cao',      desc:'Cao → thấp' },
-    name:   { asc:'A → Z',           desc:'Z → A' },
-    pos:    { asc:'Thủ môn → tiền đạo', desc:'Tiền đạo → thủ môn' }
+    recent:  { asc:'Cũ nhất trước',   desc:'Mới nhất trước' },
+    ovr:     { asc:'Thấp → cao',      desc:'Cao → thấp' },
+    name:    { asc:'A → Z',           desc:'Z → A' },
+    pos:     { asc:'Thủ môn → tiền đạo', desc:'Tiền đạo → thủ môn' },
+    element: { asc:'Kim → Mộc',       desc:'Mộc → Kim' }
   };
+  /* Bộ lọc nhanh theo Hệ trong Kho cầu thủ — chỉ dùng trong phiên hiện tại, không lưu lại
+     (không phải dữ liệu cần đồng bộ, tránh phình thêm 1 khóa kidchart_ mới cho một tùy chọn nhỏ). */
+  var collectionElementFilter = null;
+  var ELEMENT_ORDER = ['moc','thuy','hoa','tho','kim'];
+  function elementRank(code){ var i = ELEMENT_ORDER.indexOf(code); return i < 0 ? ELEMENT_ORDER.length : i; }
   var collectionSort = (function(){
     var st = null;
     try{ st = JSON.parse(localStorage.getItem('kidchart_collection_sort') || 'null'); }catch(e){}
@@ -4684,6 +4777,7 @@
       else if(key === 'ovr') c = (ovrOf(b) - ovrOf(a)) || nameCmp(a, b);
       else if(key === 'name') c = nameCmp(a, b) || (ovrOf(b) - ovrOf(a));
       else if(key === 'pos') c = (posRank(a.pos) - posRank(b.pos)) || (ovrOf(b) - ovrOf(a)) || nameCmp(a, b);
+      else if(key === 'element') c = (elementRank(a.battle && a.battle.element) - elementRank(b.battle && b.battle.element)) || (ovrOf(b) - ovrOf(a)) || nameCmp(a, b);
       if(key === 'recent'){ if(!desc) c = -c; }
       else if(!desc) c = -c;
       return c || (y.i - x.i);
@@ -4696,18 +4790,49 @@
     if(sel) sel.value = collectionSort.key;
     if(btn) btn.textContent = (collectionSort.desc ? '⬇️ ' : '⬆️ ') + COLLECTION_SORTS[collectionSort.key][collectionSort.desc ? 'desc' : 'asc'];
   }
+  function renderElementFilterRow(allPlayers){
+    var row = document.getElementById('collection-element-filter');
+    if(!row) return;
+    if(!battleReady() || !allPlayers.some(function(p){ return p.battle && p.battle.element; })){
+      row.style.display = 'none';
+      return;
+    }
+    row.style.display = '';
+    var counts = {};
+    allPlayers.forEach(function(p){ var e = p.battle && p.battle.element; if(e) counts[e] = (counts[e]||0)+1; });
+    var btns = ['<button type="button" data-el="" class="'+(collectionElementFilter?'':'active')+'">Tất cả</button>']
+      .concat(ELEMENT_ORDER.filter(function(e){ return counts[e]; }).map(function(e){
+        return '<button type="button" data-el="'+e+'" class="'+(collectionElementFilter===e?'active':'')+'">'
+          + elementIcon(e)+' '+escHtml(elementName(e))+' ('+counts[e]+')</button>';
+      }));
+    row.innerHTML = btns.join('');
+    row.querySelectorAll('button').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        collectionElementFilter = btn.getAttribute('data-el') || null;
+        renderCollection();
+      });
+    });
+  }
   function renderCollection(){
-    var players = hydratePlayers(loadPlayers()).filter(Boolean);
+    var allPlayers = hydratePlayers(loadPlayers()).filter(Boolean);
     var grid = document.getElementById('collection-grid');
     var bar = document.getElementById('collection-sort');
     var cnt = document.getElementById('collection-count');
-    if(bar) bar.style.display = players.length ? '' : 'none';
-    if(!players.length){
+    if(bar) bar.style.display = allPlayers.length ? '' : 'none';
+    renderElementFilterRow(allPlayers);
+    if(!allPlayers.length){
       grid.innerHTML = '<p class="empty-collection">Chưa có cầu thủ nào — hoàn thành nhiệm vụ mỗi ngày và vượt mốc điểm tháng để nhận thẻ cầu thủ nhé! 🎴</p>';
       return;
     }
+    var players = collectionElementFilter
+      ? allPlayers.filter(function(p){ return p.battle && p.battle.element === collectionElementFilter; })
+      : allPlayers;
     syncCollectionSortUI();
-    if(cnt) cnt.textContent = players.length + ' cầu thủ';
+    if(cnt) cnt.textContent = players.length + ' cầu thủ' + (collectionElementFilter ? ' (đã lọc / ' + allPlayers.length + ')' : '');
+    if(!players.length){
+      grid.innerHTML = '<p class="empty-collection">Không có cầu thủ nào thuộc Hệ này.</p>';
+      return;
+    }
     grid.innerHTML = sortCollection(players, collectionSort.key, collectionSort.desc).map(function(p){
       return playerCardHTML(p, false) ;
     }).join('');
