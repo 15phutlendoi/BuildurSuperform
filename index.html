@@ -782,13 +782,27 @@
     border:.4cqw solid rgba(255,255,255,.22); box-shadow:0 1cqw 2.4cqw rgba(0,0,0,.45);
   }
   .fc-card .fc-ps img{ width:max(12.5cqw,8px); height:max(12.5cqw,8px); object-fit:contain; display:block; }
-  /* Góc phải: huy hiệu Hệ (Đấu Thẻ) — chỉ hiện khi thẻ đã có dữ liệu battle */
+  /* Đáy thẻ: huy hiệu Hệ (Đấu Thẻ) — thay cho viên đá lục giác/tam giác ngược màu xám có sẵn
+     trong ảnh nền thẻ. Vị trí đo trực tiếp từ ảnh nền gốc (256×256, khối xám ở x:44.5–55.1%,
+     y:85.5–96.1%) rồi quy đổi sang % của thẻ thật (thẻ tỉ lệ 0.74, ảnh nền object-fit:cover nên
+     trục X bị crop hai bên ~13%/mỗi bên, trục Y giữ nguyên) → tâm ngang ~49.8%, đỉnh ~85%.
+     Đổi 3 biến --el-badge-* dưới đây nếu một số mẫu nền khác (ICON/SIGNATURE) lệch chút ít. */
+  .fc-card{ --el-badge-top:85%; --el-badge-w:15.5%; --el-badge-h:11.6%; }
   .fc-card .fc-element{
-    position:absolute; z-index:3; right:5.5%; top:4.5%; display:flex; align-items:center; justify-content:center;
-    width:max(15cqw,15px); height:max(15cqw,15px); border-radius:50%; line-height:1;
-    background:linear-gradient(160deg,rgba(60,62,90,.86),rgba(14,15,30,.9)); border:.4cqw solid rgba(255,255,255,.22);
-    font-size:max(10cqw,10px); box-shadow:0 1cqw 2.4cqw rgba(0,0,0,.45);
+    position:absolute; z-index:4; left:50%; top:var(--el-badge-top); box-sizing:border-box;
+    width:var(--el-badge-w); height:var(--el-badge-h); transform:translateX(-50%);
+    display:flex; align-items:center; justify-content:center;
+    /* Lục giác dọc (đỉnh trên + đỉnh dưới nhọn) — nửa dưới của hình này chính là tam giác ngược */
+    clip-path:polygon(50% 0%, 100% 26%, 100% 74%, 50% 100%, 0% 74%, 0% 26%);
+    background:linear-gradient(165deg, var(--el-c1,#8a8f9c), var(--el-c2,#2a2e38));
+    border:1.4cqw solid rgba(255,255,255,.5);
+    box-shadow:0 -.4cqw 1cqw rgba(0,0,0,.4) inset, 0 .8cqw 1.8cqw rgba(0,0,0,.55);
   }
+  .fc-card .fc-element svg{ width:66%; height:66%; fill:#fff; filter:drop-shadow(0 .3cqw .8cqw rgba(0,0,0,.6)); }
+  /* Icon Hệ cỡ nhỏ dùng cạnh chữ (modal chi tiết, nút lọc Hệ) — kích thước theo em nên tự
+     ăn khớp cỡ chữ tại chỗ dùng, không phụ thuộc kích thước mặc định bất định của trình duyệt. */
+  .el-icon-inline{ display:inline-flex; width:1.15em; height:1.15em; vertical-align:-0.22em; margin-right:3px; flex:none; }
+  .el-icon-inline svg{ width:100%; height:100%; display:block; fill:currentColor; }
   /* Tên cầu thủ */
   .fc-card .fc-name{ position:absolute; z-index:3; left:0; right:0; top:var(--fc-name-top); height:9%; display:flex; align-items:center; justify-content:center; padding:0 4%; }
   .fc-card .fc-name span{
@@ -3616,8 +3630,40 @@
     var e = elementInfo(code);
     return e ? e.name : '';
   }
-  var ELEMENT_ICON = {moc:'🌳', thuy:'🌊', hoa:'🔥', tho:'🛡️', kim:'⚙️'};
-  function elementIcon(code){ return ELEMENT_ICON[code] || '❔'; }
+  /* Icon SVG riêng cho từng Hệ — vẽ tay để vừa gợi đúng ngũ hành, vừa gợi đúng lối chơi
+     (Mộc=Biến Hóa, Thủy=Bão Tố, Hỏa=Công Phá, Thổ=Phòng Vệ, Kim=Điều Khiển), thay cho emoji
+     (emoji hiển thị không đồng nhất giữa các máy/font). fill dùng "currentColor" nên đổi
+     màu qua CSS bình thường; kích thước do CSS nơi dùng quyết định, không set cứng ở đây. */
+  var ELEMENT_ICON_SVG = {
+    // Mộc — Biến Hóa: cỏ 4 lá — 4 vòng đậm chồng khít, không dùng cuống mảnh (dễ mờ ở cỡ nhỏ)
+    moc: '<svg viewBox="0 0 24 24"><circle cx="12" cy="7.7" r="4.6"/><circle cx="16.3" cy="12" r="4.6"/><circle cx="12" cy="16.3" r="4.6"/><circle cx="7.7" cy="12" r="4.6"/></svg>',
+    // Thủy — Bão Tố: giọt nước đậm nét
+    thuy: '<svg viewBox="0 0 24 24"><path d="M12 2c4.2 5.4 7.6 9.8 7.6 13.9a7.6 7.6 0 1 1-15.2 0C4.4 11.8 7.8 7.4 12 2Z"/></svg>',
+    // Hỏa — Công Phá: ngọn lửa 2 lớp (có "lưỡi lửa" bên trong) — để không lẫn với giọt nước ở cỡ nhỏ
+    hoa: '<svg viewBox="0 0 24 24"><path d="M12.3 1.8c.6 2.4-.3 4-1.8 5.4C9 8.8 7.3 10.7 7.3 13.4a4.8 4.8 0 0 0 9.6 0c0-1.1-.4-2-.9-2.8.1 1.6-.9 2.5-2 2.3-1-.2-1.4-1.1-.9-2.2.7-1.5.3-2.8-.9-3.6.2 1.3-.4 2.2-1.4 3-.9.8-1.6 1.7-1.6 2.9a2.7 2.7 0 1 0 5.4 0c0-1-.4-1.9-1-2.7-.6 3.5 1.7 3.6 1.7 6a2.7 2.7 0 1 1-5.4 0c0-1.6 1-2.6 1.7-3.8Z"/></svg>',
+    // Thổ — Phòng Vệ: bức tường gạch (nét đậm, dễ nhận ở cỡ nhỏ)
+    tho: '<svg viewBox="0 0 24 24"><rect x="1" y="2.5" width="10" height="5.6" rx=".6"/><rect x="13" y="2.5" width="10" height="5.6" rx=".6"/><rect x="1" y="9.5" width="4.6" height="5.6" rx=".6"/><rect x="7" y="9.5" width="10" height="5.6" rx=".6"/><rect x="18.4" y="9.5" width="4.6" height="5.6" rx=".6"/><rect x="1" y="16.5" width="10" height="5.6" rx=".6"/><rect x="13" y="16.5" width="10" height="5.6" rx=".6"/></svg>',
+    // Kim — Điều Khiển: thanh kiếm khối đặc (lưỡi + chuôi + đốc)
+    // Kim — Điều Khiển: thanh kiếm khối đặc, lưỡi to bản để rõ ở cỡ nhỏ
+    kim: '<svg viewBox="0 0 24 24"><path d="M12 1.3 15.2 10.6 15.2 12.3 8.8 12.3 8.8 10.6Z"/><rect x="6" y="12.3" width="12" height="2.7" rx="1"/><rect x="9.8" y="15.3" width="4.4" height="7.4" rx="1.4"/></svg>'
+  };
+  function elementIcon(code){ return ELEMENT_ICON_SVG[code] || ''; }
+  /* Bản icon nhỏ dùng cạnh chữ (modal chi tiết, nút lọc Hệ...) — không dùng elementIcon() trần
+     ở những chỗ này vì <svg> không có width/height cố định sẽ bị trình duyệt tự đặt kích thước
+     bất định tùy ngữ cảnh. Bọc trong span kích thước theo em + fill:currentColor riêng. */
+  function elementIconInline(code){ return '<span class="el-icon-inline">'+elementIcon(code)+'</span>'; }
+  /* Cặp màu gradient riêng cho huy hiệu từng Hệ (đè lên tam giác xám trang trí ở đáy thẻ) */
+  var ELEMENT_COLORS = {
+    moc:  ['#43A047', '#1B5E20'],
+    thuy: ['#2196F3', '#0D47A1'],
+    hoa:  ['#FF5722', '#B71C1C'],
+    tho:  ['#8D6E43', '#4E342E'],
+    kim:  ['#78909C', '#37474F']
+  };
+  function elementColorVars(code){
+    var c = ELEMENT_COLORS[code] || ['#8a8f9c', '#2a2e38'];
+    return '--el-c1:'+c[0]+';--el-c2:'+c[1]+';';
+  }
   var RARITY_LABEL = {LIVE:'Phổ Thông', ICON:'Huyền Thoại', SIG:'Khoảnh Khắc'};
   function rarityLabel(code){ return RARITY_LABEL[code] || code || ''; }
   function skillLabel(id, grade){
@@ -3738,7 +3784,7 @@
     }).join('');
     return '<div class="pd-mini-title">⚔️ Thông số chiến đấu</div>'
       + '<div class="pd-info-list" style="margin-top:6px">'
-      + '<div class="pd-info-row"><span>Hệ</span><b>'+elementIcon(b.element)+' '+escHtml(elementName(b.element))+'</b></div>'
+      + '<div class="pd-info-row"><span>Hệ</span><b>'+elementIconInline(b.element)+escHtml(elementName(b.element))+'</b></div>'
       + rows.map(function(r){ return '<div class="pd-info-row"><span>'+r[0]+'</span><b>'+escHtml(String(r[1]))+'</b></div>'; }).join('')
       + '</div>'
       + (skillChips ? '<div class="pd-mini-title" style="margin-top:10px">Kỹ năng</div><div class="pd-chips">'+skillChips+'</div>' : '');
@@ -4523,7 +4569,7 @@
     var club = p.clubLogo ? '<img class="fc-club" src="'+cdnUrl(p.clubLogo)+'" alt="" loading="lazy" onerror="this.remove()">' : '';
     var foot = (flag || club) ? '<div class="fc-foot">'+flag+((flag && club) ? '<i class="fc-sep"></i>' : '')+club+'</div>' : '';
     var elCode = p.battle && p.battle.element;
-    var elBadge = elCode ? '<div class="fc-element" title="'+escHtml(elementName(elCode))+' · CP '+escHtml(String(p.battle.cp))+'">'+elementIcon(elCode)+'</div>' : '';
+    var elBadge = elCode ? '<div class="fc-element" style="'+elementColorVars(elCode)+'" title="'+escHtml(elementName(elCode))+' · CP '+escHtml(String(p.battle.cp))+'">'+elementIcon(elCode)+'</div>' : '';
     return '<div class="fc-card'+(p.background ? '' : ' no-bg')+(extraCls ? ' '+extraCls : '')+'">'
       + bg
       + '<img class="fc-render" src="'+cdnUrl(p.image)+'" alt="'+name+'" data-ini="'+escHtml(initialsOf(p.name || '?'))+'" loading="lazy" onerror="window.fcRenderFail(this)">'
@@ -4803,7 +4849,7 @@
     var btns = ['<button type="button" data-el="" class="'+(collectionElementFilter?'':'active')+'">Tất cả</button>']
       .concat(ELEMENT_ORDER.filter(function(e){ return counts[e]; }).map(function(e){
         return '<button type="button" data-el="'+e+'" class="'+(collectionElementFilter===e?'active':'')+'">'
-          + elementIcon(e)+' '+escHtml(elementName(e))+' ('+counts[e]+')</button>';
+          + elementIconInline(e)+escHtml(elementName(e))+' ('+counts[e]+')</button>';
       }));
     row.innerHTML = btns.join('');
     row.querySelectorAll('button').forEach(function(btn){
