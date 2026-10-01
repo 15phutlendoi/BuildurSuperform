@@ -1598,6 +1598,27 @@
   }
   @keyframes skpCardPop{ 0%{ opacity:0; transform:scale(.7) translateY(8px); } 100%{ opacity:1; transform:none; } }
 
+
+  /* ===== Khóa nhận thẻ ===== */
+  .card-lock-banner{ display:flex; align-items:flex-start; gap:10px; margin:0 0 12px; padding:10px 14px; border-radius:14px; background:rgba(239,68,68,.14); border:1px solid rgba(239,68,68,.55); color:#FECACA; font-size:13px; font-weight:700; line-height:1.45; cursor:pointer; }
+  .card-lock-banner.is-recovery{ background:rgba(245,158,11,.14); border-color:rgba(245,158,11,.6); color:#FDE68A; }
+  .card-lock-banner b{ color:#fff; }
+  .clb-ico{ font-size:20px; line-height:1.2; flex:none; }
+  .card-lock-banner[hidden], #cardlock-form[hidden], #cardlock-need-admin[hidden], #cardlock-release[hidden]{ display:none !important; }
+  .ds-gift.is-card-locked{ background:rgba(239,68,68,.14); border:2px dashed rgba(239,68,68,.6); color:#FECACA; cursor:pointer; }
+  .btn-open.is-card-locked{ filter:grayscale(.7); opacity:.8; }
+  .card-lock-box{ width:min(380px,100%); text-align:center; }
+  .card-lock-reason{ margin:0; padding:10px 12px; border-radius:12px; background:rgba(239,68,68,.12); border:1px solid rgba(239,68,68,.4); color:#FECACA; font-weight:700; font-size:14px; line-height:1.5; }
+  .card-lock-time{ margin:0; font-size:13.5px; color:#E2E8F0; line-height:1.5; }
+  .cardlock-status{ padding:9px 12px; border-radius:12px; background:rgba(16,185,129,.12); border:1px solid rgba(16,185,129,.4); color:#A7F3D0; font-size:12.5px; font-weight:700; line-height:1.5; }
+  .cardlock-form{ display:flex; flex-direction:column; gap:8px; margin-top:8px; }
+  .cardlock-grid{ display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:8px; }
+  .cardlock-grid label{ min-width:0; }
+  .cardlock-grid input[type=datetime-local]{ width:100%; min-width:0; background:#0F172A; border:1px solid #475569; border-radius:12px; padding:8px 6px; font-size:12px; color:#fff; font-family:inherit; color-scheme:dark; box-sizing:border-box; }
+  .cardlock-actions{ display:flex; gap:8px; }
+  .cardlock-actions .btn-secondary{ flex:1; }
+  .cardlock-actions .btn-secondary:disabled{ opacity:.45; cursor:not-allowed; }
+  .cardlock-status.is-on{ background:rgba(239,68,68,.12); border-color:rgba(239,68,68,.45); color:#FECACA; }
 </style>
 </head>
 <body>
@@ -1666,6 +1687,9 @@
     <button type="button" id="tabBtn-squad" class="tab-btn" role="tab" aria-selected="false" aria-controls="view-squad" data-tab="squad">🎴 Đội Hình Trong Mơ</button>
     <button type="button" id="tabBtn-badges" class="tab-btn" role="tab" aria-selected="false" aria-controls="view-badges" data-tab="badges">🏆 Huy Hiệu</button>
   </nav>
+
+  <!-- Dải thông báo khóa nhận thẻ (chỉ hiện khi Quản trị viên đang khóa) -->
+  <div id="card-lock-banner" class="card-lock-banner" role="status" hidden></div>
 
   <!-- Thanh chọn kỳ tính điểm: dùng chung cho 2 mục "Phòng Kỹ Năng" và "Sút Quyết Định" -->
   <div id="month-bar" class="panel month-bar" hidden>
@@ -1916,6 +1940,27 @@
       <input type="text" id="settings-admin-pin" inputmode="numeric" maxlength="12" placeholder="VD: 0000">
     </div>
     <div>
+      <span class="settings-label">⛔ Khóa nhận thẻ (Quản trị viên)</span>
+      <p class="hint-text" style="margin:2px 0 6px">Khi bé mắc lỗi, khóa việc nhận thẻ cầu thủ trong một khoảng thời gian (hộp quà ngày và thẻ Play Style). Bé vẫn tích nhiệm vụ hằng ngày và nhận điểm bình thường; thẻ chưa nhận được giữ lại, hết thời gian khóa bé sẽ nhận lại.</p>
+      <div class="cardlock-status" id="cardlock-status"></div>
+      <div id="cardlock-form" class="cardlock-form">
+        <div class="cardlock-grid">
+          <label>📅 Từ ngày
+            <input type="datetime-local" id="cardlock-from">
+          </label>
+          <label>📅 Đến ngày
+            <input type="datetime-local" id="cardlock-to">
+          </label>
+        </div>
+        <input type="text" id="cardlock-reason" maxlength="160" placeholder="Lời nhắn hiện cho bé (VD: Con chưa giữ lời hứa hôm qua)">
+        <div class="cardlock-actions">
+          <button type="button" id="cardlock-apply" class="btn-secondary">⛔ Thực hiện khóa</button>
+          <button type="button" id="cardlock-release" class="btn-secondary">🔓 Gỡ khóa</button>
+        </div>
+        <p class="hint-text" style="margin:0">Chọn khoảng thời gian rồi bấm “Thực hiện khóa”. Nếu “Từ ngày” ở tương lai, khóa sẽ tự bắt đầu đúng giờ đó. Cần nhập mã PIN Quản trị viên khi thực hiện hoặc gỡ khóa.</p>
+      </div>
+    </div>
+    <div>
       <span class="settings-label">Kho phần thưởng (quay khi vượt mốc)</span>
       <div id="reward-list" class="reward-list"></div>
       <div class="reward-row">
@@ -1927,6 +1972,17 @@
       <button type="button" id="settings-close" class="btn-secondary">Đóng</button>
       <button type="button" id="settings-save" class="btn-primary">Lưu lại!</button>
     </div>
+  </div>
+</div>
+
+<div id="card-lock-modal" class="modal">
+  <div id="card-lock-backdrop" class="modal-backdrop"></div>
+  <div class="modal-box card-lock-box">
+    <h3 id="card-lock-title">⛔ Tạm khóa nhận thẻ</h3>
+    <p class="card-lock-reason" id="card-lock-reason"></p>
+    <p class="card-lock-time" id="card-lock-time"></p>
+    <p class="hint-text" style="margin:0">Con vẫn tích nhiệm vụ hằng ngày và nhận điểm bình thường nhé. Thẻ chưa nhận sẽ được giữ lại cho con.</p>
+    <div class="modal-actions center"><button type="button" id="card-lock-ok" class="btn-primary">Con hiểu rồi</button></div>
   </div>
 </div>
 
@@ -2551,6 +2607,8 @@
   if(typeof settings.periodStartDay !== 'number' || settings.periodStartDay<1 || settings.periodStartDay>31) settings.periodStartDay = 1;
   if(typeof settings.dailyGoal !== 'number' || settings.dailyGoal<1 || settings.dailyGoal>10) settings.dailyGoal = 9;
   if(typeof settings.adminPin !== 'string' || !settings.adminPin) settings.adminPin = '0000';
+  // Khóa nhận thẻ do Quản trị viên đặt: {startAt, until, reason} (mili-giây). null = đang cho nhận thẻ bình thường.
+  if(!settings.cardLock || typeof settings.cardLock !== 'object' || typeof settings.cardLock.until !== 'number') settings.cardLock = null;
   if(!Array.isArray(settings.rewards) || !settings.rewards.length) settings.rewards = DEFAULT_REWARDS.slice();
   function saveSettings(){ safeSet('kidchart_settings', settings); }
 
@@ -3034,7 +3092,10 @@
     var goalPct = boxTarget>0 ? Math.min(100, Math.floor(total*100/boxTarget)) : 0;
 
     var giftHtml;
-    if(pending && editable){
+    if(pending && editable && isCardLocked()){
+      // Đủ điểm nhưng đang bị khóa nhận thẻ: vẫn tích điểm bình thường, quà được giữ lại
+      giftHtml = '<div class="ds-gift is-card-locked" title="Chạm để xem lý do"><span class="ds-gift-ico">⛔</span><span>Đã đủ điểm nhưng<br>đang tạm khóa nhận thẻ</span></div>';
+    } else if(pending && editable){
       giftHtml = '<div class="ds-gift is-pending" data-box-month="'+ymKey+'" data-box-day="'+dk+'" title="Chạm để chọn quà cầu thủ!">'
         + '<span class="ds-gift-ico">🎁</span><span>Đã đủ điểm!<br>Chạm để nhận quà</span></div>';
     } else if(pending && !editable){
@@ -3070,6 +3131,7 @@
     renderBadges();
     renderPlayer();
     renderMonthly();
+    refreshCardLockUI();
   }
 
   /* Hiệu ứng vui mừng khi hoàn thành 1 nhiệm vụ: thẻ nảy nhẹ + bong bóng lời khen bay lên. */
@@ -3814,6 +3876,167 @@
   }
   function savePlayers(list){ return safeSet('kidchart_players', list); }
 
+  /* ============ KHÓA NHẬN THẺ (chỉ Quản trị viên đặt) ============
+     Khi bé mắc lỗi, Quản trị viên khóa việc nhận thẻ cầu thủ trong một khoảng thời gian.
+       - BỊ CHẶN : hộp quà ngày (9 ô) và lật thẻ cầu thủ Play Style (skill Bạc/Vàng).
+       - KHÔNG chặn: tích nhiệm vụ hằng ngày, cộng điểm, mở skill, xem kho/đội hình/thẻ đã có.
+         Thẻ chưa nhận vẫn được giữ nguyên (không bị đánh dấu "đã nhận") để nhận sau.
+     Trạng thái lưu trong settings.cardLock = {startAt, until, reason} và đồng bộ cloud cùng settings.
+     Vòng đời: 'locked' (còn trong thời gian khóa) -> hết hạn -> cardLockRecoveryMet() quyết định:
+       true  -> 'free'     (tự mở lại, xóa lệnh khóa)
+       false -> 'recovery' (hết hạn nhưng vẫn chưa được nhận thẻ, chờ đạt điều kiện)  */
+  var CARD_LOCK_DEFAULT_REASON = 'Con hãy nhớ lại lỗi vừa rồi và sửa nhé, ba mẹ tin con làm được!';
+
+  /* >>> ĐIỂM MỞ RỘNG: điều kiện để được nhận thẻ lại sau khi hết thời gian khóa (sẽ xây dựng sau).
+         Nhận vào lệnh khóa vừa hết hạn, trả về true khi bé đã đạt điều kiện.
+         Hiện tại trả về true = hết thời gian khóa là tự động được nhận thẻ lại. */
+  function cardLockRecoveryMet(lock){ return true; }
+
+  function cardLockPhase(){
+    var lock = settings.cardLock;
+    if(!lock) return 'free';
+    if(typeof lock.startAt === 'number' && Date.now() < lock.startAt) return 'scheduled';
+    if(Date.now() < lock.until) return 'locked';
+    return cardLockRecoveryMet(lock) ? 'free' : 'recovery';
+  }
+  function isCardLocked(){ var ph = cardLockPhase(); return ph === 'locked' || ph === 'recovery'; }
+
+  function fmtLockRemain(ms){
+    var m = Math.max(1, Math.ceil(ms / 60000));
+    if(m < 60) return m + ' phút';
+    var h = Math.floor(m / 60), mm = m % 60;
+    if(h < 24) return h + ' giờ' + (mm ? ' ' + mm + ' phút' : '');
+    var d = Math.floor(h / 24), hh = h % 24;
+    return d + ' ngày' + (hh ? ' ' + hh + ' giờ' : '');
+  }
+  function fmtLockTime(ts){
+    var d = new Date(ts);
+    return pad2(d.getHours()) + ':' + pad2(d.getMinutes()) + ' ngày ' + fmtDDMM(d);
+  }
+
+  /* Hộp thoại báo cho bé: lý do + còn bao lâu nữa */
+  function showCardLockNotice(){
+    var lock = settings.cardLock, ph = cardLockPhase();
+    if(!lock || (ph !== 'locked' && ph !== 'recovery')) return;
+    var titleEl = document.getElementById('card-lock-title');
+    var reasonEl = document.getElementById('card-lock-reason');
+    var timeEl = document.getElementById('card-lock-time');
+    if(ph === 'locked'){
+      titleEl.textContent = '⛔ Tạm khóa nhận thẻ';
+      timeEl.innerHTML = 'Còn <b>' + fmtLockRemain(lock.until - Date.now()) + '</b> (đến ' + fmtLockTime(lock.until) + ') con mới được nhận thẻ lại.';
+    } else {
+      titleEl.textContent = '⏳ Sắp được nhận thẻ lại';
+      timeEl.textContent = 'Đã hết thời gian khóa. Con cần hoàn thành điều kiện để được nhận thẻ lại nhé.';
+    }
+    reasonEl.textContent = lock.reason || CARD_LOCK_DEFAULT_REASON;
+    openModalTop('card-lock-modal');
+  }
+  /* Dùng ở mọi cửa nhận thẻ: true = đang khóa (đã hiện thông báo), nơi gọi phải dừng lại */
+  function guardCardLock(){
+    if(!isCardLocked()) return false;
+    showCardLockNotice();
+    return true;
+  }
+
+  function renderCardLockPanel(){
+    var st = document.getElementById('cardlock-status');
+    if(!st) return;
+    var lock = settings.cardLock, ph = cardLockPhase();
+    if(ph === 'locked'){
+      st.innerHTML = '⛔ <b>Đang khóa</b> từ ' + fmtLockTime(lock.startAt) + ' đến ' + fmtLockTime(lock.until) + ' (còn ' + fmtLockRemain(lock.until - Date.now()) + ').<br>Lời nhắn: ' + escHtml(lock.reason || CARD_LOCK_DEFAULT_REASON);
+    } else if(ph === 'scheduled'){
+      st.innerHTML = '🗓️ <b>Đã lên lịch khóa</b> từ ' + fmtLockTime(lock.startAt) + ' đến ' + fmtLockTime(lock.until) + '. Hiện bé vẫn nhận thẻ bình thường.';
+    } else if(ph === 'recovery'){
+      st.innerHTML = '⏳ <b>Đã hết thời gian khóa</b> — đang chờ bé đạt điều kiện để nhận thẻ lại.';
+    } else {
+      st.innerHTML = '✅ Đang cho phép nhận thẻ bình thường.';
+    }
+    st.className = 'cardlock-status' + (ph === 'free' ? '' : ' is-on');
+    var rel = document.getElementById('cardlock-release');
+    if(rel) rel.disabled = !lock;
+    var ap = document.getElementById('cardlock-apply');
+    if(ap) ap.textContent = lock ? '⛔ Thực hiện khóa (thay lệnh hiện tại)' : '⛔ Thực hiện khóa';
+  }
+  function toLocalInput(ts){
+    var d = new Date(ts);
+    return d.getFullYear() + '-' + pad2(d.getMonth()+1) + '-' + pad2(d.getDate()) + 'T' + pad2(d.getHours()) + ':' + pad2(d.getMinutes());
+  }
+  /* Điền sẵn form: lệnh khóa hiện có, hoặc mặc định từ bây giờ đến 24 giờ sau */
+  function fillCardLockForm(){
+    var lock = settings.cardLock, now = Date.now();
+    document.getElementById('cardlock-from').value = toLocalInput(lock ? lock.startAt : now);
+    document.getElementById('cardlock-to').value = toLocalInput(lock ? lock.until : now + 86400000);
+    document.getElementById('cardlock-reason').value = lock ? (lock.reason || '') : '';
+  }
+  /* Thao tác khóa/gỡ khóa cần Quản trị viên: đang ở chế độ Quản trị thì qua luôn, chưa thì hỏi PIN */
+  function requireAdminPin(msg){
+    if(isAdmin) return true;
+    var pin = prompt(msg);
+    if(pin === null) return false;
+    if(pin !== settings.adminPin){ triggerToast('low', '🔒 Mã PIN không đúng.'); return false; }
+    return true;
+  }
+
+  /* Dải cảnh báo dưới thanh tab (hiện ở mọi mục) + bảng trong Cài đặt */
+  function refreshCardLockUI(){
+    var ban = document.getElementById('card-lock-banner');
+    if(ban){
+      var lock = settings.cardLock, ph = cardLockPhase();
+      if(ph === 'locked'){
+        ban.hidden = false; ban.className = 'card-lock-banner';
+        ban.innerHTML = '<span class="clb-ico">⛔</span><span><b>Tạm khóa nhận thẻ</b> — còn ' + fmtLockRemain(lock.until - Date.now()) + ' (đến ' + fmtLockTime(lock.until) + '). ' + escHtml(lock.reason || CARD_LOCK_DEFAULT_REASON) + '</span>';
+      } else if(ph === 'recovery'){
+        ban.hidden = false; ban.className = 'card-lock-banner is-recovery';
+        ban.innerHTML = '<span class="clb-ico">⏳</span><span><b>Đã hết thời gian khóa</b> — hoàn thành điều kiện để nhận thẻ lại nhé.</span>';
+      } else {
+        ban.hidden = true; ban.innerHTML = '';
+      }
+    }
+    renderCardLockPanel();
+  }
+
+  function applyCardLock(){
+    var fromV = document.getElementById('cardlock-from').value;
+    var toV = document.getElementById('cardlock-to').value;
+    if(!fromV || !toV){ alert('Vui lòng chọn cả "Từ ngày" và "Đến ngày".'); return; }
+    var startAt = new Date(fromV).getTime(), until = new Date(toV).getTime();
+    if(isNaN(startAt) || isNaN(until)){ alert('Ngày giờ không hợp lệ.'); return; }
+    if(until <= startAt){ alert('"Đến ngày" phải sau "Từ ngày".'); return; }
+    if(until <= Date.now()){ alert('"Đến ngày" đã qua rồi — hãy chọn thời điểm trong tương lai.'); return; }
+    if(until - startAt > 366 * 86400000){ alert('Thời gian khóa tối đa là 1 năm.'); return; }
+    if(!requireAdminPin('Nhập mã PIN Quản trị viên để khóa nhận thẻ:')) return;
+    if(settings.cardLock && !confirm('Đang có một lệnh khóa. Thực hiện sẽ thay thế lệnh khóa hiện tại. Tiếp tục?')) return;
+    var reason = (document.getElementById('cardlock-reason').value || '').trim().slice(0, 160) || CARD_LOCK_DEFAULT_REASON;
+    settings.cardLock = { startAt: startAt, until: until, reason: reason };
+    saveSettings();
+    fillCardLockForm();
+    refreshCardLockUI();
+    renderWeek();
+    triggerToast('okay', (startAt > Date.now() ? '🗓️ Đã lên lịch khóa nhận thẻ từ ' + fmtLockTime(startAt) : '⛔ Đã khóa nhận thẻ đến ' + fmtLockTime(until)));
+  }
+  function releaseCardLock(){
+    if(!settings.cardLock){ triggerToast('low', 'Hiện không có lệnh khóa nào để gỡ.'); return; }
+    if(!requireAdminPin('Nhập mã PIN Quản trị viên để gỡ khóa nhận thẻ:')) return;
+    if(!confirm('Gỡ khóa nhận thẻ ngay bây giờ?')) return;
+    settings.cardLock = null;
+    saveSettings();
+    fillCardLockForm();
+    refreshCardLockUI();
+    renderWeek();
+    triggerToast('okay', '🔓 Đã gỡ khóa nhận thẻ.');
+  }
+    /* Chạy định kỳ: hết hạn (và đạt điều kiện) thì tự gỡ khóa; còn khóa thì cập nhật số phút còn lại */
+  function tickCardLock(){
+    if(settings.cardLock && cardLockPhase() === 'free'){
+      settings.cardLock = null;
+      saveSettings();
+      triggerToast('perfect', '🎉 Đã hết thời gian khóa — con nhận thẻ lại được rồi!');
+      renderWeek();
+    } else {
+      refreshCardLockUI();
+    }
+  }
+
   /* ---- Hộp quà 9 ô: đạt 9/10 điểm ngày là được chọn 1 trong 9 cầu thủ ----
      Luồng: chạm 1 ô → LƯU THẺ NGAY (không phụ thuộc hiệu ứng) → sân khấu mở thẻ toàn màn hình:
      dồn năng lượng → bùng nổ → hiện thẻ thật. Thẻ vẽ bằng fcCardHTML — dùng chung với toàn trang. */
@@ -3862,6 +4085,7 @@
   }
 
   function openDailyBoxModal(monthKey, dk){
+    if(guardCardLock()) return;
     var month = loadMonth(monthKey);
     var dayObj = month.days[dk] || {};
     if(dayObj._dailyBoxClaimed) return;
@@ -3910,6 +4134,7 @@
   /* Bấm 1 ô: lưu thẻ trước, rồi mới chiếu hiệu ứng. */
   function claimDailyBoxPlayer(idx, cell){
     if(dailyBoxBusy) return;
+    if(isCardLocked()){ closeDailyBoxModal(); showCardLockNotice(); return; }   // bị khóa khi đang mở hộp: không lưu thẻ
     var base = dailyBoxPicks && dailyBoxPicks[idx];
     if(!base) return;
     dailyBoxBusy = true;
@@ -4336,6 +4561,8 @@
      monthKey/key (nếu có) dùng để lưu lại tiến độ nhận thẻ, cho phép mở lại đúng phần còn thiếu
      nếu người dùng đã tắt popup trước khi lật hết thẻ. */
   function openSkillPlayerModal(code, tier, monthKey, key){
+    // Đang khóa: báo cho bé và trả true ("đã xử lý") để nơi gọi KHÔNG đánh dấu cardsDone — thẻ vẫn được giữ lại để nhận sau.
+    if(guardCardLock()) return true;
     var st = (monthKey && key) ? skillState(monthKey, key) : null;
     var total = (st && st.cardsTotal) ? st.cardsTotal : (tier === 'gold' ? 3 : 1);
     var got = (st && st.cardsGot) ? st.cardsGot : 0;
@@ -4427,6 +4654,7 @@
 
   function claimSkillPlayerCard(idx, cell){
     if(skpBusy || skpFlipped >= skpNeeded) return;
+    if(isCardLocked()){ closeSkillPlayerModal(); showCardLockNotice(); return; }   // bị khóa khi đang lật thẻ: không lưu thẻ
     if(skpOpenedIdx.indexOf(idx) >= 0) return;
     var base = skpPicks && skpPicks[idx];
     if(!base) return;
@@ -4993,7 +5221,9 @@
     h += '<span class="skill-pts">+'+st.pts+' điểm</span>'
       + '<div class="sk-actions-row">';
     if(pending){
-      h += '<button type="button" class="btn-open" data-act="claim" data-skill="'+s.key+'">🎁 Nhận thưởng</button>';
+      h += isCardLocked()
+        ? '<button type="button" class="btn-open is-card-locked" data-act="claim" data-skill="'+s.key+'">⛔ Tạm khóa nhận thẻ</button>'
+        : '<button type="button" class="btn-open" data-act="claim" data-skill="'+s.key+'">🎁 Nhận thưởng</button>';
     } else if(st.tier === 'silver' || st.tier === 'gold'){
       h += '<button type="button" class="btn-ghost" data-act="cards" data-skill="'+s.key+'">🎴 Xem thẻ đã nhận</button>';
     } else {
@@ -5313,7 +5543,7 @@
       var stDone = skillState(CE.monthKey, CE.key);
       var pendingDone = skillCardsPending(stDone);
       var hasCards = (CE.tier === 'silver' || CE.tier === 'gold');
-      later.textContent = pendingDone ? '🎁 Nhận thẻ' : (hasCards ? '🎴 Xem thẻ đã nhận' : '✨ Xem lại');
+      later.textContent = pendingDone ? (isCardLocked() ? '⛔ Nhận thẻ (đang khóa)' : '🎁 Nhận thẻ') : (hasCards ? '🎴 Xem thẻ đã nhận' : '✨ Xem lại');
       main.textContent = CE.fresh ? '🎉 NHẬN THƯỞNG!' : 'Đóng';
     }
   }
@@ -5371,7 +5601,7 @@
       else triggerToast('perfect', 'Đã nhận Play Style '+SKILL_TIERS[st.tier].label.toLowerCase()+' “'+rt.name+'”! +'+st.pts+' điểm 🌟');
       renderWeek();
       if(st.tier === 'silver' || st.tier === 'gold'){
-        try{ openSkillPlayerModal(st.reward.code, st.tier, C.monthKey, C.key); }
+        try{ openSkillPlayerModal(st.reward.code, st.tier, C.monthKey, C.key); }   // đang khóa thì hàm này tự báo và giữ thẻ lại
         catch(err){ console.warn('Khong mo duoc minigame cau thu bi an', err); }
       }
     }
@@ -5506,6 +5736,7 @@
       var C = CE;
       var st = skillState(C.monthKey, C.key);
       if(skillCardsPending(st)){
+        if(guardCardLock()) return;   // đang khóa: giữ nguyên popup, không đánh dấu đã nhận
         // "Nhận thẻ": còn thẻ cầu thủ chưa lật hết (ví dụ popup từng bị đóng giữa chừng) -> mở lại minigame lật thẻ, không random lại phần thưởng
         var code = st.reward && st.reward.code, tier = st.tier, mk = C.monthKey, k = C.key;
         closeSkillModal();
@@ -5734,6 +5965,8 @@
     updatePeriodPreview();
     renderRewardList();
     renderUserPanel();
+    fillCardLockForm();
+    renderCardLockPanel();
     openModalTop('settings-modal');
   }
   function closeSettings(){ document.getElementById('settings-modal').classList.remove('open'); }
@@ -5867,6 +6100,7 @@
       btn.textContent = '🔒'; btn.classList.remove('is-admin');
       btn.title = 'Chế độ quản trị: mở khóa để sửa ngày cũ';
     }
+    renderCardLockPanel();
   }
   document.getElementById('admin-toggle-btn').addEventListener('click', function(){
     if(isAdmin){
@@ -5888,6 +6122,7 @@
   });
 
   document.getElementById('day-summary').addEventListener('click', function(e){
+    if(e.target.closest('.ds-gift.is-card-locked')){ showCardLockNotice(); return; }
     var el = e.target.closest('.ds-gift.is-pending');
     if(!el) return;
     var monthKey = el.getAttribute('data-box-month'), dk = el.getAttribute('data-box-day');
@@ -6078,6 +6313,7 @@
     } else if(act === 'cards'){
       if(!openSkillCardsView(currentPeriod.key, key)) openSkillModal(key);   // dữ liệu cũ chưa có cardsDbIds -> phát lại hiệu ứng như trước
     } else if(act === 'claim'){
+      if(guardCardLock()) return;
       var stClaimBtn = skillState(currentPeriod.key, key);
       if(stClaimBtn.reward && stClaimBtn.reward.type === 'ps'){
         var okClaim = openSkillPlayerModal(stClaimBtn.reward.code, stClaimBtn.tier, currentPeriod.key, key);
@@ -6134,6 +6370,15 @@
   document.getElementById('player-detail-backdrop').addEventListener('click', function(){
     document.getElementById('player-detail-modal').classList.remove('open');
   });
+
+  /* ---- Khóa nhận thẻ: gắn sự kiện (phải nằm trong cùng khối script với các hàm khóa) ---- */
+  document.getElementById('cardlock-apply').addEventListener('click', applyCardLock);
+  document.getElementById('cardlock-release').addEventListener('click', releaseCardLock);
+  document.getElementById('card-lock-ok').addEventListener('click', function(){ document.getElementById('card-lock-modal').classList.remove('open'); });
+  document.getElementById('card-lock-backdrop').addEventListener('click', function(){ document.getElementById('card-lock-modal').classList.remove('open'); });
+  document.getElementById('card-lock-banner').addEventListener('click', showCardLockNotice);
+  setInterval(tickCardLock, 15000);
+  tickCardLock();
 
   renderWeek();
   try{
