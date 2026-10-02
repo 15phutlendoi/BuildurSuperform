@@ -776,6 +776,15 @@
   /* OVR + vị trí trên thẻ: to hơn 50% so với bản cũ (10.5cqw → 15.75cqw, 5.75cqw → 8.6cqw) */
   .fc-card .fc-ovr b{ font-size:max(15.75cqw,13px); letter-spacing:-.02em; }
   .fc-card .fc-ovr span{ font-size:max(8.6cqw,9px); margin-top:1.5cqw; }
+  /* Nâng cấp OVR (Đấu Trường): OVR 3 chữ số thu nhỏ vừa khung; thẻ đã lên cấp có huy hiệu ▲+N và viền sáng theo mốc (đồng/bạc/vàng/kim cương) */
+  .fc-card.ovr3 .fc-ovr b{ font-size:max(12.5cqw,11px); }
+  .fc-card.up{ --up-c:#F3C9A0; --up-glow:rgba(243,160,90,.75); filter:drop-shadow(0 0 5px var(--up-glow)); }
+  .fc-card.up.t2{ --up-c:#E5E7EB; --up-glow:rgba(203,213,225,.85); }
+  .fc-card.up.t3{ --up-c:#FDE047; --up-glow:rgba(250,204,21,.9); animation:fcUpPulse 2.2s ease-in-out infinite; }
+  .fc-card.up.t4{ --up-c:#67E8F9; --up-glow:rgba(34,211,238,.95); animation:fcUpPulse 1.6s ease-in-out infinite; }
+  .fc-card.up .fc-ovr b{ color:var(--up-c); }
+  .fc-card .fc-up{ position:absolute; z-index:4; right:5%; top:5%; font-family:var(--font-display); font-weight:800; font-size:max(8.2cqw,9px); line-height:1; color:#3d2500; padding:1.4cqw 3cqw; border-radius:99px; background:linear-gradient(180deg,#fff,var(--up-c)); box-shadow:0 .6cqw 1.6cqw rgba(0,0,0,.55); }
+  @keyframes fcUpPulse{ 0%,100%{ filter:drop-shadow(0 0 4px var(--up-glow)); } 50%{ filter:drop-shadow(0 0 11px var(--up-glow)); } }
   .fc-card .fc-ps{
     position:absolute; z-index:3; left:5%; top:30%; display:flex; flex-direction:column; gap:1.4cqw; padding:1.6cqw;
     border-radius:3cqw; background:linear-gradient(160deg,rgba(60,62,90,.86),rgba(14,15,30,.9));
@@ -803,6 +812,170 @@
      ăn khớp cỡ chữ tại chỗ dùng, không phụ thuộc kích thước mặc định bất định của trình duyệt. */
   .el-icon-inline{ display:inline-flex; width:1.15em; height:1.15em; vertical-align:-0.22em; margin-right:3px; flex:none; }
   .el-icon-inline svg{ width:100%; height:100%; display:block; fill:currentColor; }
+  /* ===== Đấu Trường — 1v1 Luyện Tập (Epic 2) ===== */
+  .battle-pick-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(110px,1fr)); gap:10px; }
+  .battle-vs-row{ display:flex; align-items:center; justify-content:center; gap:10px; margin:6px 0 18px; }
+  .battle-side{ flex:1; max-width:160px; text-align:center; }
+  .battle-side .player-card{ pointer-events:none; margin:0 auto 8px; max-width:150px; }
+  .battle-vs-badge{ flex:none; font-weight:900; font-size:15px; color:var(--ink-soft); background:var(--deep-soft);
+    border:2px solid var(--line); border-radius:999px; width:34px; height:34px; display:flex; align-items:center; justify-content:center; }
+  .battle-name{ font-weight:800; font-size:13px; margin-bottom:4px; }
+  .battle-hp-track{ height:14px; border-radius:999px; background:#1c2230; border:1px solid var(--line); overflow:hidden; position:relative; }
+  .battle-hp-fill{ height:100%; border-radius:999px; transition:width .5s ease; background:linear-gradient(90deg,#22C55E,#16A34A); }
+  .battle-hp-fill.mid{ background:linear-gradient(90deg,#FACC15,#D97706); }
+  .battle-hp-fill.low{ background:linear-gradient(90deg,#F87171,#DC2626); }
+  .battle-hp-text{ font-size:11px; font-weight:700; color:var(--ink-soft); margin-top:3px; }
+  .battle-log{ max-height:220px; overflow-y:auto; display:flex; flex-direction:column; gap:6px; margin:14px 0; padding:2px; }
+  .battle-log-row{ display:flex; font-size:12.5px; line-height:1.4; }
+  .battle-log-row.side-0{ justify-content:flex-start; }
+  .battle-log-row.side-1{ justify-content:flex-end; }
+  .battle-log-bubble{ max-width:85%; padding:7px 11px; border-radius:12px; background:var(--deep-soft); border:1px solid var(--line); }
+  .battle-log-row.side-1 .battle-log-bubble{ background:#241a36; border-color:#3d2b5c; }
+  .battle-log-bubble b{ font-variant-numeric:tabular-nums; }
+  .battle-log-bubble.crit{ border-color:#F59E0B; box-shadow:0 0 0 1px #F59E0B inset; }
+  .battle-controls{ display:flex; gap:8px; flex-wrap:wrap; justify-content:center; margin-top:10px; }
+  .battle-result{ text-align:center; margin:14px 0; padding:16px; border-radius:14px; background:var(--deep-soft); border:2px solid var(--line); }
+  .battle-result.win{ border-color:#22C55E; }
+  .battle-result.lose{ border-color:#F87171; }
+  .battle-result h3{ margin:0 0 4px; font-size:18px; }
+  .battle-result p{ margin:0; color:var(--ink-soft); font-size:13px; }
+  .battle-result p.battle-reward{ color:#FBBF24; font-weight:700; margin-top:8px; }
+  .battle-result p.hint-text{ color:var(--ink-soft); font-size:12px; margin-top:6px; font-style:italic; }
+  .battle-result.evolved{ border-color:#FBBF24; box-shadow:0 0 0 2px rgba(251,191,36,.35); }
+  .battle-pick-cell{ cursor:pointer; text-align:center; transition:transform .12s; }
+  .battle-pick-cell .player-card{ pointer-events:none; }
+  .battle-pick-cell:active{ transform:scale(.95); }
+  .battle-star-tag{ color:#FBBF24; }
+  /* ===== GIAO TRANH SINH ĐỘNG: xúc xắc → tính uy lực → ra đòn theo Hệ/phẩm chất/kỹ năng → trừ Thể lực ===== */
+  .bt-arena{ position:relative; }
+  .bt-fx{ position:absolute; left:0; top:0; right:0; bottom:0; pointer-events:none; z-index:30; }
+  .bt-arena.bt-shake{ animation:btStageShake .45s ease-out; }
+  @keyframes btStageShake{ 0%,100%{ transform:none; } 20%{ transform:translate(-5px,3px); } 40%{ transform:translate(6px,-3px); } 60%{ transform:translate(-4px,2px); } 80%{ transform:translate(3px,-1px); } }
+  .battle-side{ position:relative; }
+  .battle-side.act .player-card{ filter:drop-shadow(0 0 9px var(--bt-glow,#FDE047)) drop-shadow(0 0 3px var(--bt-glow,#FDE047)); }
+  .battle-side.def .player-card{ opacity:.92; }
+  .battle-side.hit .player-card{ animation:btHit .5s ease-out; }
+  .battle-side.ko .player-card{ filter:grayscale(1) brightness(.55); }
+  .battle-side.win .player-card{ filter:drop-shadow(0 0 12px #FDE047) drop-shadow(0 0 4px #FDE047); }
+  @keyframes btHit{ 0%{ filter:brightness(2.8) saturate(0) drop-shadow(0 0 12px #F87171); transform:translateX(-9px); } 25%{ transform:translateX(10px); } 50%{ transform:translateX(-7px); } 75%{ transform:translateX(4px); } 100%{ filter:none; transform:none; } }
+  .battle-hp-track{ position:relative; }
+  .battle-hp-ghost{ position:absolute; left:0; top:0; bottom:0; border-radius:999px; background:#FCA5A5; transition:width 1s ease .35s; }
+  .battle-hp-fill{ position:relative; z-index:1; }
+  .bt-console{ margin:2px 0 10px; padding:10px 12px; border-radius:14px; background:linear-gradient(160deg,rgba(15,23,42,.95),rgba(30,41,59,.75)); border:2px solid var(--line); transition:border-color .3s; }
+  .bt-console[data-side="0"]{ border-color:#38BDF8; }
+  .bt-console[data-side="1"]{ border-color:#C084FC; }
+  .bt-turn{ text-align:center; font-weight:900; font-size:13.5px; margin-bottom:8px; }
+  .bt-turn b{ color:#FDE047; }
+  .bt-mid{ display:flex; gap:12px; align-items:flex-start; }
+  .bt-dice{ flex:none; width:104px; text-align:center; }
+  .bt-die-wrap{ filter:drop-shadow(0 5px 7px rgba(0,0,0,.65)); width:80px; margin:0 auto; }
+  .bt-die{ width:80px; height:88px; display:flex; align-items:center; justify-content:center; font-family:var(--font-display); font-weight:900; font-size:38px; color:#fff;
+    clip-path:polygon(50% 0,96% 28%,96% 72%,50% 100%,4% 72%,4% 28%); background:linear-gradient(160deg,#64748B,#334155); }
+  .bt-die.rolling{ background:linear-gradient(160deg,#A78BFA,#5B21B6); animation:btDieRoll .42s linear infinite; }
+  .bt-die.landed{ animation:btDieLand .55s cubic-bezier(.2,1.7,.4,1) both; }
+  .bt-die[data-v="low"]{ background:linear-gradient(160deg,#94A3B8,#475569); }
+  .bt-die[data-v="mid"]{ background:linear-gradient(160deg,#38BDF8,#1D4ED8); }
+  .bt-die[data-v="high"]{ background:linear-gradient(160deg,#FDBA74,#C2410C); }
+  .bt-die[data-v="crit"]{ background:linear-gradient(160deg,#FEF08A,#F59E0B); color:#4a2c00; }
+  @keyframes btDieRoll{ 0%{ transform:rotate(0deg) scale(1); } 25%{ transform:rotate(90deg) scale(1.08) translateY(-6px); } 50%{ transform:rotate(180deg) scale(1); } 75%{ transform:rotate(270deg) scale(1.08) translateY(-6px); } 100%{ transform:rotate(360deg) scale(1); } }
+  @keyframes btDieLand{ 0%{ transform:scale(1.5) rotate(-14deg); } 60%{ transform:scale(.92) rotate(4deg); } 100%{ transform:scale(1) rotate(0); } }
+  .bt-dnote{ margin-top:8px; font-size:11px; font-weight:700; line-height:1.35; color:var(--ink-soft); }
+  .bt-dnote b{ color:#FDE047; }
+  .bt-calc{ flex:1; min-width:0; min-height:150px; display:flex; flex-direction:column; gap:4px; }
+  .bt-row{ display:flex; justify-content:space-between; align-items:center; gap:8px; padding:4px 9px; border-radius:9px; background:rgba(148,163,184,.12); font-size:12px; font-weight:700; animation:btRowIn .28s ease-out both; }
+  .bt-row small{ color:var(--ink-soft); font-weight:600; }
+  .bt-row b{ font-variant-numeric:tabular-nums; white-space:nowrap; }
+  .bt-row.good{ background:rgba(34,197,94,.2); color:#86EFAC; }
+  .bt-row.bad{ background:rgba(248,113,113,.18); color:#FCA5A5; }
+  .bt-row.total{ background:linear-gradient(90deg,rgba(251,191,36,.28),rgba(249,115,22,.22)); border:1px solid rgba(251,191,36,.6); font-size:14px; font-weight:900; color:#FDE047; }
+  .bt-row.total.dmg{ background:linear-gradient(90deg,rgba(248,113,113,.35),rgba(220,38,38,.25)); border-color:#F87171; color:#FECACA; }
+  @keyframes btRowIn{ 0%{ opacity:0; transform:translateX(14px); } 100%{ opacity:1; transform:none; } }
+  .bt-proj{ position:absolute; width:42px; height:42px; margin:-21px 0 0 -21px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+    background:radial-gradient(circle at 35% 30%,var(--c1),var(--c2)); box-shadow:0 0 18px 7px var(--c1); }
+  .bt-proj svg{ width:62%; height:62%; fill:#fff; }
+  .bt-ring{ position:absolute; width:22px; height:22px; margin:-11px 0 0 -11px; border-radius:50%; border:4px solid var(--rc,#fff); box-shadow:0 0 12px var(--rc,#fff); opacity:0; }
+  .bt-spark{ position:absolute; width:9px; height:9px; margin:-4px 0 0 -4px; border-radius:50%; box-shadow:0 0 8px currentColor; }
+  .bt-float{ position:absolute; z-index:2; font-family:var(--font-display); font-weight:900; font-size:26px; color:#fff; white-space:nowrap; text-shadow:0 2px 0 #7f1d1d,0 0 10px rgba(248,113,113,.9),0 2px 6px rgba(0,0,0,.8); opacity:0; }
+  .bt-float.crit{ font-size:36px; color:#FDE047; text-shadow:0 2px 0 #92400e,0 0 14px rgba(250,204,21,.95),0 2px 6px rgba(0,0,0,.8); }
+  .bt-float.tag{ font-size:14px; color:#86EFAC; text-shadow:0 1px 0 #14532d,0 0 8px rgba(34,197,94,.9); }
+  .bt-float.tag.gold{ color:#FDE68A; text-shadow:0 1px 0 #78350f,0 0 8px rgba(251,191,36,.9); }
+  .bt-float.ko{ font-size:34px; color:#fff; letter-spacing:2px; }
+  .bt-skill{ position:absolute; z-index:3; transform:translate(-50%,0); text-align:center; padding:3px 11px 4px; border-radius:12px; white-space:nowrap; line-height:1.15; color:#3d2500;
+    background:linear-gradient(180deg,#FFFBEB,#FCD34D); box-shadow:0 3px 10px rgba(0,0,0,.55); opacity:0; }
+  .bt-skill.s{ background:linear-gradient(180deg,#F8FAFC,#CBD5E1); color:#1e293b; }
+  .bt-skill b{ display:block; font-size:12px; font-weight:900; }
+  .bt-skill small{ display:block; font-size:9.5px; font-weight:800; opacity:.85; }
+  .bt-confetti{ position:absolute; top:-10px; font-size:18px; opacity:0; }
+  /* ===== HÀNH TRÌNH (roadmap kiểu sân bóng) ===== */
+  .rm-modes{ display:flex; gap:8px; margin:10px 0 0; }
+  .rm-mode{ flex:1; border:1px solid var(--line); background:var(--deep-soft); color:var(--ink-soft); border-radius:12px; padding:9px 10px; font-weight:800; font-size:13px; cursor:pointer; }
+  .rm-mode.active{ color:#3d2500; background:linear-gradient(180deg,#FFF0A8,#F5A300); border-color:#F5A300; }
+  .battle-quota{ margin:8px 0 0; padding:6px 12px; border-radius:99px; text-align:center; font-size:12.5px; font-weight:700; background:rgba(34,197,94,.14); border:1px solid rgba(74,222,128,.45); color:#86EFAC; }
+  .battle-quota b{ color:#FDE047; }
+  .battle-quota.empty{ background:rgba(148,163,184,.12); border-color:var(--line); color:var(--ink-soft); }
+  .rm-head{ display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap; }
+  .rm-head h3{ margin:0; font-size:16px; }
+  .rm-prog-txt{ font-size:12px; font-weight:800; color:var(--ink-soft); }
+  .rm-prog{ height:8px; border-radius:99px; background:#1c2230; border:1px solid var(--line); overflow:hidden; margin:6px 0 10px; }
+  .rm-prog i{ display:block; height:100%; border-radius:99px; background:linear-gradient(90deg,#22C55E,#FBBF24); transition:width .6s ease; }
+  .rm-banner{ margin:0 0 10px; padding:9px 12px; border-radius:12px; font-size:12.5px; font-weight:700; background:rgba(251,191,36,.12); border:1px solid rgba(251,191,36,.45); }
+  .rm-next{ margin:0 0 10px; padding:10px 12px; border-radius:12px; border:2px dashed var(--line); text-align:center; font-size:12.5px; font-weight:800; color:var(--ink-soft); }
+  /* Hành trình · góc nhìn thứ nhất: khung chính + dải ải */
+  .pov-view{ position:relative; width:100%; max-width:440px; margin:0 auto; aspect-ratio:360/460; border-radius:18px; overflow:hidden; border:3px solid rgba(255,255,255,.9); background:#0b1220; box-shadow:0 8px 24px rgba(0,0,0,.4); }
+  .pov-svg{ position:absolute; inset:0; transform-origin:50% 50%; }
+  .pov-svg svg{ display:block; width:100%; height:100%; }
+  .pov-view.cur .pov-svg svg{ transform-origin:50% 100%; }
+  @keyframes povBob{ 0%,100%{ transform:translateY(0) scale(1); } 50%{ transform:translateY(-3px) scale(1.012); } }
+  .pov-view.lock .pov-svg{ filter:grayscale(.85) brightness(.55); }
+  .pov-view.far .pov-svg{ filter:grayscale(1) brightness(.4) blur(3px); }
+  .pov-view.pov-out .pov-svg{ animation:povOut .7s ease-in forwards; }
+  @keyframes povOut{ to{ transform:scale(2.4); opacity:0; } }
+  .pov-view.pov-in .pov-svg{ animation:povIn .8s ease-out; }
+  @keyframes povIn{ from{ transform:scale(1.5); opacity:0; } to{ transform:none; opacity:1; } }
+  .pov-hud{ position:absolute; left:8px; right:8px; top:8px; display:flex; justify-content:space-between; align-items:center; gap:6px; pointer-events:none; }
+  .pov-chip{ padding:3px 10px; border-radius:4px; background:#fff; border:2.5px solid #000; color:#000; font-size:12px; font-weight:900; }
+  .pov-fl{ padding:2px 7px; border-radius:4px; background:#fff; border:2.5px solid #000; font-size:12px; filter:grayscale(1); }
+  .pov-nav{ position:absolute; top:46%; width:34px; height:44px; border:none; border-radius:12px; background:rgba(2,6,23,.55); color:#fff; font-size:26px; font-weight:900; line-height:1; cursor:pointer; padding:0 0 3px; }
+  .pov-nav.prev{ left:6px; } .pov-nav.next{ right:6px; }
+  .pov-cap{ position:absolute; left:10px; right:10px; top:40px; padding:5px 10px; text-align:center; color:#000; background:#fff; border:3px solid #000; box-shadow:3px 3px 0 #000; pointer-events:none; }
+  .pov-cap b{ display:block; font-size:14px; font-weight:900; }
+  .pov-cap small{ display:block; margin-top:2px; font-size:11.5px; font-weight:700; color:#333; }
+  .pov-view.lock .pov-cap b{ color:#444; }
+  .pov-go{ display:block; width:100%; max-width:440px; margin:10px auto 0; border:none; border-radius:14px; padding:12px; font-size:16px; font-weight:900; font-family:inherit; cursor:pointer; color:#3d2500; background:linear-gradient(180deg,#FFF0A8,#F5A300); animation:povGo 1.3s ease-in-out infinite; }
+  .pov-go.wait{ color:#E2E8F0; background:#334155; animation:none; }
+  @keyframes povGo{ 0%,100%{ box-shadow:0 0 0 0 rgba(253,224,71,.8); } 50%{ box-shadow:0 0 0 10px rgba(253,224,71,0); } }
+  .pov-strip{ display:grid; grid-template-columns:repeat(5,1fr); gap:6px; max-width:440px; margin:12px auto 0; }
+  .pov-thumb{ position:relative; padding:0; overflow:hidden; border:2px solid rgba(255,255,255,.35); border-radius:10px; background:#0b1220; aspect-ratio:360/460; cursor:pointer; }
+  .pov-thumb svg{ display:block; width:100%; height:100%; }
+  .pov-thumb.lock svg{ filter:grayscale(.9) brightness(.5); }
+  .pov-thumb.sel{ border-color:#FDE047; box-shadow:0 0 0 2px rgba(253,224,71,.55); }
+  .pov-thumb.cur{ border-color:#4ADE80; }
+  .pov-tn{ position:absolute; left:3px; top:3px; min-width:18px; height:18px; padding:0 4px; border-radius:99px; background:rgba(2,6,23,.8); color:#fff; font-size:11px; font-weight:900; line-height:18px; text-align:center; }
+  .pov-tb{ position:absolute; right:2px; bottom:2px; font-size:13px; line-height:1; }
+  .rm-pick-head{ display:flex; gap:12px; align-items:center; margin:0 0 12px; padding:10px; border-radius:14px; background:linear-gradient(160deg,rgba(34,197,94,.16),rgba(251,191,36,.08)); border:1px solid rgba(74,222,128,.45); }
+  .rm-opp-card{ width:96px; flex:none; }
+  .rm-opp-card .player-card{ pointer-events:none; }
+  .rm-opp-info{ flex:1; font-size:12.5px; font-weight:700; line-height:1.55; }
+  .rm-opp-stage{ font-size:14px; font-weight:900; color:#FDE047; }
+  .rm-back{ margin-bottom:8px; }
+  .battle-up{ margin-top:5px; }
+  .battle-up-lv{ display:inline-block; font-size:11px; font-weight:800; color:#FBBF24; }
+  .battle-up-lv.zero{ color:var(--ink-soft); font-weight:700; }
+  .battle-up-bar{ height:7px; border-radius:99px; background:#1c2230; border:1px solid var(--line); overflow:hidden; margin:3px 0 2px; }
+  .battle-up-bar i{ display:block; height:100%; border-radius:99px; background:linear-gradient(90deg,#FBBF24,#F97316); transition:width .6s ease; }
+  .battle-up-txt{ font-size:10.5px; font-weight:700; color:var(--ink-soft); }
+  .bu-box{ margin-top:10px; padding:12px; border-radius:12px; background:linear-gradient(160deg,rgba(251,191,36,.16),rgba(249,115,22,.08)); border:1px solid rgba(251,191,36,.5); }
+  .bu-ovr{ display:flex; align-items:center; justify-content:center; gap:10px; font-family:var(--font-display); font-weight:800; }
+  .bu-old{ font-size:24px; color:var(--ink-soft); text-decoration:line-through; }
+  .bu-arrow{ font-size:20px; color:#FBBF24; }
+  .bu-new{ font-size:40px; color:#FDE047; text-shadow:0 0 14px rgba(250,204,21,.8); animation:buPop .7s cubic-bezier(.2,1.6,.4,1) both; }
+  .bu-chip{ display:inline-block; margin-top:4px; padding:3px 12px; border-radius:99px; font-size:13px; font-weight:800; color:#3d2500; background:linear-gradient(180deg,#FFF0A8,#F5A300); }
+  .bu-stats{ display:flex; gap:6px; justify-content:center; flex-wrap:wrap; margin:8px 0 0; padding:0; list-style:none; }
+  .bu-stats li{ font-size:12px; font-weight:700; padding:3px 9px; border-radius:99px; background:var(--deep-soft); border:1px solid var(--line); }
+  .bu-next{ margin-top:8px; font-size:12px; color:var(--ink-soft); }
+  .battle-side.bu-pop .player-card{ animation:buCardPop .9s ease-out both; }
+  @keyframes buPop{ 0%{ transform:scale(.3); opacity:0; } 100%{ transform:scale(1); opacity:1; } }
+  @keyframes buCardPop{ 0%{ transform:scale(.9); filter:brightness(2); } 60%{ transform:scale(1.07); } 100%{ transform:scale(1); filter:none; } }
   /* Tên cầu thủ */
   .fc-card .fc-name{ position:absolute; z-index:3; left:0; right:0; top:var(--fc-name-top); height:9%; display:flex; align-items:center; justify-content:center; padding:0 4%; }
   .fc-card .fc-name span{
@@ -1508,6 +1681,7 @@
   #tabBtn-skills.active{ background:linear-gradient(135deg,#FBBF24,#D97706); color:#3D2500; }
   #tabBtn-shoot.active{ background:linear-gradient(135deg,#FB923C,#EA580C); color:#3A1503; }
   #tabBtn-squad.active{ background:linear-gradient(135deg,#C4B5FD,#8B5CF6); color:#241242; }
+  #tabBtn-battle.active{ background:linear-gradient(135deg,#FCA5A5,#DC2626); color:#3D0A0A; }
   #tabBtn-badges.active{ background:linear-gradient(135deg,var(--gold-light),var(--gold-dark)); color:#3D2500; }
 
   /* Sắc thái nền nhẹ riêng cho từng màn hình (chỉ lấp vào khoảng trống
@@ -1598,27 +1772,6 @@
   }
   @keyframes skpCardPop{ 0%{ opacity:0; transform:scale(.7) translateY(8px); } 100%{ opacity:1; transform:none; } }
 
-
-  /* ===== Khóa nhận thẻ ===== */
-  .card-lock-banner{ display:flex; align-items:flex-start; gap:10px; margin:0 0 12px; padding:10px 14px; border-radius:14px; background:rgba(239,68,68,.14); border:1px solid rgba(239,68,68,.55); color:#FECACA; font-size:13px; font-weight:700; line-height:1.45; cursor:pointer; }
-  .card-lock-banner.is-recovery{ background:rgba(245,158,11,.14); border-color:rgba(245,158,11,.6); color:#FDE68A; }
-  .card-lock-banner b{ color:#fff; }
-  .clb-ico{ font-size:20px; line-height:1.2; flex:none; }
-  .card-lock-banner[hidden], #cardlock-form[hidden], #cardlock-need-admin[hidden], #cardlock-release[hidden]{ display:none !important; }
-  .ds-gift.is-card-locked{ background:rgba(239,68,68,.14); border:2px dashed rgba(239,68,68,.6); color:#FECACA; cursor:pointer; }
-  .btn-open.is-card-locked{ filter:grayscale(.7); opacity:.8; }
-  .card-lock-box{ width:min(380px,100%); text-align:center; }
-  .card-lock-reason{ margin:0; padding:10px 12px; border-radius:12px; background:rgba(239,68,68,.12); border:1px solid rgba(239,68,68,.4); color:#FECACA; font-weight:700; font-size:14px; line-height:1.5; }
-  .card-lock-time{ margin:0; font-size:13.5px; color:#E2E8F0; line-height:1.5; }
-  .cardlock-status{ padding:9px 12px; border-radius:12px; background:rgba(16,185,129,.12); border:1px solid rgba(16,185,129,.4); color:#A7F3D0; font-size:12.5px; font-weight:700; line-height:1.5; }
-  .cardlock-form{ display:flex; flex-direction:column; gap:8px; margin-top:8px; }
-  .cardlock-grid{ display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:8px; }
-  .cardlock-grid label{ min-width:0; }
-  .cardlock-grid input[type=datetime-local]{ width:100%; min-width:0; background:#0F172A; border:1px solid #475569; border-radius:12px; padding:8px 6px; font-size:12px; color:#fff; font-family:inherit; color-scheme:dark; box-sizing:border-box; }
-  .cardlock-actions{ display:flex; gap:8px; }
-  .cardlock-actions .btn-secondary{ flex:1; }
-  .cardlock-actions .btn-secondary:disabled{ opacity:.45; cursor:not-allowed; }
-  .cardlock-status.is-on{ background:rgba(239,68,68,.12); border-color:rgba(239,68,68,.45); color:#FECACA; }
 </style>
 </head>
 <body>
@@ -1685,11 +1838,9 @@
     <button type="button" id="tabBtn-skills" class="tab-btn" role="tab" aria-selected="false" aria-controls="view-skills" data-tab="skills">⚡ Phòng Kỹ Năng</button>
     <button type="button" id="tabBtn-shoot" class="tab-btn" role="tab" aria-selected="false" aria-controls="view-shoot" data-tab="shoot">⚽ Sút Quyết Định</button>
     <button type="button" id="tabBtn-squad" class="tab-btn" role="tab" aria-selected="false" aria-controls="view-squad" data-tab="squad">🎴 Đội Hình Trong Mơ</button>
+    <button type="button" id="tabBtn-battle" class="tab-btn" role="tab" aria-selected="false" aria-controls="view-battle" data-tab="battle">⚔️ Đấu Trường</button>
     <button type="button" id="tabBtn-badges" class="tab-btn" role="tab" aria-selected="false" aria-controls="view-badges" data-tab="badges">🏆 Huy Hiệu</button>
   </nav>
-
-  <!-- Dải thông báo khóa nhận thẻ (chỉ hiện khi Quản trị viên đang khóa) -->
-  <div id="card-lock-banner" class="card-lock-banner" role="status" hidden></div>
 
   <!-- Thanh chọn kỳ tính điểm: dùng chung cho 2 mục "Phòng Kỹ Năng" và "Sút Quyết Định" -->
   <div id="month-bar" class="panel month-bar" hidden>
@@ -1838,6 +1989,35 @@
     </div>
   </section>
 
+  <!-- ========== ĐẤU TRƯỜNG — 1v1 Luyện Tập ========== -->
+  <section id="view-battle" class="tab-content" role="tabpanel" aria-labelledby="tabBtn-battle">
+    <div class="panel">
+      <h2>⚔️ Đấu Trường</h2>
+      <p class="panel-sub">Vượt qua lần lượt các trận trong Hành trình (từ rất dễ đến khó), hoặc đấu nhanh với đối thủ ngẫu nhiên. Mỗi ngày đấu số trận đã đặt trong ⚙️ Cài đặt: thắng +2 ⚡, thua +1 ⚡. Đủ Năng Lượng là thẻ được cộng thêm OVR — nâng cấp không giới hạn, thẻ càng mạnh càng sáng! Thua cũng không mất thẻ nào cả.</p>
+      <div class="rm-modes"><button type="button" class="rm-mode active" id="battle-mode-road">🗺️ Hành trình</button><button type="button" class="rm-mode" id="battle-mode-quick">🎲 Đấu nhanh</button></div>
+      <p class="battle-quota" id="battle-quota"></p>
+    </div>
+    <div class="panel" id="battle-road-view"></div>
+    <div class="panel" id="battle-pick-view">
+      <div id="battle-pick-head"></div>
+      <div id="battle-pick-hint" class="empty-collection" style="display:none"></div>
+      <div class="battle-pick-grid" id="battle-pick-grid"></div>
+    </div>
+    <div class="panel" id="battle-arena-view" style="display:none">
+      <div class="bt-arena" id="bt-arena"><div class="battle-vs-row" id="battle-vs-row"></div><div class="bt-fx" id="bt-fx"></div></div>
+      <div class="bt-console" id="bt-console" data-side="0">
+        <div class="bt-turn" id="bt-turn">⚔️ Sẵn sàng!</div>
+        <div class="bt-mid">
+          <div class="bt-dice"><div class="bt-die-wrap"><div class="bt-die" id="bt-die">?</div></div><div class="bt-dnote" id="bt-dnote"></div></div>
+          <div class="bt-calc" id="bt-calc"></div>
+        </div>
+      </div>
+      <div class="battle-controls" id="battle-controls"></div>
+      <div id="battle-result-zone"></div>
+      <div class="battle-log" id="battle-log"></div>
+    </div>
+  </section>
+
   <!-- ========== HUY HIỆU · THỐNG KÊ (tủ trưng bày) ========== -->
   <section id="view-badges" class="tab-content" role="tabpanel" aria-labelledby="tabBtn-badges">
     <div class="panel">
@@ -1907,6 +2087,10 @@
       <input type="number" id="settings-daily-goal" min="1" max="10" step="1">
     </label>
     <p class="hint-text" style="margin:-6px 0 0">VD: nhập 9 nghĩa là đạt 9/10 điểm trong ngày sẽ mở được hộp quà.</p>
+    <label>⚔️ Số trận Đấu Trường mỗi ngày (1–20)
+      <input type="number" id="settings-battle-per-day" min="1" max="20" step="1">
+    </label>
+    <p class="hint-text" style="margin:-6px 0 0">VD: nhập 3 nghĩa là mỗi ngày được đấu tối đa 3 trận. Hành trình và Đấu nhanh dùng chung số lượt này.</p>
     <div>
       <span class="settings-label">👤 Người dùng — tạo mới hoặc mở hồ sơ có sẵn</span>
       <p class="hint-text" id="sync-status" style="margin:2px 0 8px">☁️ Đang kiểm tra đồng bộ…</p>
@@ -1940,27 +2124,6 @@
       <input type="text" id="settings-admin-pin" inputmode="numeric" maxlength="12" placeholder="VD: 0000">
     </div>
     <div>
-      <span class="settings-label">⛔ Khóa nhận thẻ (Quản trị viên)</span>
-      <p class="hint-text" style="margin:2px 0 6px">Khi bé mắc lỗi, khóa việc nhận thẻ cầu thủ trong một khoảng thời gian (hộp quà ngày và thẻ Play Style). Bé vẫn tích nhiệm vụ hằng ngày và nhận điểm bình thường; thẻ chưa nhận được giữ lại, hết thời gian khóa bé sẽ nhận lại.</p>
-      <div class="cardlock-status" id="cardlock-status"></div>
-      <div id="cardlock-form" class="cardlock-form">
-        <div class="cardlock-grid">
-          <label>📅 Từ ngày
-            <input type="datetime-local" id="cardlock-from">
-          </label>
-          <label>📅 Đến ngày
-            <input type="datetime-local" id="cardlock-to">
-          </label>
-        </div>
-        <input type="text" id="cardlock-reason" maxlength="160" placeholder="Lời nhắn hiện cho bé (VD: Con chưa giữ lời hứa hôm qua)">
-        <div class="cardlock-actions">
-          <button type="button" id="cardlock-apply" class="btn-secondary">⛔ Thực hiện khóa</button>
-          <button type="button" id="cardlock-release" class="btn-secondary">🔓 Gỡ khóa</button>
-        </div>
-        <p class="hint-text" style="margin:0">Chọn khoảng thời gian rồi bấm “Thực hiện khóa”. Nếu “Từ ngày” ở tương lai, khóa sẽ tự bắt đầu đúng giờ đó. Cần nhập mã PIN Quản trị viên khi thực hiện hoặc gỡ khóa.</p>
-      </div>
-    </div>
-    <div>
       <span class="settings-label">Kho phần thưởng (quay khi vượt mốc)</span>
       <div id="reward-list" class="reward-list"></div>
       <div class="reward-row">
@@ -1972,17 +2135,6 @@
       <button type="button" id="settings-close" class="btn-secondary">Đóng</button>
       <button type="button" id="settings-save" class="btn-primary">Lưu lại!</button>
     </div>
-  </div>
-</div>
-
-<div id="card-lock-modal" class="modal">
-  <div id="card-lock-backdrop" class="modal-backdrop"></div>
-  <div class="modal-box card-lock-box">
-    <h3 id="card-lock-title">⛔ Tạm khóa nhận thẻ</h3>
-    <p class="card-lock-reason" id="card-lock-reason"></p>
-    <p class="card-lock-time" id="card-lock-time"></p>
-    <p class="hint-text" style="margin:0">Con vẫn tích nhiệm vụ hằng ngày và nhận điểm bình thường nhé. Thẻ chưa nhận sẽ được giữ lại cho con.</p>
-    <div class="modal-actions center"><button type="button" id="card-lock-ok" class="btn-primary">Con hiểu rồi</button></div>
   </div>
 </div>
 
@@ -2606,9 +2758,8 @@
   if(typeof settings.cheerMax !== 'number') settings.cheerMax = 50;
   if(typeof settings.periodStartDay !== 'number' || settings.periodStartDay<1 || settings.periodStartDay>31) settings.periodStartDay = 1;
   if(typeof settings.dailyGoal !== 'number' || settings.dailyGoal<1 || settings.dailyGoal>10) settings.dailyGoal = 9;
+  if(typeof settings.battlePerDay !== 'number' || settings.battlePerDay<1 || settings.battlePerDay>20) settings.battlePerDay = 1;   // số trận Đấu Trường tối đa mỗi ngày
   if(typeof settings.adminPin !== 'string' || !settings.adminPin) settings.adminPin = '0000';
-  // Khóa nhận thẻ do Quản trị viên đặt: {startAt, until, reason} (mili-giây). null = đang cho nhận thẻ bình thường.
-  if(!settings.cardLock || typeof settings.cardLock !== 'object' || typeof settings.cardLock.until !== 'number') settings.cardLock = null;
   if(!Array.isArray(settings.rewards) || !settings.rewards.length) settings.rewards = DEFAULT_REWARDS.slice();
   function saveSettings(){ safeSet('kidchart_settings', settings); }
 
@@ -3092,10 +3243,7 @@
     var goalPct = boxTarget>0 ? Math.min(100, Math.floor(total*100/boxTarget)) : 0;
 
     var giftHtml;
-    if(pending && editable && isCardLocked()){
-      // Đủ điểm nhưng đang bị khóa nhận thẻ: vẫn tích điểm bình thường, quà được giữ lại
-      giftHtml = '<div class="ds-gift is-card-locked" title="Chạm để xem lý do"><span class="ds-gift-ico">⛔</span><span>Đã đủ điểm nhưng<br>đang tạm khóa nhận thẻ</span></div>';
-    } else if(pending && editable){
+    if(pending && editable){
       giftHtml = '<div class="ds-gift is-pending" data-box-month="'+ymKey+'" data-box-day="'+dk+'" title="Chạm để chọn quà cầu thủ!">'
         + '<span class="ds-gift-ico">🎁</span><span>Đã đủ điểm!<br>Chạm để nhận quà</span></div>';
     } else if(pending && !editable){
@@ -3131,7 +3279,6 @@
     renderBadges();
     renderPlayer();
     renderMonthly();
-    refreshCardLockUI();
   }
 
   /* Hiệu ứng vui mừng khi hoàn thành 1 nhiệm vụ: thẻ nảy nhẹ + bong bóng lời khen bay lên. */
@@ -3749,11 +3896,15 @@
     var merged = {};
     for(var k in base){ merged[k] = base[k]; }
     merged.stats = base.realStats;
-    merged.ovr = base.realOvr;
+    // Nâng cấp từ Đấu Trường: OVR hiển thị = OVR gốc + ovrBonus (không giới hạn). Thẻ cũ lưu `star` thì quy đổi 1★ = +1 OVR.
+    merged.ovrBase = base.realOvr;
+    merged.ovrBonus = (typeof raw.ovrBonus === 'number') ? raw.ovrBonus : (raw.star || 0);
+    merged.ovr = base.realOvr + merged.ovrBonus;
     merged.initials = initialsOf(base.name || '?');
     merged.id = raw.id;
     merged.dbId = raw.dbId;
     merged.acquiredAt = raw.acquiredAt;
+    merged.energy = raw.energy || 0;
     return merged;
   }
   function hydratePlayers(list){ return (list || []).map(hydratePlayer); }
@@ -3835,12 +3986,14 @@
   function battleDetailHTML(p){
     var b = p.battle;
     if(!b || !battleReady()) return '';
+    var e = effectiveBattleStats(p) || b, up = p.ovrBonus || 0;   // chỉ số đã cộng bonus nâng cấp
     var rows = [
-      ['Lực chiến (CP)', b.cp],
-      ['Thể lực', b.hp],
-      ['Giáp', b.armor + ' (giảm ' + b.armorPct + '%)'],
+      ['Lực chiến (CP)', e.cp],
+      ['Thể lực', e.hp],
+      ['Giáp', e.armor + ' (giảm ' + e.armorPct + '%)'],
       ['Phẩm chất', rarityLabel(b.rarity)]
     ];
+    if(up) rows.push(['Nâng cấp', '▲ +' + up + ' OVR · ' + battleTier(up).label]);
     var skillChips = (b.skills||[]).map(function(s){
       return '<span class="pd-chip">'+escHtml(skillLabel(s.id, s.grade))+'</span>';
     }).join('');
@@ -3875,167 +4028,6 @@
     return [];
   }
   function savePlayers(list){ return safeSet('kidchart_players', list); }
-
-  /* ============ KHÓA NHẬN THẺ (chỉ Quản trị viên đặt) ============
-     Khi bé mắc lỗi, Quản trị viên khóa việc nhận thẻ cầu thủ trong một khoảng thời gian.
-       - BỊ CHẶN : hộp quà ngày (9 ô) và lật thẻ cầu thủ Play Style (skill Bạc/Vàng).
-       - KHÔNG chặn: tích nhiệm vụ hằng ngày, cộng điểm, mở skill, xem kho/đội hình/thẻ đã có.
-         Thẻ chưa nhận vẫn được giữ nguyên (không bị đánh dấu "đã nhận") để nhận sau.
-     Trạng thái lưu trong settings.cardLock = {startAt, until, reason} và đồng bộ cloud cùng settings.
-     Vòng đời: 'locked' (còn trong thời gian khóa) -> hết hạn -> cardLockRecoveryMet() quyết định:
-       true  -> 'free'     (tự mở lại, xóa lệnh khóa)
-       false -> 'recovery' (hết hạn nhưng vẫn chưa được nhận thẻ, chờ đạt điều kiện)  */
-  var CARD_LOCK_DEFAULT_REASON = 'Con hãy nhớ lại lỗi vừa rồi và sửa nhé, ba mẹ tin con làm được!';
-
-  /* >>> ĐIỂM MỞ RỘNG: điều kiện để được nhận thẻ lại sau khi hết thời gian khóa (sẽ xây dựng sau).
-         Nhận vào lệnh khóa vừa hết hạn, trả về true khi bé đã đạt điều kiện.
-         Hiện tại trả về true = hết thời gian khóa là tự động được nhận thẻ lại. */
-  function cardLockRecoveryMet(lock){ return true; }
-
-  function cardLockPhase(){
-    var lock = settings.cardLock;
-    if(!lock) return 'free';
-    if(typeof lock.startAt === 'number' && Date.now() < lock.startAt) return 'scheduled';
-    if(Date.now() < lock.until) return 'locked';
-    return cardLockRecoveryMet(lock) ? 'free' : 'recovery';
-  }
-  function isCardLocked(){ var ph = cardLockPhase(); return ph === 'locked' || ph === 'recovery'; }
-
-  function fmtLockRemain(ms){
-    var m = Math.max(1, Math.ceil(ms / 60000));
-    if(m < 60) return m + ' phút';
-    var h = Math.floor(m / 60), mm = m % 60;
-    if(h < 24) return h + ' giờ' + (mm ? ' ' + mm + ' phút' : '');
-    var d = Math.floor(h / 24), hh = h % 24;
-    return d + ' ngày' + (hh ? ' ' + hh + ' giờ' : '');
-  }
-  function fmtLockTime(ts){
-    var d = new Date(ts);
-    return pad2(d.getHours()) + ':' + pad2(d.getMinutes()) + ' ngày ' + fmtDDMM(d);
-  }
-
-  /* Hộp thoại báo cho bé: lý do + còn bao lâu nữa */
-  function showCardLockNotice(){
-    var lock = settings.cardLock, ph = cardLockPhase();
-    if(!lock || (ph !== 'locked' && ph !== 'recovery')) return;
-    var titleEl = document.getElementById('card-lock-title');
-    var reasonEl = document.getElementById('card-lock-reason');
-    var timeEl = document.getElementById('card-lock-time');
-    if(ph === 'locked'){
-      titleEl.textContent = '⛔ Tạm khóa nhận thẻ';
-      timeEl.innerHTML = 'Còn <b>' + fmtLockRemain(lock.until - Date.now()) + '</b> (đến ' + fmtLockTime(lock.until) + ') con mới được nhận thẻ lại.';
-    } else {
-      titleEl.textContent = '⏳ Sắp được nhận thẻ lại';
-      timeEl.textContent = 'Đã hết thời gian khóa. Con cần hoàn thành điều kiện để được nhận thẻ lại nhé.';
-    }
-    reasonEl.textContent = lock.reason || CARD_LOCK_DEFAULT_REASON;
-    openModalTop('card-lock-modal');
-  }
-  /* Dùng ở mọi cửa nhận thẻ: true = đang khóa (đã hiện thông báo), nơi gọi phải dừng lại */
-  function guardCardLock(){
-    if(!isCardLocked()) return false;
-    showCardLockNotice();
-    return true;
-  }
-
-  function renderCardLockPanel(){
-    var st = document.getElementById('cardlock-status');
-    if(!st) return;
-    var lock = settings.cardLock, ph = cardLockPhase();
-    if(ph === 'locked'){
-      st.innerHTML = '⛔ <b>Đang khóa</b> từ ' + fmtLockTime(lock.startAt) + ' đến ' + fmtLockTime(lock.until) + ' (còn ' + fmtLockRemain(lock.until - Date.now()) + ').<br>Lời nhắn: ' + escHtml(lock.reason || CARD_LOCK_DEFAULT_REASON);
-    } else if(ph === 'scheduled'){
-      st.innerHTML = '🗓️ <b>Đã lên lịch khóa</b> từ ' + fmtLockTime(lock.startAt) + ' đến ' + fmtLockTime(lock.until) + '. Hiện bé vẫn nhận thẻ bình thường.';
-    } else if(ph === 'recovery'){
-      st.innerHTML = '⏳ <b>Đã hết thời gian khóa</b> — đang chờ bé đạt điều kiện để nhận thẻ lại.';
-    } else {
-      st.innerHTML = '✅ Đang cho phép nhận thẻ bình thường.';
-    }
-    st.className = 'cardlock-status' + (ph === 'free' ? '' : ' is-on');
-    var rel = document.getElementById('cardlock-release');
-    if(rel) rel.disabled = !lock;
-    var ap = document.getElementById('cardlock-apply');
-    if(ap) ap.textContent = lock ? '⛔ Thực hiện khóa (thay lệnh hiện tại)' : '⛔ Thực hiện khóa';
-  }
-  function toLocalInput(ts){
-    var d = new Date(ts);
-    return d.getFullYear() + '-' + pad2(d.getMonth()+1) + '-' + pad2(d.getDate()) + 'T' + pad2(d.getHours()) + ':' + pad2(d.getMinutes());
-  }
-  /* Điền sẵn form: lệnh khóa hiện có, hoặc mặc định từ bây giờ đến 24 giờ sau */
-  function fillCardLockForm(){
-    var lock = settings.cardLock, now = Date.now();
-    document.getElementById('cardlock-from').value = toLocalInput(lock ? lock.startAt : now);
-    document.getElementById('cardlock-to').value = toLocalInput(lock ? lock.until : now + 86400000);
-    document.getElementById('cardlock-reason').value = lock ? (lock.reason || '') : '';
-  }
-  /* Thao tác khóa/gỡ khóa cần Quản trị viên: đang ở chế độ Quản trị thì qua luôn, chưa thì hỏi PIN */
-  function requireAdminPin(msg){
-    if(isAdmin) return true;
-    var pin = prompt(msg);
-    if(pin === null) return false;
-    if(pin !== settings.adminPin){ triggerToast('low', '🔒 Mã PIN không đúng.'); return false; }
-    return true;
-  }
-
-  /* Dải cảnh báo dưới thanh tab (hiện ở mọi mục) + bảng trong Cài đặt */
-  function refreshCardLockUI(){
-    var ban = document.getElementById('card-lock-banner');
-    if(ban){
-      var lock = settings.cardLock, ph = cardLockPhase();
-      if(ph === 'locked'){
-        ban.hidden = false; ban.className = 'card-lock-banner';
-        ban.innerHTML = '<span class="clb-ico">⛔</span><span><b>Tạm khóa nhận thẻ</b> — còn ' + fmtLockRemain(lock.until - Date.now()) + ' (đến ' + fmtLockTime(lock.until) + '). ' + escHtml(lock.reason || CARD_LOCK_DEFAULT_REASON) + '</span>';
-      } else if(ph === 'recovery'){
-        ban.hidden = false; ban.className = 'card-lock-banner is-recovery';
-        ban.innerHTML = '<span class="clb-ico">⏳</span><span><b>Đã hết thời gian khóa</b> — hoàn thành điều kiện để nhận thẻ lại nhé.</span>';
-      } else {
-        ban.hidden = true; ban.innerHTML = '';
-      }
-    }
-    renderCardLockPanel();
-  }
-
-  function applyCardLock(){
-    var fromV = document.getElementById('cardlock-from').value;
-    var toV = document.getElementById('cardlock-to').value;
-    if(!fromV || !toV){ alert('Vui lòng chọn cả "Từ ngày" và "Đến ngày".'); return; }
-    var startAt = new Date(fromV).getTime(), until = new Date(toV).getTime();
-    if(isNaN(startAt) || isNaN(until)){ alert('Ngày giờ không hợp lệ.'); return; }
-    if(until <= startAt){ alert('"Đến ngày" phải sau "Từ ngày".'); return; }
-    if(until <= Date.now()){ alert('"Đến ngày" đã qua rồi — hãy chọn thời điểm trong tương lai.'); return; }
-    if(until - startAt > 366 * 86400000){ alert('Thời gian khóa tối đa là 1 năm.'); return; }
-    if(!requireAdminPin('Nhập mã PIN Quản trị viên để khóa nhận thẻ:')) return;
-    if(settings.cardLock && !confirm('Đang có một lệnh khóa. Thực hiện sẽ thay thế lệnh khóa hiện tại. Tiếp tục?')) return;
-    var reason = (document.getElementById('cardlock-reason').value || '').trim().slice(0, 160) || CARD_LOCK_DEFAULT_REASON;
-    settings.cardLock = { startAt: startAt, until: until, reason: reason };
-    saveSettings();
-    fillCardLockForm();
-    refreshCardLockUI();
-    renderWeek();
-    triggerToast('okay', (startAt > Date.now() ? '🗓️ Đã lên lịch khóa nhận thẻ từ ' + fmtLockTime(startAt) : '⛔ Đã khóa nhận thẻ đến ' + fmtLockTime(until)));
-  }
-  function releaseCardLock(){
-    if(!settings.cardLock){ triggerToast('low', 'Hiện không có lệnh khóa nào để gỡ.'); return; }
-    if(!requireAdminPin('Nhập mã PIN Quản trị viên để gỡ khóa nhận thẻ:')) return;
-    if(!confirm('Gỡ khóa nhận thẻ ngay bây giờ?')) return;
-    settings.cardLock = null;
-    saveSettings();
-    fillCardLockForm();
-    refreshCardLockUI();
-    renderWeek();
-    triggerToast('okay', '🔓 Đã gỡ khóa nhận thẻ.');
-  }
-    /* Chạy định kỳ: hết hạn (và đạt điều kiện) thì tự gỡ khóa; còn khóa thì cập nhật số phút còn lại */
-  function tickCardLock(){
-    if(settings.cardLock && cardLockPhase() === 'free'){
-      settings.cardLock = null;
-      saveSettings();
-      triggerToast('perfect', '🎉 Đã hết thời gian khóa — con nhận thẻ lại được rồi!');
-      renderWeek();
-    } else {
-      refreshCardLockUI();
-    }
-  }
 
   /* ---- Hộp quà 9 ô: đạt 9/10 điểm ngày là được chọn 1 trong 9 cầu thủ ----
      Luồng: chạm 1 ô → LƯU THẺ NGAY (không phụ thuộc hiệu ứng) → sân khấu mở thẻ toàn màn hình:
@@ -4085,7 +4077,6 @@
   }
 
   function openDailyBoxModal(monthKey, dk){
-    if(guardCardLock()) return;
     var month = loadMonth(monthKey);
     var dayObj = month.days[dk] || {};
     if(dayObj._dailyBoxClaimed) return;
@@ -4127,14 +4118,15 @@
     return {
       id: makePlayerId(),
       dbId: base.dbId || '',
-      acquiredAt: Date.now()
+      acquiredAt: Date.now(),
+      ovrBonus: 0, // số OVR đã được cộng thêm từ Đấu Trường (không giới hạn) — xem mục "Đấu Trường" bên dưới
+      energy: 0    // Năng Lượng tích lũy từ Đấu Trường, dùng để +1 OVR tiếp theo
     };
   }
 
   /* Bấm 1 ô: lưu thẻ trước, rồi mới chiếu hiệu ứng. */
   function claimDailyBoxPlayer(idx, cell){
     if(dailyBoxBusy) return;
-    if(isCardLocked()){ closeDailyBoxModal(); showCardLockNotice(); return; }   // bị khóa khi đang mở hộp: không lưu thẻ
     var base = dailyBoxPicks && dailyBoxPicks[idx];
     if(!base) return;
     dailyBoxBusy = true;
@@ -4561,8 +4553,6 @@
      monthKey/key (nếu có) dùng để lưu lại tiến độ nhận thẻ, cho phép mở lại đúng phần còn thiếu
      nếu người dùng đã tắt popup trước khi lật hết thẻ. */
   function openSkillPlayerModal(code, tier, monthKey, key){
-    // Đang khóa: báo cho bé và trả true ("đã xử lý") để nơi gọi KHÔNG đánh dấu cardsDone — thẻ vẫn được giữ lại để nhận sau.
-    if(guardCardLock()) return true;
     var st = (monthKey && key) ? skillState(monthKey, key) : null;
     var total = (st && st.cardsTotal) ? st.cardsTotal : (tier === 'gold' ? 3 : 1);
     var got = (st && st.cardsGot) ? st.cardsGot : 0;
@@ -4654,7 +4644,6 @@
 
   function claimSkillPlayerCard(idx, cell){
     if(skpBusy || skpFlipped >= skpNeeded) return;
-    if(isCardLocked()){ closeSkillPlayerModal(); showCardLockNotice(); return; }   // bị khóa khi đang lật thẻ: không lưu thẻ
     if(skpOpenedIdx.indexOf(idx) >= 0) return;
     var base = skpPicks && skpPicks[idx];
     if(!base) return;
@@ -4787,6 +4776,9 @@
     if(!p || !cdnReady() || !p.image) return '';
     var name = escHtml(p.name);
     var ovr = p.ovr || p.realOvr || 0;
+    var upN = p.ovrBonus || 0;
+    var upCls = (upN > 0 ? ' up ' + battleTier(upN).cls : '') + (String(ovr).length > 2 ? ' ovr3' : '');
+    var upChip = upN > 0 ? '<div class="fc-up">▲'+upN+'</div>' : '';
     var bg = p.background
       ? '<img class="fc-bg" src="'+cdnUrl(p.background)+'" alt="" onerror="this.parentNode.classList.add(\'no-bg\');this.remove()">'
       : '';
@@ -4798,10 +4790,11 @@
     var foot = (flag || club) ? '<div class="fc-foot">'+flag+((flag && club) ? '<i class="fc-sep"></i>' : '')+club+'</div>' : '';
     var elCode = p.battle && p.battle.element;
     var elBadge = elCode ? '<div class="fc-element" style="'+elementColorVars(elCode)+'" title="'+escHtml(elementName(elCode))+' · CP '+escHtml(String(p.battle.cp))+'">'+elementIcon(elCode)+'</div>' : '';
-    return '<div class="fc-card'+(p.background ? '' : ' no-bg')+(extraCls ? ' '+extraCls : '')+'">'
+    return '<div class="fc-card'+(p.background ? '' : ' no-bg')+upCls+(extraCls ? ' '+extraCls : '')+'">'
       + bg
       + '<img class="fc-render" src="'+cdnUrl(p.image)+'" alt="'+name+'" data-ini="'+escHtml(initialsOf(p.name || '?'))+'" loading="lazy" onerror="window.fcRenderFail(this)">'
       + '<div class="fc-ovr"><b>'+ovr+'</b><span>'+escHtml(p.pos || '')+'</span></div>'
+      + upChip
       + elBadge
       + (ps ? '<div class="fc-ps">'+ps+'</div>' : '')
       + fcNameHTML(p.name)
@@ -5124,6 +5117,1392 @@
     renderCollection();
   });
 
+  /* ================== ĐẤU TRƯỜNG — 1v1 Luyện Tập (Epic 2) ==================
+     Chế độ chơi thử đầu tiên: 1 thẻ của mình đấu 1 thẻ đối thủ ngẫu nhiên từ kho
+     cầu thủ chung (PLAYER_DB), KHÔNG quiz, KHÔNG kỹ năng (kỹ năng/quiz thuộc Epic 3).
+     Công thức đúng theo tài liệu luật v2 mục 3, chỉ giữ lại phần không cần thao tác
+     người chơi: Hệ khắc/atkMod, D10, Giáp, Bù giờ cho người đi sau, và 2 nội tại thụ
+     động theo Phẩm chất (LIVE: gieo lại xúc xắc 1-2; ICON: đòn đầu nhận giảm 20%).
+
+     Mất/Được: tối đa settings.battlePerDay trận/ngày (mặc định 1; reset lúc sang ngày mới). Thẻ ra sân luôn nhận
+     Năng Lượng — thắng +2, thua +1 (không bao giờ về 0). Đủ Năng Lượng thì thẻ được CỘNG
+     THẲNG vào OVR hiển thị (+1 OVR mỗi cấp, KHÔNG giới hạn) và chỉ số chiến đấu
+     (CP/Thể lực/Giáp) tăng theo từng cấp. Không bao giờ trừ/xóa thẻ hay hạ chỉ số khi thua. */
+  var battleState = null;      // {b, timer, auto}
+  var BATTLE_TURN_DELAY = 900; // ms giữa các lượt khi tự động đánh
+  var BATTLE_WIN_ENERGY = 2, BATTLE_LOSE_ENERGY = 1;
+  /* Nâng cấp OVR KHÔNG GIỚI HẠN: chi phí +1 OVR kế tiếp = 2 + số OVR đã cộng (2,3,4,5…) → lúc đầu lên nhanh cho đã,
+     càng cao càng lâu nhưng không bao giờ bị chặn. Chỉnh nhanh 2 hằng số dưới đây. */
+  var BATTLE_OVR_COST_BASE = 2;
+  var BATTLE_LEVEL_STATS = { cp:2.2, hp:20, armor:0.8 };   // mỗi +1 OVR cộng thêm vào chỉ số chiến đấu
+  function battleCostForNext(bonus){ return BATTLE_OVR_COST_BASE + (bonus || 0); }
+  function battleTier(bonus){   // mốc hiển thị theo tổng OVR đã cộng: viền sáng + nhãn trên thẻ
+    if(bonus >= 20) return {cls:'t4', label:'KIM CƯƠNG'};
+    if(bonus >= 10) return {cls:'t3', label:'VÀNG'};
+    if(bonus >= 5)  return {cls:'t2', label:'BẠC'};
+    return {cls:'t1', label:'ĐỒNG'};
+  }
+
+  function battleElemMult(cfg, atkEl, defEl){
+    var E = cfg && cfg.elements;
+    if(!E || !E.khac || !atkEl || !defEl) return 1;
+    if(E.khac[atkEl] === defEl) return E.khacUp || 1.2;
+    if(E.khac[defEl] === atkEl) return E.khacDown || 0.85;
+    return 1;
+  }
+  var battleLastRoll = {first:0, rerolled:false};   // để hiệu ứng biết lần đổ đầu và có được đổ lại (thẻ LIVE) hay không
+  function battleRollD10(canReroll){
+    var r = 1 + Math.floor(Math.random()*10), first = r, rerolled = false;
+    if(canReroll && r <= 2){ r = 1 + Math.floor(Math.random()*10); rerolled = true; }
+    battleLastRoll = {first:first, rerolled:rerolled};
+    return r;
+  }
+  /* Thông số chiến đấu THỰC TẾ của 1 thẻ sở hữu, đã cộng bonus theo số OVR nâng cấp (mỗi +1 OVR: xem
+     BATTLE_LEVEL_STATS). Không đụng vào battle gốc trong CSDL chung — chỉ tính riêng cho bản sở hữu. */
+  function effectiveBattleStats(p){
+    var base = p && p.battle;
+    if(!base) return base;
+    var lv = p.ovrBonus || 0;
+    if(!lv) return base;
+    var armor = base.armor + BATTLE_LEVEL_STATS.armor*lv;
+    return Object.assign({}, base, {
+      cp: Math.round((base.cp + BATTLE_LEVEL_STATS.cp*lv)*10)/10,
+      hp: Math.round(base.hp + BATTLE_LEVEL_STATS.hp*lv),
+      armor: Math.round(armor*10)/10,
+      armorPct: Math.round(armor/(armor+(BATTLE_CONFIG.formula.armorK||400))*1000)/10
+    });
+  }
+  function createBattle1v1(cardA, cardB, firstSide){
+    var cfg = BATTLE_CONFIG;
+    var battleA = effectiveBattleStats(cardA);   // thẻ của mình — có thể đã nâng cấp OVR
+    var battleB = cardB.battle;                  // đối thủ random từ CSDL chung — luôn ★0
+    return {
+      cfg: cfg, mode: cfg.modes['1v1'],
+      sides: [
+        {card:cardA, battle:battleA, hp:battleA.hp, hpMax:battleA.hp, firstHitTaken:false},
+        {card:cardB, battle:battleB, hp:battleB.hp, hpMax:battleB.hp, firstHitTaken:false}
+      ],
+      side:firstSide, firstSide:firstSide, secondMoverBonusUsed:false,
+      turn:0, finished:false, winner:null, log:[]
+    };
+  }
+  /* Đánh 1 lượt: bên `side` hiện tại tấn công bên còn lại, trả về sự kiện vừa xảy ra
+     (hoặc null nếu trận đã kết thúc). Đây là hàm thuần — không đụng DOM. */
+  function battleStep(b){
+    if(!b || b.finished) return null;
+    var cfg=b.cfg, mode=b.mode;
+    var ai=b.side, di=1-b.side;
+    var A=b.sides[ai], D=b.sides[di];
+    var ab=A.battle, db=D.battle;
+    var canReroll = ab.rarity === 'LIVE';
+    var r = battleRollD10(canReroll);
+    var rollInfo = battleLastRoll;
+    var d10 = cfg.formula.d10[r-1];
+    var mult = 1, bonusHit = false;
+    if(ai !== b.firstSide && !b.secondMoverBonusUsed){
+      mult *= (1 + (mode.secondMoverBonus||0));
+      b.secondMoverBonusUsed = true;
+      bonusHit = true;
+    }
+    var atkMod = (cfg.elements[ab.element]||{}).atkMod||1;
+    var elemM = battleElemMult(cfg, ab.element, db.element);
+    var base = ab.cp * cfg.formula.atkK * mode.tempo;
+    var raw = base * atkMod * elemM * mult * d10;
+    var reduce = db.armor / (db.armor + cfg.formula.armorK);
+    var dmg = raw * (1-reduce);
+    var iconCut = (db.rarity === 'ICON' && !D.firstHitTaken);
+    if(iconCut) dmg *= 0.8;
+    D.firstHitTaken = true;
+    dmg = Math.max(1, Math.round(dmg));
+    D.hp = Math.max(0, D.hp - dmg);
+    var evt = {turn:++b.turn, atkSide:ai, defSide:di, roll:r, d10:d10, crit:(r===10),
+      dmg:dmg, hpAfter:D.hp, hpMax:D.hpMax, bonusHit:bonusHit, reroll:canReroll,
+      firstRoll:rollInfo.first, rerolled:rollInfo.rerolled,
+      calc:{cp:ab.cp, base:base, atkMod:atkMod, elemM:elemM, bonusM:mult, d10:d10, raw:Math.round(raw),
+            reducePct:Math.round(reduce*1000)/10, iconCut:iconCut}};
+    b.log.push(evt);
+    if(D.hp <= 0){ b.finished = true; b.winner = ai; } else { b.side = di; }
+    return evt;
+  }
+  function battleOwnedCards(){
+    return hydratePlayers(loadPlayers()).filter(function(p){ return p && p.battle; });
+  }
+  function pickRandomOpponent(excludeDbId){
+    var pool = (PLAYER_DB||[]).filter(function(p){ return p && p.battle && p.dbId !== excludeDbId; });
+    if(!pool.length) return null;
+    return pool[Math.floor(Math.random()*pool.length)];
+  }
+
+  /* ---- Giới hạn số trận/ngày (chỉnh ở ⚙️ Cài đặt → settings.battlePerDay, mặc định 1) ----
+     Lưu {date, count}; dữ liệu cũ chỉ có {date} thì tính là đã đấu 1 trận. */
+  function battleTodayKey(){ return ymd(new Date()); }
+  function battleDailyState(){ return safeGet('kidchart_battle_daily') || {}; }
+  function battleLimit(){ return Math.max(1, Math.min(20, parseInt(settings.battlePerDay, 10) || 1)); }
+  function battlePlayedCount(){
+    var d = battleDailyState();
+    return d.date === battleTodayKey() ? Math.max(1, parseInt(d.count, 10) || 1) : 0;
+  }
+  function battleLeftToday(){ return Math.max(0, battleLimit() - battlePlayedCount()); }
+  function battleAlreadyPlayedToday(){ return battleLeftToday() <= 0; }   // = đã hết lượt đấu hôm nay
+  function markBattlePlayedToday(){ safeSet('kidchart_battle_daily', {date: battleTodayKey(), count: battlePlayedCount() + 1}); }
+  function battleOutOfTurnsText(){
+    var n = battleLimit();
+    return n === 1 ? 'Hôm nay con đã đấu 1 trận rồi' : 'Hôm nay con đã dùng hết '+n+' lượt đấu';
+  }
+  function renderBattleQuota(){
+    var el = document.getElementById('battle-quota');
+    if(!el) return;
+    var left = battleLeftToday(), n = battleLimit();
+    el.innerHTML = '🎟️ Hôm nay còn <b>'+left+'/'+n+'</b> lượt đấu' + (left <= 0 ? ' — mai quay lại nhé!' : '');
+    el.classList.toggle('empty', left <= 0);
+  }
+
+
+  /* ===== HÀNH TRÌNH: chuỗi trận kiểu roadmap sân bóng =====
+     • Dữ liệu sinh theo công thức (roadmapStageDef) nên mở rộng tới ROADMAP_VISION=100 trận chỉ cần nâng ROADMAP_OPEN
+       (10 → 20 → … → 100); giao diện tự vẽ thêm, không phải sửa gì khác.
+     • Đối thủ mỗi trận CỐ ĐỊNH (chọn theo số trận) và được co/giãn theo "thẻ trung bình" của CSDL chung
+       (trung vị CP/Thể lực/Giáp) × hệ số độ khó → trận đầu rất dễ, tăng dần; thẻ nâng cấp OVR cao mới vượt nổi các trận sâu.
+     • Dùng chung giới hạn số trận/ngày (settings.battlePerDay) với Đấu nhanh. Thắng lần đầu mới tính vượt trận + nhận thưởng Năng Lượng mốc. */
+  var ROADMAP_KEY = 'kidchart_battle_roadmap';
+  var ROADMAP_VISION = 100;
+  var ROADMAP_OPEN = 10;
+  var ROADMAP_NAMES = ['Giao hữu đầu xóm','Vòng bảng · Lượt 1','Vòng bảng · Lượt 2','Vòng bảng · Lượt 3','Đại chiến Xóm Chợ',
+                       'Tứ kết lượt đi','Tứ kết lượt về','Bán kết lượt đi','Bán kết lượt về','CHUNG KẾT GIẢI AO LÀNG'];
+  var ROADMAP_DIFF = ['Rất dễ','Dễ','Vừa','Khó','Rất khó'];
+  var battleMode = 'road';   // 'road' = Hành trình, 'quick' = Đấu nhanh (đối thủ ngẫu nhiên)
+  var roadPickStage = 0;     // số trận Hành trình đang chọn cầu thủ ra sân (0 = đang xem bản đồ)
+
+  function roadmapProgress(){
+    var p = safeGet(ROADMAP_KEY) || {};
+    var c = parseInt(p.cleared, 10) || 0;
+    return {cleared: Math.max(0, Math.min(ROADMAP_OPEN, c))};
+  }
+  function roadmapStageDef(n){
+    var base = n <= 10 ? 0.55 + 0.04*(n-1) : 0.91 + 0.55*(1 - Math.exp(-(n-10)/60));   // hệ số sức mạnh đối thủ so với thẻ trung bình
+    var boss = (n % 10 === 0) ? 2 : ((n % 5 === 0) ? 1 : 0);                              // x5 = mini-boss, x10 = boss chương
+    var m = base * (boss === 2 ? 1.06 : (boss === 1 ? 1.04 : 1));
+    var ch = Math.ceil(n/10);
+    var lv = m < 0.65 ? 0 : (m < 0.8 ? 1 : (m < 0.9 ? 2 : (m < 1.05 ? 3 : 4)));
+    return {
+      n:n, mult:m, boss:boss, lv:lv, label:ROADMAP_DIFF[lv], flames:lv+1,
+      name: ch === 1 ? ROADMAP_NAMES[n-1] : 'Chương '+ch+' · Trận '+(((n-1)%10)+1),
+      bonus: boss === 2 ? 6 : (boss === 1 ? 3 : 1)     // Năng Lượng thưởng khi vượt trận lần đầu
+    };
+  }
+  var _rmRef = null, _rmRefN = -1;
+  function roadmapRef(){
+    var src = PLAYER_DB || [];
+    if(_rmRef && _rmRefN === src.length) return _rmRef;
+    var pool = src.filter(function(p){ return p && p.battle && p.battle.cp > 0 && p.dbId; });
+    function med(k){
+      var a = pool.map(function(p){ return +p.battle[k] || 0; }).sort(function(x,y){ return x-y; });
+      return a.length ? a[Math.floor(a.length/2)] : 0;
+    }
+    pool.sort(function(a,b){ return a.dbId < b.dbId ? -1 : (a.dbId > b.dbId ? 1 : 0); });   // thứ tự ổn định → đối thủ mỗi trận không đổi
+    _rmRef = {cp:med('cp'), hp:med('hp'), armor:med('armor'), pool:pool};
+    _rmRefN = src.length;
+    return _rmRef;
+  }
+  function roadmapOpponent(n, excludeDbId){
+    var R = roadmapRef();
+    if(!R.pool.length || !R.cp || !battleReady()) return null;
+    var def = roadmapStageDef(n);
+    var idx = (Math.imul(n + 7, 2654435761) >>> 0) % R.pool.length;
+    var c = R.pool[idx];
+    if(excludeDbId && c.dbId === excludeDbId) c = R.pool[(idx + 1) % R.pool.length];
+    var v = Math.max(0.92, Math.min(1.08, c.battle.cp / R.cp));   // mỗi cầu thủ lệch nhẹ nhau cho đỡ giống hệt
+    var K = (BATTLE_CONFIG.formula && BATTLE_CONFIG.formula.armorK) || 400;
+    var armor = Math.round(R.armor * def.mult * 10) / 10;
+    var battle = Object.assign({}, c.battle, {
+      cp: Math.round(R.cp * def.mult * v * 10) / 10,
+      hp: Math.round(R.hp * def.mult * v),
+      armor: armor,
+      armorPct: Math.round(armor / (armor + K) * 1000) / 10
+    });
+    return Object.assign({}, c, {battle: battle, stats: c.realStats, ovr: c.realOvr});   // stats/ovr để vẽ được cả thẻ chữ dự phòng
+  }
+  function roadmapIcon(def, locked){
+    if(locked && !def.boss) return '🔒';   // trận boss khóa vẫn hiện cúp/khung thành (mờ) để gợi mục tiêu
+    return def.boss === 2 ? '🏆' : (def.boss === 1 ? '🥅' : '⚽');
+  }
+
+  /* ===== HÀNH TRÌNH · TRUYỆN TRANH BÓNG ĐÁ =====
+     • Mỗi ải = 1 khung truyện tranh đen trắng (nét mực, tram chấm, đường tốc độ, chữ tượng thanh, bóng thoại).
+       'play' = cảnh trước trận, 'win' = cảnh sau khi thắng. Nhân vật chính mang TÊN NGƯỜI DÙNG (mgHeroName) và áo số 7.
+     • Cốt truyện: một nhóm trẻ con trong xóm lập đội, đi từ bãi đất trống lên chinh phục thế giới.
+       Chương 1 (ải 1–10) = GIẢI AO LÀNG: đá chân đất ở bãi đất trống, khung thành bằng dép, cột tre.
+     • Mọi hình vẽ bằng SVG thuần (không ảnh ngoài). Muốn thêm chương mới: thêm 10 cảnh vào MG_STORY (mảng theo chương). */
+  var povUid = 0, povView = 0, povTok = 0, rmShownCleared = -1;
+  function pn(v){ return Math.round(v*10)/10; }
+
+  /* ---- tên nhân vật chính = tên người dùng đang mở hồ sơ ---- */
+  function mgHeroName(){
+    var n = '';
+    try{ n = userNameOf(syncId) || ''; }catch(e){}
+    if(!n || /^Người dùng /.test(n)){ try{ n = localUserName() || ''; }catch(e){ n = ''; } }
+    n = String(n).replace(/\s+/g, ' ').trim();
+    if(!n) return 'Số 7';
+    var w = n.split(' ');
+    if(n.length > 10 && w.length > 1) n = w[w.length-1];   // "Nguyễn Minh Khang" → "Khang"
+    return n.length > 12 ? n.slice(0, 12) : n;
+  }
+
+  /* ---- bộ công cụ vẽ ---- */
+  function mgRng(seed){ var s = (seed >>> 0) || 1; return function(){ s = (Math.imul(s, 1664525) + 1013904223) >>> 0; return s / 4294967296; }; }
+  function mgPaint(C, v){ return (v && v.indexOf('p:') === 0) ? 'url(#'+C.u+'-'+v.slice(2)+')' : v; }
+  function mgIsPat(v){ return !!v && v.indexOf('p:') === 0; }
+  function mgDefs(u){
+    function dot(id, r, gap){ return '<pattern id="'+u+'-'+id+'" width="'+gap+'" height="'+gap+'" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><circle cx="'+(gap/2)+'" cy="'+(gap/2)+'" r="'+r+'" fill="#000"/></pattern>'; }
+    return '<defs>'
+      + dot('t1', .8, 4.6) + dot('t2', 1.25, 4.6) + dot('t3', 1.75, 4.6)
+      + '<pattern id="'+u+'-hz" width="6" height="3.4" patternUnits="userSpaceOnUse"><rect width="6" height="1.5" fill="#000"/></pattern>'
+      + '<pattern id="'+u+'-dg" width="4" height="4" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="1.3" height="4" fill="#000"/></pattern>'
+      + '<pattern id="'+u+'-xh" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(30)"><rect width="1.2" height="5" fill="#000"/><rect width="5" height="1.2" fill="#000"/></pattern>'
+      + '<pattern id="'+u+'-dirt" width="34" height="26" patternUnits="userSpaceOnUse"><circle cx="4" cy="5" r=".9"/><circle cx="17" cy="3" r=".6"/><circle cx="27" cy="9" r="1.1"/><circle cx="9" cy="16" r=".7"/><circle cx="22" cy="19" r=".9"/><circle cx="31" cy="23" r=".6"/><path d="M12 10 h3 M25 14 h2.5 M2 22 h3" stroke="#000" stroke-width=".7"/></pattern>'
+      + '<pattern id="'+u+'-brick" width="26" height="12" patternUnits="userSpaceOnUse"><path d="M0 .6 H26 M0 6.6 H26 M.6 0 V6 M13.6 6 V12" stroke="#000" stroke-width="1.1" fill="none"/></pattern>'
+      + '<pattern id="'+u+'-rain" width="34" height="46" patternUnits="userSpaceOnUse"><path d="M6 0 l-6 20 M22 14 l-6 20 M30 30 l-5 16 M14 34 l-4 12" stroke="#000" stroke-width="1.1" stroke-linecap="round"/></pattern>'
+      + '<radialGradient id="'+u+'-ball" cx=".35" cy=".3" r=".9"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#e5e5e5"/></radialGradient>'
+      + '</defs>';
+  }
+  /* hình có thể tô bằng tram (pattern): lớp trắng + viền, rồi lớp tram */
+  function mgShape(C, tag, attrs, fill, sw){
+    sw = sw == null ? 2.2 : sw;
+    var base = '<'+tag+' '+attrs+' fill="'+(mgIsPat(fill) ? '#fff' : fill)+'" stroke="#000" stroke-width="'+sw+'" stroke-linejoin="round"/>';
+    return mgIsPat(fill) ? base + '<'+tag+' '+attrs+' fill="'+mgPaint(C, fill)+'"/>' : base;
+  }
+  function mgPts(a){ return a.map(function(p){ return pn(p[0])+','+pn(p[1]); }).join(' '); }
+
+  /* ---- nhân vật trẻ con kiểu manga (đơn vị nội bộ: cao ~110, gốc ở mặt đất, quay mặt sang phải) ----
+     P: tư thế {t: nghiêng thân, h: nghiêng đầu, ll/rl: [đùi, ống chân] chân xa/gần, la/ra: [cánh tay, cẳng tay] tay xa/gần}
+        góc tính từ phương thẳng đứng hướng xuống, dương = về phía trước (bên phải). air: nhấc khỏi mặt đất, sit: ngồi bệt. */
+  var MG_POSE = {
+    stand:  {t:0,  h:0,   ll:[-5,-3],   rl:[7,4],     la:[-14,-6],  ra:[14,22]},
+    point:  {t:-4, h:-6,  ll:[-9,-5],   rl:[12,6],    la:[-38,30],  ra:[82,88]},
+    run:    {t:16, h:-4,  ll:[48,4],    rl:[-42,-102],la:[-50,-8],  ra:[52,122]},
+    dribble:{t:20, h:4,   ll:[-36,-86], rl:[34,16],   la:[-64,-28], ra:[58,96]},
+    windup: {t:6,  h:6,   ll:[8,0],     rl:[-48,-132],la:[60,96],   ra:[-62,-30]},
+    kick:   {t:-14,h:-8,  ll:[-6,-2],   rl:[104,96],  la:[76,112],  ra:[-74,-44]},
+    joy:    {t:-6, h:-14, ll:[-12,-6],  rl:[12,6],    la:[-150,-164],ra:[146,160]},
+    five:   {t:-6, h:-14, ll:[-30,-90], rl:[30,-40],  la:[-150,-164],ra:[128,140], air:22},
+    leap:   {t:-8, h:-16, ll:[-30,-90], rl:[30,-40],  la:[-150,-166],ra:[148,166], air:22},
+    defend: {t:22, h:-8,  ll:[22,-34],  rl:[62,-6],   la:[-70,-40], ra:[76,108]},
+    keeper: {t:18, h:-6,  ll:[16,-30],  rl:[58,-8],   la:[96,138],  ra:[78,128]},
+    sit:    {t:-24,h:6,   ll:[76,96],   rl:[84,92],   la:[-34,-18], ra:[-46,-28], sit:1},
+    reach:  {t:30, h:10,  ll:[-6,-4],   rl:[10,4],    la:[-20,-10], ra:[62,74]},
+    pant:   {t:40, h:-20, ll:[-8,-2],   rl:[14,4],    la:[20,4],    ra:[30,6]},
+    header: {t:62, h:-10, ll:[-40,-104],rl:[-14,-74], la:[-74,-30], ra:[30,96], air:58},
+    dive:   {t:0,  h:-10, ll:[-16,-10], rl:[14,6],    la:[166,178], ra:[150,170]},
+    hips:   {t:-6, h:-8,  ll:[-10,-6],  rl:[12,6],    la:[-40,34],  ra:[40,-34]},
+    carry:  {t:0,  h:-16, ll:[-10,-4],  rl:[10,4],    la:[-172,-178],ra:[160,170]},
+    perch:  {t:0,  h:-12, ll:[40,4],    rl:[54,-6],   la:[-150,-166],ra:[128,150], sit:1}
+  };
+  var MG_KIT = {
+    hero:{shirt:'#fff',  shorts:'#111', num:'#000', skin:'#fff'},
+    opp: {shirt:'p:hz',  shorts:'#fff', num:'#000', skin:'#fff'},
+    dark:{shirt:'#111',  shorts:'#fff', num:'#fff', skin:'#fff'},
+    gk:  {shirt:'p:dg',  shorts:'#111', num:'#000', skin:'#fff', glove:'#111'},
+    dot: {shirt:'p:t2',  shorts:'#111', num:'#000', skin:'#fff'}
+  };
+  function mgJ(p, a, L){ var r = a*Math.PI/180; return {x:p.x + L*Math.sin(r), y:p.y + L*Math.cos(r)}; }
+  function mgSeg(C, pts, w, fill){
+    var d = 'M'+pts.map(function(q){ return pn(q.x)+' '+pn(q.y); }).join(' L');
+    return '<path d="'+d+'" fill="none" stroke="#000" stroke-width="'+pn(w+3)+'" stroke-linecap="round" stroke-linejoin="round"/>'
+      + (mgIsPat(fill) ? '<path d="'+d+'" fill="none" stroke="#fff" stroke-width="'+w+'" stroke-linecap="round" stroke-linejoin="round"/>' : '')
+      + '<path d="'+d+'" fill="none" stroke="'+mgPaint(C, fill)+'" stroke-width="'+w+'" stroke-linecap="round" stroke-linejoin="round"/>';
+  }
+  /* đầu + mặt + tóc (tâm 0,0, bán kính 14) */
+  function mgHead(C, o){
+    var hair = o.hair || 'spiky', face = o.face || 'grin', skin = o.skin || '#fff', s = '';
+    var back = {
+      spiky:[[15,-5],[11,-9],[10,-4],[6,-10],[4,-5],[1,-11],[-3,-7],[-9,-5],[-12,0],[-14,5],[-12,10],[-20,7],[-15,1],[-23,-4],[-15,-8],[-23,-15],[-12,-15],[-15,-26],[-5,-18],[-3,-29],[3,-18],[10,-27],[10,-16],[18,-19],[14,-11],[20,-9]],
+      band:[[15,-6],[10,-9],[8,-5],[4,-10],[0,-6],[-4,-10],[-10,-5],[-13,1],[-12,8],[-18,4],[-15,-2],[-21,-8],[-13,-12],[-14,-21],[-5,-16],[0,-24],[5,-16],[12,-20],[11,-13],[17,-12]],
+      bowl:[[16,-3],[13,-7],[9,-4],[6,-8],[2,-5],[-2,-8],[-7,-5],[-10,0],[-11,7],[-15,8],[-16,0],[-15,-9],[-9,-16],[0,-18],[9,-16],[15,-10]],
+      pony:[[16,-4],[12,-8],[9,-3],[5,-9],[0,-5],[-6,-7],[-10,-1],[-11,6],[-15,7],[-16,-2],[-14,-10],[-7,-16],[2,-17],[10,-15],[15,-10]],
+      tuft:[[8,-13],[2,-15],[-4,-14],[-9,-11],[-6,-15],[-2,-22],[0,-16],[4,-21],[5,-15]],
+      buzz:[[14,-6],[8,-8],[0,-8],[-8,-6],[-12,0],[-13,6],[-15,2],[-15,-6],[-10,-13],[-1,-16],[8,-14],[13,-10]]
+    }[hair] || [];
+    if(hair === 'pony') s += '<path d="M-12 -6 C-26 -6 -30 8 -24 20 C-22 12 -18 6 -12 4 Z" fill="#111" stroke="#000" stroke-width="1.6"/><circle cx="-13" cy="-3" r="3" fill="#fff" stroke="#000" stroke-width="1.6"/>';
+    if(hair === 'band') s += '<path d="M-12 -4 C-22 -2 -28 6 -34 4 C-28 -2 -24 -6 -14 -8 Z M-12 -2 C-20 4 -24 12 -30 14 C-24 6 -20 0 -13 -5 Z" fill="#fff" stroke="#000" stroke-width="1.6" stroke-linejoin="round"/>';
+    s += '<circle cx="-4" cy="3" r="3.6" fill="'+skin+'" stroke="#000" stroke-width="1.8"/>';
+    s += '<circle r="14" fill="'+skin+'" stroke="#000" stroke-width="2.4"/>';
+    if(skin !== '#fff') s += '<circle r="14" fill="'+mgPaint(C, skin)+'"/>';
+    /* mắt */
+    if(face === 'joy'){
+      s += '<path d="M2 1 Q4.5 -3 7 1 M9.5 1 Q11.5 -2.5 13.5 1" stroke="#000" stroke-width="1.9" fill="none" stroke-linecap="round"/>';
+    } else if(face === 'dizzy'){
+      s += '<path d="M2.5 -1.5 l4 4 M6.5 -1.5 l-4 4 M10 -1.5 l3.5 3.5 M13.5 -1.5 l-3.5 3.5" stroke="#000" stroke-width="1.7" stroke-linecap="round"/>';
+    } else {
+      var rx = face === 'shock' ? 2.2 : 2.6, ry = face === 'shock' ? 2.6 : 3.7;
+      s += '<ellipse cx="4.6" cy="1.2" rx="'+rx+'" ry="'+ry+'" fill="#000"/><ellipse cx="11.6" cy="1.2" rx="'+(rx*.75)+'" ry="'+ry+'" fill="#000"/>'
+        + (face === 'shock' ? '' : '<circle cx="5.3" cy="-.4" r="1.05" fill="#fff"/><circle cx="12.1" cy="-.4" r=".85" fill="#fff"/>');
+      var br = {det:'M1.2 -6.2 L7.2 -3.8 M9.8 -3.8 L14.4 -6', smirk:'M1.5 -4.6 L7 -5.6 M9.8 -4.8 L14.2 -7', shock:'M1.4 -6.6 Q4.5 -8.6 7.4 -6.6 M9.6 -6.6 Q12 -8.4 14 -6.6', sad:'M1.6 -4 L7 -6.4 M9.8 -6.2 L14 -4.2'}[face]
+        || 'M1.6 -5.6 Q4.5 -7.2 7.4 -5.6 M9.8 -5.6 Q12 -6.8 14 -5.6';
+      s += '<path d="'+br+'" stroke="#000" stroke-width="1.6" fill="none" stroke-linecap="round"/>';
+    }
+    /* miệng */
+    s += {
+      grin:'<path d="M5.5 7 Q9 12.5 12.6 6.6 Z" fill="#000"/>',
+      joy:'<path d="M4 6.4 Q9 15 13.4 6 Z" fill="#000"/><path d="M6.4 10 Q9 11.6 11.2 9.6" stroke="#fff" stroke-width="1.2" fill="none"/>',
+      shout:'<ellipse cx="9.4" cy="8.6" rx="3.2" ry="4" fill="#000"/>',
+      shock:'<ellipse cx="9.2" cy="9" rx="2" ry="2.8" fill="#000"/>',
+      det:'<path d="M6.4 8.6 L12 8" stroke="#000" stroke-width="1.7" stroke-linecap="round"/>',
+      smirk:'<path d="M6 9.2 Q9.4 9.6 12.4 6.2" stroke="#000" stroke-width="1.7" fill="none" stroke-linecap="round"/>',
+      sad:'<path d="M6.4 10 Q9 7.6 11.8 9.6" stroke="#000" stroke-width="1.6" fill="none" stroke-linecap="round"/>',
+      dizzy:'<path d="M5.6 9 q1.6 -2 3.2 0 t3.2 0" stroke="#000" stroke-width="1.6" fill="none" stroke-linecap="round"/>',
+      calm:'<path d="M6 8 Q9 10.6 11.8 7.8" stroke="#000" stroke-width="1.6" fill="none" stroke-linecap="round"/>'
+    }[face] || '';
+    if(face === 'joy' || face === 'grin' || o.blush) s += '<path d="M1 6 l2 -2.4 M3.2 6.4 l2 -2.4" stroke="#000" stroke-width=".9" stroke-linecap="round"/>';
+    if(face === 'sad' || o.sweat) s += '<path d="M-5 -9 q-3 4 0 6 q3 -2 0 -6 Z" fill="#fff" stroke="#000" stroke-width="1.3"/>';
+    /* tóc */
+    if(back.length) s += '<polygon points="'+mgPts(back)+'" fill="'+(hair === 'buzz' ? '#fff' : '#111')+'" stroke="#000" stroke-width="1.8" stroke-linejoin="round"/>'
+      + (hair === 'buzz' ? '<polygon points="'+mgPts(back)+'" fill="'+mgPaint(C, 'p:t2')+'"/>' : '');
+    if(hair === 'spiky' || hair === 'bowl' || hair === 'pony') s += '<path d="M-4 -16 Q0 -17.5 4 -16.5 M7 -15.5 l2.4 .8" stroke="#fff" stroke-width="1.5" fill="none" stroke-linecap="round"/>';
+    if(hair === 'band') s += '<path d="M15.5 -7 Q1 -12 -13 -5" stroke="#000" stroke-width="6.4" fill="none" stroke-linecap="round"/><path d="M15.5 -7 Q1 -12 -13 -5" stroke="#fff" stroke-width="3.6" fill="none" stroke-linecap="round"/>';
+    return s;
+  }
+  function mgKid(C, x, y, s, pose, o){
+    o = o || {};
+    var P = typeof pose === 'string' ? MG_POSE[pose] : pose, k = MG_KIT[o.kit || 'hero'], skin = o.skin || k.skin;
+    var t = P.t, pel = {x:0, y:0};
+    var kL = mgJ(pel, P.ll[0], 21), fL = mgJ(kL, P.ll[1], 21), kR = mgJ(pel, P.rl[0], 21), fR = mgJ(kR, P.rl[1], 21);
+    var up = {x:Math.sin(t*Math.PI/180), y:-Math.cos(t*Math.PI/180)}, nv = {x:Math.cos(t*Math.PI/180), y:Math.sin(t*Math.PI/180)};
+    var sh = {x:up.x*24, y:up.y*24}, nk = {x:up.x*29, y:up.y*29};
+    var hc = mgJ(nk, 180 - (t + P.h), 13);
+    var eL = mgJ(sh, P.la[0], 15), hL = mgJ(eL, P.la[1], 15), eR = mgJ(sh, P.ra[0], 15), hR = mgJ(eR, P.ra[1], 15);
+    var dy = P.sit ? -6 : -Math.max(fL.y, fR.y) - 3;
+    if(P.air) dy -= P.air;
+    if(o.air != null) dy -= o.air;
+    function foot(k2, f, ang){ var q = mgJ(f, ang + 92, 6.5), q0 = mgJ(f, ang - 88, 1.5); return mgSeg(C, [q0, q], 5.6, o.shoe ? '#111' : skin); }
+    function leg(kn, f, a){ return mgSeg(C, [pel, kn, f], 9, skin) + mgSeg(C, [pel, mgJ(pel, a[0], 9)], 13.5, k.shorts) + foot(kn, f, a[1]); }
+    function arm(el, h, far){
+      return mgSeg(C, [sh, el, h], 7, skin) + mgSeg(C, [sh, mgJ(sh, far[0], 7.5)], 10.5, k.shirt)
+        + '<circle cx="'+pn(h.x)+'" cy="'+pn(h.y)+'" r="'+(k.glove ? 5.4 : 4.4)+'" fill="'+(k.glove || skin)+'" stroke="#000" stroke-width="1.6"/>';
+    }
+    var torso = [
+      [pel.x - nv.x*11.5 + up.x*-3, pel.y - nv.y*11.5 + up.y*-3], [pel.x + nv.x*11.5 + up.x*-3, pel.y + nv.y*11.5 + up.y*-3],
+      [sh.x + nv.x*12.5 + up.x*2, sh.y + nv.y*12.5 + up.y*2], [nk.x + nv.x*5, nk.y + nv.y*5], [nk.x - nv.x*5, nk.y - nv.y*5], [sh.x - nv.x*12.5 + up.x*2, sh.y - nv.y*12.5 + up.y*2]
+    ];
+    var g = '';
+    if(!o.noShadow && !P.air && o.air == null) g += '<ellipse cx="'+pn((fL.x+fR.x)/2)+'" cy="-1" rx="22" ry="4" fill="'+mgPaint(C, 'p:t3')+'"/>';
+    g += '<g transform="translate(0 '+pn(dy)+')">';
+    g += arm(eL, hL, P.la) + leg(kL, fL, P.ll) + leg(kR, fR, P.rl);
+    g += mgShape(C, 'circle', 'cx="0" cy="0" r="11.2"', k.shorts, 2);
+    g += mgShape(C, 'polygon', 'points="'+mgPts(torso)+'"', k.shirt, 2.4);
+    if(o.num != null){
+      var c = {x:(sh.x)*.55, y:(sh.y)*.55};
+      g += '<text y="3.6" transform="translate('+pn(c.x+1)+' '+pn(c.y)+') rotate('+t+')'+(o.flip ? ' scale(-1 1)' : '')+'" text-anchor="middle" font-size="11" font-weight="800" font-family="Lexend,Arial,sans-serif" fill="'+k.num+'"'+(mgIsPat(k.shirt) ? ' stroke="#fff" stroke-width="2.4" paint-order="stroke"' : '')+'>'+o.num+'</text>';
+    }
+    g += '<g transform="translate('+pn(hc.x)+' '+pn(hc.y)+') rotate('+(P.h + t*.4)+')">' + mgHead(C, {hair:o.hair, face:o.face, skin:skin, blush:o.blush, sweat:o.sweat}) + '</g>';
+    g += arm(eR, hR, P.ra);   // tay gần vẽ sau đầu để khi giơ tay lên không bị tóc che
+    if(o.ball) g += mgBall(fR.x + 10, -dy > 0 ? -7 : fR.y - 7, 7.5);
+    g += '</g>';
+    return '<g transform="translate('+pn(x)+' '+pn(y)+') scale('+(o.flip ? -s : s)+' '+s+')'+(o.rot ? ' rotate('+o.rot+' 0 -40)' : '')+'">' + g + '</g>';
+  }
+  function mgBall(x, y, r, o){
+    o = o || {};
+    var a = '', k, p, pent = [];
+    for(k=0; k<5; k++){
+      p = (-90+72*k + (o.spin||0))*Math.PI/180;
+      pent.push([0.36*Math.cos(p), 0.36*Math.sin(p)]);
+      a += '<line x1="'+(0.36*Math.cos(p)).toFixed(2)+'" y1="'+(0.36*Math.sin(p)).toFixed(2)+'" x2="'+(0.78*Math.cos(p)).toFixed(2)+'" y2="'+(0.78*Math.sin(p)).toFixed(2)+'" stroke="#000" stroke-width=".08"/>'
+        + '<circle cx="'+(0.92*Math.cos(p+.63)).toFixed(2)+'" cy="'+(0.92*Math.sin(p+.63)).toFixed(2)+'" r=".2" fill="#000"/>';
+    }
+    return '<g transform="translate('+pn(x)+' '+pn(y)+') scale('+pn(r)+')"><circle r="1" fill="#fff"/>'
+      + a + '<polygon points="'+pent.map(function(q){ return q[0].toFixed(2)+','+q[1].toFixed(2); }).join(' ')+'" fill="#000"/>'
+      + '<circle r="1" fill="none" stroke="#000" stroke-width="'+(r > 12 ? .12 : .2)+'"/></g>';
+  }
+  /* vệt bóng bay (đường tốc độ phía sau bóng) */
+  function mgTrail(x0, y0, x1, y1, w){   // (x0,y0) = nơi bóng xuất phát, (x1,y1) = vị trí bóng: vệt song song phía sau bóng
+    var dx = x0-x1, dy = y0-y1, L = Math.sqrt(dx*dx+dy*dy) || 1, ux = dx/L, uy = dy/L, nx = -uy, ny = ux, o = '', i, R = mgRng(Math.round(L));
+    for(i=-3; i<=3; i++){
+      var off = i*w/3, st = 6 + Math.abs(i)*4 + R()*6, len = L*(0.45 + R()*0.5)*(1 - Math.abs(i)*0.08);
+      o += '<path d="M'+pn(x1+nx*off+ux*st)+' '+pn(y1+ny*off+uy*st)+' l'+pn(ux*len)+' '+pn(uy*len)+'" stroke="#000" stroke-width="'+(i === 0 ? 2.6 : 1.5)+'" stroke-linecap="round"/>';
+    }
+    return o;
+  }
+  /* đường tập trung (focus lines) */
+  function mgFocus(cx, cy, r0, n, seed, dark){
+    var R = mgRng(seed || 7), o = '', i;
+    for(i=0; i<n; i++){
+      var a = i/n*Math.PI*2 + R()*0.08, hw = (0.012 + R()*0.03) * (dark ? 1.6 : 1), r = r0 * (0.85 + R()*0.45), r1 = 520;
+      o += '<polygon points="'+pn(cx+r*Math.cos(a))+','+pn(cy+r*Math.sin(a))+' '+pn(cx+r1*Math.cos(a-hw))+','+pn(cy+r1*Math.sin(a-hw))+' '+pn(cx+r1*Math.cos(a+hw))+','+pn(cy+r1*Math.sin(a+hw))+'"/>';
+    }
+    return '<g fill="#000">'+o+'</g>';
+  }
+  /* đường tốc độ ngang (chạy) */
+  function mgSpeed(x0, x1, y0, y1, n, seed){
+    var R = mgRng(seed || 3), o = '', i;
+    for(i=0; i<n; i++){
+      var y = y0 + (y1-y0)*R(), a = x0 + (x1-x0)*R()*0.4, b = a + (x1-x0)*(0.3 + R()*0.6);
+      o += '<path d="M'+pn(a)+' '+pn(y)+' H'+pn(Math.min(x1, b))+'" stroke="#000" stroke-width="'+pn(0.8+R()*1.4)+'" stroke-linecap="round"/>';
+    }
+    return o;
+  }
+  /* bóng thoại: kind = 'say' | 'shout' | 'think' */
+  function mgBubble(C, cx, cy, lines, tail, kind, fs){
+    if(C.mini) return '';
+    fs = fs || 12.5;
+    var maxL = 0, i, o = '';
+    lines.forEach(function(l){ maxL = Math.max(maxL, l.length); });
+    var w = Math.max(44, maxL*fs*0.56 + 26), h = lines.length*fs*1.22 + 18;
+    cx = Math.max(w/2 + 8, Math.min(360 - w/2 - 8, cx));
+    var rx = w/2, ry = h/2, shape;
+    if(kind === 'shout'){
+      var pts = [], N = 22, R = mgRng(lines.join('').length + 11);
+      for(i=0; i<N*2; i++){ var a = i/(N*2)*Math.PI*2, k = (i%2) ? 1.0 : 1.18 + R()*0.12; pts.push([cx + Math.cos(a)*rx*1.12*k, cy + Math.sin(a)*ry*1.18*k]); }
+      shape = ['polygon', 'points="'+mgPts(pts)+'"'];
+    } else if(kind === 'think'){
+      var bumps = '', N2 = 12;
+      for(i=0; i<N2; i++){ var a2 = i/N2*Math.PI*2; bumps += '<circle cx="'+pn(cx + Math.cos(a2)*rx*.92)+'" cy="'+pn(cy + Math.sin(a2)*ry*.86)+'" r="'+pn(Math.min(rx, ry)*.42)+'" fill="#fff" stroke="#000" stroke-width="2"/>'; }
+      o += bumps + '<ellipse cx="'+pn(cx)+'" cy="'+pn(cy)+'" rx="'+pn(rx*.95)+'" ry="'+pn(ry*.9)+'" fill="#fff"/>';
+      if(tail){ [0.55, 0.78].forEach(function(f, j){ o += '<circle cx="'+pn(cx+(tail[0]-cx)*f)+'" cy="'+pn(cy+(tail[1]-cy)*f)+'" r="'+(j ? 3 : 5)+'" fill="#fff" stroke="#000" stroke-width="2"/>'; }); }
+    } else {
+      shape = ['ellipse', 'cx="'+pn(cx)+'" cy="'+pn(cy)+'" rx="'+pn(rx*1.08)+'" ry="'+pn(ry*1.12)+'"'];
+    }
+    if(shape){
+      var tl = '';
+      if(tail){
+        var dx = tail[0]-cx, dy = tail[1]-cy, L = Math.sqrt(dx*dx+dy*dy) || 1, nx = -dy/L*7, ny = dx/L*7;
+        tl = mgPts([[cx+nx, cy+ny], [tail[0], tail[1]], [cx-nx, cy-ny]]);
+        o += '<polygon points="'+tl+'" fill="#fff" stroke="#000" stroke-width="2.2" stroke-linejoin="round"/>';
+      }
+      o += '<'+shape[0]+' '+shape[1]+' fill="#fff" stroke="#000" stroke-width="2.4" stroke-linejoin="round"/>';
+      if(tl) o += '<polygon points="'+tl+'" fill="#fff"/>';
+    }
+    lines.forEach(function(l, j){
+      o += '<text x="'+pn(cx)+'" y="'+pn(cy - (lines.length-1)*fs*0.61 + j*fs*1.22 + fs*0.36)+'" text-anchor="middle" font-size="'+fs+'" font-weight="800" font-family="Lexend,Arial,sans-serif" fill="#000">'+escHtml(l)+'</text>';
+    });
+    return o;
+  }
+  /* chữ tượng thanh */
+  function mgSfx(C, x, y, text, size, rot, o){
+    if(C.mini) return '';
+    o = o || {};
+    return '<text transform="translate('+pn(x)+' '+pn(y)+') rotate('+(rot||0)+') skewX(-10)" text-anchor="middle" font-size="'+size+'" font-weight="800" font-family="\'Baloo 2\',Lexend,Arial Black,sans-serif" letter-spacing="1"'
+      + ' fill="'+(o.dark ? '#000' : '#fff')+'" stroke="'+(o.dark ? '#fff' : '#000')+'" stroke-width="'+pn(size*0.16)+'" paint-order="stroke" stroke-linejoin="round">'+escHtml(text)+'</text>';
+  }
+  /* nhãn tên (kiểu chú thích manga) */
+  function mgTag(C, x, y, text){
+    if(C.mini) return '';
+    var w = text.length*6.6 + 18;
+    x = Math.max(w/2 + 6, Math.min(354 - w/2, x));
+    return '<g transform="translate('+pn(x)+' '+pn(y)+') rotate(-3)"><rect x="'+pn(-w/2)+'" y="-10" width="'+pn(w)+'" height="20" fill="#000"/>'
+      + '<text y="4.4" text-anchor="middle" font-size="11.5" font-weight="800" font-family="Lexend,Arial,sans-serif" fill="#fff">'+escHtml(text)+'</text></g>';
+  }
+
+  /* ---- bối cảnh: bãi đất trống trong làng ---- */
+  function mgLot(C, o){
+    o = o || {};
+    var hz = o.hz || 222, s = '', i, R = mgRng(o.seed || 5);
+    /* trời */
+    s += '<rect width="360" height="'+(hz+2)+'" fill="#fff"/>';
+    if(o.sky === 'dusk' || o.sky === 'sunset'){
+      s += '<rect width="360" height="'+(hz*0.42)+'" fill="'+mgPaint(C, 'p:t3')+'"/><rect y="'+pn(hz*0.42)+'" width="360" height="'+pn(hz*0.3)+'" fill="'+mgPaint(C, 'p:t2')+'"/><rect y="'+pn(hz*0.72)+'" width="360" height="'+pn(hz*0.28)+'" fill="'+mgPaint(C, 'p:t1')+'"/>';
+      var sx = o.sunX || 270;
+      s += '<circle cx="'+sx+'" cy="'+(hz-16)+'" r="34" fill="#fff" stroke="#000" stroke-width="2"/>';
+    } else if(o.sky === 'rain'){
+      s += '<rect width="360" height="'+hz+'" fill="'+mgPaint(C, 'p:t2')+'"/>';
+      s += '<path d="M-10 120 q30 -26 60 -6 q24 -30 62 -6 q30 -24 64 0 q26 -20 56 0 q30 -26 60 -4 q26 -18 60 4 V0 H-10 Z" fill="'+mgPaint(C, 'p:t3')+'" stroke="#000" stroke-width="2"/>';
+    } else {
+      s += '<path d="M28 132 q8 -16 26 -10 q10 -14 28 -4 q16 0 14 12 Z M232 108 q10 -16 28 -8 q12 -12 30 0 q14 2 10 12 Z" fill="#fff" stroke="#000" stroke-width="1.8"/>';
+      s += '<path d="M0 0 H360 V36 H0 Z" fill="'+mgPaint(C, 'p:t1')+'"/>';
+    }
+    /* mái nhà, tre, chuối ở chân trời */
+    if(o.roofs !== false){
+      for(i=0; i<7; i++){
+        var rx = -20 + i*62 + R()*20, rw = 48 + R()*26, rh = 14 + R()*10;
+        s += '<polygon points="'+mgPts([[rx, hz], [rx+6, hz-rh], [rx+rw-6, hz-rh], [rx+rw, hz]])+'" fill="#fff" stroke="#000" stroke-width="1.6"/>'
+          + '<polygon points="'+mgPts([[rx, hz], [rx+6, hz-rh], [rx+rw-6, hz-rh], [rx+rw, hz]])+'" fill="'+mgPaint(C, 'p:hz')+'" opacity=".55"/>';
+      }
+    }
+    if(o.bamboo){ o.bamboo.forEach(function(bx){ s += mgBamboo(C, bx, hz); }); }
+    if(o.banana){ o.banana.forEach(function(b){ s += mgBanana(C, b[0], b[1] || hz, b[2] || 1); }); }
+    if(o.wall){ var w = o.wall; s += '<rect x="'+w[0]+'" y="'+(hz-w[2])+'" width="'+w[1]+'" height="'+w[2]+'" fill="#fff" stroke="#000" stroke-width="2"/><rect x="'+w[0]+'" y="'+(hz-w[2])+'" width="'+w[1]+'" height="'+w[2]+'" fill="'+mgPaint(C, 'p:brick')+'"/><rect x="'+(w[0]-3)+'" y="'+(hz-w[2]-5)+'" width="'+(w[1]+6)+'" height="6" fill="#fff" stroke="#000" stroke-width="2"/>'; }
+    /* mặt đất */
+    s += '<rect y="'+hz+'" width="360" height="'+(460-hz)+'" fill="#fff"/>'
+      + '<rect y="'+hz+'" width="360" height="'+(460-hz)+'" fill="'+mgPaint(C, 'p:dirt')+'" opacity="'+(o.sky === 'rain' ? .4 : .8)+'"/>'
+      + '<path d="M0 '+hz+' H360" stroke="#000" stroke-width="2"/>';
+    if(!C.mini){
+      for(i=0; i<6; i++){   // vết bánh xe / rãnh đất phối cảnh
+        var gx = 180 + (i-2.5)*36, ex = 180 + (i-2.5)*190;
+        s += '<path d="M'+pn(gx)+' '+(hz+6)+' L'+pn(ex)+' 470" stroke="#000" stroke-width=".8" stroke-dasharray="'+(10+i*3)+' '+(16+i*2)+'" opacity=".55"/>';
+      }
+      for(i=0; i<14; i++){   // sỏi + cỏ dại
+        var px = R()*360, py = hz + 14 + R()*(460-hz-14), pr = 1.4 + (py-hz)/60;
+        s += (i % 3) ? '<ellipse cx="'+pn(px)+'" cy="'+pn(py)+'" rx="'+pn(pr*1.5)+'" ry="'+pn(pr)+'" fill="#fff" stroke="#000" stroke-width="1.1"/>'
+          : '<path d="M'+pn(px)+' '+pn(py)+' l-3 -7 M'+pn(px+2)+' '+pn(py)+' l1 -9 M'+pn(px+4)+' '+pn(py)+' l4 -6" stroke="#000" stroke-width="1.2" stroke-linecap="round"/>';
+      }
+    }
+    return s;
+  }
+  function mgBamboo(C, x, hz){
+    var s = '', i;
+    for(i=0; i<5; i++){
+      var bx = x + i*7 - 14, h = 120 + (i%3)*24, lean = (i-2)*5;
+      s += '<path d="M'+bx+' '+hz+' Q'+(bx+lean*.5)+' '+(hz-h*.5)+' '+(bx+lean)+' '+(hz-h)+'" stroke="#000" stroke-width="4.4" fill="none"/><path d="M'+bx+' '+hz+' Q'+(bx+lean*.5)+' '+(hz-h*.5)+' '+(bx+lean)+' '+(hz-h)+'" stroke="#fff" stroke-width="2" fill="none" stroke-dasharray="20 2"/>';
+    }
+    s += '<path d="M'+(x-46)+' '+(hz-120)+' q20 -40 46 -50 q30 8 46 48 q-22 -14 -46 -12 q-22 -2 -46 14 Z" fill="'+mgPaint(C, 'p:t2')+'" stroke="#000" stroke-width="1.6"/>';
+    return s;
+  }
+  function mgBanana(C, x, hz, k){
+    var s = '<g transform="translate('+x+' '+hz+') scale('+k+')">'
+      + '<path d="M-5 0 Q-7 -50 -2 -96 L4 -96 Q6 -50 6 0 Z" fill="#fff" stroke="#000" stroke-width="2"/><path d="M-5 0 Q-7 -50 -2 -96 L4 -96 Q6 -50 6 0 Z" fill="'+mgPaint(C, 'p:hz')+'" opacity=".5"/>';
+    [[-150,58],[-118,64],[-60,60],[-24,56],[-200,46]].forEach(function(l, i){
+      var a = l[0]*Math.PI/180, L = l[1], ex = Math.cos(a)*L, ey = -96 + Math.sin(a)*L*0.7, mx = ex*.5, my = -96 + (ey+96)*.5 - 18;
+      s += '<path d="M0 -96 Q'+pn(mx - 10)+' '+pn(my - 12)+' '+pn(ex)+' '+pn(ey)+' Q'+pn(mx + 8)+' '+pn(my + 14)+' 0 -96 Z" fill="'+(i%2 ? '#fff' : mgPaint(C, 'p:t1'))+'" stroke="#000" stroke-width="1.8"/>'
+        + '<path d="M0 -96 Q'+pn(mx)+' '+pn(my)+' '+pn(ex)+' '+pn(ey)+'" stroke="#000" stroke-width="1" fill="none"/>';
+    });
+    return s + '</g>';
+  }
+  function mgSandalGoal(x1, x2, y, k){
+    function sd(x){ return '<g transform="translate('+pn(x)+' '+pn(y)+') scale('+k+')"><ellipse rx="9" ry="3.6" fill="#fff" stroke="#000" stroke-width="1.6"/><path d="M-2 -1.4 L4 -3 M-2 1.4 L4 3 M-2 -1.4 L-2 1.4" stroke="#000" stroke-width="1.6" fill="none"/></g>'; }
+    return sd(x1) + sd(x1 + 6*k) + sd(x2) + sd(x2 + 6*k);
+  }
+  function mgBambooGoal(C, x, y, w, h, net){
+    var s = '';
+    if(net) s += '<rect x="'+x+'" y="'+(y-h)+'" width="'+w+'" height="'+h+'" fill="'+mgPaint(C, 'p:xh')+'" opacity=".5"/>';
+    s += '<path d="M'+x+' '+y+' V'+(y-h)+' H'+(x+w)+' V'+y+'" fill="none" stroke="#000" stroke-width="7" stroke-linejoin="round"/>'
+       + '<path d="M'+x+' '+y+' V'+(y-h)+' H'+(x+w)+' V'+y+'" fill="none" stroke="#fff" stroke-width="3.6" stroke-dasharray="16 2.4" stroke-linejoin="round"/>';
+    return s;
+  }
+  function mgCrowd(C, y, n, seed, cheer){   // dân làng đội nón lá
+    var R = mgRng(seed || 9), s = '', i;
+    for(i=0; i<n; i++){
+      var x = 8 + i*(344/(n-1)) + (R()-.5)*10, k = 0.85 + R()*0.3, hat = R() < 0.55;
+      s += '<g transform="translate('+pn(x)+' '+pn(y)+') scale('+pn(k)+')">'
+        + '<path d="M-11 0 Q-12 -20 0 -22 Q12 -20 11 0 Z" fill="'+(i%2 ? '#fff' : mgPaint(C, 'p:t1'))+'" stroke="#000" stroke-width="1.6"/>'
+        + (cheer && i%2 ? '<path d="M-9 -16 L-15 -34 M9 -16 L15 -34" stroke="#000" stroke-width="3.4" stroke-linecap="round"/>' : '')
+        + '<circle cy="-29" r="7" fill="#fff" stroke="#000" stroke-width="1.6"/>'
+        + (hat ? '<polygon points="-15,-30 0,-44 15,-30" fill="#fff" stroke="#000" stroke-width="1.6" stroke-linejoin="round"/><path d="M-6 -36 L0 -42 L6 -36" stroke="#000" stroke-width=".8" fill="none"/>'
+               : '<path d="M-7 -31 Q0 -40 7 -31" fill="#111"/>')
+        + '</g>';
+    }
+    return s;
+  }
+  function mgRain(C){ return '<rect width="360" height="460" fill="'+mgPaint(C, 'p:rain')+'" opacity=".75"/>'; }
+  function mgSplash(x, y, k){
+    var s = '<g transform="translate('+x+' '+y+') scale('+k+')" fill="#fff" stroke="#000" stroke-width="1.8" stroke-linejoin="round">'
+      + '<path d="M-40 0 Q-36 -18 -28 -8 Q-26 -34 -14 -14 Q-6 -46 2 -16 Q12 -40 16 -12 Q28 -30 30 -8 Q40 -16 42 0 Z"/>';
+    [[-46,-30,4],[-30,-50,3],[-8,-62,4.4],[18,-56,3.4],[40,-40,4],[50,-20,3]].forEach(function(d){ s += '<circle cx="'+d[0]+'" cy="'+d[1]+'" r="'+d[2]+'"/>'; });
+    return s + '</g>';
+  }
+  function mgDust(x, y, k){
+    var s = '<g transform="translate('+x+' '+y+') scale('+k+')" fill="#fff" stroke="#000" stroke-width="1.8">';
+    [[-30,0,12],[-14,-8,15],[6,-6,13],[24,0,11],[-40,6,7],[38,6,7]].forEach(function(d){ s += '<circle cx="'+d[0]+'" cy="'+d[1]+'" r="'+d[2]+'"/>'; });
+    return s + '</g>';
+  }
+  function mgDuck(x, y, k, flap){
+    return '<g transform="translate('+x+' '+y+') scale('+k+')" stroke="#000" stroke-width="1.6" stroke-linejoin="round">'
+      + '<path d="M-12 0 Q-14 -10 -2 -9 Q2 -18 8 -16 Q14 -14 10 -9 L16 -8 L10 -6 Q10 2 -12 0 Z" fill="#fff"/><circle cx="7" cy="-13" r="1.1" fill="#000" stroke="none"/>'
+      + (flap ? '<path d="M-6 -6 Q-12 -26 -2 -22 Q0 -14 0 -7" fill="#fff"/>' : '<path d="M-8 -4 Q-2 -8 4 -4" fill="none"/>')
+      + '</g>';
+  }
+  function mgPond(C, cx, cy, rx, ry){
+    var s = '<ellipse cx="'+cx+'" cy="'+cy+'" rx="'+rx+'" ry="'+ry+'" fill="#fff" stroke="#000" stroke-width="2.4"/>'
+      + '<ellipse cx="'+cx+'" cy="'+cy+'" rx="'+rx+'" ry="'+ry+'" fill="'+mgPaint(C, 'p:t1')+'"/>', i;
+    for(i=0; i<6; i++){ var yy = cy - ry*0.6 + i*ry*0.24, ww = rx*(0.5 - Math.abs(i-2.5)*0.08); s += '<path d="M'+pn(cx - ww + i*6)+' '+pn(yy)+' h'+pn(ww*0.7)+' M'+pn(cx + i*4)+' '+pn(yy+4)+' h'+pn(ww*0.5)+'" stroke="#000" stroke-width="1.2" stroke-linecap="round"/>'; }
+    return s;
+  }
+  function mgTireTree(C, x, hz, tx, ty, swing){   // cây lớn + lốp xe treo trên cành
+    var by = ty - 96, s = '';
+    var trunk = 'M'+(x-16)+' '+hz+' Q'+(x-6)+' '+(hz-90)+' '+(x-12)+' '+(by-30)+' L'+(x+14)+' '+(by-30)+' Q'+(x+10)+' '+(hz-90)+' '+(x+20)+' '+hz+' Z';
+    s += '<path d="'+trunk+'" fill="#fff" stroke="#000" stroke-width="2.2"/><path d="'+trunk+'" fill="'+mgPaint(C, 'p:dg')+'" opacity=".6"/>';
+    var leaf = 'M'+(x-60)+' '+(by+6)+' q-10 -50 40 -64 q30 -40 90 -22 q50 -24 96 8 q54 0 50 40 q16 30 -24 40 q-50 12 -90 -4 q-60 16 -110 0 q-34 4 -52 2 Z';
+    s += '<path d="'+leaf+'" fill="#fff" stroke="#000" stroke-width="2.2"/><path d="'+leaf+'" fill="'+mgPaint(C, 'p:t2')+'"/>';
+    s += '<path d="M'+(x+4)+' '+(by+6)+' Q'+pn((x+tx)/2)+' '+(by-8)+' '+(tx+26)+' '+(by+2)+'" stroke="#000" stroke-width="10" fill="none" stroke-linecap="round"/><path d="M'+(x+4)+' '+(by+6)+' Q'+pn((x+tx)/2)+' '+(by-8)+' '+(tx+26)+' '+(by+2)+'" stroke="#fff" stroke-width="5.6" fill="none" stroke-linecap="round"/>';
+    s += '<g transform="rotate('+(swing||0)+' '+tx+' '+(by+2)+')"><path d="M'+tx+' '+(by+2)+' V'+(ty-30)+'" stroke="#000" stroke-width="2"/>'
+      + '<ellipse cx="'+tx+'" cy="'+ty+'" rx="22" ry="30" fill="none" stroke="#000" stroke-width="13"/>'
+      + '<ellipse cx="'+tx+'" cy="'+ty+'" rx="22" ry="30" fill="none" stroke="#fff" stroke-width="2" stroke-dasharray="3 5"/></g>';
+    return s;
+  }
+  function mgCup(x, y, k){
+    return '<g transform="translate('+x+' '+y+') scale('+k+')" stroke="#000" stroke-width="2" stroke-linejoin="round">'
+      + '<path d="M-16 -40 H16 Q16 -14 4 -10 V-2 H10 V4 H-10 V-2 H-4 V-10 Q-16 -14 -16 -40 Z" fill="#fff"/>'
+      + '<path d="M-16 -36 Q-28 -36 -24 -24 Q-21 -18 -12 -18 M16 -36 Q28 -36 24 -24 Q21 -18 12 -18" fill="none"/>'
+      + '<path d="M-6 -34 Q-8 -22 -2 -16" stroke="#000" stroke-width="1" fill="none"/><path d="M0 -30 l2 4 4 .6 -3 3 .8 4 -3.8 -2 -3.8 2 .8 -4 -3 -3 4 -.6 Z" fill="#000" stroke="none"/></g>';
+  }
+  function mgStars(C, pts){ return C.mini ? '' : pts.map(function(p){ return '<path transform="translate('+p[0]+' '+p[1]+') scale('+(p[2]||1)+')" d="M0 -10 L2.6 -2.6 L10 0 L2.6 2.6 L0 10 L-2.6 2.6 L-10 0 L-2.6 -2.6 Z" fill="#fff" stroke="#000" stroke-width="1.6" stroke-linejoin="round"/>'; }).join(''); }
+  /* khung phụ chèn (close-up đôi mắt) */
+  function mgEyesInset(C, x, y, w, h, who){
+    if(C.mini) return '';
+    var id = C.u+'-in'+x+'-'+y, cx = x + w/2, cy = y + h/2, s = '';
+    var poly = mgPts([[x, y+8], [x+w, y], [x+w, y+h-8], [x, y+h]]);
+    s += '<clipPath id="'+id+'"><polygon points="'+poly+'"/></clipPath>';
+    s += '<polygon points="'+poly+'" fill="#fff" stroke="#fff" stroke-width="10" stroke-linejoin="round"/>';
+    s += '<g clip-path="url(#'+id+')"><rect x="'+x+'" y="'+y+'" width="'+w+'" height="'+h+'" fill="#fff"/>' + mgSpeed(x, x+w, y, y+h, 24, 17)
+      + '<g transform="translate('+pn(cx - 8*6.4)+' '+pn(cy + 2)+') scale(6.4)">' + mgHead(C, {hair:who === 'rival' ? 'band' : 'spiky', face:'det'}) + '</g></g>';
+    s += '<polygon points="'+poly+'" fill="none" stroke="#000" stroke-width="3" stroke-linejoin="round"/>';
+    return s;
+  }
+
+  /* ---- CỐT TRUYỆN · CHƯƠNG 1: GIẢI AO LÀNG ----
+     play/win: chú thích hiện trong khung (dùng {N} = tên nhân vật chính). draw(C, win): vẽ cảnh. */
+  var MG_STORY = [
+    { play:'{N} rủ cả xóm đá trận bóng đầu tiên', win:'Đội bóng bãi đất chính thức ra đời!',
+      draw:function(C, win){
+        var s = mgLot(C, {hz:228, wall:[-4, 120, 70], banana:[[300, 228, 1], [342, 228, .8]], seed:3});
+        if(!win){
+          s += mgKid(C, 252, 316, .8, 'stand', {kit:'hero', hair:'bowl', face:'shock', flip:true})
+             + mgKid(C, 296, 322, .76, 'hips', {kit:'hero', hair:'pony', face:'calm', flip:true})
+             + mgKid(C, 330, 318, .62, 'stand', {kit:'hero', hair:'tuft', face:'shock', flip:true, skin:'p:t1'});
+          s += mgKid(C, 118, 432, 1.62, 'point', {kit:'hero', hair:'spiky', face:'grin', num:7}) + mgBall(176, 420, 14);
+          s += mgBubble(C, 160, 126, ['Đá với tớ', 'một trận nhé!'], [130, 238], 'say', 14) + mgBubble(C, 300, 196, ['Hả?!'], [268, 226], 'say', 11);
+        } else {
+          s += mgFocus(150, 300, 120, 54, 4);
+          s += mgKid(C, 330, 330, .82, 'run', {kit:'hero', hair:'tuft', face:'joy', flip:true, skin:'p:t1'})
+             + mgKid(C, 280, 380, 1.08, 'run', {kit:'hero', hair:'pony', face:'joy', flip:true, num:10})
+             + mgKid(C, 230, 450, 1.28, 'run', {kit:'hero', hair:'bowl', face:'joy', flip:true, num:4});
+          s += mgKid(C, 92, 436, 1.5, 'joy', {kit:'hero', hair:'spiky', face:'joy', num:7}) + mgBall(150, 440, 12);
+          s += mgBubble(C, 196, 138, ['Cho tớ vào', 'đội với!'], [262, 272], 'shout', 13) + mgBubble(C, 318, 214, ['Cả tớ nữa!'], [328, 262], 'say', 11);
+        }
+        return s;
+      }},
+    { play:'Vòng bảng: đội Xóm Trên chặn đường {N}', win:'Qua người rồi sút tung lưới dép!',
+      draw:function(C, win){
+        var s = mgLot(C, {hz:214, banana:[[40, 214, .9]], bamboo:[320], seed:8});
+        s += mgSandalGoal(178, 236, 238, 1);
+        if(!win){
+          s += mgSpeed(0, 150, 300, 440, 22, 5);
+          s += mgKid(C, 268, 438, 1.66, 'defend', {kit:'opp', hair:'buzz', face:'smirk', flip:true, num:5});
+          s += mgKid(C, 116, 440, 1.5, 'dribble', {kit:'hero', hair:'spiky', face:'det', num:7}) + mgBall(176, 432, 12);
+          s += mgBubble(C, 262, 132, ['Nhóc con mà', 'đòi qua tớ à?'], [276, 300], 'say', 13);
+          s += mgEyesInset(C, 14, 108, 128, 72, 'hero');
+        } else {
+          s += mgFocus(210, 236, 70, 60, 9, true);
+          s += mgTrail(250, 370, 214, 240, 18) + mgBall(214, 236, 8);
+          s += mgKid(C, 96, 446, 1.32, 'sit', {kit:'opp', hair:'buzz', face:'dizzy', num:5}) + mgStars(C, [[70, 270, .8], [118, 262, .6]]);
+          s += mgKid(C, 260, 452, 1.48, 'kick', {kit:'hero', hair:'spiky', face:'shout', num:7, flip:true});
+          s += mgSfx(C, 190, 168, 'VÀO!!!', 54, -6);
+        }
+        return s;
+      }},
+    { play:'Bóng lăn sát mép ao — {N} lao tới cứu!', win:'Cú vô-lê cứu bóng ngay trên mép ao!',
+      draw:function(C, win){
+        var s = mgLot(C, {hz:206, bamboo:[30], banana:[[110, 206, .7]], seed:12});
+        s += mgPond(C, 300, 372, 150, 74);
+        s += mgDuck(260, 352, 1.1, win) + mgDuck(318, 392, .9, win) + mgDuck(352, 340, .8, win);
+        if(!win){
+          s += mgSpeed(0, 200, 330, 440, 20, 8);
+          s += mgBall(214, 344, 11) + '<path d="M196 330 q6 -10 12 -2 M188 344 q6 -10 12 -2" stroke="#000" stroke-width="1.6" fill="none"/>';
+          s += mgKid(C, 106, 446, 1.55, 'run', {kit:'hero', hair:'spiky', face:'shout', num:7});
+          s += mgKid(C, 52, 290, .7, 'point', {kit:'hero', hair:'pony', face:'shout', num:10});
+          s += mgBubble(C, 200, 134, ['Bóng sắp rơi', 'xuống ao rồi!'], [70, 236], 'shout', 13) + mgSfx(C, 300, 302, 'QUẠC?', 22, 6);
+        } else {
+          s += mgFocus(150, 300, 90, 50, 13);
+          s += mgTrail(160, 330, 40, 250, 16) + mgBall(40, 248, 11);
+          s += mgKid(C, 200, 360, 1.5, 'kick', {kit:'hero', hair:'spiky', face:'shout', num:7, flip:true, rot:-24, air:30});
+          s += mgSfx(C, 120, 196, 'BỤP!', 46, -10) + mgSfx(C, 268, 304, 'QUẠC QUẠC!', 20, 6);
+          s += mgBubble(C, 270, 130, ['Cứu bóng', 'siêu đỉnh!'], [180, 250], 'say', 13);
+        }
+        return s;
+      }},
+    { play:'Mưa trút xuống, sân thành bãi bùn…', win:'Bùn đất không cản nổi đội mình!',
+      draw:function(C, win){
+        var s = mgLot(C, {hz:210, sky:'rain', banana:[[320, 210, .9]], seed:21});
+        s += '<ellipse cx="90" cy="300" rx="70" ry="12" fill="'+mgPaint(C, 'p:t2')+'" stroke="#000" stroke-width="1.6"/><ellipse cx="250" cy="420" rx="110" ry="20" fill="'+mgPaint(C, 'p:t2')+'" stroke="#000" stroke-width="1.6"/>';
+        if(!win){
+          s += mgKid(C, 268, 300, .74, 'sit', {kit:'hero', hair:'bowl', face:'sad', num:4}) + mgSplash(268, 300, .4);
+          s += mgKid(C, 150, 440, 1.6, 'pant', {kit:'hero', hair:'spiky', face:'det', num:7, sweat:true}) + mgBall(220, 430, 12);
+          s += mgRain(C);
+          s += mgBubble(C, 112, 130, ['Trơn quá…'], [134, 280], 'think', 13) + mgBubble(C, 250, 196, ['Nhưng không', 'bỏ cuộc đâu!'], [184, 300], 'say', 12.5);
+        } else {
+          s += mgFocus(220, 220, 80, 48, 22);
+          s += mgSplash(170, 438, 1.5);
+          s += mgTrail(196, 360, 270, 200, 14) + mgBall(274, 194, 11);
+          s += mgKid(C, 140, 436, 1.56, 'kick', {kit:'hero', hair:'spiky', face:'shout', num:7});
+          s += mgRain(C);
+          s += mgSfx(C, 90, 200, 'TÕM!', 44, -8) + mgSfx(C, 270, 300, 'VÚT!', 34, 8);
+          s += mgBubble(C, 250, 126, ['Bùn đất không', 'cản nổi tụi mình!'], [176, 290], 'shout', 12.5);
+        }
+        return s;
+      }},
+    { play:'Thủ môn khổng lồ của Xóm Chợ chắn khung thành', win:'Sút xuyên thủng "Bức Tường" Xóm Chợ!',
+      draw:function(C, win){
+        var s = mgLot(C, {hz:200, roofs:true, bamboo:[24, 336], seed:31});
+        if(!win){
+          s += mgBambooGoal(C, 150, 382, 200, 150, true);
+          s += mgKid(C, 256, 440, 1.9, 'keeper', {kit:'gk', hair:'buzz', face:'smirk', flip:true, num:1});
+          s += mgKid(C, 76, 448, 1.18, 'windup', {kit:'hero', hair:'spiky', face:'det', num:7}) + mgBall(104, 440, 10);
+          s += mgBubble(C, 236, 112, ['Không ai sút', 'qua được tớ!'], [262, 190], 'shout', 13.5);
+          s += mgTag(C, 246, 178, 'Thủ môn Hùng "Bức Tường"');
+          s += mgEyesInset(C, 10, 228, 120, 66, 'hero');
+        } else {
+          s += mgBambooGoal(C, 110, 330, 200, 140, true);
+          s += mgFocus(250, 250, 50, 60, 31, true);
+          s += mgTrail(150, 420, 252, 238, 18) + mgBall(256, 234, 12);
+          s += mgKid(C, 160, 318, 1.4, 'dive', {kit:'gk', hair:'buzz', face:'shock', num:1, rot:-78, noShadow:true, flip:true});
+          s += mgKid(C, 92, 452, 1.38, 'joy', {kit:'hero', hair:'spiky', face:'joy', num:7});
+          s += mgSfx(C, 258, 380, 'VÀO!!!', 52, -8) + mgBubble(C, 120, 128, ['Không thể nào…!'], [150, 250], 'say', 12.5);
+        }
+        return s;
+      }},
+    { play:'Tứ kết: {N} bị xoạc ngã, đồng đội chìa tay', win:'Cả đội đứng dậy, quyết lật ngược thế trận!',
+      draw:function(C, win){
+        var s = mgLot(C, {hz:216, wall:[230, 140, 60], banana:[[30, 216, .8]], seed:44});
+        if(!win){
+          s += mgKid(C, 300, 270, .72, 'dribble', {kit:'dark', hair:'buzz', face:'smirk', num:9}) + mgSpeed(200, 290, 236, 270, 8, 3);
+          s += mgDust(130, 432, 1.3);
+          s += mgKid(C, 120, 438, 1.36, 'sit', {kit:'hero', hair:'spiky', face:'sad', num:7});
+          s += mgKid(C, 268, 446, 1.56, 'reach', {kit:'hero', hair:'pony', face:'det', num:10, flip:true});
+          s += mgBubble(C, 236, 132, ['Đứng dậy nào,', '{N}!'.replace('{N}', C.name)], [262, 290], 'say', 13.5);
+        } else {
+          s += mgFocus(180, 300, 120, 56, 45);
+          s += mgKid(C, 46, 420, 1.06, 'joy', {kit:'hero', hair:'tuft', face:'joy', skin:'p:t1'})
+             + mgKid(C, 306, 420, 1.06, 'joy', {kit:'hero', hair:'bowl', face:'joy', flip:true, num:4})
+             + mgKid(C, 250, 446, 1.3, 'joy', {kit:'hero', hair:'pony', face:'joy', flip:true, num:10})
+             + mgKid(C, 126, 452, 1.5, 'joy', {kit:'hero', hair:'spiky', face:'shout', num:7});
+          s += mgSfx(C, 180, 188, 'CỐ LÊN!!!', 50, -5);
+          s += mgBubble(C, 120, 120, ['Lật ngược', 'thế trận nào!'], [120, 270], 'shout', 12.5);
+        }
+        return s;
+      }},
+    { play:'Chiều tà, {N} luyện cú sút qua lốp xe', win:'Tuyệt chiêu ra đời: CÚ SÚT XOÁY BÃI ĐẤT!',
+      draw:function(C, win){
+        var s = mgLot(C, {hz:230, sky:'dusk', sunX:96, roofs:true, seed:51});
+        s += mgTireTree(C, 40, 230, 282, 222, win ? 0 : 10);
+        if(!win){
+          s += mgKid(C, 132, 446, 1.6, 'windup', {kit:'hero', hair:'spiky', face:'det', num:7}) + mgBall(180, 434, 12);
+          s += mgBubble(C, 262, 318, ['Phải sút', 'trúng tâm lốp…'], [196, 300], 'think', 12.5);
+          s += mgEyesInset(C, 214, 376, 136, 68, 'hero');
+        } else {
+          s += mgFocus(282, 222, 70, 34, 52);
+                    s += mgTrail(170, 420, 282, 222, 14) + mgBall(282, 222, 12, {spin:30});
+          s += mgKid(C, 120, 446, 1.56, 'kick', {kit:'hero', hair:'spiky', face:'shout', num:7});
+          s += mgSfx(C, 262, 326, 'XOÁY!!', 40, -8);
+          s += mgTag(C, 190, 404, 'Tuyệt chiêu: Cú Sút Xoáy Bãi Đất');
+        }
+        return s;
+      }},
+    { play:'Bán kết: cả làng kéo ra xem, {N} phối hợp bật tường', win:'Đập tay ăn mừng — dẫn trước rồi!',
+      draw:function(C, win){
+        var s = mgLot(C, {hz:210, roofs:true, banana:[[340, 210, .7]], seed:61});
+        s += mgCrowd(C, 252, 13, 62, win);
+        s += '<path d="M0 252 H360" stroke="#000" stroke-width="2"/>';
+        if(!win){
+          s += mgKid(C, 280, 446, 1.4, 'kick', {kit:'hero', hair:'pony', face:'shout', num:10, flip:true});
+          s += mgTrail(250, 430, 170, 434, 8) + mgBall(166, 434, 10);
+          s += mgKid(C, 90, 446, 1.5, 'run', {kit:'hero', hair:'spiky', face:'det', num:7});
+          s += mgBubble(C, 250, 140, ['{N}, chuyền'.replace('{N}', C.name), 'lại đây!'], [282, 300], 'say', 13) + mgBubble(C, 90, 196, ['Bật tường nào!'], [96, 290], 'say', 12);
+        } else {
+          s += mgFocus(180, 300, 90, 52, 64);
+          s += mgKid(C, 158, 446, 1.4, 'five', {kit:'hero', hair:'spiky', face:'joy', num:7});
+          s += mgKid(C, 212, 446, 1.36, 'five', {kit:'hero', hair:'pony', face:'joy', num:10, flip:true});
+          s += mgSfx(C, 186, 270, 'BỐP!', 46, -8) + mgSfx(C, 268, 198, 'HOAN HÔ!', 20, 6);
+          s += mgStars(C, [[186, 210, 1], [150, 196, .6], [222, 196, .6]]);
+        }
+        return s;
+      }},
+    { play:'Quả phạt góc cuối trận bay tới… {N} bật lên!', win:'Đánh đầu tung lưới — vào chung kết!',
+      draw:function(C, win){
+        var s = mgLot(C, {hz:200, bamboo:[330], seed:71});
+        s += mgCrowd(C, 238, 12, 72, win);
+        s += mgBambooGoal(C, 200, 360, 150, 120, true);
+        if(!win){
+          s += '<path d="M20 120 Q120 70 170 150" stroke="#000" stroke-width="2.6" fill="none" stroke-dasharray="3 7" stroke-linecap="round"/>' + mgBall(172, 156, 11);
+          s += mgKid(C, 270, 446, 1.38, 'keeper', {kit:'dark', hair:'buzz', face:'shock', flip:true, num:1});
+          s += mgKid(C, 106, 450, 1.52, 'defend', {kit:'hero', hair:'spiky', face:'det', num:7});
+          s += mgBubble(C, 290, 118, ['Bóng bổng', 'tới rồi!'], [260, 166], 'say', 12.5);
+          s += mgEyesInset(C, 10, 182, 112, 64, 'hero');
+        } else {
+          s += mgFocus(260, 300, 50, 60, 73, true);
+          s += mgTrail(160, 252, 268, 312, 14) + mgBall(272, 314, 11);
+          s += mgKid(C, 140, 420, 1.44, 'header', {kit:'hero', hair:'spiky', face:'shout', num:7});
+          s += mgKid(C, 300, 452, 1.3, 'sit', {kit:'dark', hair:'buzz', face:'dizzy', flip:true, num:1});
+          s += mgSfx(C, 120, 150, 'VÀO!!!', 54, -8) + mgTag(C, 120, 196, 'Vào chung kết!');
+        }
+        return s;
+      }},
+    { play:'CHUNG KẾT: {N} đối mặt đội trưởng Xóm Đình', win:'VÔ ĐỊCH GIẢI AO LÀNG! Phía trước là cả thế giới…',
+      draw:function(C, win){
+        var s;
+        if(!win){
+          s = mgLot(C, {hz:250, sky:'sunset', sunX:180, roofs:true, seed:81});
+          s += mgFocus(180, 290, 30, 70, 82, true);
+          s += '<g transform="translate(96 214) scale(4.2)">' + mgHead(C, {hair:'band', face:'smirk'}) + '</g>';
+          s += '<g transform="translate(264 360) scale(4.4,4.4) scale(-1,1)">' + mgHead(C, {hair:'spiky', face:'det'}) + '</g>';
+          s += '<polygon points="196,160 168,262 196,258 160,378 226,236 196,240 222,160" fill="#fff" stroke="#000" stroke-width="3" stroke-linejoin="round"/>';
+          s += mgTag(C, 90, 312, 'Đội trưởng Xóm Đình');
+          s += mgBubble(C, 250, 130, ['Chung kết rồi đấy,', C.name + '!'], [150, 190], 'say', 12.5);
+          s += mgBubble(C, 110, 400, ['Tớ không thua', 'đâu!'], [210, 380], 'shout', 13);
+        } else {
+          s = mgLot(C, {hz:230, roofs:true, seed:83});
+          s += mgCrowd(C, 270, 13, 84, true);
+          s += mgFocus(184, 210, 80, 50, 85);
+          s += mgKid(C, 182, 326, 1.3, 'perch', {kit:'hero', hair:'spiky', face:'joy', num:7, noShadow:true});
+          s += mgKid(C, 150, 454, 1.36, 'carry', {kit:'hero', hair:'bowl', face:'joy', num:4})
+             + mgKid(C, 216, 454, 1.36, 'carry', {kit:'hero', hair:'pony', face:'joy', num:10, flip:true});
+          s += mgCup(212, 258, 1.4);
+          s += mgStars(C, [[120, 150, 1], [260, 140, .9], [80, 230, .6], [300, 230, .7]]);
+          s += mgSfx(C, 172, 156, 'VÔ ĐỊCH!!!', 44, -4);
+        }
+        return s;
+      }}
+  ];
+  function mgFill(t){ return String(t || '').split('{N}').join(mgHeroName()); }
+
+  /* ---- 1 khung truyện hoàn chỉnh. mode: 'play' | 'win'. opt.mini = ảnh thu nhỏ (bỏ chữ, bỏ chi tiết nhỏ) ---- */
+  function povScene(n, mode, opt){
+    opt = opt || {};
+    var sc = MG_STORY[(n-1) % MG_STORY.length], u = 'mg'+(++povUid);
+    var C = {u:u, mini:!!opt.mini, name:mgHeroName()};
+    var o = '<svg viewBox="0 0 360 460" preserveAspectRatio="xMidYMid slice" aria-hidden="true" font-family="Lexend,Arial,sans-serif">' + mgDefs(u);
+    try{ o += sc.draw(C, mode === 'win'); }
+    catch(e){ console.warn('mg scene loi', n, e); }
+    o += '<rect x="2.5" y="2.5" width="355" height="455" fill="none" stroke="#000" stroke-width="5"/>';
+    return o + '</svg>';
+  }
+
+  /* ---- màn Hành trình: khung nhìn chính + dải 10 ải ---- */
+  function povThumbHTML(i, cleared, view){
+    var st = i <= cleared ? 'done' : (i === cleared+1 ? 'cur' : 'lock');
+    return '<button type="button" class="pov-thumb '+st+(i === view ? ' sel' : '')+'" data-n="'+i+'" aria-label="Ải '+i+'">'
+      + povScene(i, st === 'done' ? 'win' : 'play', {mini:true})
+      + '<span class="pov-tn">'+i+'</span><span class="pov-tb">'+(st === 'done' ? '✅' : (st === 'cur' ? '▶️' : '🔒'))+'</span></button>';
+  }
+  function renderRoadmap(arrive){
+    var el = document.getElementById('battle-road-view');
+    if(!el) return;
+    if(!battleReady() || !roadmapRef().pool.length){
+      el.innerHTML = '<div class="empty-collection">Đấu Trường đang được chuẩn bị — quay lại sau nhé!</div>';
+      return;
+    }
+    povTok++;
+    var tok = povTok, N = ROADMAP_OPEN, cleared = roadmapProgress().cleared, played = battleAlreadyPlayedToday(), done = cleared >= N;
+    var anim = (rmShownCleared >= 0 && cleared > rmShownCleared && !arrive);   // vừa vượt ải → chiếu cảnh đồng đội nhận bóng rồi "nhập vào" cầu thủ đó
+    rmShownCleared = cleared;
+    var view = anim ? cleared : (povView || (done ? N : cleared+1));
+    view = Math.max(1, Math.min(N, view));
+    var st = view <= cleared ? 'done' : (view === cleared+1 ? 'cur' : 'lock');
+    var sc = MG_STORY[(view-1) % MG_STORY.length], def = roadmapStageDef(view), ch = Math.ceil(view/10);
+    var cap, sub = '';
+    if(st === 'done'){ cap = mgFill(sc.win); sub = view === N && done ? '' : 'Đã vượt ải ✅'; }
+    else if(st === 'lock'){ cap = '🔒 Vượt qua ải '+(view-1)+' để mở khóa'; }
+    else {
+      cap = mgFill(sc.play);
+      var opp = roadmapOpponent(view, null);
+      sub = (opp ? '⚔️ Thẻ đối thủ: '+escHtml(opp.name || '')+' · ' : '')+'🎁 Thắng lần đầu +'+def.bonus+' ⚡';
+    }
+    var first = (ch-1)*10 + 1, last = Math.min(N, ch*10), thumbs = '', i;
+    for(i=first; i<=last; i++){ thumbs += povThumbHTML(i, cleared, view); }
+    el.innerHTML =
+      '<div class="rm-head"><h3>🗺️ Hành trình · Chương '+ch+(ch === 1 ? ' — Giải Ao Làng' : '')+'</h3><span class="rm-prog-txt">'+cleared+'/'+N+' trận · mục tiêu '+ROADMAP_VISION+'</span></div>'
+      + '<div class="rm-prog"><i style="width:'+Math.round(cleared/N*100)+'%"></i></div>'
+      + (played && !done ? '<div class="rm-banner">⏰ '+battleOutOfTurnsText()+' — mai quay lại tiến lên trận kế tiếp nhé!</div>' : '')
+      + (done ? '<div class="rm-banner">🏆 '+escHtml(mgHeroName())+' đã vô địch Giải Ao Làng! Chương tiếp theo sẽ sớm mở khóa.</div>' : '')
+      + (ROADMAP_OPEN < ROADMAP_VISION ? '<div class="rm-next">🔒 Chương 2 · sắp mở — còn '+(ROADMAP_VISION-ROADMAP_OPEN)+' trận nữa đang chờ con trên đường tới đỉnh cao!</div>' : '')
+      + '<div class="pov-view '+st+(view > cleared+2 ? ' far' : '')+(st === 'play' ? '' : '')+(arrive ? ' pov-in' : '')+'" id="pov-main" data-n="'+view+'">'
+      +   '<div class="pov-svg">'+povScene(view, st === 'done' ? 'win' : 'play')+'</div>'
+      +   '<div class="pov-hud"><span class="pov-chip">Ải '+view+' · '+escHtml(def.name)+'</span><span class="pov-fl">'+new Array(def.flames+1).join('🔥')+'</span></div>'
+      +   (view > 1 ? '<button type="button" class="pov-nav prev" data-go="'+(view-1)+'" aria-label="Ải trước">‹</button>' : '')
+      +   (view < N ? '<button type="button" class="pov-nav next" data-go="'+(view+1)+'" aria-label="Ải sau">›</button>' : '')
+      +   '<div class="pov-cap"><b>'+escHtml(cap)+'</b>'+(sub ? '<small>'+sub+'</small>' : '')+'</div>'
+      + '</div>'
+      + (st === 'cur' ? '<button type="button" class="pov-go'+(played ? ' wait' : '')+'" data-n="'+view+'">'+(played ? '⏰ Mai đấu' : '▶ VÀO SÂN!')+'</button>' : '')
+      + '<div class="pov-strip">'+thumbs+'</div>';
+    if(anim && cleared < N){
+      setTimeout(function(){ if(tok !== povTok) return; var m = document.getElementById('pov-main'); if(m) m.classList.add('pov-out'); }, 1900);
+      setTimeout(function(){ if(tok !== povTok) return; povView = 0; renderRoadmap(true); }, 2600);
+    }
+  }
+  function roadmapNodeTap(n){
+    var cleared = roadmapProgress().cleared;
+    var def = roadmapStageDef(n);
+    if(n <= cleared){ triggerToast('low', '✅ Trận '+n+' · '+def.name+' đã vượt qua rồi — tiến lên trận kế tiếp nhé!'); return; }
+    if(n > cleared+1){ triggerToast('low', '🔒 Vượt qua trận '+(n-1)+' trước đã nhé!'); return; }
+    if(battleAlreadyPlayedToday()){ triggerToast('low', '⏰ '+battleOutOfTurnsText()+' — mai quay lại nhé!'); return; }
+    roadPickStage = n;
+    renderBattlePick();
+  }
+  function roadHeadHTML(n){
+    var def = roadmapStageDef(n), opp = roadmapOpponent(n, null);
+    if(!opp) return '';
+    return '<button type="button" class="btn-secondary rm-back" id="rm-back">← Về bản đồ Hành trình</button>'
+      + '<div class="rm-pick-head"><div class="rm-opp-card">'+playerCardHTML(opp, false)+'</div>'
+      + '<div class="rm-opp-info"><div class="rm-opp-stage">Trận '+n+' · '+escHtml(def.name)+(def.boss ? ' ⭐' : '')+'</div>'
+      + '<div>Đối thủ: '+escHtml(opp.name || '')+'</div>'
+      + '<div>Độ khó: '+new Array(def.flames+1).join('🔥')+' '+def.label+'</div>'
+      + '<div>🎁 Thắng lần đầu: +'+def.bonus+' ⚡ thưởng thêm</div>'
+      + '<div style="color:var(--ink-soft)">Chọn cầu thủ ra sân bên dưới 👇</div></div></div>';
+  }
+  function syncBattleModeButtons(){
+    var a = document.getElementById('battle-mode-road'), b = document.getElementById('battle-mode-quick');
+    if(a) a.classList.toggle('active', battleMode === 'road');
+    if(b) b.classList.toggle('active', battleMode === 'quick');
+  }
+  document.addEventListener('click', function(e){
+    var t = e.target && e.target.closest ? e.target : null;
+    if(!t) return;
+    var m = t.closest('#battle-mode-road, #battle-mode-quick');
+    if(m){ battleMode = (m.id === 'battle-mode-road') ? 'road' : 'quick'; roadPickStage = 0; renderBattlePick(); return; }
+    var go = t.closest('.pov-go');
+    if(go){ roadmapNodeTap(parseInt(go.getAttribute('data-n'), 10)); return; }
+    var nv = t.closest('.pov-nav, .pov-thumb');
+    if(nv){ povView = parseInt(nv.getAttribute('data-go') || nv.getAttribute('data-n'), 10) || 0; renderRoadmap(); return; }
+    if(t.closest('#rm-back')){ roadPickStage = 0; renderBattlePick(); }
+  });
+
+  function renderBattlePick(){
+    var grid = document.getElementById('battle-pick-grid');
+    var hint = document.getElementById('battle-pick-hint');
+    if(!grid) return;
+    clearBattleTimer();
+    document.getElementById('battle-arena-view').style.display = 'none';
+    syncBattleModeButtons();
+    renderBattleQuota();
+    var roadView = document.getElementById('battle-road-view'), pickHead = document.getElementById('battle-pick-head');
+    if(battleMode === 'road' && (!roadPickStage || battleAlreadyPlayedToday())){   // đang xem bản đồ Hành trình
+      roadPickStage = 0;
+      document.getElementById('battle-pick-view').style.display = 'none';
+      roadView.style.display = '';
+      renderRoadmap();
+      return;
+    }
+    roadView.style.display = 'none';
+    document.getElementById('battle-pick-view').style.display = '';
+    pickHead.innerHTML = (battleMode === 'road' && roadPickStage) ? roadHeadHTML(roadPickStage) : '';
+    if(!battleReady()){
+      grid.innerHTML = '';
+      hint.style.display = '';
+      hint.textContent = 'Đấu Trường đang được chuẩn bị — quay lại sau nhé!';
+      return;
+    }
+    if(battleAlreadyPlayedToday()){
+      grid.innerHTML = '';
+      hint.style.display = '';
+      hint.innerHTML = '⏰ '+battleOutOfTurnsText()+' — mai quay lại đấu tiếp để tích thêm Năng Lượng nâng cấp OVR nhé!';
+      return;
+    }
+    var cards = battleOwnedCards();
+    if(!cards.length){
+      grid.innerHTML = '';
+      hint.style.display = '';
+      hint.textContent = 'Chưa có cầu thủ nào để đấu — mở Kho cầu thủ để nhận thẻ trước đã nhé! 🎴';
+      return;
+    }
+    hint.style.display = 'none';
+    grid.innerHTML = cards.map(function(p){
+      return '<div class="battle-pick-cell" data-db-id="'+escHtml(p.dbId)+'">'
+        + playerCardHTML(p, false)
+        + battleStarProgressHTML(p)
+        + '</div>';
+    }).join('');
+    grid.querySelectorAll('[data-db-id]').forEach(function(el){
+      el.addEventListener('click', function(){
+        var card = cards.find(function(p){ return p.dbId === el.getAttribute('data-db-id'); });
+        if(card) startBattle(card);
+      });
+    });
+  }
+  window.appRenderBattlePick = renderBattlePick;
+  function battleBonusLabel(n){ return n > 0 ? '+'+n+' OVR' : 'Chưa nâng cấp'; }
+  function battleStarProgressHTML(p){
+    var bonus = p.ovrBonus||0, energy = p.energy||0, cost = battleCostForNext(bonus);
+    var pct = Math.min(100, Math.round(energy/cost*100));
+    return '<div class="battle-up">'
+      + '<span class="battle-up-lv'+(bonus>0?'':' zero')+'">'+(bonus>0?'▲ ':'')+escHtml(battleBonusLabel(bonus))+'</span>'
+      + '<div class="battle-up-bar"><i style="width:'+pct+'%"></i></div>'
+      + '<div class="battle-up-txt">⚡ '+energy+'/'+cost+' → +'+(bonus+1)+' OVR</div></div>';
+  }
+
+  function clearBattleTimer(){
+    if(!battleState) return;
+    if(battleState.timer){ clearTimeout(battleState.timer); battleState.timer = null; }
+    battleState.dead = true;   // dừng mọi hiệu ứng đang chạy dở của trận cũ
+    btWake(battleState);
+  }
+  function startBattle(myCard){
+    if(battleAlreadyPlayedToday()){ renderBattlePick(); return; } // phòng khi bấm 2 lần liên tiếp
+    var oppo = (battleMode === 'road' && roadPickStage) ? roadmapOpponent(roadPickStage, myCard.dbId) : pickRandomOpponent(myCard.dbId);
+    if(!oppo){ triggerToast('low', 'Chưa tìm được đối thủ phù hợp, thử lại sau nhé!'); return; }
+    markBattlePlayedToday(); // tính là đã dùng lượt của ngày hôm nay ngay khi vào trận
+    var firstSide = Math.random() < 0.5 ? 0 : 1;
+    battleState = {
+      b: createBattle1v1(myCard, oppo, firstSide),
+      cardA: myCard, cardB: oppo, timer: null, revealed: 0, rewardApplied: false,
+      shown: [0, 0], speed: 1, skipping: false, dead: false, waiters: [], skillIdx: [0, 0],
+      road: (battleMode === 'road' && roadPickStage) ? roadPickStage : 0
+    };
+    battleState.shown = [battleState.b.sides[0].hpMax, battleState.b.sides[1].hpMax];
+    document.getElementById('battle-pick-view').style.display = 'none';
+    document.getElementById('battle-arena-view').style.display = '';
+    document.getElementById('battle-result-zone').innerHTML = '';
+    document.getElementById('battle-log').innerHTML = '';
+    document.getElementById('bt-fx').innerHTML = '';
+    document.getElementById('bt-turn').textContent = '⚔️ Sẵn sàng!';
+    document.getElementById('bt-die').className = 'bt-die'; document.getElementById('bt-die').textContent = '?';
+    document.getElementById('bt-dnote').textContent = ''; document.getElementById('bt-calc').innerHTML = '';
+    renderBattleArena();
+    battleRun(battleState);
+  }
+
+  /* ===== GIAO TRANH SINH ĐỘNG =====
+     Mỗi lượt: (1) báo lượt → (2) quay xúc xắc, thấy rõ điểm đổ được (thẻ LIVE xấu số được đổ lại) →
+     (3) bảng tính Uy lực: sức đánh gốc × xúc xắc × Hệ × khắc Hệ × bù giờ, rồi trừ Giáp (và Huyền Thoại đỡ đòn đầu) →
+     (4) ra đòn: kỹ năng của thẻ hiện tên chiêu, quả cầu theo Hệ bay sang đối thủ, vòng sóng theo phẩm chất →
+     (5) trúng đòn: số sát thương bay lên, thanh Thể lực tụt dần. Kết quả trận do battleStep quyết định như cũ —
+     phần này chỉ là trình diễn. Dùng "Tăng tốc ×2" hoặc "Bỏ qua" để rút ngắn. */
+  var BT_DICE_SEQ = [60,60,60,65,75,90,110,140,180,230];   // nhịp đổi số khi xúc xắc quay (ms) — chậm dần rồi dừng
+  var BT_RARITY = { LIVE:{c:'#38BDF8', ic:'🔵'}, ICON:{c:'#FBBF24', ic:'👑'}, SIG:{c:'#E879F9', ic:'✨'} };
+  function btEl(id){ return document.getElementById(id); }
+  function btAlive(st){ return battleState === st && !st.dead && !st.skipping; }
+  function btWake(st){ (st.waiters || []).slice().forEach(function(w){ clearTimeout(w.t); w.res(); }); st.waiters = []; }
+  function bwait(st, ms){
+    return new Promise(function(res){
+      if(!st || st.dead || st.skipping){ res(); return; }
+      var w = {res:res};
+      w.t = setTimeout(function(){ var i = st.waiters.indexOf(w); if(i >= 0) st.waiters.splice(i,1); res(); }, ms / st.speed);
+      st.waiters.push(w);
+    });
+  }
+  function btF1(n){ return String(Math.round(n*10)/10); }
+  function btCenter(i){
+    var fx = btEl('bt-fx'), card = document.querySelector('#battle-vs-row .battle-side[data-side="'+i+'"] .player-card');
+    if(!fx || !card) return null;
+    var f = fx.getBoundingClientRect(), r = card.getBoundingClientRect();
+    return {x:r.left-f.left+r.width/2, y:r.top-f.top+r.height/2, w:r.width, h:r.height, top:r.top-f.top};
+  }
+  function btFx(html, cls){
+    var d = document.createElement('div'); d.className = cls; d.innerHTML = html || '';
+    btEl('bt-fx').appendChild(d); return d;
+  }
+  function btAnim(st, el, frames, ms, opt){
+    var a = el.animate(frames, Object.assign({duration: ms / st.speed, fill:'forwards', easing:'ease-out'}, opt || {}));
+    a.onfinish = function(){ if(el.parentNode) el.parentNode.removeChild(el); };
+    return a;
+  }
+  function btCount(st, el, from, to, ms, fmt){
+    var t0 = performance.now(), d = ms / st.speed;
+    (function tick(now){
+      if(!btAlive(st) || !el) return;
+      var p = Math.min(1, (now - t0) / d);
+      el.textContent = fmt(from + (to - from) * p);
+      if(p < 1) requestAnimationFrame(tick);
+    })(t0);
+  }
+  function btRing(st, x, y, color, delay){
+    var r = btFx('', 'bt-ring'); r.style.left = x+'px'; r.style.top = y+'px'; r.style.setProperty('--rc', color);
+    btAnim(st, r, [{transform:'scale(.4)', opacity:.95}, {transform:'scale(7)', opacity:0}], 650, {delay:(delay || 0) / st.speed});
+  }
+  function btBurst(st, x, y, color, n){
+    for(var i = 0; i < n; i++){
+      var p = btFx('', 'bt-spark'); p.style.left = x+'px'; p.style.top = y+'px'; p.style.background = color; p.style.color = color;
+      var ang = Math.PI*2*i/n + Math.random()*.5, dist = 40 + Math.random()*48;
+      btAnim(st, p, [{transform:'translate(0,0) scale(1)', opacity:1}, {transform:'translate('+Math.cos(ang)*dist+'px,'+Math.sin(ang)*dist+'px) scale(.2)', opacity:0}], 640);
+    }
+  }
+  function btFloat(st, x, y, html, cls, rise, ms){
+    var f = btFx(html, 'bt-float '+(cls || '')); f.style.left = x+'px'; f.style.top = y+'px';
+    btAnim(st, f, [{transform:'translate(-50%,0) scale(.5)', opacity:0}, {transform:'translate(-50%,-14px) scale(1.18)', opacity:1, offset:.22},
+                   {transform:'translate(-50%,-'+(rise || 46)+'px) scale(1)', opacity:0}], ms || 1150);
+  }
+  function btProjectile(st, from, to, el){
+    var c = ELEMENT_COLORS[el] || ['#CBD5E1','#64748B'], dx = to.x - from.x, dy = to.y - from.y;
+    var spin = (el === 'kim' || el === 'moc') ? 540 : 0;
+    for(var k = 0; k < 3; k++){   // quả cầu chính + 2 vệt đuôi mờ
+      var p = btFx(elementIcon(el), 'bt-proj'); p.style.setProperty('--c1', c[0]); p.style.setProperty('--c2', c[1]);
+      p.style.left = from.x+'px'; p.style.top = from.y+'px';
+      btAnim(st, p, [
+        {transform:'translate(0,0) scale(.5) rotate(0deg)', opacity:0},
+        {transform:'translate('+dx*.12+'px,'+dy*.12+'px) scale('+(1.15 - k*.2)+') rotate('+spin*.12+'deg)', opacity:(1 - k*.4), offset:.15},
+        {transform:'translate('+dx+'px,'+dy+'px) scale('+(1.3 - k*.25)+') rotate('+spin+'deg)', opacity:(1 - k*.4)}
+      ], 480, {delay:(k*55) / st.speed, easing:'cubic-bezier(.5,0,.9,.6)'});
+    }
+  }
+  function btPickSkill(st, side, crit){
+    var sk = st.b.sides[side].battle.skills || [];
+    if(!sk.length) return null;
+    var pool = crit ? sk.filter(function(x){ return x.grade === 'G'; }) : [];
+    if(!pool.length) pool = sk;
+    var s = pool[st.skillIdx[side] % pool.length]; st.skillIdx[side]++;
+    return s;
+  }
+  function btMarkSides(atk){
+    document.querySelectorAll('#battle-vs-row .battle-side').forEach(function(e){
+      var i = parseInt(e.getAttribute('data-side'), 10);
+      e.classList.toggle('act', atk === i); e.classList.toggle('def', atk >= 0 && atk !== i);
+    });
+  }
+  function btApplyHp(st, i, newHp){
+    var s = st.b.sides[i], fill = btEl('bt-hp-fill-'+i), ghost = btEl('bt-hp-ghost-'+i), txt = btEl('bt-hp-text-'+i);
+    var from = st.shown[i], pct = Math.max(0, newHp / s.hpMax);
+    st.shown[i] = newHp;
+    if(fill){ fill.style.transition = 'width '+(0.7/st.speed)+'s ease'; fill.style.width = Math.round(pct*100)+'%'; fill.className = 'battle-hp-fill '+hpBarClass(pct); }
+    if(ghost){ ghost.style.width = Math.round(pct*100)+'%'; }
+    if(txt) btCount(st, txt, from, newHp, 700, function(v){ return Math.round(v)+' / '+s.hpMax+' Thể lực'; });
+  }
+  async function btRollDice(st, finalVal){
+    var die = btEl('bt-die'); if(!die) return;
+    die.className = 'bt-die rolling'; die.removeAttribute('data-v');
+    for(var i = 0; i < BT_DICE_SEQ.length; i++){
+      die.textContent = (i === BT_DICE_SEQ.length - 1) ? finalVal : (1 + Math.floor(Math.random()*10));
+      await bwait(st, BT_DICE_SEQ[i]);
+      if(!btAlive(st)) return;
+    }
+    die.className = 'bt-die landed';
+    die.setAttribute('data-v', finalVal >= 10 ? 'crit' : (finalVal >= 8 ? 'high' : (finalVal >= 4 ? 'mid' : 'low')));
+  }
+
+  async function battlePlayTurn(st){
+    var b = st.b, evt = battleStep(b);
+    if(!evt) return;
+    var A = evt.atkSide, Dn = evt.defSide, sa = b.sides[A], sd = b.sides[Dn], c = evt.calc;
+    var names = [st.cardA.name, st.cardB.name], el = sa.battle.element;
+    var con = btEl('bt-console'), turnEl = btEl('bt-turn'), dnote = btEl('bt-dnote'), die = btEl('bt-die'), calc = btEl('bt-calc');
+    if(!con || !turnEl || !die || !calc) return;
+    function w(ms){ return bwait(st, ms); }
+    function row(icon, label, val, cls){
+      var d = document.createElement('div'); d.className = 'bt-row '+(cls || '');
+      d.innerHTML = '<span>'+icon+' '+label+'</span><b>'+val+'</b>'; calc.appendChild(d); return d;
+    }
+
+    // 1) báo lượt
+    con.setAttribute('data-side', A);
+    turnEl.innerHTML = 'Lượt <b>'+evt.turn+'</b> · '+(A === 0 ? '🟦' : '🟪')+' <b>'+escHtml(names[A])+'</b> ra đòn!';
+    btMarkSides(A);
+    calc.innerHTML = ''; die.className = 'bt-die'; die.removeAttribute('data-v'); die.textContent = '?';
+    dnote.textContent = 'Chuẩn bị đổ xúc xắc…';
+    await w(650); if(!btAlive(st)) return;
+
+    // 2) quay xúc xắc
+    if(evt.rerolled){
+      await btRollDice(st, evt.firstRoll); if(!btAlive(st)) return;
+      dnote.innerHTML = 'Đổ được <b>'+evt.firstRoll+'</b> — thấp quá! 🔵 <b>Phong độ ổn định</b>: được đổ lại!';
+      await w(1000); if(!btAlive(st)) return;
+    }
+    await btRollDice(st, evt.roll); if(!btAlive(st)) return;
+    dnote.innerHTML = evt.crit ? '🎯 <b>CHÍ MẠNG!</b> Đổ được 10 → ×'+c.d10.toFixed(1) : 'Đổ được <b>'+evt.roll+'</b> → ×'+c.d10.toFixed(1);
+    if(evt.crit){
+      var cc = btCenter(A);
+      if(cc){ btRing(st, cc.x, cc.y, '#FDE047'); btBurst(st, cc.x, cc.y, '#FDE047', 10); }
+    }
+    await w(evt.crit ? 1000 : 750); if(!btAlive(st)) return;
+
+    // 3) tính uy lực rồi trừ giáp
+    row('⚔️', 'Sức đánh gốc <small>(Lực chiến '+btF1(c.cp)+')</small>', btF1(c.base)); await w(240); if(!btAlive(st)) return;
+    row('🎲', 'Xúc xắc '+evt.roll, '×'+c.d10.toFixed(1)); await w(240); if(!btAlive(st)) return;
+    if(c.atkMod !== 1){ row(elementIconInline(el), 'Hệ '+escHtml(elementName(el)), '×'+c.atkMod); await w(240); if(!btAlive(st)) return; }
+    if(c.elemM !== 1){ row('🌀', c.elemM > 1 ? 'KHẮC HỆ!' : 'Bị khắc hệ', '×'+c.elemM, c.elemM > 1 ? 'good' : 'bad'); await w(260); if(!btAlive(st)) return; }
+    if(c.bonusM !== 1){ row('⏱️', 'Bù giờ (đánh sau)', '×'+c.bonusM.toFixed(2), 'good'); await w(240); if(!btAlive(st)) return; }
+    var tot = row('💪', 'UY LỰC', '0', 'total'); btCount(st, tot.querySelector('b'), 0, c.raw, 600, Math.round);
+    await w(780); if(!btAlive(st)) return;
+    row('🛡️', 'Giáp '+escHtml(names[Dn]), '−'+c.reducePct+'%'); await w(240); if(!btAlive(st)) return;
+    if(c.iconCut){ row('👑', 'Huyền Thoại đỡ đòn đầu', '−20%', 'bad'); await w(260); if(!btAlive(st)) return; }
+    var dm = row('💥', 'SÁT THƯƠNG', '0', 'total dmg'); btCount(st, dm.querySelector('b'), 0, evt.dmg, 600, Math.round);
+    await w(700); if(!btAlive(st)) return;
+
+    // 4) ra đòn: tên chiêu (kỹ năng) + quả cầu theo Hệ bay sang đối thủ; viền sáng theo phẩm chất
+    var from = btCenter(A), to = btCenter(Dn);
+    if(!from || !to) return;
+    var rar = BT_RARITY[sa.battle.rarity] || {c:'#E2E8F0', ic:'⚽'};
+    var sk = btPickSkill(st, A, evt.crit), skName = '', skGold = false;
+    if(sk){ var cfgS = BATTLE_CONFIG.skills && BATTLE_CONFIG.skills[sk.id]; skName = (cfgS && cfgS.vi) || sk.id; skGold = (sk.grade === 'G'); }
+    else { skName = 'Cú sút '+elementName(el); }
+    var banner = btFx('<b>'+(skGold ? '🌟 ' : '✦ ')+escHtml(skName)+'</b><small>'+rar.ic+' '+escHtml(rarityLabel(sa.battle.rarity))+' · Hệ '+escHtml(elementName(el))+'</small>', 'bt-skill'+(sk && !skGold ? ' s' : ''));
+    banner.style.left = from.x+'px'; banner.style.top = (from.top + 14)+'px';
+    btAnim(st, banner, [{transform:'translate(-50%,6px) scale(.6)', opacity:0}, {transform:'translate(-50%,0) scale(1.05)', opacity:1, offset:.2}, {transform:'translate(-50%,0) scale(1)', opacity:1, offset:.8}, {transform:'translate(-50%,-6px) scale(1)', opacity:0}], 1100);
+    var cardEl = document.querySelector('#battle-vs-row .battle-side[data-side="'+A+'"] .player-card');
+    if(cardEl) cardEl.animate([{transform:'none'}, {transform:'translateX('+(A === 0 ? 28 : -28)+'px) scale(1.1)', offset:.45}, {transform:'none'}], {duration:620 / st.speed, easing:'ease-in-out'});
+    btRing(st, from.x, from.y, rar.c, 0);
+    await w(520); if(!btAlive(st)) return;
+    btProjectile(st, from, to, el);
+    await w(500); if(!btAlive(st)) return;
+
+    // 5) trúng đòn: sát thương bay lên + thanh Thể lực tụt dần
+    var ec = (ELEMENT_COLORS[el] || ['#FFFFFF'])[0];
+    btRing(st, to.x, to.y, rar.c, 0); btRing(st, to.x, to.y, ec, 130);
+    btBurst(st, to.x, to.y, ec, 14);
+    var defSide = document.querySelector('#battle-vs-row .battle-side[data-side="'+Dn+'"]');
+    if(defSide){ defSide.classList.remove('hit'); void defSide.offsetWidth; defSide.classList.add('hit'); }
+    if(evt.crit){ var ar = btEl('bt-arena'); ar.classList.remove('bt-shake'); void ar.offsetWidth; ar.classList.add('bt-shake'); }
+    btFloat(st, to.x, to.y - 10, '−'+evt.dmg, evt.crit ? 'crit' : '', evt.crit ? 70 : 56, 1200);
+    if(c.elemM > 1) btFloat(st, to.x, to.y + 34, 'KHẮC HỆ!', 'tag', 36, 1200);
+    if(c.iconCut) btFloat(st, to.x, to.y + 52, '👑 đỡ −20%', 'tag gold', 30, 1200);
+    btApplyHp(st, Dn, sd.hp);
+    var logEl = btEl('battle-log');
+    if(logEl){ logEl.insertAdjacentHTML('beforeend', battleLogRowHTML(evt, names)); logEl.scrollTop = logEl.scrollHeight; }
+    if(sd.hp <= 0){
+      await w(500); if(!btAlive(st)) return;
+      if(defSide) defSide.classList.add('ko');
+      btFloat(st, to.x, to.y, 'K.O.', 'ko', 20, 1500);
+    }
+    await w(900); if(!btAlive(st)) return;
+  }
+
+  async function battleRun(st){
+    var names = [st.cardA.name, st.cardB.name];
+    btEl('bt-turn').innerHTML = '⚔️ Vào trận! <b>'+escHtml(names[st.b.firstSide])+'</b> được đánh trước';
+    btEl('bt-console').setAttribute('data-side', st.b.firstSide);
+    await bwait(st, 1300);
+    while(btAlive(st) && !st.b.finished){ await battlePlayTurn(st); }
+    if(!btAlive(st)) return;
+    // kết thúc: người thắng sáng lên, mưa bóng nếu mình thắng
+    var win = st.b.winner;
+    btMarkSides(-1);
+    var ws = document.querySelector('#battle-vs-row .battle-side[data-side="'+win+'"]'); if(ws) ws.classList.add('win');
+    btEl('bt-turn').innerHTML = '🏁 HẾT TRẬN! <b>'+escHtml(names[win])+'</b> thắng!';
+    if(win === 0){
+      var fxw = btEl('bt-fx').getBoundingClientRect().width || 300;
+      for(var i = 0; i < 22; i++){
+        var cf = btFx(['⚽','⭐','✨'][i % 3], 'bt-confetti'); cf.style.left = Math.round(Math.random()*fxw)+'px';
+        btAnim(st, cf, [{transform:'translateY(0) rotate(0deg)', opacity:1}, {transform:'translateY(220px) rotate('+(Math.random()*360)+'deg)', opacity:0}], 1500 + Math.random()*700, {delay:(Math.random()*500) / st.speed});
+      }
+    }
+    await bwait(st, 1700);
+    if(!btAlive(st)) return;
+    renderBattleArena();
+  }
+  function battleSkipToEnd(){
+    var st = battleState;
+    if(!st || st.skipping) return;
+    st.skipping = true; btWake(st);
+    while(!st.b.finished){ battleStep(st.b); }
+    var fx = btEl('bt-fx'); if(fx) fx.innerHTML = '';
+    var logEl = btEl('battle-log');
+    if(logEl){ var names = [st.cardA.name, st.cardB.name]; logEl.innerHTML = st.b.log.map(function(e){ return battleLogRowHTML(e, names); }).join(''); }
+    renderBattleArena();
+  }
+
+  /* Cộng Năng Lượng cho ĐÚNG thẻ vừa ra sân + tự +OVR (không giới hạn) nếu đủ, lưu lại vào kho.
+     Chỉ chạy đúng 1 lần/trận (chặn bằng battleState.rewardApplied). */
+  function applyBattleReward(){
+    if(!battleState || battleState.rewardApplied) return null;
+    battleState.rewardApplied = true;
+    var won = (battleState.b.winner === 0);
+    var gain = won ? BATTLE_WIN_ENERGY : BATTLE_LOSE_ENERGY;
+    var road = null;   // kết quả Hành trình (nếu là trận Hành trình)
+    if(battleState.road){
+      var def = roadmapStageDef(battleState.road);
+      road = {n:battleState.road, name:def.name, won:won, first:false, bonus:0, chapterDone:false};
+      if(won){
+        var rp = roadmapProgress();
+        if(battleState.road === rp.cleared + 1){   // chỉ trận kế tiếp mới tính vượt trận + thưởng mốc
+          road.first = true; road.bonus = def.bonus;
+          road.chapterDone = (battleState.road >= ROADMAP_OPEN);
+          safeSet(ROADMAP_KEY, {cleared: battleState.road});
+          gain += def.bonus;
+        }
+      }
+    }
+    var oldOvr = battleState.cardA.ovr || battleState.cardA.realOvr || 0;
+    var players = loadPlayers();
+    var raw = players.find(function(x){ return x && x.id === battleState.cardA.id; });
+    if(!raw) return {gain:gain, levels:0, won:won, oldOvr:oldOvr, newOvr:oldOvr, bonus:battleState.cardA.ovrBonus||0, energy:battleState.cardA.energy||0, road:road};
+    if(typeof raw.ovrBonus !== 'number') raw.ovrBonus = raw.star || 0;   // thẻ cũ lưu ★ → đổi sang OVR cộng thêm
+    delete raw.star;
+    raw.energy = (raw.energy || 0) + gain;
+    var levels = 0;
+    while(raw.energy >= battleCostForNext(raw.ovrBonus)){   // không giới hạn cấp
+      raw.energy -= battleCostForNext(raw.ovrBonus);
+      raw.ovrBonus += 1;
+      levels += 1;
+    }
+    savePlayers(players);
+    var fresh = hydratePlayer(raw);
+    if(fresh && fresh.ovr) battleState.cardA = fresh;   // sàn đấu hiện luôn thẻ với OVR mới
+    return {gain:gain, levels:levels, won:won, oldOvr:oldOvr, newOvr:(fresh && fresh.ovr) || (oldOvr+levels), bonus:raw.ovrBonus, energy:raw.energy, road:road};
+  }
+  function hpBarClass(pct){ return pct > 0.5 ? '' : (pct > 0.2 ? 'mid' : 'low'); }
+  function battleCombatantHTML(card, sideState, label, idx){
+    var pct = Math.max(0, sideState.hp / sideState.hpMax);
+    var starTag = card.ovrBonus ? ' <span class="battle-star-tag">'+escHtml(battleBonusLabel(card.ovrBonus))+'</span>' : '';
+    var el = card.battle && card.battle.element;
+    var glow = (ELEMENT_COLORS[el] || ['#FDE047'])[0];
+    return '<div class="battle-side'+(sideState.hp<=0?' ko':'')+'" data-side="'+idx+'" style="--bt-glow:'+glow+'">'
+      + playerCardHTML(card, false)
+      + '<div class="battle-name">'+escHtml(label)+starTag+'</div>'
+      + '<div class="battle-hp-track"><div class="battle-hp-ghost" id="bt-hp-ghost-'+idx+'" style="width:'+Math.round(pct*100)+'%"></div>'
+      +   '<div class="battle-hp-fill '+hpBarClass(pct)+'" id="bt-hp-fill-'+idx+'" style="width:'+Math.round(pct*100)+'%"></div></div>'
+      + '<div class="battle-hp-text" id="bt-hp-text-'+idx+'">'+Math.round(sideState.hp)+' / '+sideState.hpMax+' Thể lực</div>'
+      + '</div>';
+  }
+  function battleLogRowHTML(evt, names){
+    var atkName = names[evt.atkSide], c = evt.calc || {};
+    var bits = ['Xúc xắc <b>'+evt.roll+'</b> (×'+evt.d10.toFixed(1)+')'];
+    if(evt.rerolled) bits.push('đổ lại do phong độ ổn định (lần đầu '+evt.firstRoll+')');
+    if(evt.bonusHit) bits.push('Bù giờ +'+Math.round((battleState.b.mode.secondMoverBonus||0)*100)+'%');
+    if(c.elemM > 1) bits.push('KHẮC HỆ ×'+c.elemM); else if(c.elemM && c.elemM < 1) bits.push('bị khắc ×'+c.elemM);
+    if(c.raw) bits.push('Uy lực '+c.raw);
+    if(c.reducePct) bits.push('Giáp −'+c.reducePct+'%');
+    if(c.iconCut) bits.push('Huyền Thoại −20%');
+    if(evt.crit) bits.push('CHÍ MẠNG!');
+    return '<div class="battle-log-row side-'+evt.atkSide+'">'
+      + '<div class="battle-log-bubble'+(evt.crit?' crit':'')+'"><b>'+escHtml(atkName)+'</b> gây <b>'+evt.dmg+'</b> sát thương'
+      + '<div class="hint-text" style="margin-top:2px">'+bits.join(' · ')+'</div></div></div>';
+  }
+    function renderBattleArena(){
+    if(!battleState) return;
+    var b = battleState.b;
+    var reward = null;
+    if(b.finished) battleState.shown = [b.sides[0].hp, b.sides[1].hp];   // chốt thanh Thể lực đúng kết quả cuối
+    if(b.finished){ reward = battleState.reward || (battleState.reward = applyBattleReward()); } // cộng Năng Lượng + tự +OVR nếu đủ (chỉ chạy 1 lần)
+    var names = [battleState.cardA.name, battleState.cardB.name];
+    document.getElementById('battle-vs-row').innerHTML =
+      battleCombatantHTML(battleState.cardA, {hp:battleState.shown[0], hpMax:b.sides[0].hpMax}, battleState.cardA.name, 0)
+      + '<div class="battle-vs-badge">VS</div>'
+      + battleCombatantHTML(battleState.cardB, {hp:battleState.shown[1], hpMax:b.sides[1].hpMax}, battleState.cardB.name, 1);
+    if(b.finished){ var ws = document.querySelector('#battle-vs-row .battle-side[data-side="'+b.winner+'"]'); if(ws) ws.classList.add('win'); }
+    var conEl = document.getElementById('bt-console'); if(conEl) conEl.style.display = b.finished ? 'none' : '';
+    if(reward && reward.levels){ var s0 = document.querySelector('#battle-vs-row .battle-side'); if(s0) s0.classList.add('bu-pop'); }
+
+    var logEl = document.getElementById('battle-log');
+    logEl.innerHTML = b.log.map(function(evt){ return battleLogRowHTML(evt, names); }).join('');
+    logEl.scrollTop = logEl.scrollHeight;
+
+    var resultZone = document.getElementById('battle-result-zone');
+    var controls = document.getElementById('battle-controls');
+    if(b.finished){
+      var youWon = (b.winner === 0);
+      var rewardHTML = '';
+      if(reward){
+        var r1 = function(x){ return Math.round(x*10)/10; };
+        var cost = battleCostForNext(reward.bonus), need = cost - reward.energy;
+        var pct = Math.min(100, Math.round(reward.energy/cost*100));
+        var nextTxt = need <= BATTLE_LOSE_ENERGY
+          ? 'Trận sau, thắng hay thua đều lên +'+(reward.bonus+1)+' OVR!'
+          : 'Thắng thêm '+Math.ceil(need/BATTLE_WIN_ENERGY)+' trận nữa là lên +'+(reward.bonus+1)+' OVR!';
+        var rd = reward.road;
+        if(rd){
+          rewardHTML += rd.won
+            ? '<p class="battle-reward">🗺️ '+(rd.first ? 'Vượt qua Trận '+rd.n+' · '+escHtml(rd.name)+'!' : 'Trận '+rd.n+' con đã vượt qua từ trước rồi.')+(rd.first ? ' 🎁 Thưởng mốc +'+rd.bonus+' ⚡' : '')+'</p>'
+            : '<p class="hint-text">🗺️ Chưa vượt qua Trận '+rd.n+' · '+escHtml(rd.name)+' — mai thử lại nhé, nâng OVR cho thẻ sẽ giúp con thắng dễ hơn!</p>';
+          if(rd.chapterDone) rewardHTML += '<p class="battle-reward">🏆 HOÀN THÀNH CHƯƠNG 1! Các chương tiếp theo sẽ sớm mở khóa.</p>';
+        }
+        rewardHTML += '<p class="battle-reward">⚡ +'+reward.gain+' Năng Lượng cho '+escHtml(names[0])+'</p>';
+        if(reward.levels){
+          var L = reward.levels;
+          rewardHTML += '<div class="bu-box">'
+            + '<div class="bu-ovr"><span class="bu-old">'+reward.oldOvr+'</span><span class="bu-arrow">➜</span><b class="bu-new">'+reward.newOvr+'</b></div>'
+            + '<div class="bu-chip">▲ +'+L+' OVR · ✨ NÂNG CẤP!</div>'
+            + '<ul class="bu-stats"><li>⚔️ Lực chiến +'+r1(BATTLE_LEVEL_STATS.cp*L)+'</li><li>❤️ Thể lực +'+Math.round(BATTLE_LEVEL_STATS.hp*L)+'</li><li>🛡️ Giáp +'+r1(BATTLE_LEVEL_STATS.armor*L)+'</li></ul>'
+            + '</div>';
+        }
+        rewardHTML += '<div class="battle-up" style="max-width:260px;margin:10px auto 0"><div class="battle-up-bar"><i style="width:'+pct+'%"></i></div>'
+          + '<div class="battle-up-txt">⚡ '+reward.energy+'/'+cost+' → +'+(reward.bonus+1)+' OVR</div></div>'
+          + '<div class="bu-next">'+nextTxt+'</div>';
+      }
+      resultZone.innerHTML = '<div class="battle-result '+(youWon?'win':'lose')+(reward&&reward.levels?' evolved':'')+'">'
+        + '<h3>'+(youWon ? '🏆 Thắng rồi!' : '💪 Thua ván này!')+'</h3>'
+        + '<p>'+escHtml(names[b.winner])+' đã hạ gục '+escHtml(names[1-b.winner])+' sau '+b.turn+' lượt.</p>'
+        + rewardHTML
+        + '<p class="hint-text">'+(battleLeftToday() > 0 ? '🎟️ Hôm nay còn '+battleLeftToday()+' lượt đấu — đấu tiếp nào!' : 'Hôm nay đấu vậy là đủ rồi — mai quay lại đấu tiếp nhé!')+'</p>'
+        + '</div>';
+      controls.innerHTML = '<button type="button" class="btn-primary" id="battle-btn-back">🗂️ Về Đấu Trường</button>';
+      document.getElementById('battle-btn-back').addEventListener('click', function(){ roadPickStage = 0; renderBattlePick(); });
+      try{ resultZone.scrollIntoView({behavior:'smooth', block:'center'}); }catch(e){}
+    } else {
+      resultZone.innerHTML = '';
+      controls.innerHTML = '<button type="button" class="btn-secondary" id="battle-btn-speed">'+(battleState.speed > 1 ? '🐢 Chậm lại' : '⏩ Tăng tốc ×2')+'</button>'
+        + '<button type="button" class="btn-secondary" id="battle-btn-skip">⏭️ Bỏ qua, xem kết quả luôn</button>';
+      document.getElementById('battle-btn-skip').addEventListener('click', battleSkipToEnd);
+      document.getElementById('battle-btn-speed').addEventListener('click', function(){
+        if(!battleState) return;
+        battleState.speed = battleState.speed > 1 ? 1 : 2;
+        this.textContent = battleState.speed > 1 ? '🐢 Chậm lại' : '⏩ Tăng tốc ×2';
+      });
+    }
+  }
+
   function openSquadModal(){
     switchSquadTab('pitch');
     if(window.appSwitchTab){ window.appSwitchTab('squad'); }
@@ -5221,9 +6600,7 @@
     h += '<span class="skill-pts">+'+st.pts+' điểm</span>'
       + '<div class="sk-actions-row">';
     if(pending){
-      h += isCardLocked()
-        ? '<button type="button" class="btn-open is-card-locked" data-act="claim" data-skill="'+s.key+'">⛔ Tạm khóa nhận thẻ</button>'
-        : '<button type="button" class="btn-open" data-act="claim" data-skill="'+s.key+'">🎁 Nhận thưởng</button>';
+      h += '<button type="button" class="btn-open" data-act="claim" data-skill="'+s.key+'">🎁 Nhận thưởng</button>';
     } else if(st.tier === 'silver' || st.tier === 'gold'){
       h += '<button type="button" class="btn-ghost" data-act="cards" data-skill="'+s.key+'">🎴 Xem thẻ đã nhận</button>';
     } else {
@@ -5543,7 +6920,7 @@
       var stDone = skillState(CE.monthKey, CE.key);
       var pendingDone = skillCardsPending(stDone);
       var hasCards = (CE.tier === 'silver' || CE.tier === 'gold');
-      later.textContent = pendingDone ? (isCardLocked() ? '⛔ Nhận thẻ (đang khóa)' : '🎁 Nhận thẻ') : (hasCards ? '🎴 Xem thẻ đã nhận' : '✨ Xem lại');
+      later.textContent = pendingDone ? '🎁 Nhận thẻ' : (hasCards ? '🎴 Xem thẻ đã nhận' : '✨ Xem lại');
       main.textContent = CE.fresh ? '🎉 NHẬN THƯỞNG!' : 'Đóng';
     }
   }
@@ -5601,7 +6978,7 @@
       else triggerToast('perfect', 'Đã nhận Play Style '+SKILL_TIERS[st.tier].label.toLowerCase()+' “'+rt.name+'”! +'+st.pts+' điểm 🌟');
       renderWeek();
       if(st.tier === 'silver' || st.tier === 'gold'){
-        try{ openSkillPlayerModal(st.reward.code, st.tier, C.monthKey, C.key); }   // đang khóa thì hàm này tự báo và giữ thẻ lại
+        try{ openSkillPlayerModal(st.reward.code, st.tier, C.monthKey, C.key); }
         catch(err){ console.warn('Khong mo duoc minigame cau thu bi an', err); }
       }
     }
@@ -5736,7 +7113,6 @@
       var C = CE;
       var st = skillState(C.monthKey, C.key);
       if(skillCardsPending(st)){
-        if(guardCardLock()) return;   // đang khóa: giữ nguyên popup, không đánh dấu đã nhận
         // "Nhận thẻ": còn thẻ cầu thủ chưa lật hết (ví dụ popup từng bị đóng giữa chừng) -> mở lại minigame lật thẻ, không random lại phần thưởng
         var code = st.reward && st.reward.code, tier = st.tier, mk = C.monthKey, k = C.key;
         closeSkillModal();
@@ -5961,12 +7337,11 @@
     document.getElementById('settings-cheer-max').value = settings.cheerMax;
     document.getElementById('settings-period-start').value = settings.periodStartDay;
     document.getElementById('settings-daily-goal').value = settings.dailyGoal;
+    document.getElementById('settings-battle-per-day').value = settings.battlePerDay;
     document.getElementById('settings-admin-pin').value = settings.adminPin;
     updatePeriodPreview();
     renderRewardList();
     renderUserPanel();
-    fillCardLockForm();
-    renderCardLockPanel();
     openModalTop('settings-modal');
   }
   function closeSettings(){ document.getElementById('settings-modal').classList.remove('open'); }
@@ -6100,7 +7475,6 @@
       btn.textContent = '🔒'; btn.classList.remove('is-admin');
       btn.title = 'Chế độ quản trị: mở khóa để sửa ngày cũ';
     }
-    renderCardLockPanel();
   }
   document.getElementById('admin-toggle-btn').addEventListener('click', function(){
     if(isAdmin){
@@ -6122,7 +7496,6 @@
   });
 
   document.getElementById('day-summary').addEventListener('click', function(e){
-    if(e.target.closest('.ds-gift.is-card-locked')){ showCardLockNotice(); return; }
     var el = e.target.closest('.ds-gift.is-pending');
     if(!el) return;
     var monthKey = el.getAttribute('data-box-month'), dk = el.getAttribute('data-box-day');
@@ -6277,12 +7650,15 @@
     if(!isNaN(psd) && psd>=1 && psd<=31) settings.periodStartDay = psd;
     var dg = parseInt(document.getElementById('settings-daily-goal').value, 10);
     if(!isNaN(dg) && dg>=1 && dg<=10) settings.dailyGoal = dg;
+    var bpd = parseInt(document.getElementById('settings-battle-per-day').value, 10);
+    if(!isNaN(bpd) && bpd>=1 && bpd<=20) settings.battlePerDay = bpd;
     var pin = (document.getElementById('settings-admin-pin').value || '').trim();
     if(pin) settings.adminPin = pin;
     saveSettings();
     currentPeriod = getPeriodRange(new Date());
     closeSettings();
     renderWeek();
+    if(document.getElementById('view-battle').classList.contains('active') && !battleState){ try{ renderBattlePick(); }catch(e){} }   // cập nhật số lượt đấu ngay
   });
 
   /* ---- skill grid events ---- */
@@ -6313,7 +7689,6 @@
     } else if(act === 'cards'){
       if(!openSkillCardsView(currentPeriod.key, key)) openSkillModal(key);   // dữ liệu cũ chưa có cardsDbIds -> phát lại hiệu ứng như trước
     } else if(act === 'claim'){
-      if(guardCardLock()) return;
       var stClaimBtn = skillState(currentPeriod.key, key);
       if(stClaimBtn.reward && stClaimBtn.reward.type === 'ps'){
         var okClaim = openSkillPlayerModal(stClaimBtn.reward.code, stClaimBtn.tier, currentPeriod.key, key);
@@ -6371,15 +7746,6 @@
     document.getElementById('player-detail-modal').classList.remove('open');
   });
 
-  /* ---- Khóa nhận thẻ: gắn sự kiện (phải nằm trong cùng khối script với các hàm khóa) ---- */
-  document.getElementById('cardlock-apply').addEventListener('click', applyCardLock);
-  document.getElementById('cardlock-release').addEventListener('click', releaseCardLock);
-  document.getElementById('card-lock-ok').addEventListener('click', function(){ document.getElementById('card-lock-modal').classList.remove('open'); });
-  document.getElementById('card-lock-backdrop').addEventListener('click', function(){ document.getElementById('card-lock-modal').classList.remove('open'); });
-  document.getElementById('card-lock-banner').addEventListener('click', showCardLockNotice);
-  setInterval(tickCardLock, 15000);
-  tickCardLock();
-
   renderWeek();
   try{
     var _sv = document.getElementById('view-squad');
@@ -6391,7 +7757,7 @@
 <script>
 /* Điều hướng tab (giao diện mới) — chỉ đổi phần hiển thị, không đụng tới dữ liệu/logic của ứng dụng */
 (function(){
-  var TABS = ['week','skills','shoot','squad','badges'];
+  var TABS = ['week','skills','shoot','squad','battle','badges'];
   var MONTH_TABS = { skills:true, shoot:true };   // 2 mục này dùng chung thanh chọn kỳ tính điểm
 
   function switchTab(name){
@@ -6414,6 +7780,9 @@
     }
     if(name === 'badges' && typeof window.appRenderBadges === 'function'){
       try{ window.appRenderBadges(); }catch(err){ console.warn('Không vẽ được tủ huy hiệu', err); }
+    }
+    if(name === 'battle' && typeof window.appRenderBattlePick === 'function'){
+      try{ window.appRenderBattlePick(); }catch(err){ console.warn('Không vẽ được Đấu Trường', err); }
     }
   }
   window.appSwitchTab = switchTab;
