@@ -814,6 +814,13 @@
   .el-icon-inline svg{ width:100%; height:100%; display:block; fill:currentColor; }
   /* ===== Đấu Trường — 1v1 Luyện Tập (Epic 2) ===== */
   .battle-pick-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(110px,1fr)); gap:10px; }
+  .bp-match{ margin-top:4px; padding:3px 6px; border-radius:8px; font-size:11px; font-weight:900; text-align:center; line-height:1.25; border:1px solid transparent; }
+  .bp-match small{ display:block; font-weight:700; opacity:.9; }
+  .bp-match.t5{ background:rgba(34,197,94,.22); color:#86EFAC; border-color:rgba(74,222,128,.55); }
+  .bp-match.t4{ background:rgba(132,204,22,.18); color:#BEF264; border-color:rgba(163,230,53,.45); }
+  .bp-match.t3{ background:rgba(148,163,184,.15); color:#CBD5E1; border-color:rgba(148,163,184,.4); }
+  .bp-match.t2{ background:rgba(251,146,60,.18); color:#FDBA74; border-color:rgba(251,146,60,.45); }
+  .bp-match.t1{ background:rgba(239,68,68,.18); color:#FCA5A5; border-color:rgba(248,113,113,.45); }
   .battle-vs-row{ display:flex; align-items:center; justify-content:center; gap:10px; margin:6px 0 18px; }
   .battle-side{ flex:1; max-width:160px; text-align:center; }
   .battle-side .player-card{ pointer-events:none; margin:0 auto 8px; max-width:150px; }
@@ -968,6 +975,41 @@
   .rm-opp-info{ flex:1; font-size:12.5px; font-weight:700; line-height:1.55; }
   .rm-opp-stage{ font-size:14px; font-weight:900; color:#FDE047; }
   .rm-back{ margin-bottom:8px; }
+
+  /* ===== HÀNH TRÌNH · truyện tranh ===== */
+  .rm-tabs{ display:flex; gap:6px; margin:8px 0; overflow-x:auto; }
+  .rm-tab{ flex:none; border:1px solid var(--line); background:var(--deep-soft); color:var(--ink-soft); border-radius:99px; padding:6px 12px; font-weight:800; font-size:12px; cursor:pointer; }
+  .rm-tab.active{ color:#3d2500; background:linear-gradient(180deg,#FFF0A8,#F5A300); border-color:#F5A300; }
+  .rm-cover{ position:relative; margin:8px 0 6px; border-radius:16px; overflow:hidden; border:2px solid #FDE047; min-height:120px; background:linear-gradient(160deg,#1e3a8a,#7c2d12); }
+  .rm-cover img{ display:block; width:100%; max-height:460px; object-fit:contain; background:#0b1020; }
+  .rm-cover-txt{ position:absolute; left:0; right:0; bottom:0; padding:22px 12px 10px; background:linear-gradient(0deg,rgba(0,0,0,.82),rgba(0,0,0,0)); display:flex; flex-direction:column; gap:1px; text-shadow:0 1px 4px #000; }
+  .rm-cover-txt small{ font-size:11px; font-weight:900; letter-spacing:.08em; color:#FDE047; }
+  .rm-cover-txt b{ font-size:18px; color:#fff; }
+  .rm-cover-txt span{ font-size:12px; font-weight:700; color:#E2E8F0; }
+  .rm-pages{ display:grid; grid-template-columns:repeat(2,1fr); gap:10px; margin-top:10px; }
+  @media(min-width:640px){ .rm-pages{ grid-template-columns:repeat(5,1fr); } }
+  .rm-pg{ display:flex; flex-direction:column; padding:0; overflow:hidden; border:2px solid var(--line); border-radius:12px; background:#0f1420; color:#fff; text-align:left; cursor:pointer; font-family:inherit; }
+  .rm-pg-img{ position:relative; display:flex; align-items:center; justify-content:center; aspect-ratio:3/4; overflow:hidden; font-size:34px; background:linear-gradient(160deg,#1f2937,#111827); }
+  .rm-pg-img img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
+  .rm-pg-ph,.rm-pg-lock{ position:relative; }
+  .rm-pg.done{ border-color:#4ADE80; }
+  .rm-pg.cur{ border-color:#FDE047; animation:rmPgGlow 1.4s ease-in-out infinite; }
+  .rm-pg.cur .rm-pg-img img{ filter:blur(9px) brightness(.65); transform:scale(1.12); }
+  .rm-pg.lock .rm-pg-img{ filter:grayscale(1); opacity:.55; }
+  .rm-pg.boss1,.rm-pg.boss2{ border-color:#FDE047; }
+  @keyframes rmPgGlow{ 0%,100%{ box-shadow:0 0 0 0 rgba(253,224,71,.55); } 50%{ box-shadow:0 0 14px 3px rgba(253,224,71,.9); } }
+  .rm-pg-meta{ display:flex; flex-direction:column; gap:2px; padding:6px 8px 8px; font-size:11px; font-weight:800; line-height:1.25; }
+  .rm-pg-no{ color:#FDE047; }
+  .rm-pg-ok{ color:#4ADE80; }
+  .rm-pg-lk{ color:var(--ink-soft); }
+  .rm-reader{ position:fixed; inset:0; z-index:9999; display:none; flex-direction:column; align-items:center; justify-content:center; gap:10px; padding:12px; background:rgba(5,8,16,.96); }
+  .rm-reader.on{ display:flex; }
+  .rm-rd-x{ position:absolute; top:10px; right:12px; width:40px; height:40px; border:none; border-radius:50%; background:#334155; color:#fff; font-size:18px; cursor:pointer; }
+  .rm-rd-body{ display:flex; align-items:center; justify-content:center; gap:6px; width:100%; }
+  .rm-rd-img{ flex:1; min-width:0; max-width:760px; max-height:78vh; object-fit:contain; border-radius:8px; }
+  .rm-rd-nav{ flex:none; width:38px; height:60px; border:none; border-radius:10px; background:#334155; color:#fff; font-size:26px; cursor:pointer; }
+  .rm-rd-nav:disabled{ opacity:.25; cursor:default; }
+  .rm-rd-cap{ color:#E2E8F0; font-size:13px; font-weight:800; text-align:center; }
   .battle-up{ margin-top:5px; }
   .battle-up-lv{ display:inline-block; font-size:11px; font-weight:800; color:#FBBF24; }
   .battle-up-lv.zero{ color:var(--ink-soft); font-weight:700; }
@@ -2011,6 +2053,18 @@
     <div class="panel" id="battle-pick-view">
       <div id="battle-pick-head"></div>
       <div id="battle-pick-hint" class="empty-collection" style="display:none"></div>
+      <div class="collection-sort" id="battle-pick-sort" style="display:none">
+        <label for="battle-sort-key">Sắp xếp theo</label>
+        <select id="battle-sort-key">
+          <option value="match">🛡️ Kháng đối thủ</option>
+          <option value="recent">🕒 Mới nhận</option>
+          <option value="ovr">⭐ Overall</option>
+          <option value="name">🔤 Họ tên</option>
+          <option value="pos">📍 Vị trí</option>
+          <option value="element">⚔️ Hệ</option>
+        </select>
+        <button type="button" id="battle-sort-dir" class="btn-secondary"></button>
+      </div>
       <div class="battle-pick-grid" id="battle-pick-grid"></div>
     </div>
     <div class="panel" id="battle-arena-view" style="display:none">
@@ -5575,7 +5629,33 @@
     return def.boss === 2 ? '🏆' : (def.boss === 1 ? '🥅' : '⚽');
   }
 
-  var RM_ROW = 92, RM_PAD_T = 150, RM_PAD_B = 90, RM_XS = [50,72,32,68,30,70,34,66,36,50];
+  /* ===== HÀNH TRÌNH kiểu TRUYỆN TRANH: 10 ải = 1 chương, mỗi ải = 1 trang truyện (thắng ải mới mở trang) =====
+     Ảnh trên Cloudinary đặt tên <Tập>.<Chương>.<Bia|01..10>.png.
+     chapterBase = số ghi trong tên file của Chương 1 (1 → 1.1.01.jpg …). Đuôi file thử lần lượt theo COMIC.exts; ảnh bìa chương thiếu thì dùng bìa tập 1.0.Bia. */
+  var COMIC = {tap:1, chapterBase:1, exts:['jpg','png','jpeg','webp']};
+  var rmChapter = 0;   // 0 = tự chọn chương đang chơi
+  function comicNameUrl(name){
+    var f = CLOUDINARY.folder ? CLOUDINARY.folder.replace(/^\/+|\/+$/g,'') + '/' : '';
+    var t = CLOUDINARY.transform ? CLOUDINARY.transform + '/' : '';
+    return 'https://res.cloudinary.com/' + CLOUDINARY.cloudName + '/image/upload/' + t + f + encodeURIComponent(name);
+  }
+  function comicCandidates(ch, page){
+    if(!cdnReady()) return [];
+    var pg = (page === 'Bia') ? 'Bia' : (page < 10 ? '0' : '') + page, out = [];
+    var chs = (page === 'Bia') ? [ch - 1 + COMIC.chapterBase, 0] : [ch - 1 + COMIC.chapterBase];
+    chs.forEach(function(c){ COMIC.exts.forEach(function(x){ out.push(comicNameUrl(COMIC.tap + '.' + c + '.' + pg + '.' + x)); }); });
+    return out;
+  }
+  function comicUrl(ch, page){ return comicCandidates(ch, page)[0] || ''; }
+  function comicImg(ch, page){
+    var c = comicCandidates(ch, page);
+    return c.length ? '<img loading="lazy" alt="" src="'+c[0]+'" data-alts="'+c.slice(1).join('|')+'" onerror="rmImgFail(this)">' : '';
+  }
+  window.rmImgFail = function(img){
+    var a = (img.getAttribute('data-alts') || '').split('|').filter(Boolean);
+    if(a.length){ img.setAttribute('data-alts', a.slice(1).join('|')); img.src = a[0]; } else img.style.display = 'none';
+  };
+  function comicChapterTitle(ch){ return ch === 1 ? 'Giải Khởi Động' : 'Chương ' + ch; }
   function renderRoadmap(){
     var el = document.getElementById('battle-road-view');
     if(!el) return;
@@ -5583,51 +5663,106 @@
       el.innerHTML = '<div class="empty-collection">Đấu Trường đang được chuẩn bị — quay lại sau nhé!</div>';
       return;
     }
-    var N = ROADMAP_OPEN, cleared = roadmapProgress().cleared, played = battleAlreadyPlayedToday();
-    var H = RM_PAD_T + (N-1)*RM_ROW + RM_PAD_B;
-    var pts = [];
-    for(var n=1; n<=N; n++){ pts[n] = [RM_XS[(n-1) % RM_XS.length], H - RM_PAD_B - (n-1)*RM_ROW]; }
-    function curve(from, to){
-      var d = 'M '+pts[from][0]+' '+pts[from][1];
-      for(var k=from+1; k<=to; k++){
-        d += ' C '+pts[k-1][0]+' '+(pts[k-1][1]-48)+', '+pts[k][0]+' '+(pts[k][1]+48)+', '+pts[k][0]+' '+pts[k][1];
-      }
-      return d;
+    var cleared = roadmapProgress().cleared, played = battleAlreadyPlayedToday();
+    var chTotal = Math.ceil(ROADMAP_OPEN/10);
+    var curCh = Math.min(chTotal, Math.floor(cleared/10) + 1);
+    var ch = (rmChapter >= 1 && rmChapter <= curCh) ? rmChapter : curCh;
+    var first = (ch-1)*10 + 1, last = Math.min(ch*10, ROADMAP_OPEN), total = last - first + 1;
+    var inCh = Math.max(0, Math.min(last, cleared) - first + 1);
+    var done = cleared >= ROADMAP_OPEN;
+    var tabs = '';
+    if(curCh > 1){
+      tabs = '<div class="rm-tabs">';
+      for(var c=1; c<=curCh; c++) tabs += '<button type="button" class="rm-tab'+(c===ch?' active':'')+'" data-ch="'+c+'">Chương '+c+'</button>';
+      tabs += '</div>';
     }
-    var nodes = '';
-    for(var i=1; i<=N; i++){
-      var def = roadmapStageDef(i);
+    var pages = '';
+    for(var i=first; i<=last; i++){
+      var def = roadmapStageDef(i), pg = i - first + 1;
       var st = i <= cleared ? 'done' : (i === cleared+1 ? 'cur' : 'lock');
-      nodes += '<button type="button" class="rm-node '+st+(def.boss ? ' boss'+def.boss : '')+'" data-n="'+i+'" style="left:'+pts[i][0]+'%;top:'+pts[i][1]+'px">'
-        + '<span class="rm-ball">'+roadmapIcon(def, st==='lock')+'</span>'
-        + (st==='cur' ? '<span class="rm-tag'+(played?' wait':'')+'">'+(played ? '⏰ Mai đấu' : '▶ VÀO SÂN!')+'</span>' : '')
-        + '<span class="rm-label">'+(def.boss ? '' : i+'. ')+escHtml(def.name)+'</span>'
-        + '<span class="rm-diff">'+(st==='lock' && i > cleared+2 ? '' : new Array(def.flames+1).join('🔥'))+'</span>'
-        + '</button>';
+      var ph = '<span class="'+(st==='lock'?'rm-pg-lock':'rm-pg-ph')+'">'+(st==='lock' ? '🔒' : (def.boss===2 ? '🏆' : (def.boss===1 ? '🥅' : '📖')))+'</span>';
+      var img = st === 'lock' ? '' : comicImg(ch, pg);
+      pages += '<button type="button" class="rm-pg '+st+(def.boss ? ' boss'+def.boss : '')+'" data-n="'+i+'">'
+        + '<span class="rm-pg-img">'+ph+img+'</span>'
+        + '<span class="rm-pg-meta"><span class="rm-pg-no">Trang '+pg+(def.boss===2 ? ' 🏆' : (def.boss===1 ? ' ⭐' : ''))+'</span>'
+        + '<span class="rm-pg-name">'+escHtml(def.name)+'</span>'
+        + (st==='cur' ? '<span class="rm-tag'+(played?' wait':'')+'">'+(played ? '⏰ Mai đấu' : '▶ VÀO SÂN!')+'</span>'
+                      : (st==='done' ? '<span class="rm-pg-ok">✓ Đọc trang</span>' : '<span class="rm-pg-lk">Thắng ải trước để mở</span>'))
+        + (st==='lock' && i > cleared+2 ? '' : '<span class="rm-diff">'+new Array(def.flames+1).join('🔥')+'</span>')
+        + '</span></button>';
     }
-    var done = cleared >= N;
     el.innerHTML =
-      '<div class="rm-head"><h3>🗺️ Hành trình · Chương 1 — Giải Khởi Động</h3><span class="rm-prog-txt">'+cleared+'/'+N+' trận · mục tiêu '+ROADMAP_VISION+'</span></div>'
-      + '<div class="rm-prog"><i style="width:'+Math.round(cleared/N*100)+'%"></i></div>'
-      + (played && !done ? '<div class="rm-banner">⏰ '+battleOutOfTurnsText()+' — mai quay lại tiến lên trận kế tiếp nhé!</div>' : '')
-      + (done ? '<div class="rm-banner">🏆 Con đã vô địch Chương 1! Các chương tiếp theo sẽ sớm mở khóa.</div>' : '')
-      + (ROADMAP_OPEN < ROADMAP_VISION ? '<div class="rm-next">🔒 Chương 2 · sắp mở — còn '+(ROADMAP_VISION-ROADMAP_OPEN)+' trận nữa đang chờ con trên đường tới đỉnh cao!</div>' : '')
-      + '<div class="rm-pitch" style="height:'+H+'px">'
-      +   '<div class="rm-penalty"></div><div class="rm-goal"></div>'
-      +   '<div class="rm-kick" style="left:50%;top:'+pts[1][1]+'px"></div>'
-      +   '<svg viewBox="0 0 100 '+H+'" preserveAspectRatio="none" aria-hidden="true">'
-      +     '<path class="rm-dash" d="'+curve(1,N)+'"/>'
-      +     (cleared >= 2 ? '<path class="rm-gold" d="'+curve(1,Math.min(cleared,N))+'"/>' : '')
-      +   '</svg>'
-      +   nodes
-      + '</div>';
+      '<div class="rm-head"><h3>📖 Hành trình · Tập '+COMIC.tap+'</h3><span class="rm-prog-txt">'+Math.min(cleared,ROADMAP_OPEN)+'/'+ROADMAP_OPEN+' ải · mục tiêu '+ROADMAP_VISION+'</span></div>'
+      + tabs
+      + '<div class="rm-cover">'+comicImg(ch,'Bia')
+      +   '<div class="rm-cover-txt"><small>CHƯƠNG '+ch+'</small><b>'+escHtml(comicChapterTitle(ch))+'</b><span>'+inCh+'/'+total+' trang truyện đã mở</span></div></div>'
+      + '<div class="rm-prog"><i style="width:'+Math.round(inCh/total*100)+'%"></i></div>'
+      + (played && !done ? '<div class="rm-banner">⏰ '+battleOutOfTurnsText()+' — mai quay lại mở trang truyện tiếp theo nhé!</div>' : '')
+      + (done && ch === chTotal ? '<div class="rm-banner">🏆 Con đã hoàn thành Chương '+chTotal+'! Các chương tiếp theo sẽ sớm mở khóa.</div>' : '')
+      + (ROADMAP_OPEN < ROADMAP_VISION && ch === chTotal ? '<div class="rm-next">🔒 Chương '+(chTotal+1)+' · sắp mở — còn '+(ROADMAP_VISION-ROADMAP_OPEN)+' ải nữa đang chờ con!</div>' : '')
+      + '<div class="rm-pages">'+pages+'</div>';
   }
+
+  /* Trình đọc truyện: chỉ đọc các trang đã mở (ải đã thắng) trong chương */
+  var rmRd = {list:[], idx:0};
+  function rmReaderEl(){
+    var r = document.getElementById('rm-reader');
+    if(r) return r;
+    r = document.createElement('div'); r.id = 'rm-reader'; r.className = 'rm-reader';
+    r.innerHTML = '<button type="button" class="rm-rd-x" aria-label="Đóng">✕</button>'
+      + '<div class="rm-rd-body"><button type="button" class="rm-rd-nav" data-d="-1" aria-label="Trang trước">‹</button>'
+      + '<img class="rm-rd-img" alt=""><button type="button" class="rm-rd-nav" data-d="1" aria-label="Trang sau">›</button></div>'
+      + '<div class="rm-rd-cap"></div>';
+    document.body.appendChild(r);
+    return r;
+  }
+  function rmReaderShow(){
+    var r = rmReaderEl(), it = rmRd.list[rmRd.idx], img = r.querySelector('.rm-rd-img');
+    img.style.opacity = '1';
+    var k = 0;
+    img.onerror = function(){ k++; if(k < it.urls.length) img.src = it.urls[k]; else img.style.opacity = '.15'; };
+    img.src = it.urls[0] || '';
+    r.querySelector('.rm-rd-cap').textContent = 'Chương '+it.ch+' · Trang '+it.pg+'/10 · '+it.name;
+    var nv = r.querySelectorAll('.rm-rd-nav');
+    nv[0].disabled = rmRd.idx <= 0; nv[1].disabled = rmRd.idx >= rmRd.list.length - 1;
+  }
+  function rmOpenReader(n){
+    var cleared = roadmapProgress().cleared, ch = Math.ceil(n/10), first = (ch-1)*10 + 1, last = Math.min(ch*10, cleared);
+    rmRd.list = [];
+    for(var i=first; i<=last; i++) rmRd.list.push({ch:ch, pg:i-first+1, name:roadmapStageDef(i).name, urls:comicCandidates(ch, i-first+1)});
+    rmRd.idx = Math.max(0, n - first);
+    rmReaderEl().classList.add('on');
+    rmReaderShow();
+  }
+  function rmReaderStep(d){
+    var k = rmRd.idx + d;
+    if(k >= 0 && k < rmRd.list.length){ rmRd.idx = k; rmReaderShow(); }
+  }
+  document.addEventListener('click', function(e){
+    var t = e.target && e.target.closest ? e.target : null;
+    if(!t) return;
+    var tab = t.closest('.rm-tab');
+    if(tab){ rmChapter = parseInt(tab.getAttribute('data-ch'), 10) || 0; renderRoadmap(); return; }
+    var r = document.getElementById('rm-reader');
+    if(!r || !r.classList.contains('on')) return;
+    var nav = t.closest('.rm-rd-nav');
+    if(nav){ rmReaderStep(parseInt(nav.getAttribute('data-d'), 10)); return; }
+    if(t.closest('.rm-rd-x') || t === r || t.classList.contains('rm-rd-body')) r.classList.remove('on');
+  });
+  document.addEventListener('keydown', function(e){
+    var r = document.getElementById('rm-reader');
+    if(!r || !r.classList.contains('on')) return;
+    if(e.key === 'Escape') r.classList.remove('on');
+    else if(e.key === 'ArrowLeft') rmReaderStep(-1);
+    else if(e.key === 'ArrowRight') rmReaderStep(1);
+  });
   function roadmapNodeTap(n){
     var cleared = roadmapProgress().cleared;
     var def = roadmapStageDef(n);
-    if(n <= cleared){ triggerToast('low', '✅ Trận '+n+' · '+def.name+' đã vượt qua rồi — tiến lên trận kế tiếp nhé!'); return; }
+    if(n <= cleared){ rmOpenReader(n); return; }
     if(n > cleared+1){ triggerToast('low', '🔒 Vượt qua trận '+(n-1)+' trước đã nhé!'); return; }
     if(battleAlreadyPlayedToday()){ triggerToast('low', '⏰ '+battleOutOfTurnsText()+' — mai quay lại nhé!'); return; }
+    rmChapter = 0;
     roadPickStage = n;
     renderBattlePick();
   }
@@ -5638,6 +5773,7 @@
       + '<div class="rm-pick-head"><div class="rm-opp-card">'+playerCardHTML(opp, false)+'</div>'
       + '<div class="rm-opp-info"><div class="rm-opp-stage">Trận '+n+' · '+escHtml(def.name)+(def.boss ? ' ⭐' : '')+'</div>'
       + '<div>Đối thủ: '+escHtml(opp.name || '')+'</div>'
+      + (opp.battle && opp.battle.element ? '<div>Hệ đối thủ: '+escHtml(elementName(opp.battle.element))+'</div>' : '')
       + '<div>Độ khó: '+new Array(def.flames+1).join('🔥')+' '+def.label+'</div>'
       + '<div>🎁 Thắng lần đầu: +'+def.bonus+' ⚡ thưởng thêm</div>'
       + '<div style="color:var(--ink-soft)">Chọn cầu thủ ra sân bên dưới 👇</div></div></div>';
@@ -5652,9 +5788,83 @@
     if(!t) return;
     var m = t.closest('#battle-mode-road, #battle-mode-quick');
     if(m){ battleMode = (m.id === 'battle-mode-road') ? 'road' : 'quick'; roadPickStage = 0; renderBattlePick(); return; }
-    var nd = t.closest('.rm-node');
+    var nd = t.closest('.rm-node, .rm-pg');
     if(nd){ roadmapNodeTap(parseInt(nd.getAttribute('data-n'), 10)); return; }
     if(t.closest('#rm-back')){ roadPickStage = 0; renderBattlePick(); }
+  });
+
+  /* ===== Chọn cầu thủ ra trận: sắp xếp + xếp loại "Kháng đối thủ" + xem trước đối thủ Đấu nhanh =====
+     Kháng = so tốc độ "hạ gục" nhau: (sát thương kỳ vọng/lượt của mình ÷ Thể lực đối thủ) ÷ (ngược lại),
+     tính theo CP, Giáp, Hệ khắc/bị khắc, Thể lực (đã cộng OVR nâng cấp). >1 là có lợi thế. Chưa tính bù giờ/may rủi xúc xắc/câu hỏi. */
+  var BATTLE_SORTS = Object.assign({ match:{ asc:'Bất lợi nhất trước', desc:'Lợi thế nhất trước' } }, COLLECTION_SORTS);
+  var battleSort = (function(){
+    var st = null;
+    try{ st = JSON.parse(localStorage.getItem('kidchart_battle_sort') || 'null'); }catch(e){}
+    if(!st || !BATTLE_SORTS[st.key]) st = { key:'match', desc:true };
+    return { key: st.key, desc: st.desc !== false };
+  })();
+  function saveBattleSort(){ try{ localStorage.setItem('kidchart_battle_sort', JSON.stringify(battleSort)); }catch(e){} }
+  var quickOpp = null;   // đối thủ Đấu nhanh đã bốc sẵn — giữ nguyên tới khi vào trận (không đổi được để chọn đối thủ dễ)
+  function quickPickOpp(){
+    var c = pickRandomOpponent(null);
+    return c ? Object.assign({}, c, {stats:c.realStats || c.stats, ovr:c.realOvr || c.ovr}) : null;
+  }
+  function battlePreviewOpp(){
+    return (battleMode === 'road' && roadPickStage) ? roadmapOpponent(roadPickStage, null) : quickOpp;
+  }
+  function battleMatchup(card, opp){
+    var cfg = BATTLE_CONFIG;
+    if(!cfg || !card || !opp || !card.battle || !opp.battle) return null;
+    var a = effectiveBattleStats(card), d = opp.battle, f = cfg.formula, t = cfg.modes['1v1'].tempo;
+    var sum = f.d10.reduce(function(x,y){ return x+y; }, 0), avg = sum / f.d10.length;
+    var avgLive = (sum - f.d10[0] - f.d10[1]) / f.d10.length + avg * 0.2;   // thẻ LIVE gieo lại khi ra 1–2
+    function perHit(x, y){
+      var m = battleElemMult(cfg, x.element, y.element);
+      var dm = (x.rarity === 'LIVE') ? avgLive : avg;
+      return x.cp * f.atkK * t * ((cfg.elements[x.element] || {}).atkMod || 1) * m * dm * (1 - y.armor / (y.armor + f.armorK));
+    }
+    var mine = perHit(a, d) / d.hp, theirs = perHit(d, a) / a.hp;
+    return { score: theirs > 0 ? mine / theirs : 99, elemM: battleElemMult(cfg, a.element, d.element) };
+  }
+  function matchTier(sc){
+    if(sc >= 1.6)  return {cls:'t5', label:'🔥 Áp đảo'};
+    if(sc >= 1.15) return {cls:'t4', label:'👍 Lợi thế'};
+    if(sc >= 0.87) return {cls:'t3', label:'⚖️ Cân bằng'};
+    if(sc >= 0.62) return {cls:'t2', label:'⚠️ Bất lợi'};
+    return {cls:'t1', label:'❌ Rất khó'};
+  }
+  function matchBadgeHTML(m, best){
+    if(!m) return '';
+    var t = matchTier(m.score);
+    var el = m.elemM > 1 ? ' · khắc Hệ' : (m.elemM < 1 ? ' · bị khắc Hệ' : '');
+    return '<div class="bp-match '+t.cls+'">'+(best ? '⭐ KHÁNG NHẤT · ' : '')+t.label+' <small>×'+m.score.toFixed(2)+el+'</small></div>';
+  }
+  function sortBattleCards(list, key, desc, scores){
+    if(key !== 'match') return sortCollection(list, key, desc);
+    var arr = list.map(function(p, i){ return { p:p, i:i, s:(scores[p.dbId] || {}).score || 0 }; });
+    arr.sort(function(x, y){ var c = y.s - x.s; if(!desc) c = -c; return c || (ovrOf(y.p) - ovrOf(x.p)) || (x.i - y.i); });
+    return arr.map(function(x){ return x.p; });
+  }
+  function syncBattleSortUI(){
+    var sel = document.getElementById('battle-sort-key'), btn = document.getElementById('battle-sort-dir');
+    if(sel) sel.value = battleSort.key;
+    if(btn) btn.textContent = (battleSort.desc ? '⬇️ ' : '⬆️ ') + BATTLE_SORTS[battleSort.key][battleSort.desc ? 'desc' : 'asc'];
+  }
+  function quickHeadHTML(){
+    var opp = quickOpp;
+    if(!opp) return '';
+    var el = opp.battle && opp.battle.element ? elementName(opp.battle.element) : '';
+    return '<div class="rm-pick-head"><div class="rm-opp-card">'+playerCardHTML(opp, false)+'</div>'
+      + '<div class="rm-opp-info"><div class="rm-opp-stage">🎲 Đấu nhanh · Đối thủ trận này</div>'
+      + '<div>Đối thủ: '+escHtml(opp.name || '')+'</div>'
+      + (el ? '<div>Hệ đối thủ: '+escHtml(el)+'</div>' : '')
+      + '<div style="color:var(--ink-soft)">Chọn cầu thủ phù hợp bên dưới 👇</div></div></div>';
+  }
+  document.getElementById('battle-sort-key').addEventListener('change', function(e){
+    battleSort.key = e.target.value; battleSort.desc = true; saveBattleSort(); renderBattlePick();
+  });
+  document.getElementById('battle-sort-dir').addEventListener('click', function(){
+    battleSort.desc = !battleSort.desc; saveBattleSort(); renderBattlePick();
   });
 
   function renderBattlePick(){
@@ -5675,7 +5885,10 @@
     }
     roadView.style.display = 'none';
     document.getElementById('battle-pick-view').style.display = '';
-    pickHead.innerHTML = (battleMode === 'road' && roadPickStage) ? roadHeadHTML(roadPickStage) : '';
+    var sortBar = document.getElementById('battle-pick-sort');
+    if(sortBar) sortBar.style.display = 'none';
+    if(!(battleMode === 'road' && roadPickStage) && battleReady() && !quickOpp && !battleAlreadyPlayedToday()) quickOpp = quickPickOpp();
+    pickHead.innerHTML = (battleMode === 'road' && roadPickStage) ? roadHeadHTML(roadPickStage) : quickHeadHTML();
     if(!battleReady()){
       grid.innerHTML = '';
       hint.style.display = '';
@@ -5696,9 +5909,18 @@
       return;
     }
     hint.style.display = 'none';
-    grid.innerHTML = cards.map(function(p){
+    var opp = battlePreviewOpp(), scores = {}, bestId = null, bestS = -1;
+    cards.forEach(function(p){
+      var m = opp ? battleMatchup(p, opp) : null;
+      scores[p.dbId] = m;
+      if(m && m.score > bestS){ bestS = m.score; bestId = p.dbId; }
+    });
+    if(sortBar) sortBar.style.display = '';
+    syncBattleSortUI();
+    grid.innerHTML = sortBattleCards(cards, battleSort.key, battleSort.desc, scores).map(function(p){
       return '<div class="battle-pick-cell" data-db-id="'+escHtml(p.dbId)+'">'
         + playerCardHTML(p, false)
+        + matchBadgeHTML(scores[p.dbId], cards.length > 1 && p.dbId === bestId)
         + battleStarProgressHTML(p)
         + '</div>';
     }).join('');
@@ -5728,7 +5950,9 @@
   }
   function startBattle(myCard){
     if(battleAlreadyPlayedToday()){ renderBattlePick(); return; } // phòng khi bấm 2 lần liên tiếp
-    var oppo = (battleMode === 'road' && roadPickStage) ? roadmapOpponent(roadPickStage, myCard.dbId) : pickRandomOpponent(myCard.dbId);
+    var isRoadB = (battleMode === 'road' && roadPickStage);
+    var oppo = isRoadB ? roadmapOpponent(roadPickStage, myCard.dbId) : (quickOpp || pickRandomOpponent(myCard.dbId));
+    if(!isRoadB) quickOpp = null;   // trận sau sẽ bốc đối thủ mới
     if(!oppo){ triggerToast('low', 'Chưa tìm được đối thủ phù hợp, thử lại sau nhé!'); return; }
     markBattlePlayedToday(); // tính là đã dùng lượt của ngày hôm nay ngay khi vào trận
     var firstSide = Math.random() < 0.5 ? 0 : 1;
