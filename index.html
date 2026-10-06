@@ -32,7 +32,9 @@
   .pitch-scene-img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:50% 65%; z-index:0; background:#1b2a52; transition:opacity .12s ease; }
   .month-ball-btn{ position:absolute; z-index:2; left:50%; top:87%; transform:translate(-50%,-50%); width:46px; height:46px; border:none; background:none; padding:0; cursor:default; --inflate:.6; }
   .kick-hint-badge{ position:absolute; left:50%; top:98px; transform:translateX(-50%); z-index:1; color:#fff; font-family:var(--font-display); font-weight:800; font-size:13px; letter-spacing:.03em; white-space:nowrap; text-shadow:-1.5px -1.5px 0 #0c1b2a, 1.5px -1.5px 0 #0c1b2a, -1.5px 1.5px 0 #0c1b2a, 1.5px 1.5px 0 #0c1b2a, 0 2px 4px rgba(0,0,0,.35); pointer-events:none; }
-  .month-ball-btn.ready{ cursor:pointer; }
+  .month-ball-btn.ready, .month-ball-btn.can-shoot{ cursor:pointer; }
+  .month-ball-btn.spent{ cursor:default; }
+  .month-ball-btn.spent .ball-emoji{ filter:grayscale(.7) opacity(.7); }
   .ball-ring{ position:absolute; inset:0; width:100%; height:100%; }
   .ring-bg{ fill:none; stroke:var(--line); stroke-width:10; }
   .ring-fill{ fill:none; stroke:var(--grass); stroke-width:10; stroke-linecap:round; transform-origin:60px 60px; transform:rotate(-90deg); transition:stroke-dashoffset .5s ease, stroke .3s ease; }
@@ -44,6 +46,14 @@
   .month-ball-btn.ready .ball-emoji{ animation:ball-pulse 1s ease-in-out infinite; }
   @keyframes ball-pulse{ 0%,100%{ transform:scale(var(--inflate)); } 50%{ transform:scale(calc(var(--inflate)*1.12)); } }
   .month-pitch-mini.shooting .ball-emoji{ animation:month-shoot .7s ease forwards; }
+  .month-pitch-mini.shooting-miss .ball-emoji{ animation:month-miss .8s ease forwards; }
+  @keyframes month-miss{
+    0%{ transform:translate(0,0) scale(1); }
+    55%{ transform:translate(70px,-60px) scale(1.1) rotate(200deg); }
+    100%{ transform:translate(120px,-120px) scale(.35) rotate(400deg); opacity:.15; }
+  }
+  .month-reward.missed{ border-style:solid; border-color:rgba(148,163,184,.6); background:rgba(51,65,85,.35); }
+  .month-reward.missed .mr-icon{ filter:grayscale(.6); }
   @keyframes month-shoot{
     0%{ transform:translate(0,0) scale(1); }
     55%{ transform:translate(90px,-16px) scale(1.15); }
@@ -963,6 +973,52 @@
   .bt-arena .battle-hp-track{ background:rgba(15,23,42,.85); border-color:rgba(255,255,255,.35); }
   .bt-arena .battle-vs-badge{ background:rgba(15,23,42,.82); color:#fff; border-color:var(--gold-light); }
   @media (prefers-reduced-motion: reduce){ .bt-arena-bg .ab-layer{ transition:none; } }
+  /* ===== KHUNG ĐẤU CỐ ĐỊNH ===== (không đổi giao diện, chỉ khóa kích thước)
+     Trước đây mỗi dòng "Sức đánh gốc / Xúc xắc / UY LỰC / SÁT THƯƠNG", mỗi câu hỏi, mỗi dòng nhật ký đều làm
+     khung cao lên/thấp xuống nên sân đấu và thẻ cầu thủ bị đẩy đi. Giờ MỌI vùng thông tin có chỗ dành sẵn:
+     nội dung mới chỉ lấp vào chỗ đó (và tự cuộn bên trong), không bao giờ đổi chiều cao của khung.
+     Chỉnh nhanh: đổi --bt-stage-h (vùng xúc xắc/câu hỏi) và --bt-log-h (nhật ký) bên dưới. */
+  #battle-arena-view{ --bt-stage-h:280px; --bt-log-h:176px; overflow-anchor:none; scroll-margin-top:8px; }
+  @media (min-width:768px){ #battle-arena-view{ scroll-margin-top:96px; } }
+  @media (max-width:560px){ #battle-arena-view{ --bt-stage-h:296px; } }
+
+  /* thẻ cầu thủ: tên luôn chiếm đúng 2 dòng → hai bên thẳng hàng, thanh Thể lực không nhảy */
+  .bt-arena .battle-name{ min-height:2.5em; max-height:2.5em; line-height:1.25; overflow:hidden; }
+  .bt-arena .battle-hp-text{ min-height:1.35em; font-variant-numeric:tabular-nums; }
+
+  /* dòng báo lượt: cao cố định (đủ cho "Vào trận! … + gợi ý" 2–3 dòng) */
+  .bt-turn-slot{ height:50px; margin-bottom:4px; display:flex; align-items:center; justify-content:center; overflow:hidden; }
+  .bt-turn-slot .bt-turn{ width:100%; margin:0; line-height:1.25; }
+  .bt-turn-slot .bt-turn small{ display:block; font-size:11px; line-height:1.2; font-weight:700; }
+
+  /* vùng nội dung: câu hỏi và bảng tính dùng CHUNG một ô cố định */
+  .bt-stage{ position:relative; height:var(--bt-stage-h); contain:layout; }
+  .bt-stage > .bt-quiz, .bt-stage > .bt-mid{ position:absolute; left:0; top:0; right:0; bottom:0; }
+
+  /* câu hỏi: hẹp lại vừa ô, phần câu hỏi co giãn, tự cuộn nếu quá dài */
+  .bt-stage > .bt-quiz{ display:flex; flex-direction:column; box-sizing:border-box; padding:8px 10px; border-radius:12px; overflow-y:auto; overscroll-behavior:contain; }
+  .bt-stage .bt-quiz-top{ flex:none; margin-bottom:4px; }
+  .bt-stage .bt-quiz-time{ min-width:40px; height:40px; font-size:20px; }
+  .bt-stage .bt-quiz-bar{ flex:none; height:8px; margin-bottom:4px; }
+  .bt-stage .bt-quiz-q{ flex:1 1 auto; min-height:44px; margin:0 0 6px; overflow-y:auto; display:flex; flex-direction:column; font-size:15px; line-height:1.3; }
+  .bt-stage .bt-quiz-q::before, .bt-stage .bt-quiz-q::after{ content:''; flex:1 1 0; min-height:0; }   /* căn giữa an toàn: dài quá thì cuộn từ trên */
+  .bt-stage .bt-quiz-opts{ flex:none; }
+  .bt-stage .bt-opt{ min-height:42px; padding:6px 8px; }
+  .bt-stage .bt-quiz-fb{ flex:none; height:48px; margin-top:6px; overflow-y:auto; font-size:12px; line-height:1.3; }
+
+  /* xúc xắc + bảng tính: bảng tính cao bằng ô, mỗi dòng 1 hàng gọn, dòng mới tự cuộn xuống */
+  .bt-stage > .bt-mid{ gap:10px; align-items:stretch; }
+  .bt-stage .bt-dice{ width:100px; }
+  .bt-stage .bt-dnote{ min-height:4.1em; max-height:5.6em; margin-top:6px; overflow:hidden; }
+  .bt-stage .bt-calc{ min-height:0; align-self:stretch; overflow-x:hidden; overflow-y:auto; overscroll-behavior:contain; }
+  .bt-stage .bt-calc > .bt-row{ flex:none; padding:3px 9px; line-height:1.35; }
+  .bt-stage .bt-row > span{ min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .bt-stage .bt-calc:empty{ border:1.5px dashed rgba(148,163,184,.28); border-radius:10px; }
+  .bt-stage .bt-calc:empty::before{ content:'Cách tính sát thương sẽ hiện ở đây'; margin:auto; padding:0 12px; text-align:center; font-size:12px; font-weight:700; color:var(--ink-soft); }
+
+  /* nhật ký: cao cố định ngay từ đầu trận, tự cuộn xuống dòng mới nhất */
+  #battle-log.battle-log{ height:var(--bt-log-h); max-height:none; margin:12px 0 0; overscroll-behavior:contain; }
+  #battle-log.battle-log:empty::before{ content:'Nhật ký trận đấu sẽ hiện ở đây'; margin:auto; text-align:center; font-size:12.5px; font-weight:700; color:var(--ink-soft); }
   /* ===== HÀNH TRÌNH (roadmap kiểu sân bóng) ===== */
   .rm-modes{ display:flex; gap:8px; margin:10px 0 0; }
   .rm-mode{ flex:1; border:1px solid var(--line); background:var(--deep-soft); color:var(--ink-soft); border-radius:12px; padding:9px 10px; font-weight:800; font-size:13px; cursor:pointer; }
@@ -2137,22 +2193,24 @@
     <div class="panel" id="battle-arena-view" style="display:none">
       <div class="bt-arena" id="bt-arena"><div class="bt-arena-bg" id="bt-arena-bg" aria-hidden="true"><div class="ab-layer" id="ab-a"></div><div class="ab-layer" id="ab-b"></div><div class="ab-shade"></div></div><div class="battle-vs-row" id="battle-vs-row"></div><div class="bt-fx" id="bt-fx"></div></div>
       <div class="bt-console" id="bt-console" data-side="0">
-        <div class="bt-turn" id="bt-turn">⚔️ Sẵn sàng!</div>
-        <div class="bt-quiz" id="bt-quiz" style="display:none">
-          <div class="bt-quiz-top"><span class="bt-quiz-subj" id="bt-quiz-subj"></span><span class="bt-quiz-time" id="bt-quiz-time">15</span></div>
-          <div class="bt-quiz-bar"><i id="bt-quiz-barfill"></i></div>
-          <div class="bt-quiz-q" id="bt-quiz-q"></div>
-          <div class="bt-quiz-opts" id="bt-quiz-opts"></div>
-          <div class="bt-quiz-fb" id="bt-quiz-fb"></div>
-        </div>
-        <div class="bt-mid">
-          <div class="bt-dice"><div class="bt-die-wrap"><div class="bt-die" id="bt-die">?</div></div><div class="bt-dnote" id="bt-dnote"></div></div>
-          <div class="bt-calc" id="bt-calc"></div>
+        <div class="bt-turn-slot"><div class="bt-turn" id="bt-turn">⚔️ Sẵn sàng!</div></div>
+        <div class="bt-stage">
+          <div class="bt-quiz" id="bt-quiz" style="display:none">
+            <div class="bt-quiz-top"><span class="bt-quiz-subj" id="bt-quiz-subj"></span><span class="bt-quiz-time" id="bt-quiz-time">15</span></div>
+            <div class="bt-quiz-bar"><i id="bt-quiz-barfill"></i></div>
+            <div class="bt-quiz-q" id="bt-quiz-q"></div>
+            <div class="bt-quiz-opts" id="bt-quiz-opts"></div>
+            <div class="bt-quiz-fb" id="bt-quiz-fb"></div>
+          </div>
+          <div class="bt-mid">
+            <div class="bt-dice"><div class="bt-die-wrap"><div class="bt-die" id="bt-die">?</div></div><div class="bt-dnote" id="bt-dnote"></div></div>
+            <div class="bt-calc" id="bt-calc" tabindex="0" aria-label="Cách tính sát thương của lượt đánh"></div>
+          </div>
         </div>
       </div>
       <div class="battle-controls" id="battle-controls"></div>
       <div id="battle-result-zone"></div>
-      <div class="battle-log" id="battle-log"></div>
+      <div class="battle-log" id="battle-log" tabindex="0" aria-label="Nhật ký trận đấu"></div>
     </div>
   </section>
 
@@ -6198,6 +6256,7 @@
     document.getElementById('bt-die').className = 'bt-die'; document.getElementById('bt-die').textContent = '?';
     document.getElementById('bt-dnote').textContent = ''; document.getElementById('bt-calc').innerHTML = '';
     renderBattleArena();
+    try{ document.getElementById('battle-arena-view').scrollIntoView({block:'start'}); }catch(e){}   // đặt khung đấu vào tầm nhìn đúng 1 lần; từ đây khung đứng yên
     btEntrance(btStart).then(function(){ if(battleState === btStart) battleRun(battleState); });
   }
 
@@ -6468,7 +6527,7 @@
     function w(ms){ return bwait(st, ms); }
     function row(icon, label, val, cls){
       var d = document.createElement('div'); d.className = 'bt-row '+(cls || '');
-      d.innerHTML = '<span>'+icon+' '+label+'</span><b>'+val+'</b>'; calc.appendChild(d); return d;
+      d.innerHTML = '<span>'+icon+' '+label+'</span><b>'+val+'</b>'; calc.appendChild(d); calc.scrollTop = calc.scrollHeight; return d;
     }
 
     // 1) báo lượt
@@ -6751,7 +6810,7 @@
         + '</div>';
       controls.innerHTML = '<button type="button" class="btn-primary" id="battle-btn-back">🗂️ Về Đấu Trường</button>';
       document.getElementById('battle-btn-back').addEventListener('click', function(){ roadPickStage = 0; renderBattlePick(); });
-      try{ resultZone.scrollIntoView({behavior:'smooth', block:'center'}); }catch(e){}
+      try{ resultZone.scrollIntoView({behavior:'smooth', block:'nearest'}); }catch(e){}
     } else {
       resultZone.innerHTML = '';
       controls.innerHTML = '<button type="button" class="btn-secondary" id="battle-btn-speed">'+(battleState.speed > 1 ? '🐢 Chậm lại' : '⏩ Tăng tốc ×2')+'</button>'
@@ -6887,6 +6946,24 @@
     document.getElementById('skill-count').textContent = opened+'/'+SKILL_DEFS.length+' đã mở';
   }
 
+  /* Tỉ lệ sút vào theo % bơm: dưới 50% chắc chắn trượt; từ 50% mỗi mốc 10% cộng thêm 20%
+     (50-59% → 0%, 60% → 20%, 70% → 40%, 80% → 60%, 90% → 80%, 100% → 100%). */
+  function shotChance(rawPct){
+    if(rawPct >= 100) return 100;
+    return Math.max(0, Math.min(100, (Math.floor(rawPct/10) - 5) * 20));
+  }
+  /* Chỉ được sút khi đã nhập đủ điểm thi tháng của cả 3 môn (Toán, Tiếng Anh, Tiếng Việt). */
+  function missingExamSubjects(month){
+    return SKILL_DEFS.filter(function(d){
+      var st = month.skills[d.key];
+      return !st || st.score === null || st.score === undefined;
+    }).map(function(d){ return d.subject; });
+  }
+  function monthRawPct(period){
+    var t = periodTotals(period), g = settings.monthlyGoal;
+    return g>0 ? Math.floor(t.total/g*100) : 0;
+  }
+
   function renderMonthly(){
     var period = currentPeriod;
     var monthKey = period.key;
@@ -6909,17 +6986,33 @@
     ringFill.classList.toggle('goal-reached', reached);
     document.getElementById('month-pct-label').textContent = pct+'%';
     var ballBtn = document.getElementById('month-ball-btn');
-    ballBtn.classList.toggle('ready', reached);
+    var shot = month.shot || (month.prize ? {goal:true} : null);
+    var chance = shotChance(reached ? 100 : monthRawPct(period));
+    var missingExam = missingExamSubjects(month);
+    var examOk = missingExam.length === 0;
+    ballBtn.classList.toggle('ready', reached && examOk && !(shot && !shot.goal) || !!(shot && shot.goal));
+    ballBtn.classList.toggle('can-shoot', !shot && examOk && pct>0);
+    ballBtn.classList.toggle('spent', !!(shot && !shot.goal));
     var inflate = (0.58 + (pct/100)*0.5).toFixed(3);
     ballBtn.style.setProperty('--inflate', inflate);
     var eagerSpeed = (1.5 - (pct/100)*0.95).toFixed(2)+'s';
     ballBtn.style.setProperty('--eager-speed', eagerSpeed);
-    ballBtn.classList.toggle('eager', pct>0 && !reached);
-    document.getElementById('month-ball-hint').textContent = reached
-      ? '\u0110\u1ee7 100% r\u1ed3i! \u0110\u00e3 b\u01a1m c\u0103ng, \u1ea5n v\u00e0o b\u00f3ng \u0111\u1ec3 s\u00fat \u0103n m\u1eebng n\u00e0o! \u26bd'
-      : (pct>0
-        ? 'B\u00f3ng \u0111ang c\u0103ng d\u1ea7n \u2014 '+pct+'% r\u1ed3i, \u0111ang r\u1ea5t mu\u1ed1n \u0111\u01b0\u1ee3c s\u00fat \u0111\u00e2y!'
-        : 'Ho\u00e0n th\u00e0nh nhi\u1ec7m v\u1ee5 m\u1ed7i ng\u00e0y \u0111\u1ec3 b\u00f3ng \u0111\u1ea7y d\u1ea7n nh\u00e9!');
+    ballBtn.classList.toggle('eager', pct>0 && !reached && !shot && examOk);
+    var hintTxt;
+    if(shot && shot.goal){
+      hintTxt = 'Đã sút vào rồi! Ấn vào bóng để xem phần thưởng nhé! ⚽';
+    } else if(shot){
+      hintTxt = 'Cú sút kỳ này đã trượt (bơm ' + shot.pct + '%). Kỳ sau bơm căng hơn nhé!';
+    } else if(!examOk){
+      hintTxt = 'Nhập đủ điểm thi tháng (còn thiếu: ' + missingExam.join(', ') + ') để được sút nhé!';
+    } else if(reached){
+      hintTxt = 'Bơm căng 100% rồi — sút là vào chắc chắn! Ấn vào bóng nào! ⚽';
+    } else if(pct>0){
+      hintTxt = 'Bóng bơm ' + pct + '% — cơ hội sút vào ' + chance + '%. Chỉ được sút 1 lần mỗi kỳ, bơm càng căng càng dễ vào!';
+    } else {
+      hintTxt = 'Hoàn thành nhiệm vụ mỗi ngày để bóng đầy dần nhé!';
+    }
+    document.getElementById('month-ball-hint').textContent = hintTxt;
 
     renderSkills();
 
@@ -6936,14 +7029,22 @@
         rState = 'won'; rIcon = month.prize.icon;
         rTitle = month.prize.name;
         rSub = 'Nhớ nhắc bố mẹ thực hiện nhé!';
+      } else if(shot && !shot.goal){
+        rState = 'missed'; rIcon = '😢';
+        rTitle = 'Cú sút đã trượt';
+        rSub = 'Bơm ' + shot.pct + '% (cơ hội ' + shot.chance + '%) — kỳ sau thử lại nhé!';
+      } else if(!examOk){
+        rState = 'locked'; rIcon = '📝';
+        rTitle = 'Nhập đủ điểm thi tháng để được sút';
+        rSub = 'Còn thiếu: ' + missingExam.join(', ') + ' · cơ hội sút vào hiện tại ' + chance + '%';
       } else if(reached){
         rState = 'ready'; rIcon = '🔥';
         rTitle = 'Đủ mốc ' + goal + ' điểm rồi!';
-        rSub = 'Sút bóng xong là được quay thưởng 🎡';
+        rSub = 'Sút là vào chắc chắn, rồi quay thưởng 🎡';
       } else {
         rState = 'locked'; rIcon = '🎁';
-        rTitle = 'Bơm đủ 100% để quay thưởng';
-        rSub = 'Đang có ' + t.total + '/' + goal + ' điểm · còn thiếu ' + (goal - t.total) + ' điểm';
+        rTitle = 'Cơ hội sút vào: ' + chance + '%';
+        rSub = chance>=100 ? '' : 'Dưới 50% sẽ trượt · mỗi +10% bơm thêm 20% cơ hội · ' + t.total + '/' + goal + ' điểm';
       }
       banner.className = 'month-reward ' + rState;
       banner.innerHTML = '<div class="mr-icon">' + rIcon + '</div>'
@@ -7495,9 +7596,10 @@
     var month = loadMonth(monthKey);
     var period = periodFromKey(monthKey);
     var t = periodTotals(period);
-    document.getElementById('prize-lead').innerHTML =
-      'Con \u0111\u00e3 \u0111\u1ea1t <b>'+t.total+' \u0111i\u1ec3m</b> trong '+formatPeriodLabel(period)
-      + ', v\u01b0\u1ee3t m\u1ed1c <b>'+settings.monthlyGoal+'</b>! \u0110\u00e2y l\u00e0 c\u00fa s\u00fat quy\u1ebft \u0111\u1ecbnh mang v\u1ec1 chi\u1ebfn th\u1eafng \u2014 quay th\u01b0\u1edfng th\u00f4i n\u00e0o!';
+    var sh = month.shot;
+    document.getElementById('prize-lead').innerHTML = (sh && sh.pct < 100)
+      ? 'Con đạt <b>'+t.total+' điểm</b> trong '+formatPeriodLabel(period)+', bóng bơm <b>'+sh.pct+'%</b> mà vẫn sút vào được — may mắn quá! Quay thưởng thôi nào!'
+      : 'Con đã đạt <b>'+t.total+' điểm</b> trong '+formatPeriodLabel(period)+', vượt mốc <b>'+settings.monthlyGoal+'</b>! Đây là cú sút quyết định mang về chiến thắng — quay thưởng thôi nào!';
     buildWheel();
     var res = document.getElementById('prize-result');
     var spinBtn = document.getElementById('prize-spin');
@@ -7782,12 +7884,55 @@
   });
 
   document.getElementById('month-ball-btn').addEventListener('click', function(){
-    if(!this.classList.contains('ready')) return;
-    shootMonthBall();
+    var key = currentPeriod.key;
+    var month = loadMonth(key);
+    var shot = month.shot || (month.prize ? {goal:true} : null);
+    if(shot){
+      if(shot.goal){ shootMonthBall(true); }
+      else { triggerToast('low', 'Cú sút kỳ này đã trượt rồi. Kỳ sau cố lên nhé!'); }
+      return;
+    }
+    var miss = missingExamSubjects(month);
+    if(miss.length){
+      triggerToast('low', 'Cần nhập đủ điểm thi tháng (còn thiếu: ' + miss.join(', ') + ') mới được sút!');
+      return;
+    }
+    var period = currentPeriod;
+    var t = periodTotals(period);
+    var reached = t.total >= settings.monthlyGoal;
+    var rawPct = reached ? 100 : monthRawPct(period);
+    if(!reached && rawPct <= 0) return;
+    var chance = shotChance(rawPct);
+    if(!reached){
+      var shownPct = Math.min(99, rawPct);
+      if(!confirm('Bóng mới bơm ' + shownPct + '%, cơ hội sút vào ' + chance + '%.\nMỗi kỳ chỉ được sút 1 lần. Sút luôn nhé?')) return;
+    }
+    var isGoal = reached || (Math.random()*100 < chance);
+    month.shot = {pct: Math.min(100, rawPct), chance: chance, goal: isGoal, date: ymd(new Date())};
+    saveMonth(key);
+    shootMonthBall(isGoal);
+    if(!isGoal) setTimeout(renderMonthly, 1600);
+    else renderMonthly();
   });
 
-  function shootMonthBall(){
+  function shootMonthBall(isGoal){
     var sceneImg = document.getElementById('month-scene-img');
+    if(isGoal === false){
+      if(reducedMotion()){
+        triggerToast('low', 'Trượt rồi! Kỳ sau bơm căng hơn nhé! 😢');
+        return;
+      }
+      var sc = document.querySelector('.month-pitch-mini');
+      sc.classList.add('shooting-miss');
+      if(sceneImg){
+        sceneImg.src = KICK_FRAMES[1];
+        setTimeout(function(){ sceneImg.src = KICK_FRAMES[2]; }, 260);
+      }
+      setTimeout(function(){ sc.classList.remove('shooting-miss'); }, 1500);
+      setTimeout(function(){ if(sceneImg) sceneImg.src = KICK_FRAMES[0]; }, 2400);
+      setTimeout(function(){ triggerToast('low', 'Trượt rồi! Bóng chưa đủ căng. Kỳ sau thử lại nhé! 😢'); }, 700);
+      return;
+    }
     if(reducedMotion()){
       if(sceneImg) sceneImg.src = KICK_FRAMES[3];
       triggerCelebration('perfect', 'Chúc mừng! Bàn thắng của tháng! 🏆', 3);
