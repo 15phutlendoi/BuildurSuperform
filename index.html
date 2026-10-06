@@ -2112,7 +2112,7 @@
   <section id="view-battle" class="tab-content" role="tabpanel" aria-labelledby="tabBtn-battle">
     <div class="panel">
       <h2>⚔️ Đấu Trường</h2>
-      <p class="panel-sub">Vượt qua lần lượt các trận trong Hành trình (từ rất dễ đến khó), hoặc đấu nhanh với đối thủ ngẫu nhiên. Đến lượt con đánh sẽ có 1 câu hỏi: trả lời đúng càng nhanh, đòn càng mạnh (tối đa 10 điểm). Mỗi ngày đấu số trận đã đặt trong ⚙️ Cài đặt: thắng +2 ⚡, thua +1 ⚡. Đủ Năng Lượng là thẻ được cộng thêm OVR — nâng cấp không giới hạn, thẻ càng mạnh càng sáng! Thua cũng không mất thẻ nào cả.</p>
+      <p class="panel-sub">Vượt qua lần lượt các trận trong Hành trình (từ rất dễ đến khó), hoặc đấu nhanh với đối thủ ngẫu nhiên. Đến lượt con đánh sẽ có 1 câu hỏi: trả lời đúng càng nhanh, đòn càng mạnh (tối đa 10 điểm). Mỗi ngày đấu số trận đã đặt trong ⚙️ Cài đặt: thắng nhận ⚡ như khi hiến chính đối thủ vừa hạ (đối thủ càng giống thẻ của con, ⚡ càng nhiều), thua không nhận gì. Đủ Năng Lượng là thẻ được cộng thêm OVR — nâng cấp không giới hạn, thẻ càng mạnh càng sáng! Thua cũng không mất thẻ nào cả.</p>
       <div class="rm-modes"><button type="button" class="rm-mode active" id="battle-mode-road">🗺️ Hành trình</button><button type="button" class="rm-mode" id="battle-mode-quick">🎲 Đấu nhanh</button></div>
       <p class="battle-quota" id="battle-quota"></p>
     </div>
@@ -2455,7 +2455,7 @@
     {id:'t7',  icon:'📖', label:'Đọc một chương truyện/sách',                        points:15},
     {id:'t8',  icon:'🍽️', label:'Giúp dọn cơm, thu dọn bát đĩa',                     points:5},
     {id:'t9',  icon:'⏰', label:'Hoàn thành bài tập về nhà trước 10 giờ tối',        points:7},
-    {id:'t10', icon:'🔁', label:'Không lặp lại lỗi cũ trong sinh hoạt',              points:3},
+    {id:'t10', icon:'🤝', label:'Có hành động đẹp và cư xử đúng mực',                points:3},
     {id:'t11', icon:'🧍', label:'Tư thế ngồi, đứng nghiêm túc',                      points:3}
   ];
   var DAY_SHORT = ['T2','T3','T4','T5','T6','T7','CN'];
@@ -3329,11 +3329,11 @@
       'Sắp xếp thời gian gọn gàng như Mbappé bứt tốc về đích sớm — con làm được mà! ⚡🏁'
     ],
     t10: [
-      'Nhớ lại lỗi hôm qua và cố gắng không mắc lại nhé. 🔁💡',
-      'Cầu thủ giỏi là người biết rút kinh nghiệm sau mỗi trận đấu, con cũng vậy nhé! ⚽📘',
-      'Sai một lần không sao, quan trọng là ngày mai mình chơi hay hơn hôm qua. 🌈💪',
-      'Xem lại lỗi cũ như xem lại pha bóng hỏng, để lần sau xử lý tốt hơn. 🎥🔍',
-      'Không sao nếu chưa hoàn hảo — mỗi ngày cố gắng một chút, con đang tiến bộ rồi đó! 🌱💖'
+      'Một hành động đẹp nhỏ thôi cũng làm cả nhà vui — con làm được mà! 🤝💛',
+      'Cầu thủ giỏi không chỉ đá hay mà còn biết fair-play, cư xử đẹp với mọi người. ⚽🏅',
+      'Nói lời lễ phép, giúp đỡ người khác — đó là cách con ghi bàn trong lòng mọi người. 🌟💖',
+      'Hôm nay con làm điều tốt nào rồi? Dù nhỏ xíu cũng đáng khen lắm đó! 🌈👏',
+      'Cư xử đúng mực là bản lĩnh của đội trưởng thực thụ. Cố lên con nhé! 🎖️😊'
     ],
     t11: [
       'Giữ lưng thẳng, vai thả lỏng khi ngồi học hoặc đứng. 🧍‍♂️✨',
@@ -5564,12 +5564,15 @@
      động theo Phẩm chất (LIVE: gieo lại xúc xắc 1-2; ICON: đòn đầu nhận giảm 20%).
 
      Mất/Được: tối đa settings.battlePerDay trận/ngày (mặc định 1; reset lúc sang ngày mới). Thẻ ra sân luôn nhận
-     Năng Lượng — thắng +2, thua +1 (không bao giờ về 0). Đủ Năng Lượng thì thẻ được CỘNG
+     Năng Lượng theo cùng thang với Hiến thẻ (thắng = như hiến đối thủ vừa hạ; thua = không nhận gì). Đủ Năng Lượng thì thẻ được CỘNG
      THẲNG vào OVR hiển thị (+1 OVR mỗi cấp, KHÔNG giới hạn) và chỉ số chiến đấu
      (CP/Thể lực/Giáp) tăng theo từng cấp. Không bao giờ trừ/xóa thẻ hay hạ chỉ số khi thua. */
   var battleState = null;      // {b, timer, auto}
   var BATTLE_TURN_DELAY = 900; // ms giữa các lượt khi tự động đánh
-  var BATTLE_WIN_ENERGY = 2, BATTLE_LOSE_ENERGY = 1;
+  /* Thưởng Đấu Trường tính CÙNG THANG với Hiến thẻ (phần của 1 cấp OVR, quy ra ⚡ theo chi phí cấp hiện tại):
+     thắng = như hiến chính đối thủ vừa hạ cho thẻ ra sân (xếp bậc bằng fuseAnalyze: trùng thẻ / cùng Overall / cùng Hệ-Vị trí / cùng đội-quốc gia / khác);
+     thua = BATTLE_LOSE_FACTOR × mức thắng (mặc định 0: thua không nhận gì). Chỉnh nhanh hệ số thua ở đây. */
+  var BATTLE_LOSE_FACTOR = 0;   // thua không nhận ⚡ (đặt >0 nếu muốn thua vẫn nhận một phần)
   /* Nâng cấp OVR KHÔNG GIỚI HẠN: chi phí +1 OVR kế tiếp = 2 + số OVR đã cộng (2,3,4,5…) → lúc đầu lên nhanh cho đã,
      càng cao càng lâu nhưng không bao giờ bị chặn. Chỉnh nhanh 2 hằng số dưới đây. */
   var BATTLE_OVR_COST_BASE = 2;
@@ -6615,7 +6618,9 @@
     if(!battleState || battleState.rewardApplied) return null;
     battleState.rewardApplied = true;
     var won = (battleState.b.winner === 0);
-    var gain = won ? BATTLE_WIN_ENERGY : BATTLE_LOSE_ENERGY;
+    var fz = fuseAnalyze(battleState.cardA, battleState.cardB);          // đối thủ coi như "thẻ hiến" cho thẻ ra sân
+    var fracWin = fz.v, frac = won ? fracWin : fracWin * BATTLE_LOSE_FACTOR;   // phần của 1 cấp OVR
+    var gain = 0;      // Năng Lượng thưởng mốc Hành trình (cộng riêng, giữ nguyên)
     var road = null;   // kết quả Hành trình (nếu là trận Hành trình)
     if(battleState.road){
       var def = roadmapStageDef(battleState.road);
@@ -6633,20 +6638,24 @@
     var oldOvr = battleState.cardA.ovr || battleState.cardA.realOvr || 0;
     var players = loadPlayers();
     var raw = players.find(function(x){ return x && x.id === battleState.cardA.id; });
-    if(!raw) return {gain:gain, levels:0, won:won, oldOvr:oldOvr, newOvr:oldOvr, bonus:battleState.cardA.ovrBonus||0, energy:battleState.cardA.energy||0, road:road};
+    if(!raw) return {gain:frac * battleCostForNext(battleState.cardA.ovrBonus||0) + gain, levels:0, won:won, oldOvr:oldOvr, newOvr:oldOvr, bonus:battleState.cardA.ovrBonus||0, energy:battleState.cardA.energy||0, road:road, fz:fz, frac:frac};
     if(typeof raw.ovrBonus !== 'number') raw.ovrBonus = raw.star || 0;   // thẻ cũ lưu ★ → đổi sang OVR cộng thêm
     delete raw.star;
-    raw.energy = (raw.energy || 0) + gain;
-    var levels = 0;
-    while(raw.energy >= battleCostForNext(raw.ovrBonus)){   // không giới hạn cấp
+    var shownGain = frac * battleCostForNext(raw.ovrBonus) + gain;        // ⚡ hiển thị (theo chi phí cấp hiện tại)
+    var pr = fuseProject(raw.ovrBonus, raw.energy || 0, frac);            // đúng công thức Hiến thẻ
+    raw.ovrBonus = pr.bonus; raw.energy = pr.energy;
+    var levels = pr.levels;
+    raw.energy += gain;                                                    // thưởng mốc Hành trình (⚡ nguyên)
+    while(raw.energy >= battleCostForNext(raw.ovrBonus) - 1e-9){          // không giới hạn cấp
       raw.energy -= battleCostForNext(raw.ovrBonus);
       raw.ovrBonus += 1;
       levels += 1;
     }
+    gain = shownGain;
     savePlayers(players);
     var fresh = hydratePlayer(raw);
     if(fresh && fresh.ovr) battleState.cardA = fresh;   // sàn đấu hiện luôn thẻ với OVR mới
-    return {gain:gain, levels:levels, won:won, oldOvr:oldOvr, newOvr:(fresh && fresh.ovr) || (oldOvr+levels), bonus:raw.ovrBonus, energy:raw.energy, road:road};
+    return {gain:gain, levels:levels, won:won, oldOvr:oldOvr, newOvr:(fresh && fresh.ovr) || (oldOvr+levels), bonus:raw.ovrBonus, energy:raw.energy, road:road, fz:fz, frac:frac};
   }
   function hpBarClass(pct){ return pct > 0.5 ? '' : (pct > 0.2 ? 'mid' : 'low'); }
   function battleCombatantHTML(card, sideState, label, idx){
@@ -6708,9 +6717,11 @@
         var r1 = function(x){ return Math.round(x*10)/10; };
         var cost = battleCostForNext(reward.bonus), need = cost - reward.energy;
         var pct = Math.min(100, Math.round(reward.energy/cost*100));
-        var nextTxt = need <= BATTLE_LOSE_ENERGY
+        var winGain = reward.fz ? reward.fz.v * cost : 0, loseGain = winGain * BATTLE_LOSE_FACTOR;
+        var nextTxt = (winGain > 0 && need <= loseGain + 1e-9)
           ? 'Trận sau, thắng hay thua đều lên +'+(reward.bonus+1)+' OVR!'
-          : 'Thắng thêm '+Math.ceil(need/BATTLE_WIN_ENERGY)+' trận nữa là lên +'+(reward.bonus+1)+' OVR!';
+          : 'Còn ⚡ '+fuseFmt(Math.max(0, need))+' nữa là lên +'+(reward.bonus+1)+' OVR!'
+            + (winGain > 0 ? ' (thắng đối thủ tương tự ≈ +'+fuseFmt(winGain)+' ⚡)' : '');
         var rd = reward.road;
         if(rd){
           rewardHTML += rd.won
@@ -6718,7 +6729,8 @@
             : '<p class="hint-text">🗺️ Chưa vượt qua Trận '+rd.n+' · '+escHtml(rd.name)+' — mai thử lại nhé, nâng OVR cho thẻ sẽ giúp con thắng dễ hơn!</p>';
           if(rd.chapterDone) rewardHTML += '<p class="battle-reward">🏆 HOÀN THÀNH CHƯƠNG 1! Các chương tiếp theo sẽ sớm mở khóa.</p>';
         }
-        rewardHTML += '<p class="battle-reward">⚡ +'+reward.gain+' Năng Lượng cho '+escHtml(names[0])+'</p>';
+        rewardHTML += (!reward.won && !(reward.gain > 0)) ? '<p class="hint-text">💪 Thua nên chưa nhận ⚡ — thắng trận sau để tích Năng Lượng cho '+escHtml(names[0])+' nhé!</p>' : '<p class="battle-reward">⚡ +'+fuseFmt(reward.gain)+' Năng Lượng cho '+escHtml(names[0])
+          +(reward.fz ? ' <small>(≈ hiến thẻ '+fuseFracText(reward.frac)+' tiến độ cấp'+(reward.won ? '' : ', thua tính '+Math.round(BATTLE_LOSE_FACTOR*100)+'%')+')</small>' : '')+'</p>';
         if(reward.levels){
           var L = reward.levels;
           rewardHTML += '<div class="bu-box">'
@@ -8022,7 +8034,12 @@
      giống hệt việc tự nâng chúng lên bằng Overall rồi hiến, nên không có đường vòng nào lợi hơn.
      Bậc 3–5: thẻ hiến thấp hơn thẻ đích 1 Overall thì giữ nguyên mức trên; thấp hơn 2 thì chia đôi (1/16, 1/20, 1/40...);
      mỗi thêm 1 Overall thấp hơn lại chia đôi tiếp. Thẻ hiến cao hơn hoặc bằng thì tính đủ mức. */
-  var FUSE_DEN = { dup:1, ovr:4, elpos:8, clubnat:10, other:20 };
+  var FUSE_DEN = { dup:1, ovr:2, elpos:3, clubnat:4, other:5 };   // số thẻ cần để +1 OVR ở mức Overall chuẩn (FUSE_HARD_REF)
+  /* ĐỘ KHÓ THEO OVERALL (dùng chung cho Hiến thẻ và thưởng Đấu Trường): mỗi cấp cần × hệ số này so với mức chuẩn.
+     hệ số = 1 + SLOPE × (OVR hiện tại − REF), sàn MIN. Ví dụ OVR 70 → ×1 · 80 → ×1,5 · 90 → ×2 · 100 → ×2,5 · 120 → ×3,5
+     (tăng đều, không bao giờ bị chặn nhưng cũng không vọt lên). Chỉnh 3 hằng số dưới đây để dễ/khó hơn. */
+  var FUSE_HARD_REF = 70, FUSE_HARD_SLOPE = 0.05, FUSE_HARD_MIN = 0.5;
+  function fuseHardness(t){ return Math.max(FUSE_HARD_MIN, 1 + FUSE_HARD_SLOPE * ((t && t.ovr || 0) - FUSE_HARD_REF)); }
   var FUSE_TIERS = [
     {key:'dup',     icon:'🧬', label:'Chính thẻ này (trùng cầu thủ)'},
     {key:'ovr',     icon:'⭐', label:'Cùng Overall'},
@@ -8033,8 +8050,9 @@
   var fuseState = null;   // {targetId, selected:{id:true}, changed, result}
 
   function fuseFmt(x){ return String(Math.round(x * 10) / 10); }     // làm tròn Năng Lượng lẻ để hiển thị
+  function fuseFracText(x){ return x > 0 ? '+' + Math.max(1, Math.round(x * 100)) + '%' : '0'; }
   function fuseFmt2(x){ return String(Math.round(x * 100) / 100); }
-  function fuseFrac(den){ return den === 1 ? '+1' : (den >= 1000 ? '+<1/1000' : '+1/' + den); }
+  function fuseFrac(den){ return den <= 1.05 ? '+1' : (den >= 1000 ? '+<1/1000' : '+1/' + (Math.round(den * 10) / 10)); }
   function fuseClubKey(p){ return p.clubLogo || p.club || ''; }
   function fuseNationKey(p){ return p.nationFlag || p.nation || ''; }
 
@@ -8051,7 +8069,7 @@
              : ((elM || posM) ? 'elpos' : ((clubM || natM) ? 'clubnat' : 'other')));
     // bậc 1: chia đôi từ Overall thấp hơn thứ 1 (1, 1/2, 1/4...); bậc 3–5: chia đôi từ Overall thấp hơn thứ 2; bậc 2: không chia
     var halves = tier === 'dup' ? Math.max(0, gap) : (tier === 'ovr' ? 0 : Math.max(0, gap - 1));
-    var den = FUSE_DEN[tier] * Math.pow(2, halves);
+    var den = FUSE_DEN[tier] * Math.pow(2, halves) * fuseHardness(t);   // đã tính độ khó theo Overall của thẻ đích
     var tags = [];
     if(sameCard) tags.push(sameOvr ? 'Trùng thẻ' : (gap > 0 ? 'Trùng cầu thủ, thấp hơn ' + gap + ' Overall: chia ' + Math.pow(2, gap) : 'Trùng cầu thủ, cao hơn Overall'));
     if(sameOvr && !sameCard) tags.push('Overall ' + fOvr);
@@ -8148,8 +8166,9 @@
 
     var cands = fuseCandidates(t);
     var legend = '<div class="fuse-legend">Hiến thẻ khác để tăng tiến độ lên cấp (+1 OVR). Thẻ càng giống thẻ này, tiến độ càng nhiều:<br>'
-      + FUSE_TIERS.map(function(x){ return x.icon+' '+x.label+' <b>'+fuseFrac(FUSE_DEN[x.key])+'</b>'; }).join('<br>')
-      + '<br>🧬 Trùng cầu thủ: bằng Overall <b>+1</b>, thấp hơn 1 Overall <b>+1/2</b>, thấp hơn 2 <b>+1/4</b>... (cứ mỗi Overall thấp hơn lại chia đôi).'
+      + FUSE_TIERS.map(function(x){ return x.icon+' '+x.label+' <b>'+fuseFrac(FUSE_DEN[x.key]*fuseHardness(t))+'</b>'; }).join('<br>')
+      + '<br>🧬 Trùng cầu thủ: bằng Overall <b>'+fuseFrac(fuseHardness(t))+'</b>, thấp hơn 1 Overall <b>'+fuseFrac(2*fuseHardness(t))+'</b>, thấp hơn 2 <b>'+fuseFrac(4*fuseHardness(t))+'</b>... (cứ mỗi Overall thấp hơn lại chia đôi).'
+      + '<br>📈 Thẻ này đang OVR <b>'+(t.ovr||0)+'</b> nên mỗi cấp cần <b>×'+(Math.round(fuseHardness(t)*100)/100)+'</b> so với mức chuẩn — Overall càng cao càng khó lên cấp.'
       + '<br>Bậc 3–5: thấp hơn <b>2 Overall</b> trở lên thì <b>chia đôi</b>, mỗi Overall thấp hơn thêm lại chia đôi. ⚠️ Thẻ đã hiến sẽ <b>mất khỏi kho</b>.</div>';
     var html = head + legend;
     if(!cands.length){
@@ -8162,7 +8181,7 @@
       FUSE_TIERS.forEach(function(tr){
         var grp = cands.filter(function(c){ return c.a.tier === tr.key; });
         if(!grp.length) return;
-        html += '<div class="fuse-group-h"><span>'+tr.icon+' '+tr.label+' ('+grp.length+')</span><small>tối đa '+fuseFrac(FUSE_DEN[tr.key])+' OVR / thẻ</small></div><div class="fuse-grid">'
+        html += '<div class="fuse-group-h"><span>'+tr.icon+' '+tr.label+' ('+grp.length+')</span><small>tối đa '+fuseFrac(FUSE_DEN[tr.key]*fuseHardness(t))+' OVR / thẻ</small></div><div class="fuse-grid">'
           + grp.map(function(c){
               var p = c.card, a = c.a;
               var card = fcCardHTML(p) || playerCardHTML(p, false);
