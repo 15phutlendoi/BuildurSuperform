@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="vi"><head><meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#0F172A">
 <title>Đội Bóng Của Đốm ⚽ Nhật Ký Đội Hình Trong Mơ</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1948,6 +1948,102 @@
 .fuse-sum .modal-actions{ padding-top:0; }
 .fuse-sum .btn-gold:disabled{ opacity:.4; cursor:not-allowed; }
 .fuse-empty{ text-align:center; color:var(--ink-soft); font-size:13px; padding:18px 8px; }
+
+  /* =====================================================================
+     THANH MENU NEO DƯỚI (dock) + BỐ CỤC CHO iPAD PRO
+     iPad Pro 11": 834×1194 / 1194×834 · 12.9": 1024×1366 / 1366×1024.
+     Dock nổi, kính mờ, ô chạm ≥ 64px để bấm bằng ngón tay/ Apple Pencil.
+     ===================================================================== */
+  .tab-bar{
+    position:fixed; z-index:90; left:50%; transform:translateX(-50%);
+    bottom:max(10px, env(safe-area-inset-bottom));
+    width:min(calc(100% - 20px), 760px); margin:0; padding:6px;
+    display:grid; grid-template-columns:repeat(6,minmax(0,1fr)); gap:4px; overflow:visible;
+    border:1px solid rgba(148,163,184,.28); border-radius:26px;
+    background:rgba(11,18,36,.84);
+    -webkit-backdrop-filter:blur(20px) saturate(1.4); backdrop-filter:blur(20px) saturate(1.4);
+    box-shadow:0 18px 40px -8px rgba(0,0,0,.65), 0 0 0 1px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.08);
+  }
+  .tab-bar .tab-btn{
+    position:relative; flex:none; min-width:0; min-height:60px; padding:7px 2px 6px; border-radius:20px;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px; white-space:normal; text-align:center;
+    background:transparent; color:#CBD5E1; font-size:10.5px; font-weight:800; line-height:1.15;
+    -webkit-tap-highlight-color:transparent; touch-action:manipulation; user-select:none; -webkit-user-select:none;
+  }
+  .tab-bar .tab-btn:hover{ background:rgba(51,65,85,.55); }
+  .tab-bar .tab-btn:focus-visible{ outline:3px solid var(--gold-light,#FCD34D); outline-offset:-3px; }
+  .tab-bar .tab-btn .tab-ico{ font-size:25px; line-height:1; transition:transform .2s cubic-bezier(.34,1.56,.64,1); }
+  .tab-bar .tab-btn .tab-lbl-full{ display:none; }
+  .tab-bar .tab-btn.active{
+    background:linear-gradient(180deg,#34D399 0%,var(--stadium) 100%); color:#04251A; animation:none;
+    box-shadow:0 6px 14px -4px rgba(16,185,129,.55), inset 0 1px 0 rgba(255,255,255,.45), inset 0 -3px 0 rgba(0,0,0,.18);
+  }
+  .tab-bar .tab-btn.active .tab-ico{ transform:translateY(-2px) scale(1.12); }
+  .tab-bar .tab-btn:active{ transform:scale(.95); }
+
+  /* chừa chỗ cho dock ở cuối trang để không che nội dung */
+  .app-main{ padding-bottom:28px; }
+  .app-footer{ background:transparent; border-top:0; color:#CBD5E1; text-shadow:0 1px 3px rgba(0,0,0,.8); padding-bottom:calc(104px + env(safe-area-inset-bottom)); }
+
+  /* iPad dọc (Pro 11" 834px, Pro 12.9" 1024px) */
+  @media (min-width:700px){
+    body{ font-size:17px; }
+    .app-header{ padding:14px 32px; }
+    .app-header-inner{ max-width:1240px; }
+    .app-main{ max-width:1240px; padding:22px 32px 32px; }
+    .tab-content.active{ gap:20px; }
+    .panel, .card{ padding:20px; border-radius:20px; }
+    .tab-bar{ width:min(calc(100% - 48px), 860px); bottom:max(16px, env(safe-area-inset-bottom)); padding:8px; gap:6px; border-radius:30px; }
+    .tab-bar .tab-btn{ min-height:72px; border-radius:23px; font-size:14px; gap:4px; }
+    .tab-bar .tab-btn .tab-ico{ font-size:30px; }
+    .app-footer{ padding-bottom:calc(128px + env(safe-area-inset-bottom)); }
+  }
+  /* màn rộng (iPad ngang, Pro 12.9" ngang 1366px): dùng nhãn đầy đủ, chiều ngang lớn hơn */
+  @media (min-width:900px){
+    .tab-bar{ width:min(calc(100% - 64px), 980px); }
+    .tab-bar .tab-btn .tab-lbl-full{ display:block; }
+    .tab-bar .tab-btn .tab-lbl-short{ display:none; }
+    .app-main{ max-width:1280px; padding:24px 40px 32px; }
+    .app-header-inner{ max-width:1280px; }
+  }
+  /* iPad ngang chiều cao thấp (Pro 11" ngang = 834px cao): dock gọn lại để chừa chỗ nội dung */
+  @media (min-width:900px) and (max-height:860px){
+    .tab-bar .tab-btn{ min-height:64px; }
+    .tab-bar .tab-btn .tab-ico{ font-size:27px; }
+    .app-footer{ padding-bottom:calc(112px + env(safe-area-inset-bottom)); }
+  }
+  @media (max-width:360px){ .tab-bar .tab-btn{ font-size:9.5px; } .tab-bar .tab-btn .tab-ico{ font-size:22px; } }
+  @media (prefers-reduced-motion: reduce){ .tab-bar .tab-btn .tab-ico{ transition:none; } }
+
+  /* Lời nhắn của linh vật nằm ngay trong header, ngay dưới tên: bong bóng thoại trỏ về phía linh vật */
+  .hd-speech{ position:relative; margin-top:7px; }
+  .hd-speech .speech-bubble{
+    position:relative; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
+    padding:7px 12px; border-radius:6px 14px 14px 14px; font-size:13px; font-weight:600; line-height:1.4; color:#F1F5F9;
+    background:rgba(255,255,255,.09); border:1px solid rgba(255,255,255,.14);
+  }
+  @media (min-width:700px){ .hd-speech .speech-bubble{ font-size:15px; padding:8px 14px; } .hd-info{ max-width:560px; } }
+
+  /* ===== Nút "Luật chơi" + hộp thoại tập trung luật Đấu Trường / Nâng cấp thẻ / Đội hình ===== */
+  .panel-titlebar{ display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; }
+  .panel-titlebar h2, .panel-titlebar h3{ margin:0; }
+  .rules-btn{
+    flex:none; min-height:44px; padding:8px 16px; border-radius:999px; cursor:pointer; font-family:var(--font-display); font-weight:800; font-size:14px;
+    color:var(--gold-light,#FCD34D); background:rgba(245,158,11,.12); border:2px solid rgba(245,158,11,.55);
+    -webkit-tap-highlight-color:transparent; touch-action:manipulation;
+  }
+  .rules-btn:hover{ background:rgba(245,158,11,.22); }
+  .rules-btn:focus-visible, .rules-chip:focus-visible{ outline:3px solid var(--gold-light,#FCD34D); outline-offset:2px; }
+  #rules-modal .modal-box.rules-box{ width:min(640px,100%); max-height:90vh; display:flex; flex-direction:column; gap:12px; overflow:hidden; }
+  .rules-nav{ display:flex; gap:8px; flex-wrap:wrap; }
+  .rules-chip{ min-height:40px; padding:6px 14px; border-radius:999px; cursor:pointer; font-weight:800; font-size:13px; color:#E2E8F0; background:#334155; border:1px solid #475569; }
+  .rules-chip.active{ background:var(--stadium); border-color:transparent; color:var(--night); }
+  .rules-body{ overflow-y:auto; -webkit-overflow-scrolling:touch; padding-right:4px; display:flex; flex-direction:column; gap:18px; }
+  .rules-sec h4{ margin:0 0 6px; font-size:16px; font-weight:900; color:#FCD34D; }
+  .rules-sec ul{ margin:0; padding-left:20px; display:flex; flex-direction:column; gap:6px; font-size:14px; line-height:1.55; color:#E2E8F0; font-weight:600; }
+  .rules-sec li b{ color:#FDE68A; }
+  .rules-sec .rules-note{ margin:8px 0 0; padding:8px 12px; border-radius:12px; font-size:13px; line-height:1.5; background:rgba(16,185,129,.12); border:1px solid rgba(16,185,129,.35); color:#A7F3D0; font-weight:700; }
+  @media (min-width:700px){ .rules-sec ul{ font-size:15px; } .rules-btn{ font-size:15px; } }
 </style>
 </head>
 <body>
@@ -1978,11 +2074,8 @@
           <h1>Cùng xây dựng cầu thủ trong mơ</h1>
           <span class="hd-day" id="player-day-label">Hôm nay</span>
         </div>
-        <div class="hd-power">
-          <div class="hd-power-text"><span>Sức Mạnh Cầu Thủ</span><span id="power-value">0/100</span></div>
-          <div class="power-track">
-            <div id="power-fill" class="power-fill" style="width:0%"></div>
-          </div>
+        <div class="hd-speech">
+          <div id="mascot-speech" class="speech-bubble" aria-live="polite">Một bước nhỏ hôm nay, bàn thắng lớn ngày mai!</div>
         </div>
       </div>
     </div>
@@ -2005,19 +2098,7 @@
 
 <main class="app-main">
 
-  <div class="coach-banner">
-    <i aria-hidden="true">💬</i>
-    <div id="mascot-speech" class="speech-bubble" aria-live="polite">Một bước nhỏ hôm nay, bàn thắng lớn ngày mai!</div>
-  </div>
 
-  <nav class="tab-bar" role="tablist" aria-label="Các mục chính">
-    <button type="button" id="tabBtn-week" class="tab-btn active" role="tab" aria-selected="true" aria-controls="view-week" data-tab="week">📋 Nhiệm Vụ Ngày</button>
-    <button type="button" id="tabBtn-skills" class="tab-btn" role="tab" aria-selected="false" aria-controls="view-skills" data-tab="skills">⚡ Phòng Kỹ Năng</button>
-    <button type="button" id="tabBtn-shoot" class="tab-btn" role="tab" aria-selected="false" aria-controls="view-shoot" data-tab="shoot">⚽ Sút Quyết Định</button>
-    <button type="button" id="tabBtn-squad" class="tab-btn" role="tab" aria-selected="false" aria-controls="view-squad" data-tab="squad">🎴 Đội Hình Trong Mơ</button>
-    <button type="button" id="tabBtn-battle" class="tab-btn" role="tab" aria-selected="false" aria-controls="view-battle" data-tab="battle">⚔️ Đấu Trường</button>
-    <button type="button" id="tabBtn-badges" class="tab-btn" role="tab" aria-selected="false" aria-controls="view-badges" data-tab="badges">🏆 Huy Hiệu</button>
-  </nav>
 
   <!-- Thanh chọn kỳ tính điểm: dùng chung cho 2 mục "Phòng Kỹ Năng" và "Sút Quyết Định" -->
   <div id="month-bar" class="panel month-bar" hidden>
@@ -2129,6 +2210,7 @@
         <div class="squad-tabs">
           <button type="button" class="squad-tab-btn active" id="tab-pitch-btn">⚽ Sân đấu</button>
           <button type="button" class="squad-tab-btn" id="tab-collection-btn">🗂️ Kho cầu thủ</button>
+          <button type="button" class="rules-btn" data-rules="squad">❓ Luật chơi</button>
         </div>
       </div>
     </div>
@@ -2145,7 +2227,6 @@
         </div>
         <div class="pitch-scroll"><div class="pitch-wrap" id="pitch-wrap"></div></div>
         <div class="bench-row" id="bench-row"></div>
-        <p class="hint-text" style="margin-top:8px">Chạm vào một vị trí trên sân hoặc một ô dự bị để xếp cầu thủ. Đổi sơ đồ để có nhiều kiểu xếp hình khác nhau — mỗi đội hình chính luôn 11 cầu thủ, cộng thêm tối đa 7 dự bị.</p>
       </div>
       <div id="tab-collection" style="display:none">
         <div class="collection-element-filter" id="collection-element-filter" style="display:none"></div>
@@ -2169,8 +2250,10 @@
   <!-- ========== ĐẤU TRƯỜNG — 1v1 Luyện Tập ========== -->
   <section id="view-battle" class="tab-content" role="tabpanel" aria-labelledby="tabBtn-battle">
     <div class="panel">
-      <h2>⚔️ Đấu Trường</h2>
-      <p class="panel-sub">Vượt qua lần lượt các trận trong Hành trình (từ rất dễ đến khó), hoặc đấu nhanh với đối thủ ngẫu nhiên. Đến lượt con đánh sẽ có 1 câu hỏi: trả lời đúng càng nhanh, đòn càng mạnh (tối đa 10 điểm). Mỗi ngày đấu số trận đã đặt trong ⚙️ Cài đặt: thắng nhận ⚡ như khi hiến chính đối thủ vừa hạ (đối thủ càng giống thẻ của con, ⚡ càng nhiều), thua không nhận gì. Đủ Năng Lượng là thẻ được cộng thêm OVR — nâng cấp không giới hạn, thẻ càng mạnh càng sáng! Thua cũng không mất thẻ nào cả.</p>
+      <div class="panel-titlebar">
+        <h2>⚔️ Đấu Trường</h2>
+        <button type="button" class="rules-btn" data-rules="battle">❓ Luật chơi</button>
+      </div>
       <div class="rm-modes"><button type="button" class="rm-mode active" id="battle-mode-road">🗺️ Hành trình</button><button type="button" class="rm-mode" id="battle-mode-quick">🎲 Đấu nhanh</button></div>
       <p class="battle-quota" id="battle-quota"></p>
     </div>
@@ -2230,6 +2313,15 @@
 <footer class="app-footer">
   <p>Đội Bóng Của Đốm ⚽ Nhật Ký Đội Hình Trong Mơ</p>
 </footer>
+
+<nav class="tab-bar" role="tablist" aria-label="Các mục chính">
+  <button type="button" id="tabBtn-week" class="tab-btn active" role="tab" aria-selected="true" aria-controls="view-week" data-tab="week"><span class="tab-ico" aria-hidden="true">📋</span><span class="tab-lbl tab-lbl-full">Nhiệm Vụ Ngày</span><span class="tab-lbl tab-lbl-short" aria-hidden="true">Nhiệm Vụ</span></button>
+  <button type="button" id="tabBtn-skills" class="tab-btn" role="tab" aria-selected="false" aria-controls="view-skills" data-tab="skills"><span class="tab-ico" aria-hidden="true">⚡</span><span class="tab-lbl tab-lbl-full">Phòng Kỹ Năng</span><span class="tab-lbl tab-lbl-short" aria-hidden="true">Kỹ Năng</span></button>
+  <button type="button" id="tabBtn-shoot" class="tab-btn" role="tab" aria-selected="false" aria-controls="view-shoot" data-tab="shoot"><span class="tab-ico" aria-hidden="true">⚽</span><span class="tab-lbl tab-lbl-full">Sút Quyết Định</span><span class="tab-lbl tab-lbl-short" aria-hidden="true">Sút</span></button>
+  <button type="button" id="tabBtn-squad" class="tab-btn" role="tab" aria-selected="false" aria-controls="view-squad" data-tab="squad"><span class="tab-ico" aria-hidden="true">🎴</span><span class="tab-lbl tab-lbl-full">Đội Hình Trong Mơ</span><span class="tab-lbl tab-lbl-short" aria-hidden="true">Đội Hình</span></button>
+  <button type="button" id="tabBtn-battle" class="tab-btn" role="tab" aria-selected="false" aria-controls="view-battle" data-tab="battle"><span class="tab-ico" aria-hidden="true">⚔️</span><span class="tab-lbl tab-lbl-full">Đấu Trường</span><span class="tab-lbl tab-lbl-short" aria-hidden="true">Đấu Trường</span></button>
+  <button type="button" id="tabBtn-badges" class="tab-btn" role="tab" aria-selected="false" aria-controls="view-badges" data-tab="badges"><span class="tab-ico" aria-hidden="true">🏆</span><span class="tab-lbl tab-lbl-full">Huy Hiệu</span><span class="tab-lbl tab-lbl-short" aria-hidden="true">Huy Hiệu</span></button>
+</nav>
 
 <div id="toast"></div>
 <div id="effect-layer"></div>
@@ -2463,9 +2555,23 @@
 <div id="fuse-modal" class="modal">
   <div id="fuse-backdrop" class="modal-backdrop"></div>
   <div class="modal-box fuse-box">
-    <h3>⬆️ Nâng cấp thẻ</h3>
+    <div class="panel-titlebar"><h3>⬆️ Nâng cấp thẻ</h3><button type="button" class="rules-btn" data-rules="upgrade">❓ Luật chơi</button></div>
     <div id="fuse-body"></div>
     <div id="fuse-actions" class="fuse-sum"></div>
+  </div>
+</div>
+
+<div id="rules-modal" class="modal">
+  <div id="rules-backdrop" class="modal-backdrop"></div>
+  <div class="modal-box rules-box" role="dialog" aria-modal="true" aria-labelledby="rules-title">
+    <h3 id="rules-title">📖 Luật chơi</h3>
+    <div class="rules-nav" role="tablist" aria-label="Chọn phần luật">
+      <button type="button" class="rules-chip" data-rules-go="battle">⚔️ Đấu Trường</button>
+      <button type="button" class="rules-chip" data-rules-go="upgrade">⬆️ Nâng cấp thẻ</button>
+      <button type="button" class="rules-chip" data-rules-go="squad">🎴 Đội hình</button>
+    </div>
+    <div id="rules-body" class="rules-body"></div>
+    <div class="modal-actions center"><button type="button" id="rules-close" class="btn-gold">Đã hiểu</button></div>
   </div>
 </div>
 
@@ -3587,8 +3693,6 @@
     var isToday = currentPlayerDate === ymd(new Date());
     document.getElementById('player-day-label').textContent =
       fmtDDMM(d)+(isToday ? ' (hôm nay)' : '');
-    document.getElementById('power-fill').style.width = pct+'%';
-    document.getElementById('power-value').textContent = total+'/100';
     var scene = document.getElementById('pitch-scene');
     var ballEl = document.getElementById('pitch-ball');
     if(scene && ballEl && !scene.classList.contains('shooting')){
@@ -8316,11 +8420,8 @@
     }
 
     var cands = fuseCandidates(t);
-    var legend = '<div class="fuse-legend">Hiến thẻ khác để tăng tiến độ lên cấp (+1 OVR). Thẻ càng giống thẻ này, tiến độ càng nhiều:<br>'
-      + FUSE_TIERS.map(function(x){ return x.icon+' '+x.label+' <b>'+fuseFrac(FUSE_DEN[x.key]*fuseHardness(t))+'</b>'; }).join('<br>')
-      + '<br>🧬 Trùng cầu thủ: bằng Overall <b>'+fuseFrac(fuseHardness(t))+'</b>, thấp hơn 1 Overall <b>'+fuseFrac(2*fuseHardness(t))+'</b>, thấp hơn 2 <b>'+fuseFrac(4*fuseHardness(t))+'</b>... (cứ mỗi Overall thấp hơn lại chia đôi).'
-      + '<br>📈 Thẻ này đang OVR <b>'+(t.ovr||0)+'</b> nên mỗi cấp cần <b>×'+(Math.round(fuseHardness(t)*100)/100)+'</b> so với mức chuẩn — Overall càng cao càng khó lên cấp.'
-      + '<br>Bậc 3–5: thấp hơn <b>2 Overall</b> trở lên thì <b>chia đôi</b>, mỗi Overall thấp hơn thêm lại chia đôi. ⚠️ Thẻ đã hiến sẽ <b>mất khỏi kho</b>.</div>';
+    var legend = '<div class="fuse-legend">📈 Thẻ này đang OVR <b>'+(t.ovr||0)+'</b>: mỗi cấp cần <b>×'+(Math.round(fuseHardness(t)*100)/100)+'</b> so với mức chuẩn.'
+      + '<br>⚠️ Thẻ đã hiến sẽ <b>mất khỏi kho</b>.</div>';
     var html = head + legend;
     if(!cands.length){
       html += '<p class="fuse-empty">Kho chưa có thẻ nào khác để hiến. Mở thêm thẻ rồi quay lại nhé! 🎴</p>';
@@ -8440,6 +8541,54 @@
     renderFuse();
   }
   document.getElementById('fuse-backdrop').addEventListener('click', closeFuseModal);
+
+  /* ============ HỘP THOẠI LUẬT CHƠI (tập trung luật Đấu Trường · Nâng cấp thẻ · Đội hình) ============ */
+  function rulesHTML(){
+    var perDay = (typeof battleLimit === 'function') ? battleLimit() : 1;
+    var sec = settings.quizSeconds || 15;
+    var tiers = FUSE_TIERS.slice(1).map(function(x){ return '<li>'+x.icon+' '+x.label+': <b>'+fuseFrac(FUSE_DEN[x.key])+'</b> tiến độ lên cấp</li>'; }).join('');
+    return ''
+    + '<section class="rules-sec" id="rules-sec-battle"><h4>⚔️ Đấu Trường</h4><ul>'
+    + '<li>Có 2 cách chơi: <b>Hành trình</b> (vượt lần lượt các trận từ rất dễ đến khó) hoặc <b>Đấu nhanh</b> với đối thủ ngẫu nhiên.</li>'
+    + '<li>Đến lượt con đánh sẽ có <b>1 câu hỏi</b>: trả lời đúng càng nhanh, đòn càng mạnh (tối đa <b>10 điểm</b>). Mỗi câu có '+sec+' giây; trả lời sai hoặc hết giờ chỉ được 1 điểm.</li>'
+    + '<li>Mỗi ngày đấu tối đa <b>'+perDay+' trận</b> (đặt trong ⚙️ Cài đặt). Hành trình và Đấu nhanh dùng chung số lượt này.</li>'
+    + '<li><b>Thắng</b> nhận ⚡ Năng Lượng như khi hiến chính đối thủ vừa hạ: đối thủ càng giống thẻ của con, ⚡ càng nhiều. Hành trình còn thưởng thêm ⚡ khi vượt trận lần đầu.</li>'
+    + '<li><b>Thua</b> không nhận gì, nhưng cũng <b>không mất thẻ nào</b>.</li></ul></section>'
+    + '<section class="rules-sec" id="rules-sec-upgrade"><h4>⬆️ Nâng cấp thẻ</h4><ul>'
+    + '<li>Đủ ⚡ Năng Lượng là thẻ được cộng thêm <b>+1 OVR</b>. Nâng cấp <b>không giới hạn</b>, thẻ càng mạnh càng sáng (mốc +5 bạc, +10 vàng, +20 kim cương).</li>'
+    + '<li>Cấp kế tiếp cần <b>'+BATTLE_OVR_COST_BASE+' + số OVR đã cộng</b> ⚡ (2, 3, 4, 5…), nên lúc đầu lên rất nhanh.</li>'
+    + '<li>Mỗi +1 OVR cộng thêm: ⚔️ Lực chiến <b>+'+BATTLE_LEVEL_STATS.cp+'</b> · ❤️ Thể lực <b>+'+BATTLE_LEVEL_STATS.hp+'</b> · 🛡️ Giáp <b>+'+BATTLE_LEVEL_STATS.armor+'</b>.</li>'
+    + '<li><b>Hiến thẻ</b> là cách khác để lên cấp: chọn thẻ trong kho để tăng tiến độ. Thẻ càng giống thẻ cần nâng, tiến độ càng nhiều (ở mức Overall chuẩn):</li></ul>'
+    + '<ul style="margin-top:6px"><li>🧬 Trùng cầu thủ: bằng Overall <b>+1</b>, thấp hơn 1 Overall <b>+1/2</b>, thấp hơn 2 <b>+1/4</b>… (mỗi Overall thấp hơn thì chia đôi)</li>'+tiers+'</ul>'
+    + '<ul style="margin-top:6px"><li>Với các bậc 🔥 🏟️ 🎴: thấp hơn <b>2 Overall</b> trở lên thì chia đôi, mỗi Overall thấp hơn thêm lại chia đôi.</li>'
+    + '<li>Thẻ có Overall càng cao thì mỗi cấp càng khó lên.</li></ul>'
+    + '<p class="rules-note">⚠️ Thẻ đã hiến sẽ mất khỏi kho. Thua trận thì không mất thẻ nào.</p></section>'
+    + '<section class="rules-sec" id="rules-sec-squad"><h4>🎴 Xếp đội hình</h4><ul>'
+    + '<li>Chạm vào một vị trí trên sân hoặc một ô dự bị để xếp cầu thủ.</li>'
+    + '<li>Đổi sơ đồ chiến thuật để có nhiều kiểu xếp hình khác nhau.</li>'
+    + '<li>Đội hình chính luôn có <b>11 cầu thủ</b>, cộng thêm tối đa <b>7 dự bị</b>.</li></ul></section>';
+  }
+  function openRules(which){
+    document.getElementById('rules-body').innerHTML = rulesHTML();
+    openModalTop('rules-modal');
+    rulesGo(which || 'battle');
+  }
+  function rulesGo(which){
+    var body = document.getElementById('rules-body'), target = document.getElementById('rules-sec-' + which);
+    document.querySelectorAll('[data-rules-go]').forEach(function(c){ c.classList.toggle('active', c.getAttribute('data-rules-go') === which); });
+    if(body && target) body.scrollTo({top: target.offsetTop - body.offsetTop, behavior: reducedMotion() ? 'auto' : 'smooth'});
+  }
+  function closeRules(){ document.getElementById('rules-modal').classList.remove('open'); }
+  document.addEventListener('click', function(e){
+    var b = e.target.closest('[data-rules]');
+    if(b){ openRules(b.getAttribute('data-rules')); return; }
+    var c = e.target.closest('[data-rules-go]');
+    if(c){ rulesGo(c.getAttribute('data-rules-go')); }
+  });
+  document.getElementById('rules-close').addEventListener('click', closeRules);
+  document.getElementById('rules-backdrop').addEventListener('click', closeRules);
+  document.addEventListener('keydown', function(e){ if(e.key === 'Escape' && document.getElementById('rules-modal').classList.contains('open')) closeRules(); });
+
 
 
   renderWeek();
