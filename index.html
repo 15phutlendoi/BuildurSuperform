@@ -1609,6 +1609,8 @@
     cursor:default; text-align:left;
   }
   .date-cal-popup[hidden]{ display:none; }
+  /* .panel có backdrop-filter nên mỗi panel là một lớp xếp chồng riêng: panel chứa lịch phải nổi lên trên các panel phía dưới */
+  .panel.cal-open{ position:relative; z-index:80; }
   .date-cal-head{ display:flex; align-items:center; justify-content:space-between; gap:6px; margin-bottom:8px; }
   .cal-nav-btn{ width:32px; height:32px; flex:none; border-radius:10px; border:2px solid var(--line); background:transparent; color:var(--ink); font-size:16px; cursor:pointer; }
   .cal-nav-btn:active{ transform:scale(.9); }
@@ -7781,8 +7783,12 @@
     calViewDate = new Date(currentDay);
     renderCalPopup();
     document.getElementById('date-cal-popup').hidden = false;
+    var calPanel = document.getElementById('date-cal-popup').closest('.panel'); if(calPanel) calPanel.classList.add('cal-open');
   }
-  function closeCalPopup(){ document.getElementById('date-cal-popup').hidden = true; }
+  function closeCalPopup(){
+    var pop = document.getElementById('date-cal-popup'); pop.hidden = true;
+    var calPanel = pop.closest('.panel'); if(calPanel) calPanel.classList.remove('cal-open');
+  }
   document.getElementById('day-date-pill').addEventListener('click', function(e){
     if(e.target.closest('.date-cal-popup')) return;
     var popup = document.getElementById('date-cal-popup');
