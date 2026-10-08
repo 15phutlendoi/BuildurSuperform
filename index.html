@@ -832,6 +832,8 @@
   .pd-top{ display:flex; gap:14px; align-items:flex-start; }
   .pd-art-wrap{ flex:none; width:140px; }
   .pd-art-wrap .player-card{ width:100%; margin:0; }
+  .pd-art-wrap .fuse-cta{ margin-top:10px; }
+  .pd-art-wrap .fuse-cta .btn-gold{ width:100%; padding:9px 6px; font-size:13px; line-height:1.25; }
   .pd-head-info{ flex:1; min-width:0; display:flex; flex-direction:column; gap:4px; padding-top:2px; }
   .pd-ovr{ align-self:flex-start; font-family:var(--font-display); font-weight:800; font-size:24px; color:#fff; padding:3px 15px; border-radius:15px; line-height:1.2; }
   .pd-name{ font-family:var(--font-display); font-weight:800; font-size:18px; color:var(--ink); line-height:1.15; margin-top:4px; }
@@ -1743,6 +1745,36 @@
   .ds-bar i{ display:block; height:100%; border-radius:999px; background:linear-gradient(90deg,var(--stadium),var(--gold)); transition:width .4s ease; }
   .ds-hint{ margin-top:4px; font-size:12px; font-weight:600; color:#94A3B8; }
   .ds-hint b{ color:var(--gold-light); }
+
+  /* ===== Bảng chọn cầu thủ dùng chung + hiệu ứng thay người ===== */
+  #pos-picker-grid .pp-current{ grid-column:1/-1; position:sticky; top:0; z-index:10; display:flex; flex-direction:column; align-items:center; gap:6px;
+    padding:8px 8px 10px; margin:-2px -2px 0; border-radius:14px; background:linear-gradient(180deg,#2A2150,#1E1B3A); border:1.5px solid rgba(196,181,253,.55); box-shadow:0 6px 14px rgba(0,0,0,.35); }
+  #pos-picker-grid .pp-current .player-card{ width:clamp(88px,16vh,138px); margin:0; pointer-events:none; }
+  /* Vùng cuộn của bảng chọn cao theo màn hình (trước đây cố định 50vh nên màn nhỏ chỉ còn ~1/3 chỗ cho danh sách) */
+  #pos-picker-modal .picker-grid{ max-height:calc(100vh - 170px); max-height:calc(100dvh - 170px); }
+  @media (max-height:760px){ #pos-picker-grid .pp-current{ gap:4px; padding:6px 8px 8px; } }
+  #pos-picker-grid .pp-cur-tag{ font-size:12px; font-weight:800; color:#C4B5FD; letter-spacing:.2px; }
+  #pos-picker-grid .pp-clear{ padding:5px 12px; font-size:12px; }
+  #pos-picker-grid .pp-sep{ grid-column:1/-1; text-align:center; font-size:12px; font-weight:700; color:#A5B4FC; padding:2px 0; }
+  #pos-picker-grid .pp-item{ position:relative; cursor:pointer; border-radius:10px; outline:none; transition:transform .15s ease; }
+  #pos-picker-grid .pp-item:hover, #pos-picker-grid .pp-item:focus-visible{ transform:translateY(-3px) scale(1.03); }
+  #pos-picker-grid .pp-item:active{ transform:scale(.97); }
+  #pos-picker-grid .pp-item:focus-visible{ box-shadow:0 0 0 2px #C4B5FD; }
+  #pos-picker-grid .pp-item .player-card{ width:100%; margin:0; }
+  #pos-picker-grid .pp-rank{ position:absolute; top:3px; left:3px; z-index:4; font-size:10px; font-weight:900; color:#fff; background:rgba(15,23,42,.82); border-radius:8px; padding:1px 6px; pointer-events:none; }
+  #pos-picker-grid .pp-tag{ margin-top:3px; text-align:center; font-size:10.5px; font-weight:800; border-radius:8px; padding:2px 4px; }
+  #pos-picker-grid .pp-tag.swap{ background:rgba(37,99,235,.22); color:#93C5FD; border:1px solid rgba(96,165,250,.5); }
+  #pos-picker-grid .pp-tag.alt{ background:rgba(245,158,11,.16); color:#FCD34D; border:1px solid rgba(245,158,11,.4); }
+  .bench-slot{ position:relative; }
+  .pitch-slot.sub-ghost, .bench-slot.sub-ghost{ position:fixed !important; margin:0; transform:none; transform-origin:0 0; z-index:10070; pointer-events:none; display:block; }
+  .sub-ghost .slot-circle{ filter:drop-shadow(0 10px 14px rgba(0,0,0,.55)); }
+  .sub-badge{ position:absolute; top:-8px; right:-6px; z-index:6; min-width:22px; height:22px; padding:0 5px; border-radius:11px; display:flex; align-items:center; justify-content:center;
+    font-size:13px; font-weight:900; color:#fff; border:2px solid #fff; box-shadow:0 2px 6px rgba(0,0,0,.5); pointer-events:none; animation:subBadge 2s ease forwards; }
+  .sub-badge.in{ background:#16A34A; } .sub-badge.out{ background:#DC2626; } .sub-badge.swap{ background:#2563EB; }
+  @keyframes subBadge{ 0%{ transform:scale(.2); opacity:0; } 14%{ transform:scale(1.3); opacity:1; } 28%{ transform:scale(1); } 80%{ opacity:1; } 100%{ opacity:0; transform:translateY(-6px); } }
+  .pitch-slot.sub-flash .slot-circle, .bench-slot.sub-flash .slot-circle{ animation:subFlash .9s ease-out; }
+  @keyframes subFlash{ 0%{ box-shadow:0 0 0 0 rgba(251,191,36,.9); } 100%{ box-shadow:0 0 0 14px rgba(251,191,36,0); } }
+  @media (prefers-reduced-motion: reduce){ .sub-badge{ animation:none; } .pitch-slot.sub-flash .slot-circle, .bench-slot.sub-flash .slot-circle{ animation:none; } #pos-picker-grid .pp-item{ transition:none; } }
 
   /* Đường mốc lượt đấu */
   .ds-road{ flex:1 1 100%; width:100%; padding:2px 6px 0; }
@@ -4885,7 +4917,7 @@
       + infoRows.map(function(r){ return '<div class="pd-info-row'+(r[2]?' pd-info-wrap':'')+'"><span>'+r[0]+'</span><b>'+(r[2]?r[1]:escHtml(String(r[1])))+'</b></div>'; }).join('')
       + '</div>') : '';
     return '<div class="pd-top">'
-      + (art ? '<div class="pd-art-wrap">'+art+'</div>' : '')
+      + (art ? '<div class="pd-art-wrap">'+art+fuseDetailButtonHTML(p)+'</div>' : '')
       + '<div class="pd-head-info">'
       + '<div class="pd-ovr" style="background:'+ovrColor(ovrVal)+'">OVR '+ovrVal+'</div>'
       + '<div class="pd-name">'+escHtml(p.name||'')+'</div>'
@@ -4895,7 +4927,8 @@
       + '</div>'
       + statsBlock
       + (styleChips ? '<div class="pd-chips">'+styleChips+'</div>' : '')
-      + battleDetailHTML(p);
+      + battleDetailHTML(p)
+      + (art ? '' : fuseDetailButtonHTML(p));   // thẻ không có ảnh: nút nâng cấp xuống cuối
   }
   /* ---- Khối "Thông số chiến đấu" (Đấu Thẻ) — chỉ hiện khi có dữ liệu battle đã patch
      vào kidchart_player_db VÀ đã tải được kidchart_battle_config; nếu thiếu 1 trong 2 thì
@@ -4924,7 +4957,7 @@
   function openPlayerDetailModal(p){
     p = hydratePlayer(p);
     if(!p) return;
-    document.getElementById('player-detail-body').innerHTML = playerDetailHTML(p) + fuseDetailButtonHTML(p);
+    document.getElementById('player-detail-body').innerHTML = playerDetailHTML(p);
     wireFuseDetailButton(p);
     openModalTop('player-detail-modal');
   }
@@ -5799,6 +5832,15 @@
     var formation = currentFormation(squad);
     var players = hydratePlayers(loadPlayers());
 
+    /* Dọn id "ma": ô sân/dự bị còn lưu thẻ không còn trong kho (đã hiến, đồng bộ lệch...) thì coi như ô trống.
+       Trước đây một id như vậy làm hàm vẽ bị lỗi giữa chừng → ghế dự bị trống trơn và không chọn được thẻ. */
+    var haveIds = {};
+    players.forEach(function(p){ if(p && p.id) haveIds[p.id] = true; });
+    var cleaned = false;
+    squad.pitch = squad.pitch.map(function(id){ if(id && !haveIds[id]){ cleaned = true; return null; } return id; });
+    squad.bench = squad.bench.map(function(id){ if(id && !haveIds[id]){ cleaned = true; return null; } return id; });
+    if(cleaned){ try{ saveSquad(squad); }catch(e){} }
+
     var selZone = document.getElementById('formation-select-zone');
     selZone.innerHTML = '<select id="formation-select" class="formation-select">'
       + FORMATIONS.map(function(f){ return '<option value="'+f.id+'"'+(f.id===formation.id?' selected':'')+'>'+f.name+'</option>'; }).join('')
@@ -5885,60 +5927,189 @@
     return want.indexOf(String(p.pos||'').trim().toUpperCase()) >= 0;
   }
 
+  /* ===== BẢNG CHỌN CẦU THỦ DÙNG CHUNG cho ô trên sân và ghế dự bị =====
+     • Trên cùng (giữa): cầu thủ đang đứng ở ô đó (nếu có). Bên dưới: danh sách xếp theo OVR cao → thấp, chỉ gồm người chơi được vị trí này.
+     • Chạm một cầu thủ khác là đổi người ngay, không cần gỡ người cũ:
+         – người mới đang đứng ở ô khác (sân/dự bị) → hai thẻ ĐỔI CHỖ cho nhau;
+         – người mới còn trong kho → vào ô này, người cũ về kho.
+     • Hiệu ứng thay người: thẻ bay chéo sang chỗ của nhau, dấu ▲ xanh (vào sân) / ▼ đỏ (ra) / ⇄ xanh dương (đổi chỗ). */
+  function squadSlotSnap(type, idx){
+    var el = document.querySelector('[data-slot-type="'+type+'"][data-slot-index="'+idx+'"]');
+    var c = el && el.querySelector('.slot-circle');
+    if(!c) return null;
+    var r = c.getBoundingClientRect();
+    return {type:type, idx:idx, left:r.left, top:r.top, width:r.width, height:r.height, node:c.cloneNode(true)};
+  }
+  function squadGhost(snap){
+    var g = document.createElement('div');
+    g.className = (snap.type === 'pitch' ? 'pitch-slot' : 'bench-slot') + ' filled sub-ghost';
+    g.style.cssText = 'left:'+snap.left+'px;top:'+snap.top+'px;width:'+snap.width+'px;height:'+snap.height+'px';
+    var c = snap.node.cloneNode(true);
+    c.style.width = '100%'; c.style.height = '100%'; c.style.aspectRatio = 'auto';
+    g.appendChild(c);
+    document.body.appendChild(g);
+    return g;
+  }
+  function squadBadge(host, kind){
+    var b = document.createElement('span');
+    b.className = 'sub-badge ' + kind;
+    b.textContent = kind === 'in' ? '▲' : (kind === 'out' ? '▼' : '⇄');
+    host.appendChild(b);
+    setTimeout(function(){ if(b.parentNode) b.parentNode.removeChild(b); }, 2100);
+  }
+  function animateSubstitution(moves){
+    var reduce = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+    var arc = -1;
+    moves.forEach(function(m){
+      var destEl = m.dest ? document.querySelector('[data-slot-type="'+m.dest.type+'"][data-slot-index="'+m.dest.idx+'"]') : null;
+      var destC = destEl ? destEl.querySelector('.slot-circle') : null;
+      if(m.src && m.dest && destC){
+        var kind = (m.src.type === 'kho') ? 'in' : (m.dest.type === 'pitch' && m.src.type !== 'pitch') ? 'in' : ((m.dest.type !== 'pitch' && m.src.type === 'pitch') ? 'out' : 'swap');
+        if(reduce){ squadBadge(destEl, kind); return; }
+        var t = destC.getBoundingClientRect();
+        var dx = t.left - m.src.left, dy = t.top - m.src.top;
+        var sx = t.width / m.src.width, sy = t.height / m.src.height;
+        var mw = (m.src.width + t.width) / 2, mh = (m.src.height + t.height) / 2, up = 1.18;
+        var g = squadGhost(m.src);
+        destC.style.visibility = 'hidden';
+        var done = false;
+        var finish = function(){
+          if(done) return; done = true;
+          if(g.parentNode) g.parentNode.removeChild(g);
+          destC.style.visibility = '';
+          destEl.classList.add('sub-flash');
+          setTimeout(function(){ destEl.classList.remove('sub-flash'); }, 1000);
+          squadBadge(destEl, kind);
+        };
+        var a = g.animate([
+          {transform:'translate(0px,0px) scale(1,1)', offset:0},
+          {transform:'translate('+(dx*0.5 - (up-1)/2*mw)+'px,'+(dy*0.5 - (up-1)/2*mh + arc*34)+'px) scale('+(((1+sx)/2)*up)+','+(((1+sy)/2)*up)+')', offset:0.5},
+          {transform:'translate('+dx+'px,'+dy+'px) scale('+sx+','+sy+')', offset:1}
+        ], {duration:760, easing:'cubic-bezier(.45,.05,.3,1)', fill:'forwards'});
+        a.onfinish = finish;
+        setTimeout(finish, 1400);   // chốt an toàn nếu animation bị chặn
+        arc = -arc;
+      } else if(m.src && !m.dest){
+        if(reduce) return;
+        var g2 = squadGhost(m.src);
+        squadBadge(g2, 'out');
+        var a2 = g2.animate([
+          {transform:'translate(0px,0px) scale(1)', opacity:1},
+          {transform:'translate(0px,38px) scale(.65)', opacity:0}
+        ], {duration:620, easing:'ease-in', fill:'forwards'});
+        var rm2 = function(){ if(g2.parentNode) g2.parentNode.removeChild(g2); };
+        a2.onfinish = rm2; setTimeout(rm2, 1400);
+      } else if(!m.src && destC){
+        squadBadge(destEl, 'in');
+        if(reduce) return;
+        destEl.classList.add('sub-flash');
+        setTimeout(function(){ destEl.classList.remove('sub-flash'); }, 1000);
+        destC.animate([
+          {transform:'translateY(26px) scale(.55)', opacity:0},
+          {transform:'translateY(-6px) scale(1.08)', opacity:1, offset:0.7},
+          {transform:'translateY(0) scale(1)', opacity:1}
+        ], {duration:560, easing:'cubic-bezier(.3,.7,.3,1)'});
+      }
+    });
+  }
+  function squadPickSnap(el){
+    var card = el && el.querySelector('.player-card');
+    if(!card) return null;
+    var r = card.getBoundingClientRect();
+    if(!r.width || !r.height) return null;
+    return {type:'kho', idx:-1, left:r.left, top:r.top, width:r.width, height:r.height, node:card.cloneNode(true)};
+  }
+  function squadCloseTop(){ document.getElementById('pos-picker-modal').classList.remove('open'); }
+  function applySlotPick(slotType, slotIndex, pickedId, pickSnap){
+    var sq = loadSquad();
+    var arrOf = function(t){ return t === 'pitch' ? sq.pitch : sq.bench; };
+    var occId = arrOf(slotType)[slotIndex] || null;
+    if(occId === pickedId) return;
+    var loc = null;
+    sq.pitch.forEach(function(id, i){ if(id === pickedId) loc = {type:'pitch', idx:i}; });
+    sq.bench.forEach(function(id, i){ if(id === pickedId) loc = {type:'bench', idx:i}; });
+    var sS = occId ? squadSlotSnap(slotType, slotIndex) : null;
+    var sL = loc ? squadSlotSnap(loc.type, loc.idx) : (pickSnap || null);   // người mới còn trong kho: thẻ bay ra từ chính vị trí nó trong bảng chọn
+    arrOf(slotType)[slotIndex] = pickedId;
+    if(loc) arrOf(loc.type)[loc.idx] = occId || null;   // người cũ sang chỗ của người mới (đổi chỗ); ô cũ để trống nếu ô này đang trống
+    saveSquad(sq);
+    var moves = [{src:sL, dest:{type:slotType, idx:slotIndex}}];
+    if(occId) moves.push({src:sS, dest: loc ? {type:loc.type, idx:loc.idx} : null});
+    squadCloseTop();
+    renderPitch();
+    animateSubstitution(moves);
+  }
+  function clearSlot(slotType, slotIndex){
+    var sq = loadSquad();
+    var arr = slotType === 'pitch' ? sq.pitch : sq.bench;
+    if(!arr[slotIndex]) return;
+    var snap = squadSlotSnap(slotType, slotIndex);
+    arr[slotIndex] = null;
+    saveSquad(sq);
+    squadCloseTop();
+    renderPitch();
+    animateSubstitution([{src:snap, dest:null}]);
+  }
+
   function openPosPicker(slotType, slotIndex){
     var squad = loadSquad();
     var players = hydratePlayers(loadPlayers());
     var formation = currentFormation(squad);
-    var posLabel = slotType==='pitch' ? formation.positions[slotIndex].pos : ('Dự bị '+(slotIndex+1));
-    var currentId = slotType==='pitch' ? squad.pitch[slotIndex] : squad.bench[slotIndex];
+    var slotPos = slotType === 'pitch' ? formation.positions[slotIndex].pos : null;
+    var posLabel = slotType === 'pitch' ? slotPos : ('Dự bị '+(slotIndex+1));
+    var currentId = (slotType === 'pitch' ? squad.pitch[slotIndex] : squad.bench[slotIndex]) || null;
     document.getElementById('pos-picker-title').textContent = 'Vị trí '+posLabel;
-    var placedIds = {};
-    squad.pitch.forEach(function(id){ if(id) placedIds[id]=true; });
-    squad.bench.forEach(function(id){ if(id) placedIds[id]=true; });
-    var grid = document.getElementById('pos-picker-grid');
-    var html = '';
-    if(currentId){
-      var cp = players.find(function(p){ return p.id===currentId; });
-      if(cp) html += playerCardHTML(cp, true);
-    } else {
-      var available = players.filter(function(p){ return !placedIds[p.id]; });
-      var slotPos = slotType==='pitch' ? formation.positions[slotIndex].pos : null;
-      var candidates = slotPos ? available.filter(function(p){ return playerFitsSlot(p, slotPos); }) : available;
-      if(slotPos){
-        candidates.sort(function(a, b){
-          var ma = playerIsMainAt(a, slotPos) ? 0 : 1, mb = playerIsMainAt(b, slotPos) ? 0 : 1;
-          if(ma !== mb) return ma - mb;
-          return (b.ovr||0) - (a.ovr||0);
-        });
-      }
-      if(available.length===0){
-        html += '<p class="empty-collection">Chưa có cầu thủ nào để xếp. Hãy vượt mốc điểm tháng để nhận cầu thủ nhé!</p>';
-      } else if(candidates.length===0){
-        html += '<p class="empty-collection">Chưa có cầu thủ nào chơi được vị trí '+slotPos+' (vị trí chính hoặc phụ). Hãy nhận thêm cầu thủ nhé!</p>';
-      } else {
-        candidates.forEach(function(p){ html += playerCardHTML(p, false, 'data-add-player="'+p.id+'"'); });
-      }
+    var cur = currentId ? players.find(function(p){ return p && p.id === currentId; }) : null;
+    function locOf(id){
+      var i = squad.pitch.indexOf(id); if(i >= 0) return {type:'pitch', idx:i};
+      i = squad.bench.indexOf(id); if(i >= 0) return {type:'bench', idx:i};
+      return null;
     }
-    grid.innerHTML = html;
-    grid.querySelectorAll('[data-remove-player]').forEach(function(btn){
-      btn.addEventListener('click', function(e){
-        e.stopPropagation();
-        var s2 = loadSquad();
-        if(slotType==='pitch') s2.pitch[slotIndex] = null; else s2.bench[slotIndex] = null;
-        saveSquad(s2);
-        renderPitch();
-        openPosPicker(slotType, slotIndex);
-      });
+    // Người được đưa vào ô này; nếu họ đang đứng ở ô sân khác thì người đang ở ô này sẽ sang ô đó, nên cũng phải hợp vị trí ô đó.
+    var list = players.filter(function(p){
+      if(!p || p.id === currentId) return false;
+      if(slotPos && !playerFitsSlot(p, slotPos)) return false;
+      var loc = locOf(p.id);
+      if(cur && loc && loc.type === 'pitch' && !playerFitsSlot(cur, formation.positions[loc.idx].pos)) return false;
+      return true;
     });
-    grid.querySelectorAll('[data-add-player]').forEach(function(card){
-      card.addEventListener('click', function(){
-        var id = card.getAttribute('data-add-player');
-        var s2 = loadSquad();
-        if(slotType==='pitch') s2.pitch[slotIndex] = id; else s2.bench[slotIndex] = id;
-        saveSquad(s2);
-        renderPitch();
-        document.getElementById('pos-picker-modal').classList.remove('open');
+    list.sort(function(a, b){
+      var d = (b.ovr||0) - (a.ovr||0);
+      if(d) return d;
+      if(slotPos){ var ma = playerIsMainAt(a, slotPos) ? 0 : 1, mb = playerIsMainAt(b, slotPos) ? 0 : 1; if(ma !== mb) return ma - mb; }
+      return nameCmp(a, b);
+    });
+    var html = '';
+    if(cur){
+      html += '<div class="pp-current">'
+        + '<div class="pp-cur-tag">'+(slotType === 'pitch' ? '🟢 Đang ra sân · '+slotPos : '🪑 Đang dự bị · '+(slotIndex+1))+'</div>'
+        + playerCardHTML(cur, false)
+        + '<button type="button" class="btn-secondary pp-clear" id="pp-clear">Để trống ô này</button>'
+        + '</div>'
+        + '<div class="pp-sep">⇅ Chạm cầu thủ bên dưới để đổi người ngay</div>';
+    }
+    if(players.length === 0){
+      html += '<p class="empty-collection" style="grid-column:1/-1">Chưa có cầu thủ nào để xếp. Hãy vượt mốc điểm tháng để nhận cầu thủ nhé!</p>';
+    } else if(list.length === 0){
+      html += '<p class="empty-collection" style="grid-column:1/-1">'+(slotPos ? 'Chưa có cầu thủ nào chơi được vị trí '+slotPos+' (vị trí chính hoặc phụ). Hãy nhận thêm cầu thủ nhé!' : 'Không còn cầu thủ nào khác để đổi.')+'</p>';
+    } else {
+      if(!cur) html += '<div class="pp-sep">'+(slotPos ? '🏅 Xếp theo OVR cao nhất cho vị trí '+slotPos : '🏅 Xếp theo OVR cao nhất')+'</div>';
+      list.forEach(function(p, i){
+        var loc = locOf(p.id), tag = '';
+        if(loc) tag = '<div class="pp-tag swap">⇄ Đổi chỗ · '+(loc.type === 'pitch' ? formation.positions[loc.idx].pos : 'Dự bị '+(loc.idx+1))+'</div>';
+        else if(slotPos && !playerIsMainAt(p, slotPos)) tag = '<div class="pp-tag alt">Vị trí phụ</div>';
+        html += '<div class="pp-item" role="button" tabindex="0" data-pick="'+p.id+'"><span class="pp-rank">#'+(i+1)+'</span>'+playerCardHTML(p, false)+tag+'</div>';
       });
+    }
+    var grid = document.getElementById('pos-picker-grid');
+    grid.innerHTML = html;
+    grid.scrollTop = 0;
+    var clr = document.getElementById('pp-clear');
+    if(clr) clr.addEventListener('click', function(e){ e.stopPropagation(); clearSlot(slotType, slotIndex); });
+    grid.querySelectorAll('[data-pick]').forEach(function(el){
+      var go = function(){ applySlotPick(slotType, slotIndex, el.getAttribute('data-pick'), squadPickSnap(el)); };
+      el.addEventListener('click', go);
+      el.addEventListener('keydown', function(e){ if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); go(); } });
     });
     openModalTop('pos-picker-modal');
   }
@@ -9229,7 +9400,7 @@
 
   function fuseDetailButtonHTML(p){
     if(!p || !p.id || !p.dbId) return '';
-    return '<div class="fuse-cta"><button type="button" class="btn-gold" id="pd-fuse-btn">⬆️ Nâng cấp bằng thẻ khác</button></div>';
+    return '<div class="fuse-cta"><button type="button" class="btn-gold" id="pd-fuse-btn">⬆️ Nâng cấp</button></div>';
   }
   function wireFuseDetailButton(p){
     var b = document.getElementById('pd-fuse-btn');
@@ -9432,7 +9603,8 @@
     + '<li>Thẻ có Overall càng cao thì mỗi cấp càng khó lên.</li></ul>'
     + '<p class="rules-note">⚠️ Thẻ đã hiến sẽ mất khỏi kho. Thua trận thì không mất thẻ nào.</p></section>'
     + '<section class="rules-sec" id="rules-sec-squad"><h4>🎴 Xếp đội hình</h4><ul>'
-    + '<li>Chạm vào một vị trí trên sân hoặc một ô dự bị để xếp cầu thủ.</li>'
+    + '<li>Chạm vào một vị trí trên sân hoặc một ô dự bị: cầu thủ đang đứng đó hiện ở trên cùng, bên dưới là danh sách xếp theo OVR cao nhất cho vị trí đó.</li>'
+    + '<li>Chạm cầu thủ khác là <b>đổi người ngay</b>, không cần gỡ người cũ. Nếu người mới đang đứng ở ô khác, hai thẻ sẽ <b>đổi chỗ</b> cho nhau.</li>'
     + '<li>Đổi sơ đồ chiến thuật để có nhiều kiểu xếp hình khác nhau.</li>'
     + '<li>Đội hình chính luôn có <b>11 cầu thủ</b>, cộng thêm tối đa <b>7 dự bị</b>.</li></ul></section>';
   }
