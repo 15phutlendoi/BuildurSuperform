@@ -717,8 +717,8 @@
   .pitch-wrap svg.pitch-lines{ position:absolute; inset:0; width:100%; height:100%; }
   .formation-select-row{ display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:8px; }
   .formation-select{ font-family:var(--font-display); font-weight:700; font-size:13px; color:var(--deep-text); background:var(--card); border:2px solid var(--line); border-radius:var(--radius-sm); padding:5px 8px; }
-  .bench-row{ display:flex; gap:8px; overflow-x:auto; padding:10px 4px; margin-top:8px; background:var(--deep-soft); border-radius:var(--radius-sm); }
-  .bench-slot{ flex:none; display:flex; flex-direction:column; align-items:center; gap:4px; cursor:pointer; width:18.5%; }
+  .bench-row{ display:flex; flex-wrap:wrap; justify-content:center; gap:8px; padding:10px 4px; margin-top:8px; background:var(--deep-soft); border-radius:var(--radius-sm); }
+  .bench-slot{ flex:none; display:flex; flex-direction:column; align-items:center; gap:4px; cursor:pointer; width:calc((100% - 34px) / 5); }
   .bench-slot .slot-circle.small{ width:100%; aspect-ratio:0.74; height:auto; border-radius:9px 9px 7px 7px; }
   .bench-slot.filled .slot-circle{ background:linear-gradient(135deg,#FFE1A8,#FFB100); border-color:#8A5A00; }
   .bench-slot .slot-circle.has-art{ background:#0B1B2A; }
@@ -1741,7 +1741,34 @@
   .ds-score b{ color:var(--gold-light); font-size:19px; }
   .ds-bar{ position:relative; width:100%; height:12px; border-radius:999px; background:#0F172A; border:1px solid #334155; overflow:hidden; }
   .ds-bar i{ display:block; height:100%; border-radius:999px; background:linear-gradient(90deg,var(--stadium),var(--gold)); transition:width .4s ease; }
-  .ds-hint{ margin-top:4px; font-size:11.5px; font-weight:600; color:#94A3B8; }
+  .ds-hint{ margin-top:4px; font-size:12px; font-weight:600; color:#94A3B8; }
+  .ds-hint b{ color:var(--gold-light); }
+
+  /* Đường mốc lượt đấu */
+  .ds-road{ flex:1 1 100%; width:100%; padding:2px 6px 0; }
+  .ds-road-in{ position:relative; height:78px; margin:0 22px; }
+  .ds-road-line{ position:absolute; left:0; right:0; top:17px; height:10px; border-radius:999px; background:#0F172A; border:1px solid #334155; overflow:hidden; }
+  .ds-road-line::after{ content:''; position:absolute; left:0; right:0; top:50%; border-top:2px dashed rgba(148,163,184,.35); transform:translateY(-50%); }
+  .ds-road-line i{ position:absolute; left:0; top:0; bottom:0; border-radius:999px; background:linear-gradient(90deg,var(--stadium,#10B981),var(--gold,#F59E0B)); transition:width .5s ease; z-index:1; }
+  .ds-ms{ position:absolute; top:0; width:48px; transform:translateX(-50%); display:flex; flex-direction:column; align-items:center; gap:1px; z-index:2; }
+  .ds-ms-ico{ width:34px; height:34px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:17px; line-height:1;
+    background:#1E293B; border:2px solid #475569; filter:grayscale(.7); opacity:.8; }
+  .ds-ms-at{ font-size:12px; font-weight:900; color:#94A3B8; line-height:1.1; margin-top:2px; }
+  .ds-ms-gain{ font-size:10.5px; font-weight:800; color:#64748B; white-space:nowrap; line-height:1.1; }
+  .ds-ms.is-reached .ds-ms-ico{ background:linear-gradient(135deg,#FBBF24,#D97706); border-color:#FDE68A; filter:none; opacity:1; box-shadow:0 0 0 3px rgba(251,191,36,.22); }
+  .ds-ms.is-reached .ds-ms-at{ color:#fff; }
+  .ds-ms.is-reached .ds-ms-gain{ color:#FDE68A; }
+  .ds-ms.is-next .ds-ms-ico{ filter:none; opacity:1; border-color:var(--gold-light,#FBBF24); animation:dsMsPulse 1.6s ease-in-out infinite; }
+  .ds-ms.is-next .ds-ms-at{ color:#E2E8F0; }
+  .ds-ms.is-next .ds-ms-gain{ color:#CBD5E1; }
+  @keyframes dsMsPulse{ 0%,100%{ box-shadow:0 0 0 0 rgba(251,191,36,.55); } 50%{ box-shadow:0 0 0 7px rgba(251,191,36,0); } }
+  @media (prefers-reduced-motion: reduce){ .ds-ms.is-next .ds-ms-ico{ animation:none; } .ds-road-line i{ transition:none; } }
+  @media (max-width:420px){
+    .ds-road-in{ margin:0 18px; }
+    .ds-ms{ width:42px; }
+    .ds-ms-ico{ width:30px; height:30px; font-size:15px; }
+    .ds-ms-gain{ font-size:10px; }
+  }
 
   .ds-gift{
     flex:none; display:flex; align-items:center; gap:8px; padding:10px 16px; border-radius:14px; font-weight:800; font-size:12.5px;
@@ -2135,6 +2162,24 @@
   .rules-sec li b{ color:#FDE68A; }
   .rules-sec .rules-note{ margin:8px 0 0; padding:8px 12px; border-radius:12px; font-size:13px; line-height:1.5; background:rgba(16,185,129,.12); border:1px solid rgba(16,185,129,.35); color:#A7F3D0; font-weight:700; }
   @media (min-width:700px){ .rules-sec ul{ font-size:15px; } .rules-btn{ font-size:15px; } }
+
+  #auth-screen{ position:fixed; inset:0; z-index:20000; display:flex; align-items:center; justify-content:center; padding:16px; background:radial-gradient(circle at 50% 0%,#064E3B 0%,#0F172A 60%); font-family:inherit; }
+  #auth-screen .au-box{ width:min(400px,100%); background:#1E293B; border:1px solid #334155; border-radius:18px; padding:20px; display:flex; flex-direction:column; gap:12px; box-shadow:0 20px 60px rgba(0,0,0,.5); color:#E2E8F0; }
+  #auth-screen h2{ margin:0; text-align:center; font-size:20px; color:#fff; }
+  #auth-screen .au-tabs{ display:flex; gap:6px; background:#0F172A; padding:4px; border-radius:12px; }
+  #auth-screen .au-tab{ flex:1; padding:10px 6px; border:0; border-radius:9px; background:transparent; color:#94A3B8; font-weight:800; font-size:14px; cursor:pointer; }
+  #auth-screen .au-tab.on{ background:#10B981; color:#052e22; }
+  #auth-screen .au-tab[data-t=admin].on{ background:linear-gradient(135deg,#FBBF24,#D97706); color:#3D2500; }
+  #auth-screen label{ display:flex; flex-direction:column; gap:5px; font-size:12px; font-weight:700; color:#CBD5E1; }
+  #auth-screen select, #auth-screen input{ padding:11px 12px; border-radius:10px; border:1px solid #475569; background:#0F172A; color:#fff; font-size:15px; }
+  #auth-screen select:focus, #auth-screen input:focus{ outline:none; border-color:#10B981; }
+  #auth-screen .au-go{ padding:12px; border:0; border-radius:12px; background:#10B981; color:#052e22; font-weight:900; font-size:15px; cursor:pointer; }
+  #auth-screen .au-go.admin{ background:linear-gradient(135deg,#FBBF24,#D97706); color:#3D2500; }
+  #auth-screen .au-go:disabled{ opacity:.6; }
+  #auth-screen .au-cancel{ background:transparent; border:0; color:#94A3B8; font-size:13px; cursor:pointer; text-decoration:underline; }
+  #auth-screen .au-msg{ min-height:18px; text-align:center; font-size:13px; font-weight:700; color:#FCA5A5; }
+  #auth-screen .au-pane{ display:none; flex-direction:column; gap:12px; } #auth-screen .au-pane.on{ display:flex; }
+  #logout-btn{ }
 </style>
 </head>
 <body>
@@ -2233,6 +2278,7 @@
         <button id="day-next" class="nav-btn day-arrow" aria-label="Ngày sau">›</button>
         <button id="day-today" class="nav-btn today-btn">Về hôm nay</button>
         <button type="button" id="admin-toggle-btn" class="nav-btn" aria-label="Chế độ quản trị" title="Chế độ quản trị: mở khóa để sửa ngày cũ">🔒</button>
+        <button type="button" id="logout-btn" class="nav-btn" aria-label="Đăng xuất" title="Đăng xuất">🚪</button>
       </div>
     </div>
     <p class="hint-text" id="day-lock-note" style="margin:2px 0 0;display:none"></p>
@@ -2466,10 +2512,7 @@
       <input type="number" id="settings-daily-goal" min="1" max="10" step="1">
     </label>
     <p class="hint-text" style="margin:-6px 0 0">VD: nhập 9 nghĩa là đạt 9/10 điểm trong ngày sẽ mở được hộp quà.</p>
-    <label>⚔️ Số trận Đấu Trường mỗi ngày (1–20)
-      <input type="number" id="settings-battle-per-day" min="1" max="20" step="1">
-    </label>
-    <p class="hint-text" style="margin:-6px 0 0">VD: nhập 3 nghĩa là mỗi ngày được đấu tối đa 3 trận. Hành trình và Đấu nhanh dùng chung số lượt này.</p>
+    <p class="hint-text" style="margin:0">⚔️ Lượt Đấu Trường mỗi ngày tự tính theo điểm nhiệm vụ trong ngày: có điểm +1 · mốc 50/60/70 mỗi mốc +2 · mốc 80/90 mỗi mốc +3 · mốc 100 +5.</p>
     <label>🧠 Câu hỏi trong Đấu Trường
       <select id="settings-quiz-on"><option value="1">Bật — đến lượt đánh phải trả lời câu hỏi</option><option value="0">Tắt — đổ xúc xắc như cũ</option></select>
     </label>
@@ -2498,7 +2541,13 @@
       </select>
     </label>
     <div>
-      <span class="settings-label">👤 Người dùng — tạo mới hoặc mở hồ sơ có sẵn</span>
+      <span class="settings-label">👤 Tài khoản</span>
+      <div class="reward-row" style="margin:4px 0 8px;flex-wrap:wrap">
+        <button type="button" id="btn-auth-switch" class="btn-secondary">🔄 Đổi người dùng</button>
+        <button type="button" id="btn-auth-logout" class="btn-secondary">🚪 Đăng xuất</button>
+        <button type="button" id="btn-auth-pw" class="btn-secondary">🔑 Đổi mật khẩu</button>
+      </div>
+      <p class="hint-text" id="auth-role-label" style="margin:0 0 6px"></p>
       <p class="hint-text" id="sync-status" style="margin:2px 0 8px">☁️ Đang kiểm tra đồng bộ…</p>
       <div class="user-box">
         <p class="user-current" id="current-user-label">👤 Đang dùng: <b>…</b></p>
@@ -3085,6 +3134,7 @@
     }catch(e){ console.warn('wipe failed', e); }
   }
   function switchToUser(code, name){
+    try{ var _a = readAuth(); if(_a){ _a.code = code; saveAuth(_a); } }catch(e){}
     wipeLocalProfileData();
     try{ localStorage.setItem('kidchart_syncid', code); }catch(e){}
     setLocalUserName(name || '');
@@ -3177,6 +3227,131 @@
      - Không khớp / chưa có hồ sơ nào trên máy -> bắt buộc chọn hồ sơ có sẵn hoặc tạo hồ sơ mới qua màn hình đăng nhập.
        Tuyệt đối không tự seed/push dữ liệu máy lên Firebase trong trường hợp này —
        chỉ khi người dùng chủ động bấm "Tạo hồ sơ mới" thì mới ghi lên Firebase. */
+
+  /* ================= ĐĂNG NHẬP: màn riêng cho Người dùng và Quản trị viên =================
+     - Người dùng: chọn hồ sơ + mật khẩu (mặc định 271118 cho mọi hồ sơ cũ cho tới khi tự đổi).
+       Phiên lưu trên máy (localStorage) cho tới khi bấm Đăng xuất.
+     - Quản trị viên: mật khẩu riêng (Firebase /kidchart_admin/pw, mặc định 271118) + chọn/tạo hồ sơ cần quản lý.
+       Phiên chỉ trong tab hiện tại (sessionStorage) — đóng tab là tự thoát.
+     - Khóa dùng 'dbcd_' nên KHÔNG bị đồng bộ lên Firebase và không bị xóa khi đổi hồ sơ.
+     LƯU Ý: Firebase đang mở quyền đọc/ghi nên đây là rào chắn trong app, chưa phải bảo mật thật sự. */
+  var AUTH_KEY = 'dbcd_auth', DEFAULT_PW = '271118';
+  function pwHash(s){
+    var h1 = 0x811c9dc5, h2 = 0x1b873593; s = 'dbcd|' + s;
+    for(var i=0;i<s.length;i++){ var c = s.charCodeAt(i);
+      h1 ^= c; h1 = Math.imul(h1, 16777619) >>> 0;
+      h2 = Math.imul(h2 ^ c, 2246822519) >>> 0; h2 ^= h2 >>> 13; }
+    return h1.toString(16) + '-' + (h2>>>0).toString(16);
+  }
+  function readAuth(){
+    var r = null;
+    try{ r = JSON.parse(sessionStorage.getItem(AUTH_KEY) || localStorage.getItem(AUTH_KEY) || 'null'); }catch(e){}
+    return (r && r.role && r.code) ? r : null;
+  }
+  function clearAuth(){ try{ sessionStorage.removeItem(AUTH_KEY); localStorage.removeItem(AUTH_KEY); }catch(e){} }
+  function saveAuth(a){
+    clearAuth();
+    try{ (a.role === 'admin' ? sessionStorage : localStorage).setItem(AUTH_KEY, JSON.stringify(a)); }catch(e){}
+  }
+  function applyAuthProfile(code){
+    var cur = null; try{ cur = localStorage.getItem('kidchart_syncid'); }catch(e){}
+    if(cur !== code){
+      wipeLocalProfileData();
+      try{ localStorage.setItem('kidchart_syncid', code); }catch(e){}
+      setLocalUserName(userNameOf(code));
+    }
+    storedSyncId = code; syncId = code;
+  }
+  function showAuthScreen(canCancel){
+    return new Promise(function(resolve){
+      var el = document.createElement('div'); el.id = 'auth-screen';
+      el.innerHTML =
+        '<div class="au-box"><h2>⚽ Đội Bóng Của Đốm</h2>' +
+        '<div class="au-tabs"><button type="button" class="au-tab on" data-t="user">👦 Người dùng</button>' +
+        '<button type="button" class="au-tab" data-t="admin">🛡️ Quản trị viên</button></div>' +
+        '<div class="au-pane on" data-p="user">' +
+          '<label>Hồ sơ<select id="au-user"><option value="">— Đang tải danh sách… —</option></select></label>' +
+          '<label>Mật khẩu<input type="password" id="au-pw" autocomplete="current-password" placeholder="Nhập mật khẩu"></label>' +
+          '<button type="button" class="au-go" id="au-go-user">Đăng nhập</button></div>' +
+        '<div class="au-pane" data-p="admin">' +
+          '<label>Mật khẩu Quản trị<input type="password" id="ad-pw" placeholder="Mật khẩu quản trị viên"></label>' +
+          '<label>Hồ sơ cần quản lý<select id="ad-user"></select></label>' +
+          '<label id="ad-new-wrap" style="display:none">Tên hồ sơ mới<input type="text" id="ad-new" maxlength="24" placeholder="VD: Bé Bo"></label>' +
+          '<button type="button" class="au-go admin" id="au-go-admin">Đăng nhập Quản trị</button></div>' +
+        '<div class="au-msg" id="au-msg"></div>' +
+        (canCancel ? '<button type="button" class="au-cancel" id="au-cancel">Hủy, quay lại tài khoản đang dùng</button>' : '') +
+        '</div>';
+      document.body.appendChild(el);
+      var $ = function(id){ return document.getElementById(id); };
+      var msg = function(t){ $('au-msg').textContent = t || ''; };
+      el.querySelectorAll('.au-tab').forEach(function(b){ b.addEventListener('click', function(){
+        el.querySelectorAll('.au-tab').forEach(function(x){ x.classList.toggle('on', x === b); });
+        el.querySelectorAll('.au-pane').forEach(function(p){ p.classList.toggle('on', p.getAttribute('data-p') === b.getAttribute('data-t')); });
+        msg('');
+      }); });
+      function fillLists(){
+        return fetchUserDirectory().then(function(data){
+          var codes = Object.keys(userDirectory);
+          codes.sort(function(a,b){ return userNameOf(a).localeCompare(userNameOf(b), 'vi'); });
+          var opts = codes.map(function(c){ return '<option value="' + uEsc(c) + '">' + uEsc(userLabel(c)) + '</option>'; }).join('');
+          $('au-user').innerHTML = '<option value="">— Chọn hồ sơ —</option>' + opts;
+          $('ad-user').innerHTML = opts + '<option value="__new__">➕ Tạo hồ sơ mới…</option>';
+          if(data === null && !codes.length) msg('Không có mạng — chưa tải được danh sách hồ sơ.');
+          $('ad-new-wrap').style.display = (!codes.length ? '' : 'none');
+        });
+      }
+      fillLists();
+      $('ad-user').addEventListener('change', function(){ $('ad-new-wrap').style.display = this.value === '__new__' ? '' : 'none'; });
+      function finish(a){
+        saveAuth(a);
+        try{ sessionStorage.removeItem('dbcd_switching'); }catch(e){}
+        applyAuthProfile(a.code);
+        el.remove(); resolve(a);
+      }
+      $('au-go-user').addEventListener('click', function(){
+        var code = $('au-user').value, pw = $('au-pw').value;
+        if(!code){ msg('Hãy chọn hồ sơ của bạn.'); return; }
+        var expected = (userDirectory[code] && userDirectory[code].pw) || pwHash(code + ':' + DEFAULT_PW);
+        if(pwHash(code + ':' + pw) !== expected){ msg('Sai mật khẩu, thử lại nhé.'); $('au-pw').select(); return; }
+        finish({role:'user', code:code});
+      });
+      $('au-go-admin').addEventListener('click', function(){
+        var pw = $('ad-pw').value, btn = $('au-go-admin'); btn.disabled = true; msg('');
+        fetch(FIREBASE_BASE + '/kidchart_admin/pw.json').then(function(r){ return r.ok ? r.json() : Promise.reject(); }).then(function(stored){
+          var expected = (typeof stored === 'string' && stored) ? stored : pwHash('admin:' + DEFAULT_PW);
+          if(pwHash('admin:' + pw) !== expected){ msg('Sai mật khẩu quản trị.'); btn.disabled = false; return; }
+          var code = $('ad-user').value;
+          if(code === '__new__' || !code){
+            var name = $('ad-new').value.trim();
+            if(!name){ msg('Nhập tên hồ sơ mới.'); btn.disabled = false; return; }
+            code = makeUniqueUserCode();
+            return registerUser(code, name).then(function(){ finish({role:'admin', code:code}); });
+          }
+          finish({role:'admin', code:code});
+        }).catch(function(){ msg('Không kiểm tra được (mất mạng?).'); btn.disabled = false; });
+      });
+      el.addEventListener('keydown', function(e){ if(e.key === 'Enter'){
+        var admin = el.querySelector('.au-tab.on').getAttribute('data-t') === 'admin';
+        $(admin ? 'au-go-admin' : 'au-go-user').click(); } });
+      if(canCancel) $('au-cancel').addEventListener('click', function(){
+        try{ sessionStorage.removeItem('dbcd_switching'); }catch(e){}
+        el.remove(); resolve(null);
+      });
+    });
+  }
+  var authInfo = readAuth();
+  var authSwitching = false; try{ authSwitching = sessionStorage.getItem('dbcd_switching') === '1'; }catch(e){}
+  var authDir = await fetchUserDirectory();
+  if(authInfo && authDir !== null && !userDirectory[authInfo.code]) authInfo = null;   // hồ sơ đã bị xóa
+  if(!authInfo || authSwitching){
+    var authRes = await showAuthScreen(!!authInfo);
+    if(authRes) authInfo = authRes;
+  }
+  var authRole = authInfo.role;
+  applyAuthProfile(authInfo.code);
+  function doLogout(){ clearAuth(); try{ sessionStorage.removeItem('dbcd_switching'); }catch(e){} location.reload(); }
+  function doSwitch(){ try{ sessionStorage.setItem('dbcd_switching', '1'); }catch(e){} location.reload(); }
+
   var dirData = await fetchUserDirectory();
   var matchedExisting = !!(storedSyncId && dirData !== null && userDirectory[storedSyncId]);
   if(matchedExisting){
@@ -3642,7 +3817,7 @@
 
   /* ---- Khóa dữ liệu ngày cũ: chỉ hôm nay được sửa bình thường, ngày khác
      (đã qua hoặc chưa tới) phải bật "Chế độ quản trị" bằng mã PIN mới sửa được. ---- */
-  var isAdmin = false;
+  var isAdmin = (authRole === 'admin');
   function isDayEditable(d){ return isAdmin || ymd(d) === ymd(new Date()); }
 
   var currentDay = new Date(); currentDay.setHours(0,0,0,0);
@@ -3659,6 +3834,28 @@
     TASKS.forEach(function(t){ if(dayObj[t.id]) sum += t.points; });
     if(TASKS_MAX > 0 && TASKS_MAX !== 100) sum = Math.round(sum * 100 / TASKS_MAX);
     return sum;
+  }
+
+  /* ---- LƯỢT ĐẤU THEO ĐIỂM NGÀY ----
+     Có điểm trong ngày: 1 lượt · mốc 50/60/70: +2 lượt mỗi mốc · mốc 80/90: +3 lượt mỗi mốc · mốc 100: +5 lượt.
+     Tối đa 1 + 6 + 6 + 5 = 18 lượt/ngày. Lượt tính theo điểm HÔM NAY và cộng dồn khi đạt từng mốc. */
+  var BATTLE_TURN_MILESTONES = [
+    {at:1,   turns:1, icon:'🥅'},
+    {at:50,  turns:2, icon:'👟'},
+    {at:60,  turns:2, icon:'👟'},
+    {at:70,  turns:2, icon:'👟'},
+    {at:80,  turns:3, icon:'⚽'},
+    {at:90,  turns:3, icon:'⚽'},
+    {at:100, turns:5, icon:'🏃'}
+  ];
+  function battleTurnsForScore(score){
+    var n = 0;
+    BATTLE_TURN_MILESTONES.forEach(function(m){ if(score >= m.at) n += m.turns; });
+    return n;
+  }
+  function battleNextMilestone(score){
+    for(var i = 0; i < BATTLE_TURN_MILESTONES.length; i++){ if(score < BATTLE_TURN_MILESTONES[i].at) return BATTLE_TURN_MILESTONES[i]; }
+    return null;
   }
 
   function tierFor(score){
@@ -3715,14 +3912,37 @@
       giftHtml = '<div class="ds-gift"><span class="ds-gift-ico">🎁</span><span>Còn '+Math.max(0,boxTarget-total)+' điểm nữa<br>để mở hộp quà</span></div>';
     }
 
+    /* Đường mốc lượt đấu: 7 mốc cách đều, đạt mốc nào sáng mốc đó */
+    var MS = BATTLE_TURN_MILESTONES, segN = MS.length - 1, pos = 0;
+    if(total >= MS[segN].at) pos = segN;
+    else if(total >= MS[0].at){
+      for(var k = 0; k < segN; k++){
+        if(total >= MS[k].at && total < MS[k+1].at){ pos = k + (total - MS[k].at) / (MS[k+1].at - MS[k].at); break; }
+      }
+    }
+    var fillPct = Math.round(pos / segN * 1000) / 10;
+    var earned = battleTurnsForScore(total), nxM = battleNextMilestone(total), nxFound = false;
+    var nodes = '';
+    MS.forEach(function(m, i){
+      var reached = total >= m.at, isNext = (!reached && !nxFound);
+      if(isNext) nxFound = true;
+      nodes += '<div class="ds-ms'+(reached?' is-reached':'')+(isNext?' is-next':'')+'" style="left:'+(Math.round(i/segN*1000)/10)+'%" title="'+(m.at===1?'Có điểm':'Đạt '+m.at+' điểm')+': +'+m.turns+' lượt đấu">'
+        + '<span class="ds-ms-ico">'+(reached ? '✅' : m.icon)+'</span>'
+        + '<span class="ds-ms-at">'+(m.at===1 ? '1+' : m.at)+'</span>'
+        + '<span class="ds-ms-gain">🎟️+'+m.turns+'</span></div>';
+    });
+    var roadHtml = '<div class="ds-road" role="img" aria-label="Đường mốc điểm và lượt đấu nhận được"><div class="ds-road-in">'
+      + '<div class="ds-road-line"><i style="width:'+fillPct+'%"></i></div>' + nodes + '</div></div>';
+    var turnsHint = '🎟️ Đã nhận <b>'+earned+'</b> lượt đấu' + (nxM ? ' · còn <b>'+(nxM.at-total)+'</b> điểm nữa để nhận <b>+'+nxM.turns+'</b> lượt' : ' · 🎉 đã nhận đủ mọi mốc!');
+
     document.getElementById('day-summary').innerHTML =
       '<div class="ds-badge tier-'+tier.key+'">'+tier.emoji+'</div>'
       + '<div class="ds-mid">'
       +   '<div class="ds-top-line"><span>Điểm hôm nay</span><span class="ds-score"><b>'+total+'</b>/100</span></div>'
-      +   '<div class="ds-bar"><i style="width:'+total+'%"></i></div>'
-      +   '<div class="ds-hint">🥅 dưới 50 · 👟 50–80 · ⚽ trên 80 · 🏃 trên 90 · 🏆 tròn 100</div>'
+      +   '<div class="ds-hint">'+turnsHint+'</div>'
       + '</div>'
-      + giftHtml;
+      + giftHtml
+      + roadHtml;
 
     var listHtml = '';
     TASKS.forEach(function(t){
@@ -3740,6 +3960,7 @@
     renderBadges();
     renderPlayer();
     renderMonthly();
+    try{ renderBattleQuota(); }catch(e){}
   }
 
   /* Hiệu ứng vui mừng khi hoàn thành 1 nhiệm vụ: thẻ nảy nhẹ + bong bóng lời khen bay lên. */
@@ -5523,21 +5744,40 @@
       + '</div>';
   }
 
+  /* Firebase Realtime Database không lưu giá trị null trong mảng: mảng thưa (có ô trống ở giữa/cuối)
+     được trả về dưới dạng object {"2":"id"} hoặc bị cắt ngắn. Hàm này chuẩn hoá mọi dạng về mảng đủ độ dài. */
+  function toSlotArray(v, len){
+    var out = [], i;
+    for(i=0;i<len;i++) out.push(null);
+    if(Array.isArray(v)){
+      for(i=0;i<v.length && i<len;i++) out[i] = v[i] || null;
+    } else if(v && typeof v === 'object'){
+      Object.keys(v).forEach(function(k){
+        var n = parseInt(k, 10);
+        if(String(n) === k && n >= 0 && n < len) out[n] = v[k] || null;
+      });
+    }
+    return out;
+  }
   function loadSquad(){
     var raw = safeGet('kidchart_squad');
     var f = FORMATIONS.find(function(fo){ return fo.id === (raw && raw.formationId); }) || FORMATIONS[0];
-    var s;
-    if(!raw || !Array.isArray(raw.pitch) || raw.pitch.length !== f.positions.length || raw.formationId !== f.id){
-      s = {formationId: f.id, pitch: f.positions.map(function(){ return null; }), bench: (raw && raw.bench) || []};
-    } else {
-      s = raw;
-    }
-    if(!Array.isArray(s.bench)) s.bench = [];
-    while(s.bench.length < BENCH_SIZE) s.bench.push(null);
-    s.bench = s.bench.slice(0, BENCH_SIZE);
+    var sameFormation = !!raw && raw.formationId === f.id;
+    var s = {};
+    if(raw && typeof raw === 'object'){ Object.keys(raw).forEach(function(k){ s[k] = raw[k]; }); }
+    s.formationId = f.id;
+    s.pitch = sameFormation ? toSlotArray(raw.pitch, f.positions.length) : f.positions.map(function(){ return null; });
+    s.bench = toSlotArray(raw && raw.bench, BENCH_SIZE);
     return s;
   }
-  function saveSquad(s){ safeSet('kidchart_squad', s); }
+  /* Ghi ô trống là '' (không phải null) để mảng luôn "đặc" trên Firebase và không bị mất dự bị khi tải lại */
+  function saveSquad(sq){
+    var out = {};
+    Object.keys(sq).forEach(function(k){ out[k] = sq[k]; });
+    out.pitch = (sq.pitch || []).map(function(id){ return id || ''; });
+    out.bench = (sq.bench || []).map(function(id){ return id || ''; });
+    safeSet('kidchart_squad', out);
+  }
   function currentFormation(squad){ return FORMATIONS.find(function(f){ return f.id===squad.formationId; }) || FORMATIONS[0]; }
   function squadCounts(squad){
     return {starters: squad.pitch.filter(Boolean).length, reserves: squad.bench.filter(Boolean).length};
@@ -5953,7 +6193,12 @@
      Lưu {date, count}; dữ liệu cũ chỉ có {date} thì tính là đã đấu 1 trận. */
   function battleTodayKey(){ return ymd(new Date()); }
   function battleDailyState(){ return safeGet('kidchart_battle_daily') || {}; }
-  function battleLimit(){ return Math.max(1, Math.min(20, parseInt(settings.battlePerDay, 10) || 1)); }
+  function battleTodayScore(){
+    var t = new Date();
+    var o = loadMonth(ym(t)).days[dkey(t)] || {};
+    return computeDayTotal(o);
+  }
+  function battleLimit(){ return battleTurnsForScore(battleTodayScore()); }   // số lượt đã nhận hôm nay theo điểm ngày
   function battlePlayedCount(){
     var d = battleDailyState();
     return d.date === battleTodayKey() ? Math.max(1, parseInt(d.count, 10) || 1) : 0;
@@ -5963,13 +6208,25 @@
   function markBattlePlayedToday(){ safeSet('kidchart_battle_daily', {date: battleTodayKey(), count: battlePlayedCount() + 1}); }
   function battleOutOfTurnsText(){
     var n = battleLimit();
+    if(n <= 0) return 'Hôm nay con chưa có điểm nên chưa có lượt đấu';
     return n === 1 ? 'Hôm nay con đã đấu 1 trận rồi' : 'Hôm nay con đã dùng hết '+n+' lượt đấu';
+  }
+  /* Đoạn đuôi gợi ý khi hết lượt: chưa có điểm → đi làm nhiệm vụ; còn mốc kế tiếp → ghi thêm điểm; đã đủ 100 → mai quay lại. */
+  function battleTail(whenDone){
+    var nx = battleNextMilestone(battleTodayScore());
+    if(battleLimit() <= 0) return ' — làm nhiệm vụ để ghi điểm và nhận lượt đấu nhé!';
+    if(nx) return ' — ghi thêm điểm để nhận thêm lượt, hoặc mai quay lại nhé!';
+    return whenDone;
   }
   function renderBattleQuota(){
     var el = document.getElementById('battle-quota');
     if(!el) return;
     var left = battleLeftToday(), n = battleLimit();
-    el.innerHTML = '🎟️ Hôm nay còn <b>'+left+'/'+n+'</b> lượt đấu' + (left <= 0 ? ' — mai quay lại nhé!' : '');
+    var sc = battleTodayScore(), nx = battleNextMilestone(sc);
+    var txt = '🎟️ Hôm nay còn <b>'+left+'/'+n+'</b> lượt đấu';
+    if(left <= 0) txt += battleTail(' — mai quay lại nhé!');
+    else if(nx) txt += ' · đạt <b>'+nx.at+'</b> điểm nhận thêm <b>+'+nx.turns+'</b>';
+    el.innerHTML = txt;
     el.classList.toggle('empty', left <= 0);
   }
 
@@ -6111,7 +6368,7 @@
       + '<div class="rm-cover">'+comicImg(ch,'Bia')
       +   '<div class="rm-cover-txt"><small>CHƯƠNG '+ch+'</small><b>'+escHtml(comicChapterTitle(ch))+'</b><span>'+inCh+'/'+total+' trang truyện đã mở</span></div></div>'
       + '<div class="rm-prog"><i style="width:'+Math.round(inCh/total*100)+'%"></i></div>'
-      + (played && !done ? '<div class="rm-banner">⏰ '+battleOutOfTurnsText()+' — mai quay lại mở trang truyện tiếp theo nhé!</div>' : '')
+      + (played && !done ? '<div class="rm-banner">⏰ '+battleOutOfTurnsText()+battleTail(' — mai quay lại mở trang truyện tiếp theo nhé!')+'</div>' : '')
       + (done && ch === chTotal ? '<div class="rm-banner">🏆 Con đã hoàn thành Chương '+chTotal+'! Các chương tiếp theo sẽ sớm mở khóa.</div>' : '')
       + (ROADMAP_OPEN < ROADMAP_VISION && ch === chTotal ? '<div class="rm-next">🔒 Chương '+(chTotal+1)+' · sắp mở — còn '+(ROADMAP_VISION-ROADMAP_OPEN)+' ải nữa đang chờ con!</div>' : '')
       + '<div class="rm-pages">'+pages+'</div>';
@@ -6175,7 +6432,7 @@
     var def = roadmapStageDef(n);
     if(n <= cleared){ rmOpenReader(n); return; }
     if(n > cleared+1){ triggerToast('low', '🔒 Vượt qua trận '+(n-1)+' trước đã nhé!'); return; }
-    if(battleAlreadyPlayedToday()){ triggerToast('low', '⏰ '+battleOutOfTurnsText()+' — mai quay lại nhé!'); return; }
+    if(battleAlreadyPlayedToday()){ triggerToast('low', '⏰ '+battleOutOfTurnsText()+battleTail(' — mai quay lại nhé!')); return; }
     rmChapter = 0;
     roadPickStage = n;
     renderBattlePick();
@@ -6312,7 +6569,7 @@
     if(battleAlreadyPlayedToday()){
       grid.innerHTML = '';
       hint.style.display = '';
-      hint.innerHTML = '⏰ '+battleOutOfTurnsText()+' — mai quay lại đấu tiếp để tích thêm Năng Lượng nâng cấp OVR nhé!';
+      hint.innerHTML = '⏰ '+battleOutOfTurnsText()+battleTail(' — mai quay lại đấu tiếp để tích thêm Năng Lượng nâng cấp OVR nhé!');
       return;
     }
     var cards = battleOwnedCards();
@@ -7006,7 +7263,7 @@
         + '<h3>'+(youWon ? '🏆 Thắng rồi!' : '💪 Thua ván này!')+'</h3>'
         + '<p>'+escHtml(names[b.winner])+' đã hạ gục '+escHtml(names[1-b.winner])+' sau '+b.turn+' lượt.</p>'
         + rewardHTML
-        + '<p class="hint-text">'+(battleLeftToday() > 0 ? '🎟️ Hôm nay còn '+battleLeftToday()+' lượt đấu — đấu tiếp nào!' : 'Hôm nay đấu vậy là đủ rồi — mai quay lại đấu tiếp nhé!')+'</p>'
+        + '<p class="hint-text">'+(battleLeftToday() > 0 ? '🎟️ Hôm nay còn '+battleLeftToday()+' lượt đấu — đấu tiếp nào!' : (battleLimit() <= 0 ? 'Hôm nay chưa có lượt đấu — làm nhiệm vụ để ghi điểm nhé!' : (battleNextMilestone(battleTodayScore()) ? 'Hết lượt rồi — ghi thêm điểm ở tab Nhiệm Vụ để nhận thêm lượt đấu nhé!' : 'Hôm nay đấu vậy là đủ rồi — mai quay lại đấu tiếp nhé!')))+'</p>'
         + '</div>';
       controls.innerHTML = '<button type="button" class="btn-primary" id="battle-btn-back">🗂️ Về Đấu Trường</button>';
       document.getElementById('battle-btn-back').addEventListener('click', function(){ roadPickStage = 0; renderBattlePick(); });
@@ -8321,7 +8578,6 @@
     document.getElementById('settings-cheer-max').value = settings.cheerMax;
     document.getElementById('settings-period-start').value = settings.periodStartDay;
     document.getElementById('settings-daily-goal').value = settings.dailyGoal;
-    document.getElementById('settings-battle-per-day').value = settings.battlePerDay;
     document.getElementById('settings-quiz-on').value = settings.quizEnabled ? '1' : '0';
     document.getElementById('settings-quiz-seconds').value = settings.quizSeconds;
     document.getElementById('settings-bg-mode').value = settings.bgMode;
@@ -8475,6 +8731,7 @@
       renderWeek();
       return;
     }
+    if(authRole === 'admin'){ isAdmin = true; updateAdminBtn(); renderWeek(); triggerToast('okay', '🔓 Đã mở chế độ Quản trị viên!'); return; }
     var pin = prompt('Nhập mã PIN Quản trị viên để sửa dữ liệu ngày cũ:');
     if(pin === null) return;
     if(pin === settings.adminPin){
@@ -8706,8 +8963,41 @@
     input.value = '';
     renderRewardList();
   });
+
+  /* ---- Đăng xuất · Đổi người dùng · Đổi mật khẩu ---- */
+  document.getElementById('logout-btn').addEventListener('click', function(){ if(confirm('Đăng xuất khỏi tài khoản này?')) doLogout(); });
+  document.getElementById('btn-auth-logout').addEventListener('click', function(){ if(confirm('Đăng xuất khỏi tài khoản này?')) doLogout(); });
+  document.getElementById('btn-auth-switch').addEventListener('click', doSwitch);
+  (function(){
+    var lab = document.getElementById('auth-role-label');
+    if(lab) lab.innerHTML = authRole === 'admin' ? '🛡️ Đang đăng nhập với quyền <b>Quản trị viên</b>' : '👦 Đang đăng nhập với tư cách <b>Người dùng</b>';
+    if(authRole !== 'admin'){   // Người dùng thường không thấy các mục quản trị
+      ['btn-player-db-import','btn-qbank-import','settings-admin-pin'].forEach(function(id){
+        var n = document.getElementById(id);
+        while(n && n.parentElement && n.parentElement.className !== 'modal-box') n = n.parentElement;
+        if(n && n.parentElement) n.style.display = 'none';
+      });
+    }
+  })();
+  document.getElementById('btn-auth-pw').addEventListener('click', function(){
+    var admin = authRole === 'admin';
+    var p1 = prompt(admin ? 'Mật khẩu QUẢN TRỊ mới (ít nhất 4 ký tự):' : 'Mật khẩu mới cho hồ sơ này (ít nhất 4 ký tự):');
+    if(p1 === null) return;
+    if(p1.length < 4){ alert('Mật khẩu cần ít nhất 4 ký tự.'); return; }
+    if(prompt('Nhập lại mật khẩu mới để xác nhận:') !== p1){ alert('Hai lần nhập không giống nhau.'); return; }
+    var h = pwHash((admin ? 'admin:' : syncId + ':') + p1);
+    var url = admin ? FIREBASE_BASE + '/kidchart_admin/pw.json' : USERS_BASE + '/' + encodeURIComponent(syncId) + '/pw.json';
+    fetch(url, {method:'PUT', headers:{'Content-Type':'application/json'}, body: JSON.stringify(h)}).then(function(r){
+      if(!r.ok) throw new Error('HTTP ' + r.status);
+      if(!admin){ userDirectory[syncId] = userDirectory[syncId] || {}; userDirectory[syncId].pw = h; }
+      triggerToast('okay', '🔑 Đã đổi mật khẩu!');
+    }).catch(function(e){ alert('Không đổi được mật khẩu (' + e.message + '). Kiểm tra mạng rồi thử lại.'); });
+  });
+  if(isAdmin) updateAdminBtn();
+
   /* ---- Mở hồ sơ người dùng có sẵn ---- */
   document.getElementById('btn-user-load').addEventListener('click', function(){
+    if(authRole !== 'admin'){ alert('Chỉ Quản trị viên mới mở hồ sơ khác trực tiếp. Hãy dùng nút "Đổi người dùng".'); return; }
     var code = document.getElementById('user-select').value.trim();
     if(!code){ alert('Chưa chọn hồ sơ người dùng nào.'); return; }
     if(code === syncId){ alert('Đây đang là hồ sơ hiện tại rồi.'); return; }
@@ -8716,6 +9006,7 @@
   });
   /* ---- Tạo người dùng mới: dữ liệu trắng hoàn toàn ---- */
   document.getElementById('btn-user-create').addEventListener('click', function(){
+    if(authRole !== 'admin'){ alert('Chỉ Quản trị viên mới được tạo hồ sơ mới.'); return; }
     var input = document.getElementById('new-user-name');
     var name = input.value.trim();
     if(!name){ alert('Nhập tên người dùng mới trước nhé.'); return; }
@@ -8744,8 +9035,6 @@
     if(!isNaN(psd) && psd>=1 && psd<=31) settings.periodStartDay = psd;
     var dg = parseInt(document.getElementById('settings-daily-goal').value, 10);
     if(!isNaN(dg) && dg>=1 && dg<=10) settings.dailyGoal = dg;
-    var bpd = parseInt(document.getElementById('settings-battle-per-day').value, 10);
-    if(!isNaN(bpd) && bpd>=1 && bpd<=20) settings.battlePerDay = bpd;
     settings.quizEnabled = document.getElementById('settings-quiz-on').value !== '0';
     var qs = parseInt(document.getElementById('settings-quiz-seconds').value, 10);
     if(!isNaN(qs) && qs>=5 && qs<=60) settings.quizSeconds = qs;
@@ -9130,7 +9419,7 @@
     + '<section class="rules-sec" id="rules-sec-battle"><h4>⚔️ Đấu Trường</h4><ul>'
     + '<li>Có 2 cách chơi: <b>Hành trình</b> (vượt lần lượt các trận từ rất dễ đến khó) hoặc <b>Đấu nhanh</b> với đối thủ ngẫu nhiên.</li>'
     + '<li>Đến lượt con đánh sẽ có <b>1 câu hỏi</b>: trả lời đúng càng nhanh, đòn càng mạnh (tối đa <b>10 điểm</b>). Mỗi câu có '+sec+' giây; trả lời sai hoặc hết giờ chỉ được 1 điểm.</li>'
-    + '<li>Mỗi ngày đấu tối đa <b>'+perDay+' trận</b> (đặt trong ⚙️ Cài đặt). Hành trình và Đấu nhanh dùng chung số lượt này.</li>'
+    + '<li>Lượt đấu nhận theo <b>điểm nhiệm vụ trong ngày</b>: có điểm được <b>1</b> lượt · mốc 👟 <b>50, 60, 70</b> điểm mỗi mốc <b>+2</b> · mốc ⚽ <b>80, 90</b> điểm mỗi mốc <b>+3</b> · mốc 🏃 <b>100</b> điểm <b>+5</b> (tối đa 18 lượt/ngày). Hôm nay con đã nhận <b>'+perDay+'</b> lượt. Hành trình và Đấu nhanh dùng chung số lượt này.</li>'
     + '<li><b>Thắng</b> nhận ⚡ Năng Lượng như khi hiến chính đối thủ vừa hạ: đối thủ càng giống thẻ của con, ⚡ càng nhiều. Hành trình còn thưởng thêm ⚡ khi vượt trận lần đầu.</li>'
     + '<li><b>Thua</b> không nhận gì, nhưng cũng <b>không mất thẻ nào</b>.</li></ul></section>'
     + '<section class="rules-sec" id="rules-sec-upgrade"><h4>⬆️ Nâng cấp thẻ</h4><ul>'
