@@ -2226,14 +2226,19 @@
   .rm-modes.size-modes .rm-mode{ padding:7px 10px; }
   .t3-headinfo{ margin:6px 0 8px; font-size:13px; line-height:1.5; color:var(--ink-soft); }
   .t3-headinfo b{ color:var(--ink); font-size:14px; }
-  .t3-enemy{ display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin:6px 0 10px; }
+  .t3-enemy{ display:grid; grid-template-columns:repeat(3,96px); justify-content:center; gap:10px; margin:6px 0 10px; }   /* thẻ đối thủ rộng 96px — bằng thẻ đối thủ 1v1 (.rm-opp-card) */
   .t3-ecell .player-card{ pointer-events:none; }
   .t3-ename{ text-align:center; font-size:12px; font-weight:800; margin-top:3px; }
   .t3-panel{ grid-column:1/-1; padding:10px; border-radius:14px; background:rgba(15,23,42,.96); border:1px solid var(--line); box-shadow:0 6px 18px rgba(0,0,0,.35); }
   .t3-title{ font-weight:900; font-size:14px; margin-bottom:6px; } .t3-title small{ font-weight:600; color:var(--ink-soft); }
-  .t3-slots{ display:grid; grid-template-columns:repeat(3,1fr); gap:6px; }
-  .t3-slot{ border:1.5px dashed var(--line); border-radius:10px; padding:6px 4px; text-align:center; font-size:12px; color:var(--ink-soft); min-height:44px; display:flex; flex-direction:column; justify-content:center; }
-  .t3-slot.on{ border-style:solid; border-color:#FBBF24; color:var(--ink); cursor:pointer; background:rgba(251,191,36,.1); }
+  .t3-slots{ display:grid; grid-template-columns:repeat(3,96px); justify-content:center; gap:10px; }   /* thẻ trong đội rộng 96px — bằng thẻ đối thủ phía trên */
+  .t3-slot{ position:relative; width:96px; color:var(--ink-soft); font-size:12px; }
+  .t3-slot.on{ cursor:pointer; color:var(--ink); }
+  .t3-slotcard{ position:relative; width:96px; }
+  .t3-slotcard .player-card{ pointer-events:none; outline:2px solid #FBBF24; outline-offset:-2px; }
+  .t3-slotcard.empty{ aspect-ratio:.72; border:1.5px dashed var(--line); border-radius:10px; display:flex; align-items:center; justify-content:center; }
+  .t3-slotord{ position:absolute; top:3px; left:4px; z-index:5; min-width:22px; height:22px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:900; background:rgba(15,23,42,.88); color:#FDE047; border:1.5px solid #FDE047; }
+  .t3-slotcard.empty .t3-slotord{ top:4px; left:4px; opacity:.7; }
   .t3-slot small{ font-size:10.5px; color:var(--ink-soft); }
   .t3-syn{ display:flex; flex-wrap:wrap; gap:5px; margin:8px 0 2px; }
   .t3-chip{ font-size:11.5px; font-weight:700; padding:3px 8px; border-radius:99px; background:rgba(148,163,184,.14); border:1px solid var(--line); color:var(--ink-soft); display:inline-flex; align-items:center; gap:3px; }
@@ -2352,7 +2357,7 @@
     .ap-foot{ padding-left:24px; padding-right:24px; }
   }
   /* ===== MÁY QUAY SLOT (thay xúc xắc 10 mặt) — hiện giữa sân đấu khi quay điểm đòn ===== */
-  .bt-slot{ position:absolute; left:50%; top:50%; z-index:26; width:190px; padding:7px 9px 8px; border-radius:18px; pointer-events:none;
+  .bt-slot{ position:absolute; left:50%; top:50%; z-index:26; width:224px; padding:7px 9px 8px; border-radius:18px; pointer-events:none;
     background:linear-gradient(170deg,#EF4444 0%,#B91C1C 45%,#7F1D1D 100%); border:3px solid #FBBF24;
     box-shadow:0 0 0 2px #7C2D12, 0 12px 30px rgba(0,0,0,.65), inset 0 2px 0 rgba(255,255,255,.35), inset 0 -6px 12px rgba(0,0,0,.35);
     opacity:0; transform:translate(-50%,-50%) scale(.55); transition:opacity .22s ease, transform .38s cubic-bezier(.3,1.5,.5,1); }
@@ -2367,6 +2372,9 @@
   .bt-reel-strip{ will-change:transform; }
   .bt-reel-strip span{ display:flex; align-items:center; justify-content:center; height:56px; font-family:var(--font-display); font-weight:900; font-size:38px; color:#DC2626; text-shadow:0 2px 0 rgba(0,0,0,.25); }
   .bt-reel-strip span.t{ font-size:29px; }
+  .bt-sep{ flex:none; align-self:center; width:12px; text-align:center; font-family:var(--font-display); font-weight:900; font-size:20px; color:#FEF08A; text-shadow:0 1px 0 #7C2D12; }
+  .bt-reel-strip span.z{ font-size:36px; text-shadow:none; }   /* số 0 hiện bằng icon vui */
+  .bt-slot-line{ right:2px; }
   .bt-reel.spin .bt-reel-strip{ filter:blur(1.6px); }
   @keyframes btReelSpin{ from{ transform:translateY(0); } to{ transform:translateY(-33.3333%); } }
   .bt-slot-line{ position:absolute; left:2px; right:2px; top:50%; height:2px; margin-top:-1px; background:rgba(239,68,68,.85); box-shadow:0 0 6px #EF4444; pointer-events:none; }
@@ -2384,6 +2392,48 @@
   .bt-die{ width:64px; height:64px; clip-path:none; border-radius:16px; font-size:30px; border:2px solid rgba(255,255,255,.3); }
   .bt-die.rolling{ animation:btDiePulse .5s ease-in-out infinite; }
   @keyframes btDiePulse{ 50%{ opacity:.55; } }
+
+  /* ===== HỒI HỘP: 9 giây cuối giấu đồng hồ, khu vực câu hỏi đập như nhịp tim ===== */
+  .bt-quiz-bar{ transition:opacity .35s ease; }
+  .bt-quiz.hb .bt-quiz-time{ background:linear-gradient(160deg,#FCA5A5,#EF4444); color:#fff; box-shadow:0 0 14px rgba(239,68,68,.85); animation:btHbIcon var(--hb,.95s) ease-in-out infinite; }
+  .bt-quiz.hb .bt-quiz-bar, .bt-quiz.fin .bt-quiz-bar{ opacity:0; }
+  .bt-stage > .bt-quiz.hb{ outline:3px solid transparent; outline-offset:-3px; animation:btHeart var(--hb,.95s) ease-in-out infinite; }
+  .bt-quiz.hb .bt-quiz-q{ animation:btHbText var(--hb,.95s) ease-in-out infinite; }
+  @keyframes btHeart{
+    0%,100%{ transform:scale(1); background-color:rgba(239,68,68,0); outline-color:rgba(239,68,68,0); filter:drop-shadow(0 0 0 rgba(239,68,68,0)); }
+    12%{ transform:scale(1.022); background-color:rgba(239,68,68,.16); outline-color:rgba(239,68,68,.75); filter:drop-shadow(0 0 10px rgba(239,68,68,.7)); }
+    24%{ transform:scale(1); background-color:rgba(239,68,68,.05); outline-color:rgba(239,68,68,.25); filter:drop-shadow(0 0 3px rgba(239,68,68,.25)); }
+    38%{ transform:scale(1.034); background-color:rgba(239,68,68,.24); outline-color:rgba(239,68,68,.95); filter:drop-shadow(0 0 16px rgba(239,68,68,.95)); }
+    58%{ transform:scale(1); background-color:rgba(239,68,68,0); outline-color:rgba(239,68,68,0); filter:drop-shadow(0 0 0 rgba(239,68,68,0)); }
+  }
+  @keyframes btHbText{ 0%,100%{ text-shadow:0 0 0 rgba(239,68,68,0); } 12%{ text-shadow:0 0 10px rgba(239,68,68,.8); } 24%{ text-shadow:0 0 2px rgba(239,68,68,.3); } 38%{ text-shadow:0 0 16px rgba(239,68,68,1); } 58%{ text-shadow:0 0 0 rgba(239,68,68,0); } }
+  @keyframes btHbIcon{ 0%,100%{ transform:scale(1); } 12%{ transform:scale(1.2); } 24%{ transform:scale(1); } 38%{ transform:scale(1.3); } 58%{ transform:scale(1); } }
+  @keyframes btHeartSoft{ 0%,100%{ background-color:rgba(239,68,68,0); } 40%{ background-color:rgba(239,68,68,.22); } }
+  @media (prefers-reduced-motion:reduce){
+    .bt-stage > .bt-quiz.hb{ animation-name:btHeartSoft; }
+    .bt-quiz.hb .bt-quiz-time, .bt-quiz.hb .bt-quiz-q{ animation:none; }
+  }
+
+  /* ===== LUCKY ROLL kịch tính (lượt trả lời câu hỏi): 3 ô = icon nghịch ngợm + điểm 1–10 ===== */
+  .bt-slot.drama{ width:268px; }
+  .bt-slot.drama .bt-reel{ height:70px; }
+  .bt-slot.drama .bt-reel-strip span{ flex-direction:column; gap:0; height:70px; font-size:0; line-height:1; }
+  .bt-slot.drama .bt-reel-strip em{ font-style:normal; font-size:22px; line-height:1.05; }
+  .bt-slot.drama .bt-reel-strip b{ font-family:var(--font-display); font-weight:900; font-size:30px; line-height:1; color:#DC2626; text-shadow:0 2px 0 rgba(0,0,0,.25); }
+  .bt-slot.drama .bt-reel-strip span.up b{ color:#15803D; }
+  .bt-slot.drama .bt-reel-strip span.dn b{ color:#7C3AED; }
+  .bt-slot.drama .bt-slot-foot{ min-height:2.7em; font-size:12.5px; line-height:1.3; letter-spacing:.02em; }
+  .bt-slot.drama .bt-slot-foot .sc{ display:inline-block; font-size:16px; color:#fff; letter-spacing:.06em; text-shadow:0 1px 0 #7C2D12,0 0 8px rgba(253,224,71,.8); }
+  .bt-slot.drama .bt-reel.crawl .bt-reel-strip{ filter:blur(.5px); }
+  .bt-slot.drama .bt-reel.lock{ animation:btReelLock .42s ease-out; box-shadow:inset 0 0 8px rgba(0,0,0,.45), 0 0 0 2px #FDE047, 0 0 12px rgba(253,224,71,.85); }
+  @keyframes btReelLock{ 0%{ transform:scale(.88); } 55%{ transform:scale(1.1); } 100%{ transform:scale(1); } }
+  .bt-slot.tense{ animation:btTense .13s linear infinite; box-shadow:0 0 0 2px #7C2D12, 0 0 28px 6px rgba(239,68,68,.9), 0 12px 30px rgba(0,0,0,.65), inset 0 2px 0 rgba(255,255,255,.35); }
+  @keyframes btTense{
+    0%,100%{ transform:translate(-50%,-50%) scale(1.03) rotate(0deg); }
+    25%{ transform:translate(calc(-50% - 2px),-50%) scale(1.03) rotate(-.7deg); }
+    75%{ transform:translate(calc(-50% + 2px),-50%) scale(1.03) rotate(.7deg); }
+  }
+  @media (prefers-reduced-motion:reduce){ .bt-slot.tense{ animation:none; } .bt-slot.drama .bt-reel.lock{ animation:none; } }
 
   /* ===== 3V3 · SÂN ĐẤU MỚI: 2 hàng ngang, vừa khít 1 màn hình iPad (không cần kéo lên/xuống) =====
      Hàng trên = đội đối thủ, hàng dưới = đội con. Số 1/2/3 trên mỗi thẻ = thứ tự ra đòn (= thứ tự chọn thẻ).
@@ -2413,7 +2463,7 @@
   .bt3-hp .battle-hp-track{ height:15px; margin:0; }
   .bt3-hp .battle-hp-text{ position:absolute; inset:0; margin:0; min-height:0; display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:900; color:#fff; text-shadow:0 1px 2px #000,0 0 3px #000; }
   .bt3-info .bt3-rage{ margin:2px 0 0; height:11px; justify-content:center; }
-  .bt3-unit.next .bt3-cardwrap{ filter:drop-shadow(0 0 9px #FDE047); animation:bt3Bob 1.1s ease-in-out infinite; }
+  .bt3-unit.next .bt3-cardwrap{ filter:drop-shadow(0 0 9px #FDE047); outline:3px solid #FDE047; outline-offset:1px; animation:bt3Bob 1.1s ease-in-out infinite; }
   .bt3-unit.next .bt3-ord{ background:#FDE047; color:#111827; }
   @keyframes bt3Bob{ 50%{ transform:translateY(-4px); } }
   .bt3-unit.targetable{ outline:none; animation:none; cursor:pointer; }
@@ -2429,6 +2479,7 @@
   .bt3-midbar{ position:relative; z-index:1; flex:none; height:30px; display:grid; grid-template-columns:1fr 1fr; align-items:center; gap:8px; }
   .bt3-round{ justify-self:start; font-size:12px; font-weight:800; color:#F1F5F9; background:rgba(15,23,42,.75); border-radius:99px; padding:3px 10px; }
   .bt3-round:empty{ display:none; }
+  .bt3-order:empty{ display:none; }
   .bt3-order{ justify-self:end; display:flex; align-items:center; gap:4px; background:rgba(15,23,42,.75); border-radius:99px; padding:3px 8px; }
   .bt3-oc-lbl{ font-size:10.5px; font-weight:800; color:#CBD5E1; margin-right:2px; }
   .bt3-oc{ width:22px; height:22px; border-radius:7px; display:inline-flex; align-items:center; justify-content:center; font-size:12px; font-weight:900; color:#04121f; }
@@ -2695,7 +2746,7 @@
       <div class="battle-pick-grid" id="battle-pick-grid"></div>
     </div>
     <div class="panel" id="battle-arena-view" style="display:none">
-      <div class="bt-arena" id="bt-arena"><div class="bt-arena-bg" id="bt-arena-bg" aria-hidden="true"><div class="ab-layer" id="ab-a"></div><div class="ab-layer" id="ab-b"></div><div class="ab-shade"></div></div><div class="battle-vs-row" id="battle-vs-row"></div><div class="bt-slot" id="bt-slot" aria-hidden="true"><div class="bt-slot-top"><i></i><span id="bt-slot-title">LUCKY ROLL</span><i></i></div><div class="bt-slot-body"><div class="bt-slot-win"><div class="bt-reel"><div class="bt-reel-strip"></div></div><div class="bt-reel"><div class="bt-reel-strip"></div></div><div class="bt-reel"><div class="bt-reel-strip"></div></div><div class="bt-slot-line"></div></div><div class="bt-slot-lever"><b></b></div></div><div class="bt-slot-foot" id="bt-slot-foot">ĐANG QUAY…</div></div><div class="bt-fx" id="bt-fx"></div></div>
+      <div class="bt-arena" id="bt-arena"><div class="bt-arena-bg" id="bt-arena-bg" aria-hidden="true"><div class="ab-layer" id="ab-a"></div><div class="ab-layer" id="ab-b"></div><div class="ab-shade"></div></div><div class="battle-vs-row" id="battle-vs-row"></div><div class="bt-slot" id="bt-slot" aria-hidden="true"><div class="bt-slot-top"><i></i><span id="bt-slot-title">LUCKY ROLL</span><i></i></div><div class="bt-slot-body"><div class="bt-slot-win"><div class="bt-reel"><div class="bt-reel-strip"></div></div><span class="bt-sep">+</span><div class="bt-reel"><div class="bt-reel-strip"></div></div><span class="bt-sep">+</span><div class="bt-reel"><div class="bt-reel-strip"></div></div><div class="bt-slot-line"></div></div><div class="bt-slot-lever"><b></b></div></div><div class="bt-slot-foot" id="bt-slot-foot">ĐANG QUAY…</div></div><div class="bt-fx" id="bt-fx"></div></div>
       <div class="bt-console" id="bt-console" data-side="0">
         <div class="bt-turn-slot"><div class="bt-turn" id="bt-turn">⚔️ Sẵn sàng!</div></div>
         <div class="bt-stage">
@@ -2865,7 +2916,7 @@
     <label>⏱️ Thời gian trả lời mỗi câu (5–60 giây)
       <input type="number" id="settings-quiz-seconds" min="5" max="60" step="1">
     </label>
-    <p class="hint-text" style="margin:-6px 0 0">Số giây còn lại khi trả lời đúng = điểm của đòn đánh (tối đa 10). Trả lời sai hoặc hết giờ chỉ được 1 điểm.</p>
+    <p class="hint-text" style="margin:-6px 0 0">Số giây còn lại khi trả lời đúng = điểm của đòn đánh (tối đa 10). Trả lời sai hoặc hết giờ chỉ được 1 điểm. Đồng hồ chỉ hiện số từ giây thứ 10 trở lên; 9 giây cuối số biến mất, khu vực câu hỏi đập như nhịp tim và điểm được giấu kín cho tới khi Lucky Roll quay ra (nếu đặt dưới 10 giây thì nhịp tim đập ngay từ đầu).</p>
       </div>
       <div class="ap-card" data-save="1">
         <h4>📊 Tỷ lệ câu hỏi theo lĩnh vực (%)</h4>
@@ -7465,40 +7516,62 @@
   }
   /* ===== Máy quay slot giữa sân: 3 cuộn dừng lần lượt, cùng ra điểm của đòn đánh ===== */
   var btSlotTimer = 0;
-  function btSlotBuild(){
+  /* Mỗi cuộn số hiện 0–4 (3 cuộn cộng lại = điểm đòn 1–10); ô icon cuối đổi theo mức điểm để tăng kịch tính */
+  var BT_SLOT_N = 5, BT_SLOT_ZERO = '🤪';   // số 0 trên cuộn hiện bằng icon vui
+  function btSlotSplit(v){   // tách điểm đòn thành 3 số 0–4 có tổng = v (ngẫu nhiên, chỉ để hiển thị)
+    for(var tries = 0; tries < 200; tries++){
+      var a = Math.floor(Math.random()*5), b = Math.floor(Math.random()*5), c = v - a - b;
+      if(c >= 0 && c <= 4) return [a, b, c];
+    }
+    return [Math.min(4, v), Math.min(4, Math.max(0, v - 4)), Math.max(0, v - 8)];
+  }
+  function btSlotBuild(mode){
     var sl = btEl('bt-slot'); if(!sl) return null;
-    if(!sl.getAttribute('data-built')){
-      var items = '';
-      for(var r = 0; r < 3; r++) for(var n = 1; n <= 10; n++) items += '<span'+(n === 10 ? ' class="t"' : '')+'>'+n+'</span>';
-      sl.querySelectorAll('.bt-reel-strip').forEach(function(e){ e.innerHTML = items; });
-      sl.setAttribute('data-built', '1');
+    mode = mode || 'old';
+    if(mode === 'drama' || sl.getAttribute('data-built') !== mode){   // 'drama' dựng lại mỗi lần để icon gây nhiễu luôn mới
+      var drama = mode === 'drama', n = drama ? BT_DR_N : BT_SLOT_N;
+      sl.querySelectorAll('.bt-reel-strip').forEach(function(e){
+        var one = '';
+        for(var i = 0; i < n; i++){
+          if(drama) one += btDrItem(btDrRnd(1, 10), BT_FUN[(btDrRnd(0, BT_FUN.length - 1) + i) % BT_FUN.length], '');
+          else one += i === 0 ? '<span class="z">'+BT_SLOT_ZERO+'</span>' : '<span>'+i+'</span>';
+        }
+        e.innerHTML = one + one + one;   // 3 bản giống nhau để vòng quay liền mạch
+        e.style.transition = 'none'; e.style.transform = ''; e.style.animation = 'none';
+      });
+      sl.querySelectorAll('.bt-sep').forEach(function(e){ e.textContent = drama ? '›' : '+'; });
+      sl.classList.toggle('drama', drama);
+      sl.setAttribute('data-n', String(n)); sl.setAttribute('data-built', mode);
     }
     return sl;
   }
   function btSlotHide(now){
-    clearTimeout(btSlotTimer);
+    clearTimeout(btSlotTimer); btDrumStop();
     var sl = btEl('bt-slot'); if(!sl) return;
     if(now){ sl.style.transition = 'none'; }
-    sl.classList.remove('on', 'pull', 'high', 'crit');
+    sl.classList.remove('on', 'pull', 'high', 'crit', 'tense');
     if(now){ void sl.offsetWidth; sl.style.transition = ''; }
   }
   function btSlotStart(sl){
-    clearTimeout(btSlotTimer);
-    sl.classList.remove('high', 'crit'); sl.classList.add('on', 'pull');
+    clearTimeout(btSlotTimer); btDrumStop();
+    sl.classList.remove('high', 'crit', 'tense'); sl.classList.add('on', 'pull');
     btEl('bt-slot-title').textContent = 'LUCKY ROLL'; btEl('bt-slot-foot').textContent = 'ĐANG QUAY…';
+    var n = parseInt(sl.getAttribute('data-n'), 10) || BT_SLOT_N;
     sl.querySelectorAll('.bt-reel').forEach(function(r, k){
       var strip = r.querySelector('.bt-reel-strip');
-      r.classList.add('spin');
+      r.classList.remove('lock', 'crawl'); r.classList.add('spin');
       strip.style.transition = 'none'; strip.style.transform = '';
-      strip.style.animation = 'btReelSpin '+(0.26 + k*0.035)+'s linear infinite';
+      strip.style.animation = 'btReelSpin '+((0.26 + k*0.035) * n / BT_SLOT_N)+'s linear infinite';
     });
   }
-  function btSlotStop(sl, k, v){
+  function btSlotStop(sl, k, v, ms, startIdx){   // k = 0..2; v = chỉ số ô cần dừng; startIdx = ô bắt đầu trượt (mặc định = v)
+    var n = parseInt(sl.getAttribute('data-n'), 10) || BT_SLOT_N;
     var r = sl.querySelectorAll('.bt-reel')[k], strip = r.querySelector('.bt-reel-strip'), H = r.clientHeight || 56;
+    var s0 = (typeof startIdx === 'number') ? startIdx : v;
     strip.style.animation = 'none'; strip.style.transition = 'none';
-    strip.style.transform = 'translateY('+(-(v - 1)*H)+'px)'; void strip.offsetWidth;
-    strip.style.transition = 'transform .75s cubic-bezier(.12,.8,.2,1.12)';
-    strip.style.transform = 'translateY('+(-(10 + v - 1)*H)+'px)';
+    strip.style.transform = 'translateY('+(-s0*H)+'px)'; void strip.offsetWidth;
+    strip.style.transition = 'transform '+((ms || 750) / 1000)+'s cubic-bezier(.12,.8,.2,1.12)';
+    strip.style.transform = 'translateY('+(-(n + v)*H)+'px)';
     r.classList.remove('spin');
   }
   function btSlotLand(st, v){
@@ -7506,21 +7579,130 @@
     var tier = v >= 10 ? 'crit' : (v >= 8 ? 'high' : (v >= 4 ? 'mid' : 'low'));
     sl.classList.remove('pull'); if(tier === 'crit' || tier === 'high') sl.classList.add(tier);
     btEl('bt-slot-title').textContent = tier === 'crit' ? '🎰 JACKPOT! 🎰' : (tier === 'high' ? '🔥 BIG WIN!' : 'LUCKY ROLL');
-    btEl('bt-slot-foot').textContent = 'ĐIỂM ĐÒN: ' + v;
+    btEl('bt-slot-foot').textContent = (st.btParts ? st.btParts.join(' + ') + ' = ' : '') + v + ' ĐIỂM';
     var die = btEl('bt-die');
     if(die){ die.className = 'bt-die landed'; die.setAttribute('data-v', tier); die.textContent = v; }
     btSlotTimer = setTimeout(function(){ btSlotHide(false); }, (tier === 'crit' ? 1500 : 1000) / (st.speed || 1));
   }
-  async function btRollDice(st, finalVal){
+  /* ===== LUCKY ROLL KỊCH TÍNH — chỉ dùng cho lượt người chơi trả lời câu hỏi =====
+     Điểm thật (1–10) đã chốt từ trước; 3 ô chỉ kể câu chuyện dẫn tới nó. Mỗi ô = 1 icon nghịch ngợm + số điểm TẠM TÍNH (1–10)
+     sau ô đó; ô cuối luôn bằng điểm thật. Kịch bản: Leo dốc · Nước rút · Đỉnh giả rồi tụt · Tụt rồi bật · Rơi tự do · Chắc như đinh · Tam hoa (10). */
+  var BT_DR_N = 12, BT_QUIZ_SHOW = 10, btDrLast = '', btDrumIv = 0;
+  var BT_FUN = ['🤪','😜','👻','🦄','🐵','🤡','🐸','🐙','🍌','🚀','💣','🦆','🐊','🐌','🍀','🎈','😈','🤖','🐢','🐰'];
+  function btDrRnd(a, b){ return a + Math.floor(Math.random() * (b - a + 1)); }
+  function btDrPick(arr){ return arr[Math.floor(Math.random() * arr.length)]; }
+  function btDrItem(num, ic, cls){ return '<span class="dr '+(cls || '')+'"><em>'+ic+'</em><b>'+num+'</b></span>'; }
+  function btDrCl(x){ return Math.max(1, Math.min(10, x)); }
+  var BT_DR_SCEN = [
+    {id:'climb',   w:2, ok:function(v){ return v >= 3; },  mk:function(v){ var a = btDrRnd(1, v - 2); return [a, btDrRnd(a + 1, v - 1), v]; }},
+    {id:'sprint',  w:3, ok:function(v){ return v >= 4; },  mk:function(v){ return [btDrRnd(1, v - 3), btDrRnd(1, v - 3), v]; }},
+    {id:'fake',    w:3, ok:function(v){ return v <= 9; },  mk:function(v){ var h = v <= 8 ? btDrRnd(v + 2, 10) : 10; return [btDrRnd(1, h - 1), h, v]; }},
+    {id:'rebound', w:3, ok:function(v){ return v >= 3; },  mk:function(v){ var lo = btDrRnd(1, v - 2); return [btDrRnd(lo + 1, 10), lo, v]; }},
+    {id:'drop',    w:3, ok:function(v){ return v <= 8; },  mk:function(v){ var m = btDrRnd(v + 1, 9); return [btDrRnd(m + 1, 10), m, v]; }},
+    {id:'steady',  w:1, ok:function(){ return true; },     mk:function(v){ return [btDrCl(v + btDrRnd(-1, 1)), btDrCl(v + btDrRnd(-1, 1)), v]; }},
+    {id:'triple',  w:2, ok:function(v){ return v === 10; }, mk:function(){ return [10, 10, 10]; }}
+  ];
+  function btDrPlan(v){
+    v = Math.max(1, Math.min(10, Math.round(v)));
+    var pool = BT_DR_SCEN.filter(function(s){ return s.ok(v); });
+    var alt = pool.filter(function(s){ return s.id !== btDrLast; }); if(alt.length) pool = alt;   // không lặp kịch bản liền nhau
+    var tot = 0; pool.forEach(function(s){ tot += s.w; });
+    var x = Math.random() * tot, sc = pool[0];
+    for(var i = 0; i < pool.length; i++){ x -= pool[i].w; if(x <= 0){ sc = pool[i]; break; } }
+    btDrLast = sc.id;
+    return {id:sc.id, p:sc.mk(v)};
+  }
+  function btDrStep(i, prev, cur, plan){   // icon + câu nói cho ô i (điểm tạm tính chuyển từ prev sang cur)
+    var d = cur - prev, cls = i === 0 ? '' : (d > 0 ? 'up' : (d < 0 ? 'dn' : '')), o;
+    if(plan.id === 'triple' && i === 2) return {ic:'👑', q:'TAM HOA! Ba ô 10 điểm!', cls:'up'};
+    if(i === 0) o = cur >= 8 ? {ic:'🔥', q:'Khởi đầu bùng nổ!'} : (cur <= 3 ? {ic:'🙈', q:'Ối… hơi thấp nè!'} : {ic:'🤪', q:'Xuất phát nghịch ngợm!'});
+    else if(d >= 5) o = btDrPick([{ic:'🚀', q:'Phóng tên lửa!'}, {ic:'🦄', q:'Kỳ lân tặng quà!'}, {ic:'🧨', q:'BÙM! Nổ điểm!'}]);
+    else if(d >= 3) o = btDrPick([{ic:'🐰', q:'Thỏ nhảy vọt!'}, {ic:'⚡', q:'Sét đánh may mắn!'}]);
+    else if(d >= 1) o = btDrPick([{ic:'🍀', q:'Trúng cỏ 4 lá!'}, {ic:'🐵', q:'Khỉ tặng thêm điểm!'}]);
+    else if(d === 0) o = btDrPick([{ic:'😎', q:'Giữ vững phong độ!'}, {ic:'🛡️', q:'Khiên chắn vững!'}]);
+    else if(d >= -2) o = btDrPick([{ic:'🍌', q:'Trượt vỏ chuối!'}, {ic:'🐌', q:'Ốc sên cản đường!'}]);
+    else o = btDrPick([{ic:'🐊', q:'Cá sấu ngoạm mất điểm!'}, {ic:'🤡', q:'Chú hề ăn bớt điểm!'}, {ic:'💣', q:'Bom nổ! Rớt điểm!'}]);
+    return {ic:o.ic, q:o.q, cls:cls};
+  }
+  function btDrumStop(){ if(btDrumIv){ clearInterval(btDrumIv); btDrumIv = 0; } }
+  function btDrumStart(speed){   // trống dồn khi chờ ô cuối (tự dừng sau tối đa ~4s phòng khi bị ngắt)
+    btDrumStop(); var c = 0;
+    btDrumIv = setInterval(function(){
+      c++; if(c > 48){ btDrumStop(); return; }
+      try{ beep(150 + (c % 2) * 30 + Math.min(c, 20) * 4, 0.05, 'square', 0, 0.045); }catch(e){}
+    }, 85 / (speed || 1));
+  }
+  function btHeartSfx(){ try{ beep(95, 0.12, 'triangle', 0.1, 0.28); beep(78, 0.16, 'triangle', 0.26, 0.22); }catch(e){} }   // tim đập "lub-dub"
+  function btDrSfx(d){
+    try{
+      if(d > 0){ beep(520, 0.1, 'triangle', 0, 0.15); beep(700, 0.14, 'triangle', 0.08, 0.15); }
+      else if(d < 0){ beep(320, 0.14, 'sawtooth', 0, 0.09); beep(230, 0.22, 'sawtooth', 0.12, 0.09); }
+      else playPop();
+    }catch(e){}
+  }
+  function btDrStop(sl, k, num, ic, cls, ms){   // dừng cuộn k đúng ô (icon + số) đã định, trượt từ một ô khác để không lộ kết quả trước
+    var r = sl.querySelectorAll('.bt-reel')[k], strip = r.querySelector('.bt-reel-strip');
+    var n = parseInt(sl.getAttribute('data-n'), 10) || BT_DR_N, idx = 3 + k, html = btDrItem(num, ic, cls);
+    for(var c = 0; c < 3; c++){ var el = strip.children[c * n + idx]; if(el) el.outerHTML = html; }
+    r.classList.remove('crawl');
+    btSlotStop(sl, k, idx, ms, (idx + 5) % n);
+  }
+  async function btRollDrama(st, finalVal){
+    var die = btEl('bt-die'); if(die){ die.className = 'bt-die rolling'; die.removeAttribute('data-v'); die.textContent = '?'; }
+    var sl = btSlotBuild('drama');
+    if(!sl){ if(die){ die.className = 'bt-die landed'; die.textContent = finalVal; } return; }
+    var plan = btDrPlan(finalVal), foot = btEl('bt-slot-foot'), title = btEl('bt-slot-title'), prev = 0;
+    btSlotStart(sl);
+    foot.innerHTML = '🤞 Điểm đang được giấu kín…<br><b class="sc">? · ? · ?</b>';
+    await bwait(st, 850); if(!btAlive(st)) return;
+    for(var k = 0; k < 3; k++){
+      var cur = plan.p[k], info = btDrStep(k, prev, cur, plan), last = (k === 2);
+      if(k === 1){ await bwait(st, 450); if(!btAlive(st)) return; }
+      if(last){   // ô cuối: rung lắc + trống dồn, cuộn chậm lại cho người chơi nín thở
+        var slow = (plan.id === 'fake' || plan.id === 'rebound' || plan.id === 'drop');
+        sl.classList.add('tense'); title.textContent = '🥁 HỒI HỘP…';
+        foot.innerHTML = (plan.id === 'fake' && prev >= 9 ? '😲 ' + prev + ' rồi sao?! ' : '🥁 ') + 'Ô cuối quyết định…<br><b class="sc">? điểm</b>';
+        var rl = sl.querySelectorAll('.bt-reel')[2], rs = rl.querySelector('.bt-reel-strip');
+        rl.classList.add('crawl'); rs.style.animationDuration = (BT_DR_N / BT_SLOT_N * 0.7) + 's';
+        btDrumStart(st.speed);
+        await bwait(st, slow ? 1500 : 1100); btDrumStop(); if(!btAlive(st)) return;
+        sl.classList.remove('tense');
+      }
+      btDrStop(sl, k, cur, info.ic, info.cls, last ? 1100 : 750);
+      await bwait(st, last ? 750 : 560); if(!btAlive(st)) return;
+      sl.querySelectorAll('.bt-reel')[k].classList.add('lock');   // ô vừa lộ diện
+      btDrSfx(cur - prev);
+      foot.innerHTML = info.ic + ' ' + info.q + '<br>' + (last ? '<b class="sc">' + cur + ' ĐIỂM</b>' : 'Đang có <b class="sc">' + cur + '</b> điểm…');
+      await bwait(st, last ? 500 : (plan.id === 'fake' && k === 1 ? 1000 : 700)); if(!btAlive(st)) return;
+      prev = cur;
+    }
+    btDrumStop();
+    st.btParts = null;
+    btSlotLand(st, finalVal);
+    foot.innerHTML = '🎯 CHỐT<br><b class="sc">' + finalVal + ' ĐIỂM</b>';
+    clearTimeout(btSlotTimer); btSlotTimer = setTimeout(function(){ btSlotHide(false); }, (finalVal >= 10 ? 1900 : 1400) / (st.speed || 1));   // cho kết quả nằm lại lâu hơn một chút
+    try{
+      if(finalVal >= 10) playCheer(3); else if(finalVal >= 8) playCheer(2); else if(finalVal >= 4) playCheer(1);
+      else { beep(330, 0.14, 'triangle', 0, 0.12); beep(262, 0.22, 'triangle', 0.15, 0.12); }
+    }catch(e){}
+  }
+  async function btRollDice(st, finalVal, drama){
+    if(drama) return btRollDrama(st, finalVal);   // lượt trả lời câu hỏi: Lucky Roll kịch tính
     var die = btEl('bt-die'); if(die){ die.className = 'bt-die rolling'; die.removeAttribute('data-v'); die.textContent = '?'; }
     var sl = btSlotBuild();
     if(!sl){ if(die){ die.className = 'bt-die landed'; die.textContent = finalVal; } return; }
+    var parts = btSlotSplit(finalVal); st.btParts = parts;
+    var foot = btEl('bt-slot-foot');
     btSlotStart(sl);
     await bwait(st, 650); if(!btAlive(st)) return;
-    for(var k = 0; k < 3; k++){
-      btSlotStop(sl, k, finalVal);
-      await bwait(st, k < 2 ? 330 : 780); if(!btAlive(st)) return;
+    for(var k = 0; k < 3; k++){   // 3 cuộn số dừng lần lượt, tổng đang cộng dồn hiện ở dòng dưới
+      btSlotStop(sl, k, parts[k]);
+      var shown = parts.slice(0, k + 1).join(' + ') + (k < 2 ? ' + …' : ' = ' + finalVal);
+      foot.textContent = shown;
+      await bwait(st, k < 2 ? 450 : 600); if(!btAlive(st)) return;
     }
+    foot.textContent = parts.join(' + ') + ' = ' + finalVal;
+    await bwait(st, 400); if(!btAlive(st)) return;
     btSlotLand(st, finalVal);
   }
 
@@ -7541,18 +7723,31 @@
     btEl('bt-quiz-q').textContent = q.question;
     fb.innerHTML = '';
     optsEl.innerHTML = q.options.map(function(o, i){ return '<button type="button" class="bt-opt" data-i="'+i+'">'+escHtml(o)+'</button>'; }).join('');
-    box.classList.remove('urgent'); box.style.display = ''; if(mid) mid.style.display = 'none';
+    box.classList.remove('urgent', 'hb', 'fin'); box.style.removeProperty('--hb'); timeEl.textContent = String(secs);
+    box.style.display = ''; if(mid) mid.style.display = 'none';
     try{ box.scrollIntoView({block:'nearest'}); }catch(e){}
     var res = await new Promise(function(resolve){
-      var t0 = performance.now(), done = false, iv = null;
+      var t0 = performance.now(), done = false, iv = null, hb = false, tempo = 0, lastBeat = 0;
       function remaining(){ return secs - (performance.now() - t0) / 1000; }
-      function finish(r){ if(done) return; done = true; clearInterval(iv); st.quiz = null; optsEl.onclick = null; resolve(r); }
+      function finish(r){
+        if(done) return; done = true; clearInterval(iv); st.quiz = null; optsEl.onclick = null;
+        box.classList.remove('hb'); box.classList.add('fin'); box.style.removeProperty('--hb');   // dừng nhịp tim, giấu thanh thời gian
+        timeEl.textContent = r.skipped ? '' : (r.ok ? '🎰' : (r.timeout ? '⏰' : '❌'));
+        resolve(r);
+      }
       st.quiz = {abort:function(){ finish({ok:false, skipped:true, picked:-1}); }, shift:function(ms){ t0 += ms; }};
       function tick(){
         var rem = remaining();
-        if(rem <= 0){ timeEl.textContent = '0'; bar.style.width = '0%'; finish({ok:false, timeout:true, picked:-1}); return; }
-        timeEl.textContent = String(Math.ceil(rem)); bar.style.width = (rem / secs * 100)+'%';
-        box.classList.toggle('urgent', rem <= 5);
+        if(rem <= 0){ finish({ok:false, timeout:true, picked:-1}); return; }
+        if(Math.ceil(rem) >= BT_QUIZ_SHOW){   // 15 → 10: còn hiện số đếm ngược + thanh thời gian
+          timeEl.textContent = String(Math.ceil(rem)); bar.style.width = (rem / secs * 100)+'%';
+        } else {                              // 9 → 0: giấu số & thanh, cả khu vực câu hỏi đập như nhịp tim (càng gần 0 càng dồn dập)
+          if(!hb){ hb = true; box.classList.add('hb'); timeEl.textContent = '💓'; }
+          var tp = rem <= 2 ? 0.42 : (rem <= 5 ? 0.62 : 0.95);
+          if(tp !== tempo){ tempo = tp; box.style.setProperty('--hb', tp + 's'); }
+          var now = performance.now();
+          if(now - lastBeat >= tempo * 1000){ lastBeat = now; btHeartSfx(); }
+        }
       }
       tick(); iv = setInterval(tick, 100);
       optsEl.onclick = function(e){
@@ -7568,11 +7763,11 @@
     if(!res.skipped){
       var btns = optsEl.querySelectorAll('.bt-opt');
       btns.forEach(function(b2, i){ b2.disabled = true; if(i === q.correct) b2.classList.add('ok'); else if(i === res.picked) b2.classList.add('bad'); });
-      fb.innerHTML = res.ok ? '✅ <b>Chính xác!</b> Còn '+res.secLeft+' giây → '+res.score+' điểm'
+      fb.innerHTML = res.ok ? '✅ <b>Chính xác!</b> Điểm đang được giấu kín — quay <b>Lucky Roll</b> nào! 🎰'
         : ((res.timeout ? '⏰ <b>Hết giờ!</b> ' : '❌ <b>Chưa đúng rồi.</b> ') + 'Đáp án đúng: <b>'+escHtml(q.options[q.correct])+'</b>'+(q.explain ? '<br><small>'+escHtml(q.explain)+'</small>' : ''));
       await bwait(st, res.ok ? 1000 : 2600);
     }
-    box.style.display = 'none'; box.classList.remove('urgent'); if(mid) mid.style.display = '';
+    box.style.display = 'none'; box.classList.remove('urgent', 'hb', 'fin'); box.style.removeProperty('--hb'); if(mid) mid.style.display = '';
     return res;
   }
 
@@ -7606,7 +7801,7 @@
       if(!evt) return;
       evt.quiz = {ok:qres.ok, secLeft:qres.secLeft || 0, timeout:!!qres.timeout, skipped:!!qres.skipped};
       c = evt.calc;
-      await btRollDice(st, evt.roll); if(!btAlive(st)) return;
+      await btRollDice(st, evt.roll, true); if(!btAlive(st)) return;
       dnote.innerHTML = (qres.ok ? '✅ Đúng! Còn <b>'+qres.secLeft+'s</b>' : (qres.timeout ? '⏰ Hết giờ' : '❌ Chưa đúng'))
         + ' → <b>'+evt.roll+' điểm</b> (×'+c.d10.toFixed(1)+')' + (evt.crit ? '<br>🎯 <b>CHÍ MẠNG!</b>' : '');
       if(evt.crit){
@@ -8130,8 +8325,10 @@
     var slots = '';
     for(var i = 0; i < 3; i++){
       var c = sel[i];
-      slots += c ? '<div class="t3-slot on" data-pick="'+escHtml(c.id)+'">'+ORD3[i]+' '+elIc3(c.battle.element)+' <b>'+escHtml(sn3(c))+'</b><small>OVR '+(c.ovr||'')+'</small></div>'
-                 : '<div class="t3-slot">'+ORD3[i]+' <span>trống</span></div>';
+      slots += c ? '<div class="t3-slot on" data-pick="'+escHtml(c.id)+'" title="Bấm để bỏ thẻ khỏi đội">'
+                   +   '<div class="t3-slotcard"><span class="t3-slotord">'+ORD3[i]+'</span>'+playerCardHTML(c, false)+'</div>'
+                   +   '<div class="t3-ename">'+elIc3(c.battle.element)+' '+escHtml(sn3(c))+'</div></div>'
+                 : '<div class="t3-slot"><div class="t3-slotcard empty"><span class="t3-slotord">'+ORD3[i]+'</span><span>trống</span></div></div>';
     }
     var tb = previewBattle3(sel, enemy);
     var chips = sel.length >= 2 ? synChips3(tb, 0) : '<span class="t3-chip">Chọn đủ thẻ để xem liên kết Ngũ hành</span>';
@@ -8240,12 +8437,7 @@
   function renderOrder3(st){
     var b = st.b, el = document.getElementById('bt3-order'), rd = document.getElementById('bt3-round');
     if(rd) rd.innerHTML = b.finished ? '🏁 Hết trận' : 'Vòng <b>'+(b.round + 1)+'</b>';
-    if(!el) return;
-    if(b.finished){ el.innerHTML = ''; return; }
-    el.innerHTML = '<span class="bt3-oc-lbl">Thứ tự đánh</span>' + order3(b, 6).map(function(i, k){
-      var u = b.sides[i];
-      return '<span class="bt3-oc t'+u.team+(k === 0 ? ' now' : '')+'" title="'+escHtml((u.team === 0 ? 'Đội con' : 'Đối thủ')+' · '+(u.card.name || ''))+'">'+(u.slot + 1)+'</span>';
-    }).join('');
+    if(el) el.innerHTML = '';   // không còn dãy số thứ tự đánh — chỉ highlight thẻ đến lượt (class .next, đặt trong renderBattleArena3)
   }
   /* Vừa khít màn iPad: tính chiều cao khung đấu và bề rộng thẻ theo kích thước thật của màn hình */
   var BT3_FIXED_PX = 156;
@@ -8597,7 +8789,7 @@
       evt = battleStep3(b, target, qres.score); if(!evt) return;
       evt.quiz = {ok:qres.ok, secLeft:qres.secLeft || 0, timeout:!!qres.timeout, skipped:!!qres.skipped};
       c = evt.calc;
-      await btRollDice(st, evt.roll); if(!btAlive(st)) return;
+      await btRollDice(st, evt.roll, true); if(!btAlive(st)) return;
       dnote.innerHTML = (qres.ok ? '✅ Đúng! Còn <b>'+qres.secLeft+'s</b>' : (qres.timeout ? '⏰ Hết giờ' : '❌ Chưa đúng'))
         + ' → <b>'+evt.roll+' điểm</b> (×'+c.d10.toFixed(1)+')' + (evt.crit ? '<br>🎯 <b>CHÍ MẠNG!</b>' : '');
       await w(evt.crit ? 800 : 500); if(!btAlive(st)) return;
@@ -11164,7 +11356,7 @@
     return ''
     + '<section class="rules-sec" id="rules-sec-battle"><h4>⚔️ Đấu Trường</h4><ul>'
     + '<li>Có 2 cách chơi: <b>Hành trình</b> (vượt lần lượt các trận từ rất dễ đến khó) hoặc <b>Đấu nhanh</b> với đối thủ ngẫu nhiên. Ở <b>Hành trình</b>, các trận <b>1v1 ⚔️ và 3v3 🛡️ xen kẽ nhau</b> theo thứ tự cố định (trận lẻ là 1v1, trận chẵn là 3v3) — không cần chọn. Chỉ ở <b>Đấu nhanh</b> con mới được chọn đấu 1v1 hay 3v3.</li>'
-    + '<li>Đến lượt con đánh sẽ có <b>1 câu hỏi</b>: trả lời đúng càng nhanh, đòn càng mạnh (tối đa <b>10 điểm</b>). Mỗi câu có '+sec+' giây; trả lời sai hoặc hết giờ chỉ được 1 điểm.</li>'
+    + '<li>Đến lượt con đánh sẽ có <b>1 câu hỏi</b>: trả lời đúng càng nhanh, đòn càng mạnh (tối đa <b>10 điểm</b>). Mỗi câu có '+sec+' giây; trả lời sai hoặc hết giờ chỉ được 1 điểm. Từ giây thứ 9 trở đi đồng hồ biến mất, tim đập thình thịch — điểm chỉ lộ ra khi quay <b>Lucky Roll</b> 🎰.</li>'
     + '<li>Lượt đấu nhận theo <b>điểm nhiệm vụ trong ngày</b>: có điểm được <b>1</b> lượt · mốc 👟 <b>50, 60, 70</b> điểm mỗi mốc <b>+2</b> · mốc ⚽ <b>80, 90</b> điểm mỗi mốc <b>+3</b> · mốc 🏃 <b>100</b> điểm <b>+5</b> (tối đa 18 lượt/ngày). Hôm nay con đã nhận <b>'+perDay+'</b> lượt. Hành trình và Đấu nhanh dùng chung số lượt này.</li>'
     + '<li><b>Thắng</b> nhận ⚡ Năng Lượng như khi hiến chính đối thủ vừa hạ: đối thủ càng giống thẻ của con, ⚡ càng nhiều. Hành trình còn thưởng thêm ⚡ khi vượt trận lần đầu.</li>'
     + '<li><b>Thua</b> không nhận gì, nhưng cũng <b>không mất thẻ nào</b>.</li>'
