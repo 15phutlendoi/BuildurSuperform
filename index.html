@@ -2220,6 +2220,8 @@
   #logout-btn{ }
 
   /* ===== 3V3 ===== */
+  .rm-type{ align-self:flex-start; font-size:11px; font-weight:800; padding:1px 8px; border-radius:99px; background:rgba(56,189,248,.18); color:#7DD3FC; border:1px solid rgba(56,189,248,.35); }
+  .rm-type.s3{ background:rgba(192,132,252,.18); color:#D8B4FE; border-color:rgba(192,132,252,.4); }
   .rm-modes.size-modes{ margin-top:8px; }
   .rm-modes.size-modes .rm-mode{ padding:7px 10px; }
   .t3-headinfo{ margin:6px 0 8px; font-size:13px; line-height:1.5; color:var(--ink-soft); }
@@ -2671,7 +2673,7 @@
         <button type="button" class="rules-btn" data-rules="battle">❓ Luật chơi</button>
       </div>
       <div class="rm-modes"><button type="button" class="rm-mode active" id="battle-mode-road">🗺️ Hành trình</button><button type="button" class="rm-mode" id="battle-mode-quick">🎲 Đấu nhanh</button></div>
-      <div class="rm-modes size-modes"><button type="button" class="rm-mode active" id="battle-size-1">⚔️ 1v1</button><button type="button" class="rm-mode" id="battle-size-3">🛡️ 3v3 · Đội 3 thẻ</button></div>
+      <div class="rm-modes size-modes" id="battle-size-wrap" style="display:none"><button type="button" class="rm-mode active" id="battle-size-1">⚔️ 1v1</button><button type="button" class="rm-mode" id="battle-size-3">🛡️ 3v3 · Đội 3 thẻ</button></div>
       <p class="battle-quota" id="battle-quota"></p>
     </div>
     <div class="panel" id="battle-road-view"></div>
@@ -6769,7 +6771,12 @@
   var ROADMAP_NAMES = ['Giao hữu khởi động','Vòng bảng · Lượt 1','Vòng bảng · Lượt 2','Vòng bảng · Lượt 3','Vòng 1/16',
                        'Vòng 1/8','Tứ kết','Bán kết lượt đi','Bán kết lượt về','CHUNG KẾT'];
   var ROADMAP_DIFF = ['Rất dễ','Dễ','Vừa','Khó','Rất khó'];
-  var battleSize = (function(){ try{ return localStorage.getItem('dbcd_battle_size') === '3' ? 3 : 1; }catch(e){ return 1; } })();   // 1 = 1v1, 3 = đội 3 thẻ
+  var quickSize = (function(){ try{ return localStorage.getItem('dbcd_battle_size') === '3' ? 3 : 1; }catch(e){ return 1; } })();   // lựa chọn của người dùng — CHỈ áp dụng cho Đấu nhanh
+  var battleSize = quickSize;   // cỡ trận đang áp dụng: 1 = 1v1, 3 = đội 3 thẻ (Hành trình: cố định theo số trận, xem roadSizeFor)
+  /* Hành trình: 1v1 và 3v3 đan xen tuần tự, cố định, không cho chọn. Trận lẻ (1,3,5…) = 1v1 · trận chẵn (2,4,…,10) = 3v3.
+     Muốn đổi quy luật chỉ cần sửa hàm này. */
+  function roadSizeFor(n){ return (n % 2 === 1) ? 1 : 3; }
+  function applyBattleSize(){ battleSize = (battleMode === 'road' && roadPickStage) ? roadSizeFor(roadPickStage) : quickSize; }
   var battleMode = 'road';   // 'road' = Hành trình, 'quick' = Đấu nhanh (đối thủ ngẫu nhiên)
   var roadPickStage = 0;     // số trận Hành trình đang chọn cầu thủ ra sân (0 = đang xem bản đồ)
 
@@ -6896,6 +6903,7 @@
         + '<span class="rm-pg-img">'+ph+img+'</span>'
         + '<span class="rm-pg-meta"><span class="rm-pg-no">Trang '+pg+(def.boss===2 ? ' 🏆' : (def.boss===1 ? ' ⭐' : ''))+'</span>'
         + '<span class="rm-pg-name">'+escHtml(def.name)+'</span>'
+        + '<span class="rm-type s'+roadSizeFor(i)+'">'+(roadSizeFor(i) === 3 ? '🛡️ 3v3' : '⚔️ 1v1')+'</span>'
         + (st==='cur' ? '<span class="rm-tag'+(played?' wait':'')+'">'+(played ? '⏰ Mai đấu' : '▶ VÀO SÂN!')+'</span>'
                       : (st==='done' ? '<span class="rm-pg-ok">✓ Đọc trang</span>' : '<span class="rm-pg-lk">Thắng ải trước để mở</span>'))
         + (st==='lock' && i > cleared+2 ? '' : '<span class="rm-diff">'+new Array(def.flames+1).join('🔥')+'</span>')
@@ -6972,6 +6980,7 @@
     if(n <= cleared){ rmOpenReader(n); return; }
     if(n > cleared+1){ triggerToast('low', '🔒 Vượt qua trận '+(n-1)+' trước đã nhé!'); return; }
     if(battleAlreadyPlayedToday()){ triggerToast('low', '⏰ '+battleOutOfTurnsText()+battleTail(' — mai quay lại nhé!')); return; }
+    if(roadSizeFor(n) === 3 && battleOwnedCards().length < 3){ triggerToast('low', '🛡️ Trận '+n+' đấu 3v3 — cần ít nhất 3 thẻ cầu thủ. Mở thêm thẻ rồi quay lại nhé!'); return; }
     rmChapter = 0;
     roadPickStage = n;
     renderBattlePick();
@@ -6981,7 +6990,7 @@
     if(!opp) return '';
     return '<button type="button" class="btn-secondary rm-back" id="rm-back">← Về bản đồ Hành trình</button>'
       + '<div class="rm-pick-head"><div class="rm-opp-card">'+playerCardHTML(opp, false)+'</div>'
-      + '<div class="rm-opp-info"><div class="rm-opp-stage">Trận '+n+' · '+escHtml(def.name)+(def.boss ? ' ⭐' : '')+'</div>'
+      + '<div class="rm-opp-info"><div class="rm-opp-stage">Trận '+n+' · ⚔️ 1v1 · '+escHtml(def.name)+(def.boss ? ' ⭐' : '')+'</div>'
       + '<div>Đối thủ: '+escHtml(opp.name || '')+'</div>'
       + (opp.battle && opp.battle.element ? '<div>Hệ đối thủ: '+escHtml(elementName(opp.battle.element))+'</div>' : '')
       + '<div>Độ khó: '+new Array(def.flames+1).join('🔥')+' '+def.label+'</div>'
@@ -6992,6 +7001,7 @@
     var a = document.getElementById('battle-mode-road'), b = document.getElementById('battle-mode-quick');
     if(a) a.classList.toggle('active', battleMode === 'road');
     if(b) b.classList.toggle('active', battleMode === 'quick');
+    if(typeof syncBattleSizeButtons === 'function') syncBattleSizeButtons();
   }
   document.addEventListener('click', function(e){
     var t = e.target && e.target.closest ? e.target : null;
@@ -7082,6 +7092,7 @@
     var hint = document.getElementById('battle-pick-hint');
     if(!grid) return;
     clearBattleTimer();
+    applyBattleSize();
     document.getElementById('battle-arena-view').style.display = 'none';
     syncBattleModeButtons();
     renderBattleQuota();
@@ -8102,7 +8113,7 @@
     if(battleMode === 'road' && roadPickStage){
       var def = roadmapStageDef(roadPickStage);
       return '<button type="button" class="btn-secondary rm-back" id="rm-back">← Về bản đồ Hành trình</button>'
-        + '<div class="t3-headinfo"><b>Trận '+roadPickStage+' · '+escHtml(def.name)+(def.boss ? ' ⭐' : '')+'</b>'
+        + '<div class="t3-headinfo"><b>Trận '+roadPickStage+' · 🛡️ 3v3 · '+escHtml(def.name)+(def.boss ? ' ⭐' : '')+'</b>'
         + '<div>Độ khó: '+new Array(def.flames+1).join('🔥')+' '+def.label+' · 🎁 Thắng lần đầu +'+def.bonus+' ⚡ thưởng thêm</div>'
         + (def.boss ? '<div>⚠️ Đội đối thủ có '+(def.boss === 2 ? 'chuỗi Tương sinh đủ 3 thẻ' : 'liên kết Tương sinh')+' — đánh gãy liên kết bằng cách hạ gục thẻ giữ liên kết!</div>' : '')
         + '</div>' + trio;
@@ -8154,7 +8165,7 @@
     if(cards.length < 3){
       grid.innerHTML = '';
       hint.style.display = '';
-      hint.innerHTML = '🛡️ Đấu 3v3 cần ít nhất <b>3 thẻ</b> (con đang có '+cards.length+'). Bấm <b>1v1</b> để đấu ngay, hoặc mở thêm thẻ rồi quay lại nhé!';
+      hint.innerHTML = '🛡️ Đấu 3v3 cần ít nhất <b>3 thẻ</b> (con đang có '+cards.length+'). '+(battleMode === 'road' ? 'Mở thêm thẻ rồi quay lại nhé!' : 'Bấm <b>1v1</b> để đấu ngay, hoặc mở thêm thẻ rồi quay lại nhé!');
       return;
     }
     var enemy = enemyTeam3();
@@ -8769,16 +8780,19 @@
   /* ---- nút chuyển 1v1 / 3v3 ---- */
   function syncBattleSizeButtons(){
     var a = document.getElementById('battle-size-1'), c = document.getElementById('battle-size-3');
-    if(a) a.classList.toggle('active', battleSize === 1);
-    if(c) c.classList.toggle('active', battleSize === 3);
+    if(a) a.classList.toggle('active', quickSize === 1);
+    if(c) c.classList.toggle('active', quickSize === 3);
+    var wrap = document.getElementById('battle-size-wrap');
+    if(wrap) wrap.style.display = (battleMode === 'quick') ? '' : 'none';   // Hành trình: tự đan xen 1v1/3v3, không cho chọn
   }
   document.addEventListener('click', function(e){
     var t = e.target && e.target.closest ? e.target : null;
     if(!t) return;
     var m = t.closest('#battle-size-1, #battle-size-3');
     if(m){
-      battleSize = (m.id === 'battle-size-3') ? 3 : 1;
-      try{ localStorage.setItem(BATTLE_SIZE_KEY, String(battleSize)); }catch(err){}
+      if(battleMode !== 'quick') return;   // chỉ Đấu nhanh được chọn loại đấu
+      quickSize = (m.id === 'battle-size-3') ? 3 : 1;
+      try{ localStorage.setItem(BATTLE_SIZE_KEY, String(quickSize)); }catch(err){}
       pickTeam3 = []; pickKey3 = ''; quickOpp = null; quickTeam3 = null;
       renderBattlePick();
     }
@@ -11149,12 +11163,12 @@
     var tiers = FUSE_TIERS.slice(1).map(function(x){ return '<li>'+x.icon+' '+x.label+': <b>'+fuseFrac(FUSE_DEN[x.key])+'</b> tiến độ lên cấp</li>'; }).join('');
     return ''
     + '<section class="rules-sec" id="rules-sec-battle"><h4>⚔️ Đấu Trường</h4><ul>'
-    + '<li>Có 2 cách chơi: <b>Hành trình</b> (vượt lần lượt các trận từ rất dễ đến khó) hoặc <b>Đấu nhanh</b> với đối thủ ngẫu nhiên.</li>'
+    + '<li>Có 2 cách chơi: <b>Hành trình</b> (vượt lần lượt các trận từ rất dễ đến khó) hoặc <b>Đấu nhanh</b> với đối thủ ngẫu nhiên. Ở <b>Hành trình</b>, các trận <b>1v1 ⚔️ và 3v3 🛡️ xen kẽ nhau</b> theo thứ tự cố định (trận lẻ là 1v1, trận chẵn là 3v3) — không cần chọn. Chỉ ở <b>Đấu nhanh</b> con mới được chọn đấu 1v1 hay 3v3.</li>'
     + '<li>Đến lượt con đánh sẽ có <b>1 câu hỏi</b>: trả lời đúng càng nhanh, đòn càng mạnh (tối đa <b>10 điểm</b>). Mỗi câu có '+sec+' giây; trả lời sai hoặc hết giờ chỉ được 1 điểm.</li>'
     + '<li>Lượt đấu nhận theo <b>điểm nhiệm vụ trong ngày</b>: có điểm được <b>1</b> lượt · mốc 👟 <b>50, 60, 70</b> điểm mỗi mốc <b>+2</b> · mốc ⚽ <b>80, 90</b> điểm mỗi mốc <b>+3</b> · mốc 🏃 <b>100</b> điểm <b>+5</b> (tối đa 18 lượt/ngày). Hôm nay con đã nhận <b>'+perDay+'</b> lượt. Hành trình và Đấu nhanh dùng chung số lượt này.</li>'
     + '<li><b>Thắng</b> nhận ⚡ Năng Lượng như khi hiến chính đối thủ vừa hạ: đối thủ càng giống thẻ của con, ⚡ càng nhiều. Hành trình còn thưởng thêm ⚡ khi vượt trận lần đầu.</li>'
     + '<li><b>Thua</b> không nhận gì, nhưng cũng <b>không mất thẻ nào</b>.</li>'
-    + '<li><b>Chế độ 3v3 🛡️</b> (nút chuyển 1v1/3v3 ở đầu trang): chọn <b>3 thẻ</b> ra sân cùng lúc. Mỗi lượt <b>1 thẻ</b> của một bên ra đòn theo thứ tự ①②③ (thẻ bị loại thì bỏ qua) rồi đến bên kia. Khi đến lượt, con <b>chạm vào thẻ đối thủ</b> để chọn mục tiêu, rồi trả lời câu hỏi. Bên nào bị <b>loại hết 3 thẻ</b> là thua.</li>'
+    + '<li><b>Chế độ 3v3 🛡️</b> (ở Đấu nhanh có nút chuyển 1v1/3v3; ở Hành trình tự xen kẽ): chọn <b>3 thẻ</b> ra sân cùng lúc. Mỗi lượt <b>1 thẻ</b> của một bên ra đòn theo thứ tự ①②③ (thẻ bị loại thì bỏ qua) rồi đến bên kia. Khi đến lượt, con <b>chạm vào thẻ đối thủ</b> để chọn mục tiêu, rồi trả lời câu hỏi. Bên nào bị <b>loại hết 3 thẻ</b> là thua.</li>'
     + '<li><b>Liên kết Ngũ hành trong đội:</b> thẻ được đồng đội <b>Tương sinh</b> (Mộc→Hỏa→Thổ→Kim→Thủy→Mộc) <b>+10%</b> sức đánh · đủ chuỗi 3 thẻ <b>Thuận hành +5%</b> cả đội · mỗi cặp <b>đồng Hệ +7.5%</b> · thẻ bị đồng đội <b>Xung khắc −8%</b>. Thẻ nào bị hạ thì liên kết của nó <b>đứt ngay</b> — hạ đúng thẻ giữ liên kết sẽ làm đội đối thủ yếu đi!</li>'
     + '<li><b>Đặc điểm đội theo CLB · Quốc gia · Hành lang:</b> 🏟️ <b>cùng CLB</b>: +13% sức đánh mỗi cặp và Chuyền 1-2 mạnh hơn · 🌍 <b>cùng quốc gia</b>: +5% mỗi cặp, khi đồng đội bị loại thẻ cùng quốc gia còn lại được <b>Báo thù</b> (+1 Nộ khí, +6% sức đánh) · ⬅️ <b>cùng cánh trái</b>: +28% sức đánh mỗi cặp · ➡️ <b>cùng cánh phải</b>: mọi đòn đánh lan 17% sang thẻ bên cạnh · 🎯 <b>cùng trung lộ</b>: nhận ít hơn 16% sát thương mỗi cặp. Tất cả cộng dồn với Ngũ hành (tối đa +50% sức đánh cho mỗi thẻ) và đều mất khi thẻ trong liên kết bị loại.</li>'
     + '<li><b>Chiến thuật 3v3:</b> 🔴 <b>Nộ khí</b> đủ 3 chấm (đánh hoặc bị đánh được +1) → tung <b>chiêu đặc biệt</b> ×1.5 và lan 50% sang thẻ bên cạnh · ⚽ <b>Chuyền 1-2</b>: đòn kế tiếp của đội dồn vào cùng mục tiêu +10% · Hệ có vai trò riêng: 🔥 <b>Hỏa</b> gây bỏng, 💧 <b>Thủy</b> làm chậm (khi điểm đòn ≥ 7), 🌿 <b>Mộc</b> hồi máu cho đồng đội yếu nhất, 🪨 <b>Thổ</b> gánh 15% sát thương cho đồng đội, ⚙️ <b>Kim</b> xuyên 25% giáp.</li>'
