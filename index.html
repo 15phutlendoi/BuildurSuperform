@@ -638,11 +638,9 @@
   .modal-box input:focus, .bonus-form input:focus, .bonus-form select:focus, .skill-score-row input:focus{ outline:none; border-color:var(--stadium); box-shadow:0 0 0 2px rgba(16,185,129,.25); }
   .modal-box input::placeholder{ color:#64748B; }
   .settings-label{ font-size:12px; color:#CBD5E1; font-weight:800; display:block; margin-bottom:6px; }
-  #settings-modal .modal-box{ width:min(460px,100%); gap:12px; max-height:92vh; overflow-y:auto; }
-  #settings-modal .modal-box h3{ font-size:17px; padding-bottom:10px; border-bottom:1px solid #334155; }
-  #settings-modal .range-row{ display:flex; align-items:center; gap:8px; }
-  #settings-modal .range-row input{ flex:1; min-width:0; }
-  #settings-modal .range-sep{ font-weight:700; color:#94A3B8; }
+  #admin-page .range-row{ display:flex; align-items:center; gap:8px; }
+  #admin-page .range-row input{ flex:1; min-width:0; }
+  #admin-page .range-sep{ font-weight:700; color:#94A3B8; }
   .reward-row{ display:flex; align-items:center; gap:8px; }
   .reward-row input{ flex:1; min-width:0; }
   .reward-row select{
@@ -670,8 +668,8 @@
   .btn-secondary{ background:#334155; color:#E2E8F0; border:none; border-radius:12px; padding:9px 16px; font-weight:800; font-size:13px; cursor:pointer; transition:background .15s, transform .1s; }
   .btn-secondary:hover{ background:#475569; }
   .btn-secondary:active{ transform:scale(.95); }
-  #settings-modal .btn-secondary{ background:var(--gold); color:var(--night); font-weight:900; }
-  #settings-modal .btn-secondary:hover{ background:var(--gold-light); }
+  #admin-page .btn-secondary{ background:var(--gold); color:var(--night); font-weight:900; }
+  #admin-page .btn-secondary:hover{ background:var(--gold-light); }
   .btn-mini{ border:none; background:var(--stadium); color:var(--night); font-weight:900; font-size:12px; padding:8px 12px; border-radius:10px; cursor:pointer; box-shadow:none; transition:background .15s, transform .1s; }
   .btn-mini:hover{ background:var(--stadium-dark); }
   .btn-mini:active{ transform:scale(.95); box-shadow:none; }
@@ -1602,9 +1600,9 @@
   @keyframes sk-quake{ 0%,100%{ transform:translate(0,0); } 12%{ transform:translate(-7px,4px); } 25%{ transform:translate(6px,-5px); } 37%{ transform:translate(-5px,-3px); } 50%{ transform:translate(5px,4px); } 62%{ transform:translate(-3px,2px); } 75%{ transform:translate(3px,-2px); } 87%{ transform:translate(-1px,1px); } }
 
   /* ô nhập trong Cài đặt: khoảng điểm khích lệ */
-  #settings-modal .range-row{ display:flex; align-items:center; gap:8px; }
-  #settings-modal .range-row input{ flex:1; min-width:0; }
-  #settings-modal .range-sep{ font-weight:800; }
+  #admin-page .range-row{ display:flex; align-items:center; gap:8px; }
+  #admin-page .range-row input{ flex:1; min-width:0; }
+  #admin-page .range-sep{ font-weight:800; }
 
   @media (max-width:380px){ #skill-modal .sk-title{ font-size:18px; } .sk-cname{ font-size:17px; } }
   @media (prefers-reduced-motion: reduce){
@@ -2481,6 +2479,106 @@
     #battle-arena-view.bt3-mode .battle-controls{ margin:0; gap:6px; flex-wrap:nowrap; }
     #battle-arena-view.bt3-mode .battle-controls .btn-secondary, #battle-arena-view.bt3-mode .battle-controls button{ flex:1; min-height:40px; padding:6px 10px; font-size:13px; }
   }
+
+  /* =============== TRANG QUẢN TRỊ (chỉ Quản trị viên) + MENU TÀI KHOẢN (⚙️) =============== */
+  #btn-admin-console{ background:linear-gradient(135deg,#FBBF24,#D97706); color:#3D2500; border-color:#D97706; }
+  #btn-admin-console[hidden]{ display:none; }
+  .account-box{ width:min(360px,100%); gap:12px; }
+  .account-who{ display:flex; align-items:center; gap:12px; background:var(--glass-soft); border:1px solid var(--glass-line); border-radius:var(--radius-sm); padding:12px; }
+  .account-avatar{ flex:none; width:44px; height:44px; border-radius:14px; display:flex; align-items:center; justify-content:center; font-size:22px; background:#0F172A; border:1px solid #475569; }
+  .account-who-text{ min-width:0; display:flex; flex-direction:column; gap:2px; }
+  .account-who-text b{ color:#fff; font-size:15px; font-weight:900; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .account-role{ font-size:12px; font-weight:700; color:var(--slate-ink-text); }
+  .account-actions{ display:flex; flex-direction:column; gap:8px; }
+  .account-actions .btn-secondary{ min-height:46px; font-size:14px; }
+  .account-actions .btn-secondary.is-danger{ background:var(--coral-soft); color:var(--coral-ink); border:1px solid rgba(248,113,113,.4); }
+
+  body.ap-open{ overflow:hidden; }
+  #admin-page{ position:fixed; inset:0; z-index:9000; display:flex; flex-direction:column; color:var(--ink); font-family:var(--font-body);
+    background:radial-gradient(circle at 50% -10%, rgba(217,119,6,.28) 0%, rgba(15,23,42,0) 55%), var(--night); }
+  #admin-page[hidden]{ display:none; }
+  #admin-page:not([hidden]){ animation:apIn .22s ease; }
+  @keyframes apIn{ from{ opacity:0; transform:translateY(10px); } to{ opacity:1; transform:none; } }
+  .ap-head{ flex:none; display:flex; align-items:center; justify-content:space-between; gap:10px; padding:calc(10px + env(safe-area-inset-top)) 12px 10px;
+    background:var(--glass-strong); -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px); border-bottom:1px solid var(--glass-line); }
+  .ap-head-main{ display:flex; align-items:center; gap:10px; min-width:0; }
+  .ap-badge{ flex:none; width:42px; height:42px; border-radius:14px; display:flex; align-items:center; justify-content:center; font-size:22px; background:linear-gradient(135deg,#FBBF24,#D97706); box-shadow:0 6px 14px rgba(0,0,0,.35); }
+  .ap-head h2{ margin:0; font-size:16px; font-weight:900; color:#fff; line-height:1.2; white-space:nowrap; }
+  .ap-x-long{ display:none; }
+  @media (min-width:480px){ .ap-x-long{ display:inline; } .ap-x-short{ display:none; } .ap-head h2{ font-size:17px; } }
+  .ap-sub{ margin:2px 0 0; font-size:12px; color:var(--slate-ink-text); font-weight:600; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .ap-sub b{ color:var(--gold-ink); }
+  .ap-head-actions{ display:flex; align-items:center; gap:8px; flex:none; }
+  .ap-head .btn-gold{ padding:10px 14px; font-size:13px; min-height:44px; white-space:nowrap; }
+  .ap-shell{ flex:1; min-height:0; display:flex; flex-direction:column; }
+  .ap-tabs{ flex:none; display:flex; gap:6px; padding:10px 12px; overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none; border-bottom:1px solid var(--glass-line); background:var(--glass-soft); }
+  .ap-tabs::-webkit-scrollbar{ display:none; }
+  .ap-tab{ flex:none; display:flex; align-items:center; gap:8px; min-height:44px; padding:8px 14px; border-radius:999px; border:1px solid #475569; background:#334155; color:#E2E8F0;
+    font:inherit; font-weight:800; font-size:13px; cursor:pointer; white-space:nowrap; transition:background .15s, color .15s; }
+  .ap-tab:hover{ background:#475569; }
+  .ap-tab.on{ background:linear-gradient(135deg,#FBBF24,#D97706); border-color:transparent; color:#3D2500; }
+  .ap-tab:focus-visible{ outline:2px solid var(--gold-light); outline-offset:2px; }
+  .ap-tab-ico{ font-size:17px; line-height:1; }
+  .ap-body{ flex:1; min-height:0; overflow-y:auto; -webkit-overflow-scrolling:touch; padding:16px 12px 28px; }
+  .ap-pane{ width:100%; max-width:720px; margin:0 auto; display:flex; flex-direction:column; gap:14px; }
+  .ap-pane[hidden]{ display:none; }
+  .ap-pane-title{ margin:0; font-size:19px; font-weight:900; color:#fff; }
+  .ap-pane-desc{ margin:4px 0 0; font-size:13px; color:var(--ink-soft); line-height:1.5; }
+  .ap-card{ background:var(--night-card); border:1px solid var(--line); border-radius:var(--radius-md); padding:16px; display:flex; flex-direction:column; gap:12px; box-shadow:var(--shadow-card); }
+  .ap-card h4{ margin:0; font-size:15px; font-weight:900; color:#fff; display:flex; align-items:center; flex-wrap:wrap; gap:6px 8px; }
+  .ap-card.ap-info{ background:var(--glass-soft); box-shadow:none; }
+  .ap-chip-now{ font-size:11px; font-weight:800; color:var(--gold-ink); background:var(--gold-soft); border:1px solid rgba(245,158,11,.35); border-radius:999px; padding:2px 8px; }
+  .ap-count{ font-size:12px; font-weight:700; color:var(--ink-soft); }
+  #admin-page label{ display:flex; flex-direction:column; gap:6px; font-size:12px; color:#CBD5E1; font-weight:700; }
+  #admin-page input[type=number], #admin-page input[type=text], #admin-page select{ width:100%; min-height:44px; background:#0F172A; border:1px solid #475569; border-radius:12px; padding:9px 12px; font:inherit; font-size:14px; color:#fff; }
+  #admin-page input:focus, #admin-page select:focus{ outline:none; border-color:var(--stadium); box-shadow:0 0 0 2px rgba(16,185,129,.25); }
+  #admin-page input::placeholder{ color:#64748B; }
+  #admin-page .btn-secondary{ min-height:44px; }
+  .ap-foot{ flex:none; display:flex; align-items:center; justify-content:space-between; gap:10px; padding:10px 12px calc(10px + env(safe-area-inset-bottom));
+    background:var(--glass-strong); -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px); border-top:1px solid var(--glass-line); }
+  .ap-dirty{ font-size:12px; font-weight:800; color:var(--grass-ink-text); }
+  .ap-dirty.is-dirty{ color:var(--gold-ink-text); }
+  .ap-foot .btn-primary{ min-height:46px; padding:10px 22px; font-size:14px; }
+  @media (min-width:860px){
+    .ap-head{ padding-left:24px; padding-right:24px; }
+    .ap-shell{ display:grid; grid-template-columns:240px minmax(0,1fr); }
+    .ap-tabs{ flex-direction:column; overflow:visible; padding:16px 12px; border-bottom:0; border-right:1px solid var(--glass-line); }
+    .ap-tab{ width:100%; border-radius:var(--radius-sm); justify-content:flex-start; }
+    .ap-body{ padding:24px 28px 32px; }
+    .ap-foot{ padding-left:24px; padding-right:24px; }
+  }
+  .ap-chip{ background:none; border:0; padding:0; margin:0; font:inherit; color:inherit; cursor:pointer; text-align:left; max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .ap-chip:focus-visible{ outline:2px solid var(--gold-light); outline-offset:2px; border-radius:4px; }
+  .pf-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:10px; }
+  .pf-card{ position:relative; display:flex; align-items:center; gap:10px; min-height:64px; padding:10px 12px; border-radius:var(--radius-sm); border:1px solid #475569; background:#0F172A; color:#fff; font:inherit; text-align:left; cursor:pointer; transition:border-color .15s, transform .1s; }
+  .pf-card:hover{ border-color:var(--gold); }
+  .pf-card:active{ transform:scale(.98); }
+  .pf-card:focus-visible{ outline:2px solid var(--gold-light); outline-offset:2px; }
+  .pf-card.is-current{ grid-column:1/-1; cursor:default; border-color:var(--gold); background:linear-gradient(135deg,rgba(251,191,36,.16),rgba(217,119,6,.08)); box-shadow:0 0 0 1px rgba(251,191,36,.35); }
+  .pf-card.is-current:hover{ border-color:var(--gold); }
+  .pf-av{ flex:none; width:40px; height:40px; border-radius:14px; display:flex; align-items:center; justify-content:center; font-size:18px; font-weight:900; color:#fff; background:hsl(var(--h,200) 55% 38%); }
+  .pf-meta{ min-width:0; display:flex; flex-direction:column; gap:2px; }
+  .pf-meta b{ font-size:14px; font-weight:900; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .pf-meta small{ font-size:11px; color:var(--ink-soft); font-weight:700; }
+  .pf-tag{ margin-left:auto; flex:none; font-size:11px; font-weight:900; color:#3D2500; background:linear-gradient(135deg,#FBBF24,#D97706); border-radius:999px; padding:3px 9px; }
+  .pf-note{ grid-column:1/-1; margin:0; }
+  .pf-new{ min-height:46px; border-radius:var(--radius-sm); border:1.5px dashed #64748B; background:transparent; color:#E2E8F0; font:inherit; font-weight:800; font-size:14px; cursor:pointer; }
+  .pf-new:hover{ border-color:var(--gold); color:var(--gold-ink); }
+  #pf-create[hidden]{ display:none; }
+  /* ---- Tab Nhiệm vụ (Trang quản trị) ---- */
+  #admin-page .tk-list{ display:flex; flex-direction:column; gap:10px; }
+  #admin-page .tk-row{ display:grid; grid-template-columns:58px 1fr 92px; gap:8px; padding:10px; border:1px solid #475569; border-radius:14px; background:rgba(15,23,42,.45); }
+  #admin-page .tk-row .tk-icon{ text-align:center; font-size:20px; padding-left:4px; padding-right:4px; }
+  #admin-page .tk-row .tk-hint{ grid-column:1 / -1; }
+  #admin-page .tk-acts{ grid-column:1 / -1; display:flex; gap:6px; justify-content:flex-end; }
+  #admin-page .tk-mini{ min-height:40px; min-width:44px; padding:0 12px; border-radius:10px; border:1px solid #475569; background:#334155; color:#E2E8F0; font-weight:800; font-family:inherit; cursor:pointer; }
+  #admin-page .tk-mini:hover:not(:disabled){ background:#475569; }
+  #admin-page .tk-mini:disabled{ opacity:.35; cursor:default; }
+  #admin-page .tk-mini.danger{ color:#FCA5A5; border-color:#7F1D1D; }
+  #admin-page .tk-total{ font-size:13px; font-weight:700; line-height:1.5; padding:10px 12px; border-radius:12px; }
+  #admin-page .tk-total.ok{ background:rgba(16,185,129,.12); border:1px solid rgba(16,185,129,.4); color:#A7F3D0; }
+  #admin-page .tk-total.warn{ background:rgba(251,191,36,.12); border:1px solid rgba(251,191,36,.45); color:#FDE68A; }
+  @media (prefers-reduced-motion:reduce){ #admin-page:not([hidden]){ animation:none; } }
 </style>
 </head>
 <body>
@@ -2526,7 +2624,8 @@
         </div>
       </div>
       <div class="hd-actions">
-        <button id="btn-settings" class="icon-btn" title="Cài đặt" aria-label="Cài đặt">⚙️</button>
+        <button id="btn-admin-console" class="icon-btn" title="Trang quản trị" aria-label="Trang quản trị" hidden>🛡️</button>
+        <button id="btn-settings" class="icon-btn" title="Tài khoản: đổi người dùng · đăng xuất" aria-label="Tài khoản: đổi người dùng, đăng xuất">⚙️</button>
       </div>
     </div>
 
@@ -2785,13 +2884,128 @@
   </div>
 </div>
 
-<div id="settings-modal" class="modal">
-  <div id="settings-backdrop" class="modal-backdrop"></div>
-  <div class="modal-box">
-    <h3>⚙️ Cài đặt</h3>
+<!-- ⚙️ Tài khoản: chỉ còn Đổi người dùng / Đăng xuất (không hỏi mã). Cấu hình nằm ở Trang quản trị bên dưới. -->
+<div id="account-modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="account-title">
+  <div id="account-backdrop" class="modal-backdrop"></div>
+  <div class="modal-box account-box">
+    <h3 id="account-title">⚙️ Tài khoản</h3>
+    <div class="account-who">
+      <span class="account-avatar" id="account-avatar" aria-hidden="true">👦</span>
+      <div class="account-who-text"><b id="account-name">…</b><span class="account-role" id="account-role"></span></div>
+    </div>
+    <p class="hint-text" id="sync-status" style="margin:0">☁️ Đang kiểm tra đồng bộ…</p>
+    <div class="account-actions">
+      <button type="button" id="btn-auth-switch" class="btn-secondary">🔄 Đổi người dùng</button>
+      <button type="button" id="btn-auth-logout" class="btn-secondary is-danger">🚪 Đăng xuất</button>
+    </div>
+    <div class="modal-actions"><button type="button" id="account-close" class="btn-ghost">Đóng</button></div>
+  </div>
+</div>
+
+<!-- 🛡️ Trang quản trị: toàn bộ cấu hình, chia tab theo nhóm chức năng. Chỉ phiên đăng nhập Quản trị viên mới mở được. -->
+<div id="admin-page" role="dialog" aria-modal="true" aria-labelledby="ap-title" hidden>
+  <header class="ap-head">
+    <div class="ap-head-main">
+      <span class="ap-badge" aria-hidden="true">🛡️</span>
+      <div style="min-width:0"><h2 id="ap-title">Trang quản trị</h2><p class="ap-sub" id="ap-sub">Hồ sơ đang quản lý: <b>…</b></p></div>
+    </div>
+    <div class="ap-head-actions">
+      <button type="button" id="ap-account" class="icon-btn" title="Tài khoản: đổi người dùng · đăng xuất" aria-label="Tài khoản: đổi người dùng, đăng xuất">⚙️</button>
+      <button type="button" id="ap-exit" class="btn-gold" aria-label="Vào ứng dụng"><span class="ap-x-long">Vào ứng dụng</span><span class="ap-x-short">Ứng dụng</span> ›</button>
+    </div>
+  </header>
+  <div class="ap-shell">
+    <nav class="ap-tabs" id="ap-tabs" role="tablist" aria-label="Nhóm cài đặt">
+      <button type="button" class="ap-tab on" role="tab" id="aptab-system" data-ap="system" aria-controls="appane-system" aria-selected="true" tabindex="0"><span class="ap-tab-ico" aria-hidden="true">👤</span><span>Hồ sơ &amp; hệ thống</span></button>
+      <button type="button" class="ap-tab" role="tab" id="aptab-tasks" data-ap="tasks" aria-controls="appane-tasks" aria-selected="false" tabindex="-1"><span class="ap-tab-ico" aria-hidden="true">📋</span><span>Nhiệm vụ</span></button>
+      <button type="button" class="ap-tab" role="tab" id="aptab-points" data-ap="points" aria-controls="appane-points" aria-selected="false" tabindex="-1"><span class="ap-tab-ico" aria-hidden="true">🎯</span><span>Điểm &amp; mục tiêu</span></button>
+      <button type="button" class="ap-tab" role="tab" id="aptab-rewards" data-ap="rewards" aria-controls="appane-rewards" aria-selected="false" tabindex="-1"><span class="ap-tab-ico" aria-hidden="true">🎁</span><span>Phần thưởng</span></button>
+      <button type="button" class="ap-tab" role="tab" id="aptab-battle" data-ap="battle" aria-controls="appane-battle" aria-selected="false" tabindex="-1"><span class="ap-tab-ico" aria-hidden="true">⚔️</span><span>Đấu Trường</span></button>
+      <button type="button" class="ap-tab" role="tab" id="aptab-data" data-ap="data" aria-controls="appane-data" aria-selected="false" tabindex="-1"><span class="ap-tab-ico" aria-hidden="true">🗂️</span><span>Dữ liệu</span></button>
+    </nav>
+    <div class="ap-body" id="ap-body">
+    <section class="ap-pane" id="appane-system" role="tabpanel" aria-labelledby="aptab-system">
+      <div><h3 class="ap-pane-title">👤 Hồ sơ &amp; hệ thống</h3><p class="ap-pane-desc">Chọn hồ sơ cần quản lý trước — mọi cài đặt ở các tab khác áp dụng riêng cho hồ sơ này.</p></div>
+      <div class="ap-card">
+        <h4>👤 Hồ sơ đang quản lý <span class="ap-chip-now">Chạm để chuyển hồ sơ</span></h4>
+        <p class="hint-text" id="sync-status-2" style="margin:0">☁️ Đang kiểm tra đồng bộ…</p>
+        <input type="text" id="pf-search" placeholder="🔍 Tìm hồ sơ theo tên hoặc mã" aria-label="Tìm hồ sơ" hidden>
+        <div class="pf-grid" id="pf-list"></div>
+        <button type="button" id="btn-pf-new" class="pf-new" aria-expanded="false" aria-controls="pf-create">＋ Tạo hồ sơ mới</button>
+        <div id="pf-create" hidden>
+          <div class="reward-row"><input type="text" id="new-user-name" maxlength="24" placeholder="Tên hồ sơ mới, VD: Bé Bo"><button type="button" id="btn-user-create" class="btn-secondary">Tạo</button></div>
+          <p class="hint-text" style="margin:8px 0 0">Hồ sơ mới bắt đầu với dữ liệu trắng hoàn toàn. Dữ liệu của hồ sơ hiện tại vẫn được giữ và mở lại được từ danh sách trên.</p>
+        </div>
+      </div>
+      <div class="ap-card">
+        <h4>🔑 Mật khẩu &amp; mã PIN</h4>
+<div>
+          <span class="settings-label">Mật khẩu đăng nhập <span class="ap-chip-now">Có tác dụng ngay</span></span>
+          <p class="hint-text" style="margin:2px 0 8px">Mật khẩu Quản trị dùng ở tab 🛡️ Quản trị viên. Mật khẩu hồ sơ dùng để đăng nhập hồ sơ đang quản lý bằng tab 👦 Người dùng. Tối thiểu 4 ký tự.</p>
+          <div class="reward-row" style="flex-wrap:wrap">
+            <button type="button" id="btn-auth-pw-admin" class="btn-secondary">🔑 Đổi mật khẩu Quản trị</button>
+            <button type="button" id="btn-auth-pw-user" class="btn-secondary">🔑 Đổi mật khẩu hồ sơ này</button>
+          </div>
+        </div>
+        <div data-save="1">
+          <span class="settings-label">🔒 Mã PIN mở khóa sửa ngày cũ</span>
+          <p class="hint-text" style="margin:2px 0 6px">Dùng khi đang ở hồ sơ Người dùng mà cần mở khóa 🔒 để sửa nhiệm vụ của ngày đã qua hoặc nhập lại điểm môn thi. Quản trị viên đăng nhập không cần nhập mã này. Lưu ý: đây là khóa mềm cho gia đình, không phải bảo mật tuyệt đối vì đây là trang web tĩnh.</p>
+      <input type="text" id="settings-admin-pin" inputmode="numeric" maxlength="12" placeholder="VD: 0000">
+        </div>
+      </div>
+      <div class="ap-card" data-save="1">
+        <h4>🖼️ Giao diện</h4>
+    <label>🖼️ Hình nền
+      <select id="settings-bg-mode">
+        <option value="tab">Đổi mỗi lần mở app và mỗi lần chuyển menu</option>
+        <option value="visit">Chỉ đổi mỗi lần mở app</option>
+        <option value="off">Tắt — dùng nền sân bóng cũ</option>
+      </select>
+    </label>
+      </div>
+    </section>
+    <section class="ap-pane" id="appane-tasks" role="tabpanel" aria-labelledby="aptab-tasks" hidden>
+      <div><h3 class="ap-pane-title">📋 Nhiệm vụ hằng ngày</h3><p class="ap-pane-desc" id="tk-desc">Soạn nhiệm vụ và điểm riêng cho hồ sơ đang quản lý.</p></div>
+      <div class="ap-card" data-save="1">
+        <h4>📝 Danh sách nhiệm vụ của hồ sơ</h4>
+        <div class="tk-list" id="tk-list"></div>
+        <div class="tk-total ok" id="tk-total" role="status" aria-live="polite"></div>
+        <div class="reward-row" style="flex-wrap:wrap">
+          <button type="button" id="btn-tk-add" class="btn-secondary">＋ Thêm nhiệm vụ</button>
+          <button type="button" id="btn-tk-reset" class="btn-secondary">↺ Về danh sách mặc định</button>
+        </div>
+        <p class="hint-text" style="margin:0">Mỗi hồ sơ có nhiệm vụ và điểm riêng. Thay đổi áp dụng từ <b>hôm nay</b>; các ngày đã qua giữ nguyên điểm đã tích. Điểm ngày luôn quy về thang 100 (đủ mọi nhiệm vụ = 100) nên các mốc hộp quà, lượt Đấu Trường vẫn đúng. Nhớ bấm <b>💾 Lưu cài đặt</b>.</p>
+      </div>
+      <div class="ap-card">
+        <h4>📑 Sao chép từ hồ sơ khác</h4>
+        <div class="reward-row">
+          <select id="tk-copy-from" aria-label="Chọn hồ sơ để sao chép nhiệm vụ"><option value="">— Chọn hồ sơ —</option></select>
+          <button type="button" id="btn-tk-copy" class="btn-secondary">Sao chép</button>
+        </div>
+        <p class="hint-text" style="margin:0">Lấy nhanh danh sách nhiệm vụ của một hồ sơ khác làm điểm xuất phát, rồi chỉnh lại cho phù hợp.</p>
+      </div>
+    </section>
+    <section class="ap-pane" id="appane-points" role="tabpanel" aria-labelledby="aptab-points" hidden>
+      <div><h3 class="ap-pane-title">🎯 Điểm &amp; mục tiêu</h3><p class="ap-pane-desc">Mốc điểm nhận thưởng, kỳ tính điểm và điểm thưởng Play Style.</p></div>
+      <div class="ap-card" data-save="1">
+        <h4>📅 Mục tiêu tháng</h4>
     <label>🎯 Mức điểm đạt thưởng trong tháng
       <input type="number" id="settings-goal" min="1" step="1">
     </label>
+    <label>📅 Kỳ tính điểm hàng tháng bắt đầu từ ngày
+      <input type="number" id="settings-period-start" min="1" max="31" step="1">
+    </label>
+    <p class="hint-text" id="settings-period-preview" style="margin:-6px 0 0"></p>
+      </div>
+      <div class="ap-card" data-save="1">
+        <h4>🎁 Hộp quà mỗi ngày</h4>
+    <label>🎁 Mức điểm ngày để mở hộp quà (trên thang 10)
+      <input type="number" id="settings-daily-goal" min="1" max="10" step="1">
+    </label>
+    <p class="hint-text" style="margin:-6px 0 0">VD: nhập 9 nghĩa là đạt 9/10 điểm trong ngày sẽ mở được hộp quà.</p>
+      </div>
+      <div class="ap-card" data-save="1">
+        <h4>🥇 Điểm thưởng Play Style (Phòng Kỹ Năng)</h4>
     <label>🥇 Điểm thưởng Play Style VÀNG (điểm thi từ 8/10 trở lên)
       <input type="number" id="settings-skill-gold" min="0" step="50">
     </label>
@@ -2806,15 +3020,24 @@
       </span>
     </label>
     <p class="hint-text" style="margin:-6px 0 0">VD: 20 đến 50 nghĩa là mỗi lần mở hộp khích lệ, con nhận ngẫu nhiên một số điểm trong khoảng đó. Nhập 2 số bằng nhau nếu muốn cố định. Điểm đã mở rồi sẽ giữ nguyên khi đổi cài đặt.</p>
-    <label>📅 Kỳ tính điểm hàng tháng bắt đầu từ ngày
-      <input type="number" id="settings-period-start" min="1" max="31" step="1">
-    </label>
-    <p class="hint-text" id="settings-period-preview" style="margin:-6px 0 0"></p>
-    <label>🎁 Mức điểm ngày để mở hộp quà (trên thang 10)
-      <input type="number" id="settings-daily-goal" min="1" max="10" step="1">
-    </label>
-    <p class="hint-text" style="margin:-6px 0 0">VD: nhập 9 nghĩa là đạt 9/10 điểm trong ngày sẽ mở được hộp quà.</p>
-    <p class="hint-text" style="margin:0">⚔️ Lượt Đấu Trường mỗi ngày tự tính theo điểm nhiệm vụ trong ngày: có điểm +1 · mốc 50/60/70 mỗi mốc +2 · mốc 80/90 mỗi mốc +3 · mốc 100 +5.</p>
+      </div>
+    </section>
+    <section class="ap-pane" id="appane-rewards" role="tabpanel" aria-labelledby="aptab-rewards" hidden>
+      <div><h3 class="ap-pane-title">🎁 Phần thưởng</h3><p class="ap-pane-desc">Kho quà xuất hiện trên vòng quay khi con vượt mốc tháng.</p></div>
+      <div class="ap-card" data-save="1">
+        <h4>🎰 Kho phần thưởng <span class="ap-count" id="reward-count"></span></h4>
+        <p class="hint-text" style="margin:0">Phần thưởng được quay ngẫu nhiên khi con vượt mốc điểm tháng. Cần giữ ít nhất 2 phần thưởng để vòng quay hoạt động.</p>
+        <div id="reward-list" class="reward-list" style="margin:0"></div>
+        <div class="reward-row">
+          <input type="text" id="new-reward-input" placeholder="VD: 01 buổi đi công viên">
+          <button type="button" id="btn-add-reward" class="btn-secondary">Thêm</button>
+        </div>
+      </div>
+    </section>
+    <section class="ap-pane" id="appane-battle" role="tabpanel" aria-labelledby="aptab-battle" hidden>
+      <div><h3 class="ap-pane-title">⚔️ Đấu Trường</h3><p class="ap-pane-desc">Câu hỏi trả lời khi đến lượt đánh và tỷ lệ các lĩnh vực.</p></div>
+      <div class="ap-card" data-save="1">
+        <h4>🧠 Câu hỏi khi đến lượt đánh</h4>
     <label>🧠 Câu hỏi trong Đấu Trường
       <select id="settings-quiz-on"><option value="1">Bật — đến lượt đánh phải trả lời câu hỏi</option><option value="0">Tắt — đổ xúc xắc như cũ</option></select>
     </label>
@@ -2822,8 +3045,9 @@
       <input type="number" id="settings-quiz-seconds" min="5" max="60" step="1">
     </label>
     <p class="hint-text" style="margin:-6px 0 0">Số giây còn lại khi trả lời đúng = điểm của đòn đánh (tối đa 10). Trả lời sai hoặc hết giờ chỉ được 1 điểm.</p>
-    <div>
-      <span class="settings-label">📊 Tỷ lệ câu hỏi theo lĩnh vực (%)</span>
+      </div>
+      <div class="ap-card" data-save="1">
+        <h4>📊 Tỷ lệ câu hỏi theo lĩnh vực (%)</h4>
       <div class="quiz-mix-grid">
         <label>🔢 Toán<input type="number" id="settings-mix-toan" min="0" max="100" step="5"></label>
         <label>🔤 Tiếng Anh<input type="number" id="settings-mix-anh" min="0" max="100" step="5"></label>
@@ -2834,49 +3058,25 @@
       </div>
       <p class="hint-text" id="quiz-mix-total" style="margin:6px 0 6px"></p>
       <button type="button" id="btn-quiz-mix-reset" class="btn-secondary">↺ Về mặc định (50% Toán · 40% Tiếng Anh · 10% Tiếng Việt)</button>
-    </div>
-    <label>🖼️ Hình nền
-      <select id="settings-bg-mode">
-        <option value="tab">Đổi mỗi lần mở app và mỗi lần chuyển menu</option>
-        <option value="visit">Chỉ đổi mỗi lần mở app</option>
-        <option value="off">Tắt — dùng nền sân bóng cũ</option>
-      </select>
-    </label>
-    <div>
-      <span class="settings-label">👤 Tài khoản</span>
-      <div class="reward-row" style="margin:4px 0 8px;flex-wrap:wrap">
-        <button type="button" id="btn-auth-switch" class="btn-secondary">🔄 Đổi người dùng</button>
-        <button type="button" id="btn-auth-logout" class="btn-secondary">🚪 Đăng xuất</button>
-        <button type="button" id="btn-auth-pw" class="btn-secondary">🔑 Đổi mật khẩu</button>
       </div>
-      <p class="hint-text" id="auth-role-label" style="margin:0 0 6px"></p>
-      <p class="hint-text" id="sync-status" style="margin:2px 0 8px">☁️ Đang kiểm tra đồng bộ…</p>
-      <div class="user-box">
-        <p class="user-current" id="current-user-label">👤 Đang dùng: <b>…</b></p>
-        <div class="reward-row">
-          <select id="user-select"><option value="">— Đang tải danh sách… —</option></select>
-          <button type="button" id="btn-user-load" class="btn-secondary">Mở hồ sơ</button>
-        </div>
-        <p class="hint-text" style="margin:6px 0 0">Mở hồ sơ có sẵn sẽ tải toàn bộ dữ liệu của người dùng đó từ đám mây về máy này.</p>
-        <div class="user-sep">HOẶC</div>
-        <div class="reward-row">
-          <input type="text" id="new-user-name" placeholder="Tên người dùng mới (VD: Bé Bo)" maxlength="24">
-          <button type="button" id="btn-user-create" class="btn-secondary">Tạo mới</button>
-        </div>
-        <p class="hint-text" style="margin:6px 0 0"><span class="user-warn">⚠️ Tạo mới = dữ liệu trắng hoàn toàn:</span> xóa sạch điểm ngày, huy hiệu, kỹ năng, cầu thủ, đội hình và quà trên máy này rồi bắt đầu lại từ đầu. Hồ sơ cũ vẫn nằm trên đám mây và mở lại được bằng danh sách ở trên.</p>
+      <div class="ap-card ap-info">
+        <h4>⚔️ Lượt Đấu Trường mỗi ngày (tự tính)</h4>
+    <p class="hint-text" style="margin:0">⚔️ Lượt Đấu Trường mỗi ngày tự tính theo điểm nhiệm vụ trong ngày: có điểm +1 · mốc 50/60/70 mỗi mốc +2 · mốc 80/90 mỗi mốc +3 · mốc 100 +5.</p>
       </div>
-    </div>
-    <div>
-      <span class="settings-label">🎴 Dữ liệu cầu thủ (Firebase)</span>
+    </section>
+    <section class="ap-pane" id="appane-data" role="tabpanel" aria-labelledby="aptab-data" hidden>
+      <div><h3 class="ap-pane-title">🗂️ Dữ liệu</h3><p class="ap-pane-desc">Kho dùng chung trên Firebase. Chỉ cần cập nhật khi có file mới; các nút ở đây có tác dụng ngay, không cần bấm Lưu.</p></div>
+      <div class="ap-card">
+        <h4>🎴 Dữ liệu cầu thủ (Firebase) <span class="ap-chip-now">Có tác dụng ngay</span></h4>
       <p class="hint-text" id="player-db-status" style="margin:2px 0 6px">Đang kiểm tra…</p>
       <div class="reward-row">
         <button type="button" id="btn-player-db-import" class="btn-secondary">Cập nhật từ file .json</button>
         <input type="file" id="player-db-file" accept=".json,application/json" style="display:none">
       </div>
       <p class="hint-text" style="margin:6px 0 0">Chọn file <b>players.json</b> hoặc <b>kidchart_player_db.json</b> mới nhất. Dữ liệu được đưa lên Firebase (dùng chung cho mọi hồ sơ), chỉ cần làm khi có dữ liệu cầu thủ mới.</p>
-    </div>
-    <div>
-      <span class="settings-label">🧠 Kho câu hỏi (Firebase)</span>
+      </div>
+      <div class="ap-card">
+        <h4>🧠 Kho câu hỏi (Firebase) <span class="ap-chip-now">Có tác dụng ngay</span></h4>
       <p class="hint-text" id="qbank-status" style="margin:2px 0 6px">Đang kiểm tra…</p>
       <div class="reward-row">
         <button type="button" id="btn-qbank-import" class="btn-secondary">Cập nhật từ file .json</button>
@@ -2884,25 +3084,14 @@
         <input type="file" id="qbank-file" accept=".json,application/json" style="display:none">
       </div>
       <p class="hint-text" style="margin:6px 0 0">File mới có <b>"mode": "append"</b> (mặc định) sẽ được <b>thêm</b> vào kho trên Firebase; <b>"mode": "replace"</b> thì thay toàn bộ. Muốn sửa kho: bấm "Tải kho hiện tại", chỉnh file rồi tải lên lại. Câu Toán được máy tự tạo vô hạn.</p>
-    </div>
-    <div>
-      <span class="settings-label">🔒 Mã PIN Quản trị viên</span>
-      <p class="hint-text" style="margin:2px 0 6px">Dùng mã này để mở khóa và sửa lại nhiệm vụ của những ngày đã qua. Chỉ ba mẹ nên biết mã này. Lưu ý: đây là khóa mềm cho gia đình, không phải bảo mật tuyệt đối vì đây là trang web tĩnh.</p>
-      <input type="text" id="settings-admin-pin" inputmode="numeric" maxlength="12" placeholder="VD: 0000">
-    </div>
-    <div>
-      <span class="settings-label">Kho phần thưởng (quay khi vượt mốc)</span>
-      <div id="reward-list" class="reward-list"></div>
-      <div class="reward-row">
-        <input type="text" id="new-reward-input" placeholder="VD: 01 buổi đi công viên">
-        <button type="button" id="btn-add-reward" class="btn-secondary">Thêm</button>
       </div>
-    </div>
-    <div class="modal-actions">
-      <button type="button" id="settings-close" class="btn-secondary">Đóng</button>
-      <button type="button" id="settings-save" class="btn-primary">Lưu lại!</button>
+    </section>
     </div>
   </div>
+  <footer class="ap-foot">
+    <span class="ap-dirty" id="ap-dirty" role="status" aria-live="polite">✓ Mọi thay đổi đã được lưu</span>
+    <button type="button" id="settings-save" class="btn-primary">💾 Lưu cài đặt</button>
+  </footer>
 </div>
 
 <div id="skill-modal" class="modal">
@@ -3052,7 +3241,7 @@
   }
 
 
-  var TASKS = [
+  var DEFAULT_TASKS = [
     {id:'t1',  icon:'📝', label:'Đạt từ 18/20 điểm phiếu bài tập trên lớp',          points:30},
     {id:'t2',  icon:'🤸', label:'Tập luyện 6 động tác vươn cao',                     points:8},
     {id:'t3',  icon:'🧒', label:'Chơi với các em ít nhất 30 phút',                   points:10},
@@ -3065,6 +3254,8 @@
     {id:'t10', icon:'🤝', label:'Có hành động đẹp và cư xử đúng mực',                points:3},
     {id:'t11', icon:'🧍', label:'Tư thế ngồi, đứng nghiêm túc',                      points:3}
   ];
+  /* Danh sách đang dùng của HỒ SƠ hiện tại (mặc định = DEFAULT_TASKS; ghi đè bằng settings.tasks sau khi tải Cài đặt) */
+  var TASKS = DEFAULT_TASKS.map(function(t){ return {id:t.id, icon:t.icon, label:t.label, points:t.points, hint:'', builtin:true}; });
   var DAY_SHORT = ['T2','T3','T4','T5','T6','T7','CN'];
 
   var BADGE_DEFS = [
@@ -3323,6 +3514,8 @@
   function setSyncStatus(text){
     var el = document.getElementById('sync-status');
     if(el) el.textContent = text;
+    var el2 = document.getElementById('sync-status-2');
+    if(el2) el2.textContent = text;
   }
   function cloudPath(key){
     return FIREBASE_BASE + '/kidchart/' + encodeURIComponent(syncId) + '/' + encodeURIComponent(key) + '.json';
@@ -3436,32 +3629,34 @@
     }catch(e){ console.warn('wipe failed', e); }
   }
   function switchToUser(code, name){
-    try{ var _a = readAuth(); if(_a){ _a.code = code; saveAuth(_a); } }catch(e){}
+    try{ var _a = readAuth(); if(_a){ _a.code = code; saveAuth(_a); if(_a.role === 'admin') sessionStorage.setItem('dbcd_admin_landing', 'points'); } }catch(e){}
     wipeLocalProfileData();
     try{ localStorage.setItem('kidchart_syncid', code); }catch(e){}
     setLocalUserName(name || '');
     location.reload();
   }
+  var pfFilter = '';
+  function pfPaint(offline){
+    var box = document.getElementById('pf-list'); if(!box) return;
+    var codes = Object.keys(userDirectory);
+    if(codes.indexOf(syncId) === -1) codes.push(syncId);
+    codes.sort(function(a,b){ if(a === syncId) return -1; if(b === syncId) return 1; return userNameOf(a).localeCompare(userNameOf(b), 'vi'); });
+    var sw = document.getElementById('pf-search'); if(sw) sw.hidden = codes.length <= 8;
+    var q = pfFilter.trim().toLowerCase();
+    var shown = codes.filter(function(c){ return !q || c === syncId || userLabel(c).toLowerCase().indexOf(q) >= 0; });
+    box.innerHTML = shown.map(function(c){
+      var nm = userNameOf(c), cur = (c === syncId), ini = (nm.trim().split(/\s+/).pop() || '?').charAt(0).toUpperCase(), h = 0, k;
+      for(k = 0; k < c.length; k++) h = (h * 31 + c.charCodeAt(k)) % 360;
+      return '<button type="button" class="pf-card' + (cur ? ' is-current' : '') + '" data-code="' + uEsc(c) + '"' + (cur ? ' aria-current="true"' : '') + '>'
+        + '<span class="pf-av" style="--h:' + h + '" aria-hidden="true">' + uEsc(ini) + '</span>'
+        + '<span class="pf-meta"><b>' + uEsc(nm) + '</b><small>Mã ' + uEsc(c) + '</small></span>'
+        + (cur ? '<span class="pf-tag">Đang quản lý</span>' : '') + '</button>';
+    }).join('') + (offline ? '<p class="hint-text pf-note">Không có mạng — danh sách có thể chưa đầy đủ.</p>' : '')
+      + (q && shown.length <= 1 ? '<p class="hint-text pf-note">Không có hồ sơ nào khớp.</p>' : '');
+  }
   function renderUserPanel(){
-    var cur = document.getElementById('current-user-label');
-    var sel = document.getElementById('user-select');
-    if(cur) cur.innerHTML = '\ud83d\udc64 Đang dùng: <b>' + uEsc(userLabel(syncId)) + '</b>';
-    if(!sel) return;
-    sel.innerHTML = '<option value="">— Đang tải danh sách… —</option>';
-    fetchUserDirectory().then(function(data){
-      var codes = Object.keys(userDirectory);
-      if(codes.indexOf(syncId) === -1) codes.push(syncId);
-      if(data === null && codes.length <= 1){
-        sel.innerHTML = '<option value="">— Không có mạng, chưa tải được danh sách —</option>';
-        return;
-      }
-      codes.sort(function(a,b){ return userNameOf(a).localeCompare(userNameOf(b), 'vi'); });
-      sel.innerHTML = codes.map(function(c){
-        return '<option value="' + uEsc(c) + '"' + (c===syncId ? ' selected' : '') + '>'
-             + uEsc(userLabel(c)) + (c===syncId ? ' (đang dùng)' : '') + '</option>';
-      }).join('');
-      if(cur) cur.innerHTML = '\ud83d\udc64 Đang dùng: <b>' + uEsc(userLabel(syncId)) + '</b>';
-    });
+    pfPaint(false);                                   // hiện ngay danh sách đang có
+    fetchUserDirectory().then(function(data){ pfPaint(data === null); });
   }
 
   /* ---- Đăng nhập khi thiết bị kết nối lần đầu: chọn hồ sơ có sẵn hoặc tạo mới ---- */
@@ -3577,8 +3772,6 @@
           '<button type="button" class="au-go" id="au-go-user">Đăng nhập</button></div>' +
         '<div class="au-pane" data-p="admin">' +
           '<label>Mật khẩu Quản trị<input type="password" id="ad-pw" placeholder="Mật khẩu quản trị viên"></label>' +
-          '<label>Hồ sơ cần quản lý<select id="ad-user"></select></label>' +
-          '<label id="ad-new-wrap" style="display:none">Tên hồ sơ mới<input type="text" id="ad-new" maxlength="24" placeholder="VD: Bé Bo"></label>' +
           '<button type="button" class="au-go admin" id="au-go-admin">Đăng nhập Quản trị</button></div>' +
         '<div class="au-msg" id="au-msg"></div>' +
         (canCancel ? '<button type="button" class="au-cancel" id="au-cancel">Hủy, quay lại tài khoản đang dùng</button>' : '') +
@@ -3597,16 +3790,15 @@
           codes.sort(function(a,b){ return userNameOf(a).localeCompare(userNameOf(b), 'vi'); });
           var opts = codes.map(function(c){ return '<option value="' + uEsc(c) + '">' + uEsc(userLabel(c)) + '</option>'; }).join('');
           $('au-user').innerHTML = '<option value="">— Chọn hồ sơ —</option>' + opts;
-          $('ad-user').innerHTML = opts + '<option value="__new__">➕ Tạo hồ sơ mới…</option>';
           if(data === null && !codes.length) msg('Không có mạng — chưa tải được danh sách hồ sơ.');
-          $('ad-new-wrap').style.display = (!codes.length ? '' : 'none');
+          el._dirOk = (data !== null);   // danh sách hồ sơ đã tải được (dù rỗng)
         });
       }
       fillLists();
-      $('ad-user').addEventListener('change', function(){ $('ad-new-wrap').style.display = this.value === '__new__' ? '' : 'none'; });
       function finish(a){
         saveAuth(a);
         try{ sessionStorage.removeItem('dbcd_switching'); }catch(e){}
+        try{ if(a.role === 'admin') sessionStorage.setItem('dbcd_admin_landing', 'system'); else sessionStorage.removeItem('dbcd_admin_landing'); }catch(e){}
         applyAuthProfile(a.code);
         el.remove(); resolve(a);
       }
@@ -3622,12 +3814,15 @@
         fetch(FIREBASE_BASE + '/kidchart_admin/pw.json').then(function(r){ return r.ok ? r.json() : Promise.reject(); }).then(function(stored){
           var expected = (typeof stored === 'string' && stored) ? stored : pwHash('admin:' + DEFAULT_PW);
           if(pwHash('admin:' + pw) !== expected){ msg('Sai mật khẩu quản trị.'); btn.disabled = false; return; }
-          var code = $('ad-user').value;
-          if(code === '__new__' || !code){
-            var name = $('ad-new').value.trim();
-            if(!name){ msg('Nhập tên hồ sơ mới.'); btn.disabled = false; return; }
-            code = makeUniqueUserCode();
-            return registerUser(code, name).then(function(){ finish({role:'admin', code:code}); });
+          // Không chọn hồ sơ ở màn hình đăng nhập: vào hồ sơ đang quản lý gần nhất (hoặc hồ sơ đầu tiên). Đổi hồ sơ / tạo hồ sơ mới trong Trang quản trị.
+          var code = '';
+          try{ var _last = localStorage.getItem('kidchart_syncid'); if(_last && userDirectory[_last]) code = _last; }catch(e){}
+          if(!code){
+            var _ks = Object.keys(userDirectory).sort(function(a,b){ return userNameOf(a).localeCompare(userNameOf(b), 'vi'); });
+            code = _ks[0] || '';
+          }
+          if(!code){   // luôn có hồ sơ sẵn; hồ sơ mới được tạo trong Trang quản trị, không tạo ở màn hình đăng nhập
+            msg(el._dirOk ? 'Chưa có hồ sơ nào để quản lý.' : 'Không có mạng — chưa tải được danh sách hồ sơ.'); btn.disabled = false; return;
           }
           finish({role:'admin', code:code});
         }).catch(function(){ msg('Không kiểm tra được (mất mạng?).'); btn.disabled = false; });
@@ -3651,7 +3846,7 @@
   }
   var authRole = authInfo.role;
   applyAuthProfile(authInfo.code);
-  function doLogout(){ clearAuth(); try{ sessionStorage.removeItem('dbcd_switching'); }catch(e){} location.reload(); }
+  function doLogout(){ clearAuth(); try{ sessionStorage.removeItem('dbcd_switching'); sessionStorage.removeItem('dbcd_admin_landing'); }catch(e){} location.reload(); }
   function doSwitch(){ try{ sessionStorage.setItem('dbcd_switching', '1'); }catch(e){} location.reload(); }
 
   var dirData = await fetchUserDirectory();
@@ -3696,6 +3891,37 @@
   if(typeof settings.adminPin !== 'string' || !settings.adminPin) settings.adminPin = '0000';
   if(!Array.isArray(settings.rewards) || !settings.rewards.length) settings.rewards = DEFAULT_REWARDS.slice();
   function saveSettings(){ safeSet('kidchart_settings', settings); }
+
+  /* ===== NHIỆM VỤ HẰNG NGÀY RIÊNG CHO TỪNG HỒ SƠ =====
+     - Lưu trong settings.tasks (settings đã tách theo hồ sơ và tự đồng bộ Firebase). Chưa có = dùng DEFAULT_TASKS.
+     - Mỗi nhiệm vụ: {id:'t<số>', icon, label, points, hint, builtin}. id không bao giờ tái sử dụng (settings.taskSeq). */
+  var TASK_ID_RE = /^t\d+$/;
+  var TASKS_LIMIT = 20;
+  function defaultTaskList(){
+    return DEFAULT_TASKS.map(function(t){ return {id:t.id, icon:t.icon, label:t.label, points:t.points, hint:'', builtin:true}; });
+  }
+  function taskListClean(raw){
+    if(raw && !Array.isArray(raw) && typeof raw === 'object') raw = Object.keys(raw).map(function(k){ return raw[k]; });   // Firebase có thể trả object thay cho mảng
+    if(!Array.isArray(raw)) return defaultTaskList();
+    var out = [], seen = {};
+    raw.forEach(function(t){
+      if(!t || typeof t !== 'object') return;
+      var id = String(t.id == null ? '' : t.id);
+      if(!TASK_ID_RE.test(id) || seen[id]) return;
+      var label = String(t.label == null ? '' : t.label).trim().slice(0, 80);
+      if(!label) return;
+      var pts = Math.round(Number(t.points)); if(isNaN(pts) || pts < 0) pts = 0; if(pts > 100) pts = 100;
+      var icon = String(t.icon == null ? '' : t.icon).trim();
+      icon = icon ? Array.from(icon).slice(0, 2).join('') : '⭐';
+      out.push({id:id, icon:icon, label:label, points:pts, hint:String(t.hint == null ? '' : t.hint).trim().slice(0, 140), builtin:t.builtin === true});
+      seen[id] = 1;
+    });
+    return out.length ? out.slice(0, TASKS_LIMIT) : defaultTaskList();
+  }
+  function applyTasksFromSettings(){ TASKS = taskListClean(settings.tasks); }
+  applyTasksFromSettings();
+  function taskById(id){ for(var i = 0; i < TASKS.length; i++){ if(TASKS[i].id === id) return TASKS[i]; } return null; }
+  function taskPointsNow(id){ var t = taskById(id); return t ? t.points : 0; }
 
   var badges = safeGet('kidchart_badges') || {};
   function saveBadges(){ safeSet('kidchart_badges', badges); }
@@ -3767,7 +3993,7 @@
         var dayObj = days[dk];
         if(!dayObj || typeof dayObj !== 'object') return;
         var total = computeDayTotal(dayObj);
-        TASKS.forEach(function(t){ if(dayObj[t.id]) S.tasks++; });
+        Object.keys(dayObj).forEach(function(k){ if(TASK_ID_RE.test(k) && dayObj[k]) S.tasks++; });
         S.dayPoints += total;
         if(total >= 50)  S.tier.okay++;
         if(total > 80)   S.tier.great++;
@@ -4082,6 +4308,9 @@
   };
   /* Chọn 1 gợi ý cho một nhiệm vụ, cố định theo từng ngày (không đổi lung tung mỗi lần vẽ lại). */
   function pickHintForTask(taskId, d){
+    var tk = taskById(taskId);
+    if(tk && tk.hint) return tk.hint;                 // gợi ý do Quản trị viên nhập
+    if(tk && !tk.builtin) return '';                  // nhiệm vụ tự tạo/đã sửa nội dung: không dùng gợi ý có sẵn
     var arr = TASK_HINTS[taskId];
     if(!arr || !arr.length) return '';
     var idx = hashStr(ymd(d) + ':' + taskId) % arr.length;
@@ -4130,12 +4359,41 @@
   // Nếu sau này chỉnh điểm nhiệm vụ mà tổng lệch 100, điểm ngày vẫn được quy về thang 100
   // để tích đủ mọi nhiệm vụ luôn ra đúng 100 (Cúp Vô Địch, mốc 90/100 của hộp quà không bị hụt).
   var TASKS_MAX = TASKS.reduce(function(a,t){ return a + t.points; }, 0);
+  function recalcTasksMax(){ TASKS_MAX = TASKS.reduce(function(a,t){ return a + t.points; }, 0); }
+  /* Ngày đã qua giữ nguyên điểm: khi tích nhiệm vụ, app "chụp" điểm từng nhiệm vụ (dayObj._p) và tổng điểm lúc đó (dayObj._m).
+     Ngày cũ chưa có bản chụp thì dùng danh sách hiện tại (giống hành vi trước đây). */
   function computeDayTotal(dayObj){
     if(!dayObj) return 0;
-    var sum = 0;
-    TASKS.forEach(function(t){ if(dayObj[t.id]) sum += t.points; });
-    if(TASKS_MAX > 0 && TASKS_MAX !== 100) sum = Math.round(sum * 100 / TASKS_MAX);
-    return sum;
+    var sum = 0, max = (typeof dayObj._m === 'number' && dayObj._m > 0) ? dayObj._m : TASKS_MAX, p = (dayObj._p && typeof dayObj._p === 'object') ? dayObj._p : {};
+    Object.keys(dayObj).forEach(function(k){
+      if(!TASK_ID_RE.test(k) || !dayObj[k]) return;
+      sum += (typeof p[k] === 'number') ? p[k] : taskPointsNow(k);
+    });
+    if(max > 0 && max !== 100) sum = Math.round(sum * 100 / max);
+    return Math.min(100, sum);
+  }
+  /* Khi Quản trị viên đổi điểm/danh sách nhiệm vụ: chụp điểm cho các ngày ĐÃ QUA (theo danh sách cũ);
+     từ hôm nay trở đi bỏ bản chụp để tính theo danh sách mới. Gọi TRƯỚC khi thay TASKS. */
+  function tasksFreezeHistory(){
+    var todayStr = ymd(new Date()), keys = [];
+    try{ for(var i = 0; i < localStorage.length; i++){ var k = localStorage.key(i); if(k && k.indexOf('kidchart_month_') === 0) keys.push(k.slice(15)); } }catch(e){}
+    keys.forEach(function(ymKey){
+      var mo = loadMonth(ymKey), changed = false;
+      Object.keys(mo.days || {}).forEach(function(dk){
+        var dObj = mo.days[dk]; if(!dObj || typeof dObj !== 'object') return;
+        if((ymKey + '-' + dk) < todayStr){
+          if(typeof dObj._m === 'number') return;
+          var ticked = Object.keys(dObj).filter(function(t){ return TASK_ID_RE.test(t) && dObj[t]; });
+          if(!ticked.length) return;
+          if(!dObj._p || typeof dObj._p !== 'object') dObj._p = {};
+          ticked.forEach(function(t){ if(typeof dObj._p[t] !== 'number') dObj._p[t] = taskPointsNow(t); });
+          dObj._m = TASKS_MAX; changed = true;
+        } else if(dObj._m !== undefined || dObj._p !== undefined){
+          delete dObj._m; delete dObj._p; changed = true;
+        }
+      });
+      if(changed) saveMonth(ymKey);
+    });
   }
 
   /* ---- LƯỢT ĐẤU THEO ĐIỂM NGÀY ----
@@ -4251,8 +4509,8 @@
       var checked = !!dayObj[t.id];
       listHtml += '<label class="task-card'+(checked?' is-done':'')+(editable?'':' is-locked')+'" data-task="'+t.id+'">'
         + '<input type="checkbox" class="task-check" data-date="'+ymd(d)+'" data-task="'+t.id+'" '+(checked?'checked':'')+(editable?'':' disabled')+'>'
-        + '<span class="task-card-icon">'+t.icon+'</span>'
-        + '<span class="task-card-body"><span class="task-card-name">'+t.label+'</span><span class="task-card-hint">💡 '+pickHintForTask(t.id, d)+'</span></span>'
+        + '<span class="task-card-icon">'+uEsc(t.icon)+'</span>'
+        + '<span class="task-card-body"><span class="task-card-name">'+uEsc(t.label)+'</span>'+(function(){ var h = pickHintForTask(t.id, d); return h ? '<span class="task-card-hint">💡 '+uEsc(h)+'</span>' : ''; })()+'</span>'
         + '<span class="task-card-pts">⚡+'+t.points+'</span>'
         + '<span class="task-card-check">'+(editable?'✓':'🔒')+'</span>'
         + '</label>';
@@ -5055,7 +5313,6 @@
     el.textContent = 'Kho hiện có ' + quizCuratedPool().length + ' câu (' + builtinN + ' có sẵn + ' + cloudN + ' từ Firebase), cộng Toán tự tạo vô hạn.';
   }
   refreshQuestionBankStatus();
-  document.getElementById('btn-settings').addEventListener('click', refreshQuestionBankStatus);
   document.getElementById('btn-qbank-export').addEventListener('click', function(){
     var data = {version:1, updated:ymd(new Date()), mode:'replace', replaceBuiltin:true,
       note:'answers[0] luôn là đáp án ĐÚNG (app tự xáo thứ tự). subject: toan|tviet|anh|tnxh|bongda|khac. level: 1 dễ – 3 khó. Muốn chỉ THÊM câu mới: đổi "mode" thành "append" và giữ lại các câu mới.',
@@ -10212,6 +10469,7 @@
       return '<div class="reward-item"><span>'+(r.icon||'\ud83c\udf81')+' '+r.name+'</span>'
         + '<button class="chip-x" data-reward="'+i+'" title="X\u00f3a">\u2715</button></div>';
     }).join('');
+    var rc = document.getElementById('reward-count'); if(rc) rc.textContent = '· ' + settings.rewards.length + ' phần';
   }
   function updatePeriodPreview(){
     var v = parseInt(document.getElementById('settings-period-start').value, 10);
@@ -10227,7 +10485,14 @@
       : 'Ví dụ, kỳ hiện tại sẽ là: ' + formatPeriodLabel(preview) + '.';
     document.getElementById('settings-period-preview').textContent = txt;
   }
-  function openSettings(){
+  /* ================= TRANG QUẢN TRỊ (chỉ Quản trị viên) =================
+     - Mọi cấu hình nằm ở đây, chia tab theo nhóm chức năng. Chỉ phiên đăng nhập Quản trị viên mới mở được.
+     - Quản trị viên đăng nhập xong vào thẳng trang này (cờ phiên 'dbcd_admin_landing'); nút 🛡️ trên đầu trang để quay lại.
+     - Thẻ có data-save="1" cần bấm "Lưu cài đặt"; các thẻ "Có tác dụng ngay" (dữ liệu, hồ sơ, mật khẩu) thực hiện tức thì. */
+  var AP_TABS = ['system','tasks','points','rewards','battle','data'];
+  var apTab = 'system', apDirty = false, apRewardsBackup = null, apOpener = null;
+
+  function fillAdminFields(){
     document.getElementById('settings-goal').value = settings.monthlyGoal;
     document.getElementById('settings-skill-gold').value = settings.skillGoldPts;
     document.getElementById('settings-skill-silver').value = settings.skillSilverPts;
@@ -10240,12 +10505,166 @@
     document.getElementById('settings-bg-mode').value = settings.bgMode;
     fillQuizMixInputs();
     document.getElementById('settings-admin-pin').value = settings.adminPin;
+    tkLoad();
     updatePeriodPreview();
     renderRewardList();
-    renderUserPanel();
-    openModalTop('settings-modal');
   }
-  function closeSettings(){ document.getElementById('settings-modal').classList.remove('open'); }
+  function apSetDirty(on, savedNow){
+    apDirty = !!on;
+    var el = document.getElementById('ap-dirty');
+    if(!el) return;
+    el.textContent = apDirty ? '● Có thay đổi chưa lưu' : (savedNow ? '✓ Đã lưu cho «' + userNameOf(syncId) + '»' : '✓ Mọi thay đổi đã được lưu');
+    el.classList.toggle('is-dirty', apDirty);
+  }
+  function apSelectTab(key, focusTab){
+    if(AP_TABS.indexOf(key) < 0) key = 'system';
+    apTab = key;
+    AP_TABS.forEach(function(k){
+      var t = document.getElementById('aptab-' + k), p = document.getElementById('appane-' + k), on = (k === key);
+      if(t){ t.setAttribute('aria-selected', on ? 'true' : 'false'); t.tabIndex = on ? 0 : -1; t.classList.toggle('on', on); if(on && focusTab) t.focus(); }
+      if(p) p.hidden = !on;
+    });
+    var body = document.getElementById('ap-body'); if(body) body.scrollTop = 0;
+  }
+  function openAdminPage(tab){
+    if(authRole !== 'admin') return;   // chỉ Quản trị viên
+    var page = document.getElementById('admin-page');
+    if(!page) return;
+    fillAdminFields();
+    apRewardsBackup = settings.rewards.slice();
+    apSetDirty(false);
+    var sub = document.getElementById('ap-sub');
+    if(sub) sub.innerHTML = '<button type="button" class="ap-chip" id="ap-chip" title="Đổi hồ sơ khác">Hồ sơ: <b>' + uEsc(userNameOf(syncId)) + '</b> · Đổi ›</button>';
+    renderUserPanel();
+    refreshQuestionBankStatus();
+    refreshPlayerDbStatus();
+    apOpener = document.activeElement;
+    page.hidden = false;
+    document.body.classList.add('ap-open');
+    apSelectTab(tab || apTab, true);
+  }
+  function closeAdminPage(){
+    var page = document.getElementById('admin-page');
+    if(!page || page.hidden) return true;
+    if(apDirty){
+      if(!confirm('Bạn có thay đổi chưa lưu.\n\nBấm OK để thoát và BỎ các thay đổi này, hoặc Hủy để ở lại và bấm "Lưu cài đặt".')) return false;
+      if(apRewardsBackup) settings.rewards = apRewardsBackup;   // bỏ thay đổi kho thưởng chưa lưu
+    }
+    apSetDirty(false);
+    page.hidden = true;
+    document.body.classList.remove('ap-open');
+    try{ if(apOpener && apOpener.focus && document.body.contains(apOpener)) apOpener.focus(); }catch(e){}
+    return true;
+  }
+
+  /* ---- Tab Nhiệm vụ: soạn danh sách nhiệm vụ riêng cho hồ sơ đang quản lý ---- */
+  var apTasks = [], apTaskSeq = 11;
+  function tkClone(list){ return list.map(function(t){ return {id:t.id, icon:t.icon, label:t.label, points:t.points, hint:t.hint || '', builtin:!!t.builtin}; }); }
+  function tkSyncSeq(){
+    apTaskSeq = Math.max(11, settings.taskSeq | 0, apTaskSeq);
+    apTasks.forEach(function(t){ apTaskSeq = Math.max(apTaskSeq, parseInt(String(t.id).slice(1), 10) || 0); });
+  }
+  function tkSum(){ return apTasks.reduce(function(a, t){ return a + (Number(t.points) || 0); }, 0); }
+  function tkPaintTotal(){
+    var el = document.getElementById('tk-total'); if(!el) return;
+    var s = tkSum();
+    el.className = 'tk-total ' + (s === 100 ? 'ok' : 'warn');
+    el.innerHTML = (s === 100)
+      ? '✅ Tổng <b>100</b> điểm · ' + apTasks.length + ' nhiệm vụ — đúng thang điểm ngày.'
+      : '⚠️ Tổng <b>' + s + '</b> điểm (không phải 100) · ' + apTasks.length + ' nhiệm vụ. App vẫn tự quy về thang 100: làm đủ mọi nhiệm vụ = 100 điểm. Nên đặt tổng đúng 100 để dễ theo dõi.';
+  }
+  function tkRender(){
+    var host = document.getElementById('tk-list'); if(!host) return;
+    host.innerHTML = apTasks.map(function(t, i){
+      return '<div class="tk-row" data-i="' + i + '">'
+        + '<input type="text" class="tk-icon" maxlength="4" value="' + uEsc(t.icon) + '" aria-label="Biểu tượng">'
+        + '<input type="text" class="tk-label" maxlength="80" value="' + uEsc(t.label) + '" placeholder="Nội dung nhiệm vụ" aria-label="Nội dung nhiệm vụ">'
+        + '<input type="number" class="tk-pts" min="0" max="100" step="1" inputmode="numeric" value="' + uEsc(t.points) + '" aria-label="Điểm">'
+        + '<input type="text" class="tk-hint" maxlength="140" value="' + uEsc(t.hint) + '" placeholder="' + (t.builtin ? 'Để trống = dùng gợi ý có sẵn' : 'Gợi ý cho bé (không bắt buộc)') + '" aria-label="Gợi ý">'
+        + '<div class="tk-acts">'
+        +   '<button type="button" class="tk-mini" data-tk="up"' + (i === 0 ? ' disabled' : '') + ' aria-label="Chuyển lên">↑</button>'
+        +   '<button type="button" class="tk-mini" data-tk="down"' + (i === apTasks.length - 1 ? ' disabled' : '') + ' aria-label="Chuyển xuống">↓</button>'
+        +   '<button type="button" class="tk-mini danger" data-tk="del" aria-label="Xóa nhiệm vụ">🗑️ Xóa</button>'
+        + '</div></div>';
+    }).join('');
+    tkPaintTotal();
+  }
+  function tkFillCopyList(){
+    var sel = document.getElementById('tk-copy-from'); if(!sel) return;
+    var codes = Object.keys(userDirectory || {}).filter(function(c){ return c !== syncId; });
+    sel.innerHTML = '<option value="">— Chọn hồ sơ —</option>' + codes.map(function(c){ return '<option value="' + uEsc(c) + '">' + uEsc(userLabel(c)) + '</option>'; }).join('');
+  }
+  function tkLoad(){
+    apTasks = tkClone(TASKS); tkSyncSeq(); tkRender(); tkFillCopyList();
+    var d = document.getElementById('tk-desc');
+    if(d) d.innerHTML = 'Nhiệm vụ và điểm riêng cho hồ sơ <b>' + uEsc(userNameOf(syncId)) + '</b>. Hồ sơ nào cũng soạn riêng được.';
+  }
+  document.getElementById('tk-list').addEventListener('input', function(e){
+    var row = e.target.closest('.tk-row'); if(!row) return;
+    var t = apTasks[parseInt(row.getAttribute('data-i'), 10)]; if(!t) return;
+    var c = e.target.classList;
+    if(c.contains('tk-icon')) t.icon = e.target.value;
+    else if(c.contains('tk-label')){
+      t.label = e.target.value;
+      if(t.builtin){ var df = DEFAULT_TASKS.filter(function(x){ return x.id === t.id; })[0]; if(!df || df.label !== t.label.trim()){ t.builtin = false; } }
+    }
+    else if(c.contains('tk-pts')){ var v = parseInt(e.target.value, 10); t.points = isNaN(v) ? 0 : Math.max(0, Math.min(100, v)); tkPaintTotal(); }
+    else if(c.contains('tk-hint')) t.hint = e.target.value;
+  });
+  document.getElementById('tk-list').addEventListener('click', function(e){
+    var b = e.target.closest('[data-tk]'); if(!b) return;
+    var row = b.closest('.tk-row'), i = parseInt(row.getAttribute('data-i'), 10), act = b.getAttribute('data-tk');
+    if(act === 'up' && i > 0){ var a = apTasks[i]; apTasks[i] = apTasks[i-1]; apTasks[i-1] = a; }
+    else if(act === 'down' && i < apTasks.length - 1){ var a2 = apTasks[i]; apTasks[i] = apTasks[i+1]; apTasks[i+1] = a2; }
+    else if(act === 'del'){
+      if(apTasks.length <= 1){ alert('Cần giữ ít nhất 1 nhiệm vụ.'); return; }
+      if(!confirm('Xóa nhiệm vụ này khỏi danh sách?\n\nCác ngày đã qua vẫn giữ nguyên điểm đã tích.')) return;
+      apTasks.splice(i, 1);
+    } else return;
+    tkRender();
+  });
+  document.getElementById('btn-tk-add').addEventListener('click', function(){
+    if(apTasks.length >= TASKS_LIMIT){ alert('Tối đa ' + TASKS_LIMIT + ' nhiệm vụ cho mỗi hồ sơ.'); return; }
+    tkSyncSeq(); apTaskSeq++;
+    apTasks.push({id:'t' + apTaskSeq, icon:'⭐', label:'', points:0, hint:'', builtin:false});
+    tkRender();
+    var rows = document.querySelectorAll('#tk-list .tk-row'), last = rows[rows.length - 1];
+    if(last){ var inp = last.querySelector('.tk-label'); if(inp){ inp.focus(); try{ last.scrollIntoView({block:'center'}); }catch(err){} } }
+  });
+  document.getElementById('btn-tk-reset').addEventListener('click', function(){
+    if(!confirm('Đưa danh sách nhiệm vụ về mặc định (11 nhiệm vụ gốc)? Chưa lưu cho tới khi bấm "Lưu cài đặt".')) return;
+    apTasks = defaultTaskList(); tkSyncSeq(); tkRender(); apSetDirty(true);
+  });
+  document.getElementById('btn-tk-copy').addEventListener('click', function(){
+    var code = document.getElementById('tk-copy-from').value, btn = this;
+    if(!code){ alert('Chọn hồ sơ cần sao chép nhiệm vụ trước nhé!'); return; }
+    btn.disabled = true;
+    fetch(FIREBASE_BASE + '/kidchart/' + encodeURIComponent(code) + '/kidchart_settings.json')
+      .then(function(r){ return r.ok ? r.json() : Promise.reject(new Error('http')); })
+      .then(function(s){
+        var list = taskListClean(s && s.tasks);
+        if(!confirm('Thay danh sách hiện tại bằng ' + list.length + ' nhiệm vụ của «' + userNameOf(code) + '»?\n\nChưa lưu cho tới khi bấm "Lưu cài đặt".')) return;
+        apTasks = list; tkSyncSeq(); tkRender(); apSetDirty(true);
+      })
+      .catch(function(){ alert('Không đọc được nhiệm vụ của hồ sơ đó. Kiểm tra mạng rồi thử lại nhé!'); })
+      .then(function(){ btn.disabled = false; });
+  });
+  /* Ghi danh sách đang soạn vào settings (gọi từ nút Lưu cài đặt). Trả về false nếu không hợp lệ. */
+  function tkCommit(){
+    var filled = apTasks.filter(function(t){ return String(t.label || '').trim(); });
+    if(!filled.length){ alert('Cần ít nhất 1 nhiệm vụ có nội dung. App giữ nguyên danh sách nhiệm vụ cũ nhé!'); return false; }
+    var clean = taskListClean(filled);
+    var sig = function(l){ return JSON.stringify(l.map(function(t){ return [t.id, t.points]; })); };
+    var scoreChanged = sig(clean) !== sig(TASKS);
+    var same = JSON.stringify(clean) === JSON.stringify(TASKS);
+    tkSyncSeq(); settings.taskSeq = apTaskSeq;
+    if(same) return true;
+    if(scoreChanged) tasksFreezeHistory();   // dùng danh sách CŨ để chụp điểm ngày đã qua
+    settings.tasks = clean;
+    applyTasksFromSettings();
+    recalcTasksMax();
+    return true;
+  }
 
   // ---- events ----
   document.getElementById('day-tasklist').addEventListener('change', function(e){
@@ -10259,7 +10678,12 @@
     if(!month.days[dk]) month.days[dk] = {};
     var oldTotal = computeDayTotal(month.days[dk]);
     var willBeDone = input.checked;
-    month.days[dk][taskId] = willBeDone;
+    var dObj = month.days[dk];
+    if(!dObj._p || typeof dObj._p !== 'object') dObj._p = {};
+    Object.keys(dObj).forEach(function(k){ if(TASK_ID_RE.test(k) && dObj[k] && typeof dObj._p[k] !== 'number') dObj._p[k] = taskPointsNow(k); });
+    dObj[taskId] = willBeDone;
+    if(willBeDone) dObj._p[taskId] = taskPointsNow(taskId); else delete dObj._p[taskId];
+    if(typeof dObj._m !== 'number') dObj._m = TASKS_MAX;
     var newTotal = computeDayTotal(month.days[dk]);
     saveMonth(ymKey);
     currentPlayerDate = dateStr;
@@ -10552,13 +10976,53 @@
     if(shootState(loadMonth(key), 0).status === 'won') openPrizeModal(key);
   });
 
-  var SETTINGS_PIN = '2711';
-  document.getElementById('btn-settings').addEventListener('click', function(){
-    var code = prompt('🔒 Nhập mã để mở Cài đặt:');
-    if(code===null) return;
-    if(code.trim()!==SETTINGS_PIN){ alert('Sai mã rồi, thử lại nhé!'); return; }
-    openSettings();
+  /* ⚙️ chỉ mở menu Tài khoản (Đổi người dùng · Đăng xuất) — không còn hỏi mã. Cấu hình nằm ở Trang quản trị. */
+  function renderAccountMenu(){
+    var adm = authRole === 'admin';
+    var nm = document.getElementById('account-name'), rl = document.getElementById('account-role'), av = document.getElementById('account-avatar');
+    if(nm) nm.textContent = userNameOf(syncId) + ' · ' + syncId;
+    if(rl) rl.textContent = adm ? '🛡️ Quản trị viên' : '👦 Người dùng';
+    if(av) av.textContent = adm ? '🛡️' : '👦';
+  }
+  function openAccountMenu(){ renderAccountMenu(); openModalTop('account-modal'); }
+  function closeAccountMenu(){ document.getElementById('account-modal').classList.remove('open'); }
+  document.getElementById('btn-settings').addEventListener('click', openAccountMenu);
+  document.getElementById('ap-account').addEventListener('click', openAccountMenu);
+  document.getElementById('account-close').addEventListener('click', closeAccountMenu);
+  document.getElementById('account-backdrop').addEventListener('click', closeAccountMenu);
+  document.addEventListener('keydown', function(e){ if(e.key === 'Escape' && document.getElementById('account-modal').classList.contains('open')) closeAccountMenu(); });
+
+  /* Trang quản trị: mở bằng 🛡️, chuyển tab, đánh dấu thay đổi chưa lưu, thoát */
+  document.getElementById('btn-admin-console').addEventListener('click', function(){ openAdminPage(); });
+  document.getElementById('ap-exit').addEventListener('click', closeAdminPage);
+  document.getElementById('ap-sub').addEventListener('click', function(e){ if(e.target.closest('#ap-chip')) apSelectTab('system', true); });
+  document.getElementById('btn-pf-new').addEventListener('click', function(){
+    var box = document.getElementById('pf-create'), open = box.hidden;
+    box.hidden = !open; this.setAttribute('aria-expanded', open ? 'true' : 'false');
+    if(open) document.getElementById('new-user-name').focus();
   });
+  document.getElementById('pf-search').addEventListener('input', function(){ pfFilter = this.value; pfPaint(false); });
+  document.getElementById('pf-list').addEventListener('click', function(e){
+    var b = e.target.closest('[data-code]'); if(!b || authRole !== 'admin') return;
+    var code = b.getAttribute('data-code'); if(code === syncId) return;
+    if(apDirty && !confirm('Bạn có thay đổi chưa lưu cho hồ sơ hiện tại.\nChuyển hồ sơ sẽ BỎ các thay đổi này. Tiếp tục?')) return;
+    if(!confirm('Chuyển sang hồ sơ "' + userLabel(code) + '"?\n\nTrang sẽ tải lại và lấy toàn bộ dữ liệu của hồ sơ này từ đám mây. Cài đặt đã lưu của hồ sơ hiện tại vẫn được giữ.')) return;
+    switchToUser(code, userNameOf(code));
+  });
+  document.getElementById('ap-tabs').addEventListener('click', function(e){ var b = e.target.closest('[data-ap]'); if(b) apSelectTab(b.getAttribute('data-ap'), false); });
+  document.getElementById('ap-tabs').addEventListener('keydown', function(e){
+    var i = AP_TABS.indexOf(apTab), n = AP_TABS.length, k = e.key, j = -1;
+    if(k === 'ArrowRight' || k === 'ArrowDown') j = (i + 1) % n;
+    else if(k === 'ArrowLeft' || k === 'ArrowUp') j = (i - 1 + n) % n;
+    else if(k === 'Home') j = 0;
+    else if(k === 'End') j = n - 1;
+    if(j < 0) return;
+    e.preventDefault(); apSelectTab(AP_TABS[j], true);
+  });
+  ['input','change'].forEach(function(ev){
+    document.getElementById('ap-body').addEventListener(ev, function(e){ if(e.target.closest('[data-save]')) apSetDirty(true); });
+  });
+  document.getElementById('btn-quiz-mix-reset').addEventListener('click', function(){ apSetDirty(true); });
   /* ---- Cập nhật dữ liệu cầu thủ lên Firebase (node dùng chung) từ file .json ---- */
   function refreshPlayerDbStatus(){
     var el = document.getElementById('player-db-status');
@@ -10569,7 +11033,6 @@
       : 'Chưa có dữ liệu cầu thủ — hãy chọn file .json để tải lên.';
   }
   refreshPlayerDbStatus();
-  document.getElementById('btn-settings').addEventListener('click', refreshPlayerDbStatus);
   document.getElementById('btn-player-db-import').addEventListener('click', function(){
     document.getElementById('player-db-file').click();
   });
@@ -10597,12 +11060,12 @@
       }
       try{ localStorage.setItem('kidchart_player_db', JSON.stringify(list)); }catch(err){}
       alert('Đã cập nhật ' + list.length + ' cầu thủ. Trang sẽ tải lại.');
+      try{ sessionStorage.setItem('dbcd_admin_landing', 'data'); }catch(err){}
       location.reload();
     };
     reader.readAsText(f);
   });
-  document.getElementById('settings-close').addEventListener('click', closeSettings);
-  document.getElementById('settings-backdrop').addEventListener('click', closeSettings);
+
   document.getElementById('reward-list').addEventListener('click', function(e){
     var btn = e.target.closest('.chip-x');
     if(!btn) return;
@@ -10610,6 +11073,7 @@
     if(settings.rewards.length<=2){ alert('C\u1ea7n gi\u1eef \u00edt nh\u1ea5t 2 ph\u1ea7n th\u01b0\u1edfng \u0111\u1ec3 quay.'); return; }
     settings.rewards.splice(i,1);
     renderRewardList();
+    apSetDirty(true);
   });
   document.getElementById('btn-add-reward').addEventListener('click', function(){
     var input = document.getElementById('new-reward-input');
@@ -10619,26 +11083,16 @@
     settings.rewards.push({icon: icons[settings.rewards.length % icons.length], name: v});
     input.value = '';
     renderRewardList();
+    apSetDirty(true);
   });
 
-  /* ---- Đăng xuất · Đổi người dùng · Đổi mật khẩu ---- */
+  /* ---- Đăng xuất · Đổi người dùng (menu ⚙️) · Đổi mật khẩu (Trang quản trị → Hồ sơ & hệ thống) ---- */
   document.getElementById('logout-btn').addEventListener('click', function(){ if(confirm('Đăng xuất khỏi tài khoản này?')) doLogout(); });
   document.getElementById('btn-auth-logout').addEventListener('click', function(){ if(confirm('Đăng xuất khỏi tài khoản này?')) doLogout(); });
   document.getElementById('btn-auth-switch').addEventListener('click', doSwitch);
-  (function(){
-    var lab = document.getElementById('auth-role-label');
-    if(lab) lab.innerHTML = authRole === 'admin' ? '🛡️ Đang đăng nhập với quyền <b>Quản trị viên</b>' : '👦 Đang đăng nhập với tư cách <b>Người dùng</b>';
-    if(authRole !== 'admin'){   // Người dùng thường không thấy các mục quản trị
-      ['btn-player-db-import','btn-qbank-import','settings-admin-pin'].forEach(function(id){
-        var n = document.getElementById(id);
-        while(n && n.parentElement && n.parentElement.className !== 'modal-box') n = n.parentElement;
-        if(n && n.parentElement) n.style.display = 'none';
-      });
-    }
-  })();
-  document.getElementById('btn-auth-pw').addEventListener('click', function(){
-    var admin = authRole === 'admin';
-    var p1 = prompt(admin ? 'Mật khẩu QUẢN TRỊ mới (ít nhất 4 ký tự):' : 'Mật khẩu mới cho hồ sơ này (ít nhất 4 ký tự):');
+  function apChangePw(admin){
+    if(authRole !== 'admin') return;
+    var p1 = prompt(admin ? 'Mật khẩu QUẢN TRỊ mới (ít nhất 4 ký tự):' : 'Mật khẩu mới cho hồ sơ "' + userNameOf(syncId) + '" (ít nhất 4 ký tự):');
     if(p1 === null) return;
     if(p1.length < 4){ alert('Mật khẩu cần ít nhất 4 ký tự.'); return; }
     if(prompt('Nhập lại mật khẩu mới để xác nhận:') !== p1){ alert('Hai lần nhập không giống nhau.'); return; }
@@ -10649,18 +11103,11 @@
       if(!admin){ userDirectory[syncId] = userDirectory[syncId] || {}; userDirectory[syncId].pw = h; }
       triggerToast('okay', '🔑 Đã đổi mật khẩu!');
     }).catch(function(e){ alert('Không đổi được mật khẩu (' + e.message + '). Kiểm tra mạng rồi thử lại.'); });
-  });
+  }
+  document.getElementById('btn-auth-pw-admin').addEventListener('click', function(){ apChangePw(true); });
+  document.getElementById('btn-auth-pw-user').addEventListener('click', function(){ apChangePw(false); });
   if(isAdmin) updateAdminBtn();
 
-  /* ---- Mở hồ sơ người dùng có sẵn ---- */
-  document.getElementById('btn-user-load').addEventListener('click', function(){
-    if(authRole !== 'admin'){ alert('Chỉ Quản trị viên mới mở hồ sơ khác trực tiếp. Hãy dùng nút "Đổi người dùng".'); return; }
-    var code = document.getElementById('user-select').value.trim();
-    if(!code){ alert('Chưa chọn hồ sơ người dùng nào.'); return; }
-    if(code === syncId){ alert('Đây đang là hồ sơ hiện tại rồi.'); return; }
-    if(!confirm('Mở hồ sơ "' + userLabel(code) + '"?\n\nTrang sẽ tải lại và lấy toàn bộ dữ liệu của hồ sơ này từ đám mây.')) return;
-    switchToUser(code, userNameOf(code));
-  });
   /* ---- Tạo người dùng mới: dữ liệu trắng hoàn toàn ---- */
   document.getElementById('btn-user-create').addEventListener('click', function(){
     if(authRole !== 'admin'){ alert('Chỉ Quản trị viên mới được tạo hồ sơ mới.'); return; }
@@ -10702,9 +11149,13 @@
     else alert('Tỷ lệ các lĩnh vực không thể cùng bằng 0%. App giữ nguyên tỷ lệ cũ nhé!');
     var pin = (document.getElementById('settings-admin-pin').value || '').trim();
     if(pin) settings.adminPin = pin;
+    tkCommit();
     saveSettings();
     currentPeriod = getPeriodRange(new Date());
-    closeSettings();
+    apRewardsBackup = settings.rewards.slice();
+    fillAdminFields();   // hiện lại giá trị đã được chuẩn hóa (vd. khoảng điểm khích lệ bị đảo, ngoài phạm vi)
+    apSetDirty(false, true);
+    triggerToast('okay', '✅ Đã lưu cài đặt cho ' + userNameOf(syncId));
     if(window.appBgApplyMode){ window.appBgApplyMode(); if(bgBefore === 'off' && settings.bgMode !== 'off') window.appBgChange(true, 0); }   // hàm nằm ở script điều hướng
     renderWeek();
     if(document.getElementById('view-battle').classList.contains('active') && !battleState){ try{ renderBattlePick(); }catch(e){} }   // cập nhật số lượt đấu ngay
@@ -11127,6 +11578,15 @@
     var _sv = document.getElementById('view-squad');
     if(_sv && _sv.classList.contains('active') && window.appRenderSquad) window.appRenderSquad();
   }catch(e){}
+
+  /* Quản trị viên: hiện nút 🛡️ và vào thẳng Trang quản trị ngay sau khi đăng nhập */
+  if(authRole === 'admin'){
+    var _apBtn = document.getElementById('btn-admin-console');
+    if(_apBtn) _apBtn.hidden = false;
+    var _land = null;
+    try{ _land = sessionStorage.getItem('dbcd_admin_landing'); sessionStorage.removeItem('dbcd_admin_landing'); }catch(e){}
+    if(_land) openAdminPage(AP_TABS.indexOf(_land) >= 0 ? _land : 'system');
+  }
 })();
 </script>
 
