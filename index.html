@@ -1771,6 +1771,12 @@
   #pos-picker-grid .pp-tag{ margin-top:3px; text-align:center; font-size:10.5px; font-weight:800; border-radius:8px; padding:2px 4px; }
   #pos-picker-grid .pp-tag.swap{ background:rgba(37,99,235,.22); color:#93C5FD; border:1px solid rgba(96,165,250,.5); }
   #pos-picker-grid .pp-tag.alt{ background:rgba(245,158,11,.16); color:#FCD34D; border:1px solid rgba(245,158,11,.4); }
+  /* thẻ trùng cầu thủ (kể cả khác phiên bản) với người đã xếp trong đội hình: mờ + không chọn được */
+  #pos-picker-grid .pp-item.pp-dup{ cursor:not-allowed; }
+  #pos-picker-grid .pp-item.pp-dup:hover, #pos-picker-grid .pp-item.pp-dup:active{ transform:none; }
+  #pos-picker-grid .pp-item.pp-dup .player-card, #pos-picker-grid .pp-item.pp-dup .pp-stats{ opacity:.4; filter:grayscale(.75); }
+  #pos-picker-grid .pp-tag.dup{ background:rgba(239,68,68,.18); color:#FCA5A5; border:1px solid rgba(248,113,113,.5); }
+  #toast{ z-index:10200; }   /* thông báo phải nổi lên trên cả hộp thoại (hộp thoại z-index 10001) */
   .bench-slot{ position:relative; }
   .pitch-slot.sub-ghost, .bench-slot.sub-ghost{ position:fixed !important; margin:0; transform:none; transform-origin:0 0; z-index:10070; pointer-events:none; display:block; }
   .sub-ghost .slot-circle{ filter:drop-shadow(0 10px 14px rgba(0,0,0,.55)); }
@@ -2252,6 +2258,9 @@
   .t3-bar span{ flex:1; font-weight:800; font-size:13px; } .t3-go{ white-space:nowrap; } .t3-go:disabled{ opacity:.45; }
   .battle-pick-cell{ position:relative; }
   .battle-pick-cell.t3-sel .player-card{ outline:3px solid #FBBF24; outline-offset:-2px; border-radius:10px; }
+  .battle-pick-cell.t3-dup{ cursor:not-allowed; }
+  .battle-pick-cell.t3-dup .player-card{ opacity:.4; filter:grayscale(.75); }
+  .battle-pick-cell.t3-dup::after{ content:'🚫 Đã có bản khác trong đội'; display:block; margin-top:3px; font-size:10.5px; font-weight:800; color:#FCA5A5; line-height:1.2; }
   .t3-ord{ position:absolute; top:2px; left:4px; z-index:4; font-size:22px; font-weight:900; color:#FDE047; text-shadow:0 1px 4px #000; pointer-events:none; }
   /* sân đấu 3v3 */
   .battle-vs-row.bt3{ display:flex; flex-direction:column; align-items:stretch; gap:6px; }
@@ -5501,6 +5510,40 @@
   }
   function hydratePlayers(list){ return (list || []).map(hydratePlayer); }
 
+  /* ===== KHÔNG TRÙNG CẦU THỦ (kể cả khác phiên bản) =====
+     Mỗi phiên bản của một cầu thủ (Phổ Thông / Huyền Thoại / Khoảnh Khắc...) là 1 thẻ riêng với dbId riêng, nhưng vẫn là CÙNG MỘT NGƯỜI.
+     playerIdentityKey() đưa mọi phiên bản về cùng 1 khóa: ưu tiên trường playerKey (nếu CSDL có đặt), không thì dùng TÊN đã chuẩn hóa
+     (bỏ dấu, không phân biệt hoa/thường, bỏ dấu câu và hậu tố phiên bản đặt trong ngoặc như "(ICON)", "[TOTY]").
+     Dùng chung cho: đội hình (sân + dự bị), đội 3v3 của con và đội đối thủ 3v3. */
+  function playerIdentityKey(p){
+    if(!p) return '';
+    if(p.playerKey) return 'k:' + String(p.playerKey).trim().toLowerCase();
+    var n = String(p.name || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/đ/gi, 'd')
+      .replace(/[\(\[\{][^\)\]\}]*[\)\]\}]/g, ' ').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+    return n ? 'n:' + n : (p.dbId ? 'db:' + p.dbId : '');
+  }
+  /* Đội hình (sân + dự bị): tìm thẻ KHÁC đang đứng ở ô khác mà cùng cầu thủ với `cand`.
+     Bỏ qua ô (ignoreType, ignoreIdx) vì người ở ô đó sẽ ra khỏi ô — thay bằng phiên bản khác của chính họ là hợp lệ. */
+  function squadDupHolder(squad, players, cand, ignoreType, ignoreIdx){
+    var key = playerIdentityKey(cand);
+    if(!key) return null;
+    var found = null;
+    function scan(arr, type){
+      (arr || []).forEach(function(id, i){
+        if(found || !id || id === cand.id) return;
+        if(type === ignoreType && i === ignoreIdx) return;
+        var q = players.find(function(x){ return x && x.id === id; });
+        if(q && playerIdentityKey(q) === key) found = q;
+      });
+    }
+    scan(squad.pitch, 'pitch');
+    scan(squad.bench, 'bench');
+    return found;
+  }
+  function squadDupMsg(q){
+    return 'Đã có ' + ((q && q.name) || 'cầu thủ này') + ' trong đội hình — mỗi cầu thủ chỉ được xếp 1 thẻ, kể cả phiên bản khác.';
+  }
+
   function pad4(n){ return String(n).padStart(4,'0'); }
   function makePlayerId(){ return 'p'+Date.now().toString(36)+Math.floor(Math.random()*9999).toString(36); }
   function initialsOf(name){
@@ -6482,7 +6525,21 @@
     var cleaned = false;
     squad.pitch = squad.pitch.map(function(id){ if(id && !haveIds[id]){ cleaned = true; return null; } return id; });
     squad.bench = squad.bench.map(function(id){ if(id && !haveIds[id]){ cleaned = true; return null; } return id; });
+    /* Dọn trùng cầu thủ: dữ liệu cũ có thể đã xếp 2 phiên bản của cùng 1 người. Giữ thẻ xếp trước (sân trước, rồi dự bị), thẻ còn lại về kho (không mất thẻ). */
+    var seenIdent = {}, dupCleared = 0;
+    var dedupeSlot = function(id){
+      if(!id) return id;
+      var pl = players.find(function(x){ return x && x.id === id; });
+      var key = playerIdentityKey(pl);
+      if(!key) return id;
+      if(seenIdent[key]){ dupCleared++; cleaned = true; return null; }
+      seenIdent[key] = true;
+      return id;
+    };
+    squad.pitch = squad.pitch.map(dedupeSlot);
+    squad.bench = squad.bench.map(dedupeSlot);
     if(cleaned){ try{ saveSquad(squad); }catch(e){} }
+    if(dupCleared) triggerToast('low', 'Đã đưa ' + dupCleared + ' thẻ trùng cầu thủ ra khỏi đội hình (về lại kho) — mỗi cầu thủ chỉ được xếp 1 thẻ.');
 
     var selZone = document.getElementById('formation-select-zone');
     selZone.innerHTML = '<select id="formation-select" class="formation-select">'
@@ -6665,6 +6722,10 @@
   function squadCloseTop(){ document.getElementById('pos-picker-modal').classList.remove('open'); }
   function applySlotPick(slotType, slotIndex, pickedId, pickSnap){
     var sq = loadSquad();
+    var _allP = hydratePlayers(loadPlayers());
+    var _pk = _allP.find(function(x){ return x && x.id === pickedId; });
+    var _dupQ = _pk ? squadDupHolder(sq, _allP, _pk, slotType, slotIndex) : null;
+    if(_dupQ){ triggerToast('low', squadDupMsg(_dupQ)); return; }
     var arrOf = function(t){ return t === 'pitch' ? sq.pitch : sq.bench; };
     var occId = arrOf(slotType)[slotIndex] || null;
     if(occId === pickedId) return;
@@ -6770,12 +6831,20 @@
         var loc = locOf(p.id), tag = '';
         if(loc) tag = '<div class="pp-tag swap">⇄ Đổi chỗ · '+(loc.type === 'pitch' ? formation.positions[loc.idx].pos : 'Dự bị '+(loc.idx+1))+'</div>';
         else if(slotPos && !playerIsMainAt(p, slotPos)) tag = '<div class="pp-tag alt">Vị trí phụ</div>';
+        var dupOf = squadDupHolder(squad, players, p, slotType, slotIndex);
+        if(dupOf){   // cùng cầu thủ (kể cả phiên bản khác) với người đã có trong đội hình → mờ, không chọn được
+          html += '<div class="pp-item pp-dup" aria-disabled="true" data-dup-msg="'+escHtml(squadDupMsg(dupOf))+'">'+playerCardHTML(p, false)+ppStatsHTML(p, ppKeyStats(p, slotPos), slotPos ? cur : null)+'<div class="pp-tag dup">🚫 Đã có bản khác trong đội hình</div></div>';
+          return;
+        }
         html += '<div class="pp-item" role="button" tabindex="0" data-pick="'+p.id+'">'+playerCardHTML(p, false)+ppStatsHTML(p, ppKeyStats(p, slotPos), slotPos ? cur : null)+tag+'</div>';
       });
     }
     var grid = document.getElementById('pos-picker-grid');
     grid.innerHTML = html;
     grid.scrollTop = 0;
+    grid.querySelectorAll('.pp-dup').forEach(function(el){
+      el.addEventListener('click', function(){ triggerToast('low', el.getAttribute('data-dup-msg') || 'Cầu thủ này đã có trong đội hình rồi.'); });
+    });
     var clr = document.getElementById('pp-clear');
     if(clr) clr.addEventListener('click', function(e){ e.stopPropagation(); clearSlot(slotType, slotIndex); });
     grid.querySelectorAll('[data-pick]').forEach(function(el){
@@ -7132,11 +7201,11 @@
       var found = null;
       for(var s = 0; s < R.pool.length && !found; s++){
         var q = R.pool[(idx + s) % R.pool.length];
-        if(usedIds && usedIds[q.dbId]) continue;
+        if(usedIds && usedIds[playerIdentityKey(q) || q.dbId]) continue;
         if(wantEl && q.battle.element !== wantEl) continue;
         found = q;
       }
-      if(!found){ for(var s2 = 0; s2 < R.pool.length && !found; s2++){ var q2 = R.pool[(idx + s2) % R.pool.length]; if(!(usedIds && usedIds[q2.dbId])) found = q2; } }
+      if(!found){ for(var s2 = 0; s2 < R.pool.length && !found; s2++){ var q2 = R.pool[(idx + s2) % R.pool.length]; if(!(usedIds && usedIds[playerIdentityKey(q2) || q2.dbId])) found = q2; } }
       if(!found) return null;
       c = found;
     }
@@ -8324,6 +8393,21 @@
   var quickTeam3 = null;         // đội đối thủ Đấu nhanh đã bốc sẵn
   var roadTeamCache3 = {n:0, team:null};
   function sn3(c){ var p = String((c && c.name) || '').split(/\s+/); return p[p.length-1] || ''; }
+  /* 3v3: thẻ khác (đã chọn trong đội) mà cùng cầu thủ với thẻ id (kể cả phiên bản khác) */
+  function teamDupHolder3(cards, id){
+    var cand = cards.find(function(c){ return c.id === id; });
+    var key = playerIdentityKey(cand);
+    if(!key) return null;
+    for(var i = 0; i < pickTeam3.length; i++){
+      if(pickTeam3[i] === id) continue;
+      var q = cards.find(function(c){ return c.id === pickTeam3[i]; });
+      if(q && playerIdentityKey(q) === key) return q;
+    }
+    return null;
+  }
+  function teamDupMsg3(q){
+    return 'Đội đã có ' + ((q && q.name) || 'cầu thủ này') + ' — không chọn 2 thẻ của cùng một cầu thủ, kể cả phiên bản khác.';
+  }
   function elIc3(code){ return code ? elementIconInline(code) : ''; }
   function loadBattleSize3(){ try{ return localStorage.getItem(BATTLE_SIZE_KEY) === '3' ? 3 : 1; }catch(e){ return 1; } }
   function pct3(x){ var v = Math.round(x*1000)/10; return (v > 0 ? '+' : '') + v + '%'; }
@@ -8335,8 +8419,9 @@
     var guard = 0;
     while(out.length < 3 && pool.length >= 3 && guard++ < 200){
       var c = pool[Math.floor(Math.random()*pool.length)];
-      if(used[c.dbId]) continue;
-      used[c.dbId] = 1;
+      var uk = playerIdentityKey(c) || c.dbId;   // không bốc 2 thẻ cùng cầu thủ (kể cả khác phiên bản)
+      if(used[uk]) continue;
+      used[uk] = 1;
       out.push(Object.assign({}, c, {stats:c.realStats || c.stats, ovr:c.realOvr || c.ovr}));
     }
     return out.length === 3 ? out : null;
@@ -8348,10 +8433,10 @@
     var def = roadmapStageDef(n), sinh = (BATTLE_CONFIG.elements && BATTLE_CONFIG.elements.sinh) || SINH_MAP;
     var used = {}, team = [];
     var a = roadmapOpponent(n, null, 0, null, used); if(!a) return null;
-    used[a.dbId] = 1; team.push(a);
+    used[playerIdentityKey(a) || a.dbId] = 1; team.push(a);
     var want1 = def.boss ? sinh[a.battle.element] : null;
     var b2 = roadmapOpponent(n, null, 1, want1, used); if(!b2) return null;
-    used[b2.dbId] = 1; team.push(b2);
+    used[playerIdentityKey(b2) || b2.dbId] = 1; team.push(b2);
     var want2 = def.boss === 2 ? sinh[b2.battle.element] : null;
     var c3 = roadmapOpponent(n, null, 2, want2, used); if(!c3) return null;
     team.push(c3);
@@ -8502,13 +8587,20 @@
       }
     }
     document.querySelectorAll('#battle-pick-grid .battle-pick-cell').forEach(function(cell){
-      var k = pickTeam3.indexOf(cell.getAttribute('data-id'));
+      var cid = cell.getAttribute('data-id'), k = pickTeam3.indexOf(cid);
       cell.classList.toggle('t3-sel', k >= 0);
+      cell.classList.toggle('t3-dup', k < 0 && !!teamDupHolder3(cards, cid));
       var ob = cell.querySelector('.t3-ord'); if(ob) ob.textContent = k >= 0 ? ORD3[k] : '';
     });
     var go = document.getElementById('t3-go');
     if(go) go.addEventListener('click', function(){
       var s = selCards3(cards); if(s.length !== 3) return;
+      var _ik = {};
+      for(var _q = 0; _q < s.length; _q++){
+        var _k = playerIdentityKey(s[_q]);
+        if(_k && _ik[_k]){ triggerToast('low', teamDupMsg3(s[_q])); return; }
+        if(_k) _ik[_k] = 1;
+      }
       if(go.classList.contains('t3-ready')) t3Launch(go, function(){ startBattle3(s, enemy); });
       else startBattle3(s, enemy);
     });
@@ -8533,6 +8625,16 @@
     var key = battleMode + ':' + roadPickStage;
     if(key !== pickKey3){ pickKey3 = key; pickTeam3 = []; }
     pickTeam3 = pickTeam3.filter(function(id){ return cards.some(function(c){ return c.id === id; }); });
+    (function(){   // đội đang chọn dở không được có 2 thẻ cùng cầu thủ
+      var seen = {};
+      pickTeam3 = pickTeam3.filter(function(id){
+        var c = cards.find(function(x){ return x.id === id; });
+        var k = playerIdentityKey(c);
+        if(k && seen[k]) return false;
+        if(k) seen[k] = 1;
+        return true;
+      });
+    })();
     hint.style.display = 'none';
     var scores = {};
     cards.forEach(function(p){
@@ -8553,8 +8655,12 @@
       cell.addEventListener('click', function(){
         var id = cell.getAttribute('data-id'), k = pickTeam3.indexOf(id);
         if(k >= 0) pickTeam3.splice(k, 1);
-        else if(pickTeam3.length >= 3){ triggerToast('low', 'Đủ 3 thẻ rồi — bấm vào thẻ trong đội để bỏ bớt nhé!'); return; }
-        else pickTeam3.push(id);
+        else {
+          var dupT = teamDupHolder3(cards, id);
+          if(dupT){ triggerToast('low', teamDupMsg3(dupT)); return; }
+          if(pickTeam3.length >= 3){ triggerToast('low', 'Đủ 3 thẻ rồi — bấm vào thẻ trong đội để bỏ bớt nhé!'); return; }
+          pickTeam3.push(id);
+        }
         refreshTeamPick3(cards);
       });
     });
@@ -11651,6 +11757,7 @@
     + '<li><b>Liên kết Ngũ hành trong đội:</b> thẻ được đồng đội <b>Tương sinh</b> (Mộc→Hỏa→Thổ→Kim→Thủy→Mộc) <b>+10%</b> sức đánh · đủ chuỗi 3 thẻ <b>Thuận hành +5%</b> cả đội · mỗi cặp <b>đồng Hệ +7.5%</b> · thẻ bị đồng đội <b>Xung khắc −8%</b>. Thẻ nào bị hạ thì liên kết của nó <b>đứt ngay</b> — hạ đúng thẻ giữ liên kết sẽ làm đội đối thủ yếu đi!</li>'
     + '<li><b>Đặc điểm đội theo CLB · Quốc gia · Hành lang:</b> 🏟️ <b>cùng CLB</b>: +13% sức đánh mỗi cặp và Chuyền 1-2 mạnh hơn · 🌍 <b>cùng quốc gia</b>: +5% mỗi cặp, khi đồng đội bị loại thẻ cùng quốc gia còn lại được <b>Báo thù</b> (+1 Nộ khí, +6% sức đánh) · ⬅️ <b>cùng cánh trái</b>: +28% sức đánh mỗi cặp · ➡️ <b>cùng cánh phải</b>: mọi đòn đánh lan 17% sang thẻ bên cạnh · 🎯 <b>cùng trung lộ</b>: nhận ít hơn 16% sát thương mỗi cặp. Tất cả cộng dồn với Ngũ hành (tối đa +50% sức đánh cho mỗi thẻ) và đều mất khi thẻ trong liên kết bị loại.</li>'
     + '<li><b>Chiến thuật 3v3:</b> 🔴 <b>Nộ khí</b> đủ 3 chấm (đánh hoặc bị đánh được +1) → tung <b>chiêu đặc biệt</b> ×1.5 và lan 50% sang thẻ bên cạnh · ⚽ <b>Chuyền 1-2</b>: đòn kế tiếp của đội dồn vào cùng mục tiêu +10% · Hệ có vai trò riêng: 🔥 <b>Hỏa</b> gây bỏng, 💧 <b>Thủy</b> làm chậm (khi điểm đòn ≥ 7), 🌿 <b>Mộc</b> hồi máu cho đồng đội yếu nhất, 🪨 <b>Thổ</b> gánh 15% sát thương cho đồng đội, ⚙️ <b>Kim</b> xuyên 25% giáp.</li>'
+    + '<li><b>Không trùng cầu thủ:</b> một đội 3v3 không được có 2 thẻ của cùng một cầu thủ, kể cả khác phiên bản (đội đối thủ cũng vậy).</li>'
     + '<li><b>Thưởng 3v3:</b> thắng thì mỗi thẻ nhận ⚡ bằng một nửa phần của trận 1v1 (thẻ ⭐MVP gây nhiều sát thương nhất nhận thêm); thưởng mốc Hành trình chia đều 3 thẻ. Hành trình dùng chung tiến độ với 1v1.</li></ul></section>'
     + '<section class="rules-sec" id="rules-sec-upgrade"><h4>⬆️ Nâng cấp thẻ</h4><ul>'
     + '<li>Đủ ⚡ Năng Lượng là thẻ được cộng thêm <b>+1 OVR</b>. Nâng cấp <b>không giới hạn</b>, thẻ càng mạnh càng sáng (mốc +5 bạc, +10 vàng, +20 kim cương).</li>'
@@ -11665,6 +11772,7 @@
     + '<li>Chạm vào một vị trí trên sân hoặc một ô dự bị: cầu thủ đang đứng đó hiện ở trên cùng, bên dưới là danh sách xếp theo OVR cao nhất cho vị trí đó.</li>'
     + '<li>Chạm cầu thủ khác là <b>đổi người ngay</b>, không cần gỡ người cũ. Nếu người mới đang đứng ở ô khác, hai thẻ sẽ <b>đổi chỗ</b> cho nhau.</li>'
     + '<li>Đổi sơ đồ chiến thuật để có nhiều kiểu xếp hình khác nhau.</li>'
+    + '<li><b>Không trùng cầu thủ:</b> mỗi cầu thủ chỉ được xếp <b>1 thẻ</b> trong đội hình (sân + dự bị), kể cả khi là phiên bản khác của cùng một người. Thẻ trùng sẽ bị làm mờ trong bảng chọn.</li>'
     + '<li>Đội hình chính luôn có <b>11 cầu thủ</b>, cộng thêm tối đa <b>7 dự bị</b>.</li></ul></section>';
   }
   function openRules(which){
