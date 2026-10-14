@@ -2580,6 +2580,60 @@
   #admin-page .tk-total.warn{ background:rgba(251,191,36,.12); border:1px solid rgba(251,191,36,.45); color:#FDE68A; }
   @media (prefers-reduced-motion:reduce){ #admin-page:not([hidden]){ animation:none; } }
 </style>
+<style id="welcome-notice-css">
+  /* ===== Thông báo chào mừng: popup cho User + tab soạn thảo trong Trang quản trị ===== */
+  #welcome-modal{ overflow:hidden; }
+  #welcome-modal .wn-box{ position:relative; z-index:1; width:min(480px,100%); max-height:92vh; overflow-y:auto; text-align:center; border:1px solid rgba(251,191,36,.55); animation:wnBoxIn .55s cubic-bezier(.34,1.56,.64,1), wnGlow 2.4s ease-in-out .6s infinite; }
+  @keyframes wnBoxIn{ from{ opacity:0; transform:scale(.7) translateY(24px); } to{ opacity:1; transform:none; } }
+  @keyframes wnGlow{ 0%,100%{ box-shadow:0 0 22px 2px rgba(251,191,36,.28), 0 18px 40px rgba(0,0,0,.5); } 50%{ box-shadow:0 0 46px 8px rgba(251,191,36,.55), 0 18px 40px rgba(0,0,0,.5); } }
+  /* Tia sáng xoay phía sau hộp thoại */
+  #welcome-modal .wn-rays{ position:absolute; left:50%; top:50%; width:170vmax; height:170vmax; margin:-85vmax 0 0 -85vmax; pointer-events:none; z-index:0;
+    background:repeating-conic-gradient(from 0deg, rgba(251,191,36,.20) 0 7deg, rgba(251,191,36,0) 7deg 18deg);
+    -webkit-mask-image:radial-gradient(circle, #000 0, rgba(0,0,0,.55) 18%, transparent 46%); mask-image:radial-gradient(circle, #000 0, rgba(0,0,0,.55) 18%, transparent 46%);
+    animation:wnSpin 48s linear infinite; }
+  @keyframes wnSpin{ to{ transform:rotate(360deg); } }
+  #welcome-modal .wn-spark{ position:absolute; z-index:2; pointer-events:none; font-size:20px; animation:wnTwinkle 1.8s ease-in-out infinite; }
+  #welcome-modal .wn-spark.s1{ top:10px; left:14px; } #welcome-modal .wn-spark.s2{ top:44px; right:16px; animation-delay:.5s; font-size:16px; }
+  #welcome-modal .wn-spark.s3{ top:92px; left:8px; animation-delay:1s; font-size:14px; } #welcome-modal .wn-spark.s4{ top:8px; right:56px; animation-delay:1.3s; font-size:14px; }
+  @keyframes wnTwinkle{ 0%,100%{ opacity:.15; transform:scale(.6) rotate(0); } 50%{ opacity:1; transform:scale(1.25) rotate(25deg); } }
+  #welcome-modal .wn-preview-bar{ margin:-4px -4px 10px; padding:6px 10px; border-radius:10px; background:rgba(56,189,248,.14); border:1px dashed rgba(56,189,248,.6); color:#BAE6FD; font-size:12px; font-weight:800; }
+  #welcome-modal .wn-kicker{ display:block; align-self:center; width:fit-content; max-width:100%; margin:0 auto; font-size:12px; font-weight:900; letter-spacing:.12em; color:#3D2500; padding:5px 14px; border-radius:999px; background:linear-gradient(135deg,#FDE68A,#F59E0B); box-shadow:0 4px 14px rgba(245,158,11,.5); animation:wnPulse 1.6s ease-in-out infinite; }
+  #welcome-modal .wn-kicker[hidden]{ display:none; }
+  @keyframes wnPulse{ 0%,100%{ transform:scale(1); } 50%{ transform:scale(1.07); } }
+  #welcome-modal h3{ margin:10px 0 8px; font-size:23px; line-height:1.25; font-weight:900; color:#fff;
+    background:linear-gradient(100deg,#fff 25%,#FDE68A 42%,#F59E0B 50%,#FDE68A 58%,#fff 75%); background-size:260% 100%; -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; animation:wnShine 2.8s linear infinite; }
+  @keyframes wnShine{ from{ background-position:130% 0; } to{ background-position:-130% 0; } }
+  #welcome-modal .wn-msg{ margin:0 0 6px; font-size:14px; line-height:1.55; color:#CBD5E1; white-space:pre-line; }
+  #welcome-modal .wn-cards{ display:grid; gap:10px; justify-items:center; margin:14px 0 6px; perspective:900px; }
+  #welcome-modal .wn-cards.n1{ grid-template-columns:minmax(0,190px); justify-content:center; }
+  #welcome-modal .wn-cards.n2{ grid-template-columns:repeat(2,minmax(0,1fr)); }
+  #welcome-modal .wn-cards.n3{ grid-template-columns:repeat(3,minmax(0,1fr)); }
+  #welcome-modal .wn-card{ position:relative; width:100%; animation:wnReveal .85s cubic-bezier(.2,.8,.2,1) var(--d,0s) backwards, wnFloat 3.2s ease-in-out calc(var(--d,0s) + .9s) infinite; }
+  #welcome-modal .wn-card .fc-card{ filter:drop-shadow(0 6px 10px rgba(0,0,0,.45)); }
+  #welcome-modal .wn-card::after{ content:''; position:absolute; inset:0; border-radius:8% / 5.5%; pointer-events:none; background:linear-gradient(115deg, transparent 38%, rgba(255,255,255,.6) 50%, transparent 62%); background-size:260% 100%; background-position:160% 0; animation:wnGlint 3s ease-in-out calc(var(--d,0s) + .9s) infinite; }
+  @keyframes wnReveal{ 0%{ opacity:0; transform:rotateY(100deg) scale(.55) translateY(34px); } 60%{ opacity:1; transform:rotateY(-12deg) scale(1.07); } 100%{ opacity:1; transform:none; } }
+  @keyframes wnFloat{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-5px); } }
+  @keyframes wnGlint{ 0%{ background-position:160% 0; } 55%,100%{ background-position:-60% 0; } }
+  #welcome-modal .modal-actions{ flex-wrap:wrap; gap:8px; margin-top:12px; }
+  @media (prefers-reduced-motion:reduce){ #welcome-modal .wn-box, #welcome-modal .wn-card, #welcome-modal .wn-rays, #welcome-modal .wn-spark, #welcome-modal .wn-kicker, #welcome-modal h3, #welcome-modal .wn-card::after{ animation:none !important; } }
+
+  #admin-page textarea#wn-msg{ width:100%; min-height:96px; resize:vertical; background:#0F172A; border:1px solid #475569; border-radius:12px; padding:9px 12px; font:inherit; font-size:14px; color:#fff; box-sizing:border-box; }
+  #admin-page textarea#wn-msg:focus{ outline:none; border-color:var(--stadium); box-shadow:0 0 0 2px rgba(16,185,129,.25); }
+  #admin-page .wn-picked{ display:flex; flex-wrap:wrap; gap:6px; min-height:34px; }
+  #admin-page .wn-chip{ display:inline-flex; align-items:center; gap:6px; padding:6px 6px 6px 12px; border-radius:999px; background:rgba(16,185,129,.14); border:1px solid rgba(16,185,129,.5); color:#A7F3D0; font-size:13px; font-weight:800; }
+  #admin-page .wn-chip button{ min-width:28px; min-height:28px; border-radius:50%; border:0; background:#334155; color:#E2E8F0; font-weight:900; cursor:pointer; }
+  #admin-page .wn-empty{ font-size:13px; color:#94A3B8; }
+  #admin-page .wn-list{ display:flex; flex-direction:column; gap:6px; max-height:340px; overflow-y:auto; padding-right:2px; }
+  #admin-page .wn-row{ display:grid; grid-template-columns:44px 1fr 28px; align-items:center; gap:10px; text-align:left; min-height:56px; padding:6px 10px; border-radius:12px; border:1px solid #475569; background:rgba(15,23,42,.45); color:#E2E8F0; font:inherit; cursor:pointer; }
+  #admin-page .wn-row:hover{ background:rgba(51,65,85,.7); }
+  #admin-page .wn-row.on{ border-color:var(--stadium); background:rgba(16,185,129,.12); }
+  #admin-page .wn-row .wn-th{ width:44px; height:44px; border-radius:8px; background:#1E293B; object-fit:cover; object-position:top; }
+  #admin-page .wn-row b{ display:block; font-size:14px; }
+  #admin-page .wn-row small{ color:#94A3B8; font-size:12px; }
+  #admin-page .wn-row .wn-tick{ font-weight:900; color:var(--stadium); text-align:center; }
+  #admin-page .wn-sortbar{ display:flex; flex-wrap:wrap; gap:6px; }
+  #admin-page .wn-sortbar .on{ outline:2px solid var(--stadium); }
+</style>
 </head>
 <body>
 <div id="bg-stage" aria-hidden="true"><div class="bg-layer" id="bg-a"></div><div class="bg-layer" id="bg-b"></div><div class="bg-shade"></div></div>
@@ -2922,6 +2976,7 @@
       <button type="button" class="ap-tab" role="tab" id="aptab-rewards" data-ap="rewards" aria-controls="appane-rewards" aria-selected="false" tabindex="-1"><span class="ap-tab-ico" aria-hidden="true">🎁</span><span>Phần thưởng</span></button>
       <button type="button" class="ap-tab" role="tab" id="aptab-battle" data-ap="battle" aria-controls="appane-battle" aria-selected="false" tabindex="-1"><span class="ap-tab-ico" aria-hidden="true">⚔️</span><span>Đấu Trường</span></button>
       <button type="button" class="ap-tab" role="tab" id="aptab-data" data-ap="data" aria-controls="appane-data" aria-selected="false" tabindex="-1"><span class="ap-tab-ico" aria-hidden="true">🗂️</span><span>Dữ liệu</span></button>
+      <button type="button" class="ap-tab" role="tab" id="aptab-notice" data-ap="notice" aria-controls="appane-notice" aria-selected="false" tabindex="-1"><span class="ap-tab-ico" aria-hidden="true">📣</span><span>Thông báo</span></button>
     </nav>
     <div class="ap-body" id="ap-body">
     <section class="ap-pane" id="appane-system" role="tabpanel" aria-labelledby="aptab-system">
@@ -3086,6 +3141,50 @@
       <p class="hint-text" style="margin:6px 0 0">File mới có <b>"mode": "append"</b> (mặc định) sẽ được <b>thêm</b> vào kho trên Firebase; <b>"mode": "replace"</b> thì thay toàn bộ. Muốn sửa kho: bấm "Tải kho hiện tại", chỉnh file rồi tải lên lại. Câu Toán được máy tự tạo vô hạn.</p>
       </div>
     </section>
+    <section class="ap-pane" id="appane-notice" role="tabpanel" aria-labelledby="aptab-notice" hidden>
+      <div><h3 class="ap-pane-title">📣 Thông báo chào mừng</h3><p class="ap-pane-desc">Soạn popup hiện ra cho Người dùng ngay khi đăng nhập — ví dụ giới thiệu cầu thủ mới của phiên bản mới. Dùng chung cho mọi hồ sơ.</p></div>
+      <div class="ap-card">
+        <h4>📝 Nội dung popup <span class="ap-chip-now">Có tác dụng ngay khi Phát hành</span></h4>
+        <p class="hint-text" id="wn-status" style="margin:0">Đang tải…</p>
+        <label>Nhãn sự kiện (dòng huy hiệu phía trên tiêu đề)
+          <input type="text" id="wn-kicker-in" maxlength="40" placeholder="VD: 🎊 KHAI TRƯƠNG SỰ KIỆN 🎊">
+          <span class="hint-text" style="margin:0">Để trống nếu không muốn hiện huy hiệu này. Có thể gõ kèm emoji.</span>
+        </label>
+        <label>Tiêu đề
+          <input type="text" id="wn-title" maxlength="80" placeholder="VD: Chào mừng phiên bản mới! 🎉">
+        </label>
+        <label>Lời nhắn
+          <textarea id="wn-msg" maxlength="500" rows="4" placeholder="VD: Có cầu thủ mới vừa gia nhập đội! Hoàn thành nhiệm vụ mỗi ngày để rinh họ về đội hình nhé."></textarea>
+        </label>
+        <label>Tần suất hiển thị
+          <select id="wn-freq">
+            <option value="once">Một lần cho mỗi lần phát hành (riêng từng hồ sơ)</option>
+            <option value="always">Mỗi lần mở app / đăng nhập</option>
+          </select>
+        </label>
+      </div>
+      <div class="ap-card">
+        <h4>🎴 Cầu thủ giới thiệu <span class="ap-count" id="wn-count"></span></h4>
+        <p class="hint-text" style="margin:0">Chọn tối đa 6 cầu thủ từ kho dữ liệu đang dùng trên Firebase. Có thể bỏ trống nếu chỉ muốn gửi lời nhắn.</p>
+        <div class="wn-picked" id="wn-picked"></div>
+        <input type="text" id="wn-search" placeholder="🔍 Tìm cầu thủ theo tên" aria-label="Tìm cầu thủ">
+        <div class="wn-sortbar">
+          <button type="button" class="btn-secondary on" id="wn-sort-new">🆕 Mới thêm nhất</button>
+          <button type="button" class="btn-secondary" id="wn-sort-ovr">⭐ OVR cao nhất</button>
+          <button type="button" class="btn-secondary" id="wn-sort-name">🔤 Theo tên</button>
+        </div>
+        <div class="wn-list" id="wn-list"></div>
+      </div>
+      <div class="ap-card">
+        <h4>🚀 Phát hành</h4>
+        <div class="reward-row" style="flex-wrap:wrap">
+          <button type="button" id="wn-preview" class="btn-secondary">👁️ Xem thử</button>
+          <button type="button" id="wn-publish" class="btn-primary">🚀 Phát hành &amp; bật</button>
+          <button type="button" id="wn-off" class="btn-secondary">⏹️ Tắt thông báo</button>
+        </div>
+        <p class="hint-text" style="margin:0">Mỗi lần bấm <b>Phát hành</b>, những hồ sơ đã xem bản cũ sẽ được xem lại bản mới. Tab này không dùng nút «Lưu cài đặt» ở dưới. Quản trị viên không bị popup làm phiền khi đăng nhập — dùng «Xem thử» để kiểm tra.</p>
+      </div>
+    </section>
     </div>
   </div>
   <footer class="ap-foot">
@@ -3175,6 +3274,23 @@
     </div>
   </div>
   <div id="skp-stage" class="dbx-stage" aria-live="polite"></div>
+</div>
+
+<div id="welcome-modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="wn-pop-title">
+  <div id="welcome-backdrop" class="modal-backdrop"></div>
+  <div class="wn-rays" aria-hidden="true"></div>
+  <div class="modal-box wn-box">
+    <span class="wn-spark s1" aria-hidden="true">✨</span><span class="wn-spark s2" aria-hidden="true">⭐</span><span class="wn-spark s3" aria-hidden="true">✨</span><span class="wn-spark s4" aria-hidden="true">🌟</span>
+    <div class="wn-preview-bar" id="wn-pop-preview" hidden>👁️ XEM THỬ — Người dùng sẽ thấy đúng như thế này</div>
+    <div class="wn-kicker" id="wn-pop-kicker">🎊 KHAI TRƯƠNG SỰ KIỆN 🎊</div>
+    <h3 id="wn-pop-title"></h3>
+    <p class="wn-msg" id="wn-pop-msg"></p>
+    <div class="wn-cards" id="wn-pop-cards"></div>
+    <div class="modal-actions center">
+      <button type="button" id="wn-pop-go" class="btn-gold">⚽ Làm nhiệm vụ ngay</button>
+      <button type="button" id="wn-pop-close" class="btn-secondary">Đóng</button>
+    </div>
+  </div>
 </div>
 
 <div id="player-detail-modal" class="modal">
@@ -10489,7 +10605,7 @@
      - Mọi cấu hình nằm ở đây, chia tab theo nhóm chức năng. Chỉ phiên đăng nhập Quản trị viên mới mở được.
      - Quản trị viên đăng nhập xong vào thẳng trang này (cờ phiên 'dbcd_admin_landing'); nút 🛡️ trên đầu trang để quay lại.
      - Thẻ có data-save="1" cần bấm "Lưu cài đặt"; các thẻ "Có tác dụng ngay" (dữ liệu, hồ sơ, mật khẩu) thực hiện tức thì. */
-  var AP_TABS = ['system','tasks','points','rewards','battle','data'];
+  var AP_TABS = ['system','tasks','points','rewards','battle','data','notice'];
   var apTab = 'system', apDirty = false, apRewardsBackup = null, apOpener = null;
 
   function fillAdminFields(){
@@ -10538,6 +10654,7 @@
     renderUserPanel();
     refreshQuestionBankStatus();
     refreshPlayerDbStatus();
+    wnInit();
     apOpener = document.activeElement;
     page.hidden = false;
     document.body.classList.add('ap-open');
@@ -11579,6 +11696,259 @@
     if(_sv && _sv.classList.contains('active') && window.appRenderSquad) window.appRenderSquad();
   }catch(e){}
 
+
+  /* ================= THÔNG BÁO CHÀO MỪNG (popup khi Người dùng đăng nhập) =================
+     - Dữ liệu DÙNG CHUNG cho mọi hồ sơ: <FIREBASE_BASE>/kidchart_welcome_notice.json
+         { enabled, version, title, message, freq:'once'|'always', playerIds:[dbId...], updatedAt }
+       Mỗi lần Quản trị viên bấm "Phát hành" thì `version` đổi -> hồ sơ đã xem bản cũ sẽ thấy bản mới.
+     - Trạng thái "đã xem" lưu trên máy bằng khóa 'dbcd_notice_seen_<mã hồ sơ>' (tiền tố dbcd_ nên KHÔNG đồng bộ lên Firebase
+       và không bị xóa khi đổi hồ sơ). freq='always' thì chỉ hiện 1 lần cho mỗi phiên (sessionStorage).
+     - Không tải được (mất mạng / chưa có node) thì im lặng bỏ qua, không báo lỗi. */
+  var NOTICE_URL = FIREBASE_BASE + '/kidchart_welcome_notice.json';
+  var NOTICE_MAX_PLAYERS = 6;
+  var WN_DEFAULT_KICKER = '🎊 KHAI TRƯƠNG SỰ KIỆN 🎊';
+  var wnPicked = [], wnSort = 'new', wnRemote = null;
+
+  function wnNorm(s){ return String(s || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/đ/g, 'd'); }
+  function wnIdNum(id){ return parseInt(String(id || '').replace(/\D/g, ''), 10) || 0; }
+  async function wnFetch(){
+    try{
+      var r = await fetch(NOTICE_URL);
+      if(!r.ok) return null;
+      var d = await r.json();
+      return (d && typeof d === 'object') ? d : null;
+    }catch(e){ return null; }
+  }
+
+
+  /* ---- Ảnh thẻ trong popup: nếu ảnh (đã qua bộ chuyển đổi f_auto,q_auto) không tải được thì thử lại bằng ảnh gốc, hỏng nữa mới dùng chữ cái dự phòng ---- */
+  window.wnImgRetry = function(img, kind){
+    if(!img.getAttribute('data-wn-retry')){
+      img.setAttribute('data-wn-retry', '1');
+      var t = CLOUDINARY.transform ? CLOUDINARY.transform + '/' : '';
+      var raw = t ? img.src.replace('/image/upload/' + t, '/image/upload/') : '';
+      if(raw && raw !== img.src){ img.loading = 'eager'; img.src = raw; return; }
+    }
+    if(kind === 'bg'){ if(img.parentNode) img.parentNode.classList.add('no-bg'); img.remove(); }
+    else if(kind === 'r'){ window.fcRenderFail(img); }
+    else { img.remove(); }
+  };
+  function wnCardHTML(p){
+    return dbxCardHTML(p)
+      .replace(/onerror="window\.fcRenderFail\(this\)"/g, "onerror=\"window.wnImgRetry(this,'r')\"")
+      .replace(/onerror="this\.parentNode\.classList\.add\('no-bg'\);this\.remove\(\)"/g, "onerror=\"window.wnImgRetry(this,'bg')\"")
+      .replace(/onerror="this\.remove\(\)"/g, "onerror=\"window.wnImgRetry(this,'x')\"");
+  }
+
+  /* ---- Hiệu ứng khai trương: pháo giấy bắn từ 2 góc dưới + mưa giấy màu (canvas, tự dọn sau vài giây) ---- */
+  var wnRaf = 0, wnFxTimer = 0;
+  function wnStopFx(){
+    if(wnRaf){ cancelAnimationFrame(wnRaf); wnRaf = 0; }
+    if(wnFxTimer){ clearTimeout(wnFxTimer); wnFxTimer = 0; }
+    var c = document.getElementById('wn-confetti'); if(c) c.remove();
+  }
+  function wnConfetti(){
+    wnStopFx();
+    if(window.matchMedia && window.matchMedia('(prefers-reduced-motion:reduce)').matches) return;
+    var cv = document.createElement('canvas'); cv.id = 'wn-confetti';
+    var dpr = Math.min(2, window.devicePixelRatio || 1), W = window.innerWidth, H = window.innerHeight;
+    cv.width = W * dpr; cv.height = H * dpr;
+    cv.style.cssText = 'position:fixed;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:' + (modalZTop + 5);
+    document.body.appendChild(cv);
+    var ctx = cv.getContext('2d'); ctx.scale(dpr, dpr);
+    var cols = ['#F59E0B','#FBBF24','#10B981','#34D399','#FFFFFF','#60A5FA','#F472B6'], ps = [];
+    function piece(x, y, vx, vy){ ps.push({ x:x, y:y, vx:vx, vy:vy, w:6 + Math.random()*6, h:3 + Math.random()*5, r:Math.random()*6.28, vr:(Math.random()-.5)*.4, c:cols[(Math.random()*cols.length)|0], life:0, max:170 + Math.random()*90 }); }
+    function burst(x, y, ang, n){ for(var i=0;i<n;i++){ var a = ang + (Math.random()-.5)*0.9, v = 10 + Math.random()*10; piece(x, y, Math.cos(a)*v, Math.sin(a)*v); } }
+    function rain(n){ for(var i=0;i<n;i++) piece(Math.random()*W, -12, (Math.random()-.5)*2, 1.5 + Math.random()*3); }
+    burst(0, H, -Math.PI/3, 70); burst(W, H, -2*Math.PI/3, 70); rain(30);
+    wnFxTimer = setTimeout(function(){ wnFxTimer = 0; burst(0, H*0.8, -Math.PI/3.4, 45); burst(W, H*0.8, -2*Math.PI/2.9, 45); rain(40); }, 1000);
+    function frame(){
+      ctx.clearRect(0, 0, W, H);
+      ps = ps.filter(function(p){ return p.life < p.max && p.y < H + 30; });
+      ps.forEach(function(p){
+        p.vx *= 0.985; p.vy = (p.vy + 0.28) * 0.992; p.x += p.vx; p.y += p.vy; p.r += p.vr; p.life++;
+        ctx.save(); ctx.globalAlpha = p.life > p.max - 30 ? Math.max(0, (p.max - p.life) / 30) : 1;
+        ctx.translate(p.x, p.y); ctx.rotate(p.r); ctx.fillStyle = p.c; ctx.fillRect(-p.w/2, -p.h/2, p.w, p.h); ctx.restore();
+      });
+      if(!ps.length && !wnFxTimer){ wnStopFx(); return; }
+      wnRaf = requestAnimationFrame(frame);
+    }
+    wnRaf = requestAnimationFrame(frame);
+  }
+
+  /* ---- Popup phía Người dùng ---- */
+  var wnCur = null, wnIsPreview = false;
+  function wnClose(){
+    var m = document.getElementById('welcome-modal');
+    if(!m || !m.classList.contains('open')) return;
+    m.classList.remove('open');
+    wnStopFx();
+    if(!wnIsPreview && wnCur){ try{ localStorage.setItem('dbcd_notice_seen_' + syncId, String(wnCur.version || '')); }catch(e){} }
+  }
+  function wnShow(cfg, preview){
+    wnCur = cfg; wnIsPreview = !!preview;
+    var ids = (cfg.playerIds || []).filter(function(id){ return PLAYER_DB_BY_ID[id]; }).slice(0, NOTICE_MAX_PLAYERS);
+    document.getElementById('wn-pop-preview').hidden = !preview;
+    var kk = document.getElementById('wn-pop-kicker');
+    kk.textContent = (typeof cfg.kicker === 'string') ? cfg.kicker : WN_DEFAULT_KICKER;   // chưa từng đặt = mặc định; để trống = ẩn huy hiệu
+    kk.hidden = !kk.textContent;
+    document.getElementById('wn-pop-title').textContent = cfg.title || 'Chào mừng bạn quay lại!';
+    var msgEl = document.getElementById('wn-pop-msg');
+    msgEl.textContent = cfg.message || ''; msgEl.hidden = !cfg.message;
+    var host = document.getElementById('wn-pop-cards');
+    var cols = ids.length <= 1 ? 'n1' : (ids.length === 2 || ids.length === 4 ? 'n2' : 'n3');
+    host.className = 'wn-cards ' + cols;
+    host.innerHTML = ids.map(function(id, i){
+      return '<div class="wn-card" style="--d:' + (0.35 + i * 0.18).toFixed(2) + 's">' + wnCardHTML(PLAYER_DB_BY_ID[id]) + '</div>';
+    }).join('');
+    host.hidden = !ids.length;
+    var go = document.getElementById('wn-pop-go');
+    go.hidden = false;
+    openModalTop('welcome-modal');
+    wnConfetti();
+  }
+  document.getElementById('wn-pop-close').addEventListener('click', wnClose);
+  document.getElementById('welcome-backdrop').addEventListener('click', wnClose);
+  document.getElementById('wn-pop-go').addEventListener('click', function(){
+    var wasPreview = wnIsPreview;
+    wnClose();
+    if(!wasPreview && typeof window.appSwitchTab === 'function') window.appSwitchTab('week');   // về tab nhiệm vụ trong tuần
+  });
+  document.addEventListener('keydown', function(e){ if(e.key === 'Escape') wnClose(); });
+
+  async function maybeShowWelcomeNotice(){
+    if(authRole !== 'user') return;
+    var cfg = await wnFetch();
+    if(!cfg || cfg.enabled !== true) return;
+    var hasPlayers = (cfg.playerIds || []).some(function(id){ return PLAYER_DB_BY_ID[id]; });
+    if(!String(cfg.message || '').trim() && !hasPlayers) return;
+    var ver = String(cfg.version || '');
+    if(cfg.freq === 'always'){
+      var sk = 'dbcd_notice_sess_' + syncId, done = '';
+      try{ done = sessionStorage.getItem(sk) || ''; }catch(e){}
+      if(done === ver) return;
+      try{ sessionStorage.setItem(sk, ver); }catch(e){}
+    } else {
+      var seen = '';
+      try{ seen = localStorage.getItem('dbcd_notice_seen_' + syncId) || ''; }catch(e){}
+      if(seen === ver) return;
+    }
+    setTimeout(function(){ wnShow(cfg, false); }, 500);
+  }
+
+  /* ---- Tab "Thông báo" trong Trang quản trị ---- */
+  function wnFormatTime(ts){
+    var d = new Date(Number(ts)); if(isNaN(d.getTime())) return '';
+    var p = function(n){ return (n < 10 ? '0' : '') + n; };
+    return p(d.getDate()) + '/' + p(d.getMonth() + 1) + '/' + d.getFullYear() + ' ' + p(d.getHours()) + ':' + p(d.getMinutes());
+  }
+  function wnPaintStatus(){
+    var el = document.getElementById('wn-status'); if(!el) return;
+    if(!wnRemote){ el.textContent = 'Chưa có thông báo nào trên Firebase (hoặc chưa tải được). Soạn nội dung bên dưới rồi bấm «Phát hành».'; return; }
+    var n = (wnRemote.playerIds || []).length;
+    el.innerHTML = (wnRemote.enabled === true ? '🟢 Đang <b>BẬT</b>' : '⚪ Đang <b>TẮT</b>')
+      + (wnRemote.version ? ' · phát hành ' + wnFormatTime(wnRemote.version) : '') + ' · ' + n + ' cầu thủ.';
+  }
+  function wnPaintPicked(){
+    var host = document.getElementById('wn-picked'), cnt = document.getElementById('wn-count');
+    if(cnt) cnt.textContent = wnPicked.length + '/' + NOTICE_MAX_PLAYERS;
+    if(!host) return;
+    host.innerHTML = wnPicked.length ? wnPicked.map(function(id){
+      var p = PLAYER_DB_BY_ID[id];
+      return '<span class="wn-chip">' + uEsc(p ? p.name : id) + '<button type="button" data-wn-del="' + uEsc(id) + '" aria-label="Bỏ chọn">✕</button></span>';
+    }).join('') : '<span class="wn-empty">Chưa chọn cầu thủ nào.</span>';
+  }
+  function wnPaintList(){
+    var host = document.getElementById('wn-list'); if(!host) return;
+    if(!PLAYER_DB.length){ host.innerHTML = '<span class="wn-empty">Chưa có dữ liệu cầu thủ trên Firebase.</span>'; return; }
+    var q = wnNorm(document.getElementById('wn-search').value.trim());
+    var arr = PLAYER_DB.filter(function(p){ return p && p.dbId && p.name && (!q || wnNorm(p.name).indexOf(q) >= 0); });
+    if(wnSort === 'new') arr.sort(function(a, b){ return String(b.added || '').localeCompare(String(a.added || '')) || (wnIdNum(b.dbId) - wnIdNum(a.dbId)); });
+    else if(wnSort === 'ovr') arr.sort(function(a, b){ return (b.realOvr || 0) - (a.realOvr || 0); });
+    else arr.sort(function(a, b){ return String(a.name).localeCompare(String(b.name), 'vi'); });
+    var total = arr.length; arr = arr.slice(0, 60);
+    host.innerHTML = arr.map(function(p){
+      var on = wnPicked.indexOf(p.dbId) >= 0;
+      var th = (cdnReady() && p.image) ? '<img class="wn-th" loading="lazy" alt="" src="' + uEsc(cdnUrl(p.image)) + '" onerror="this.style.visibility=\'hidden\'">' : '<span class="wn-th"></span>';
+      return '<button type="button" class="wn-row' + (on ? ' on' : '') + '" data-wn-id="' + uEsc(p.dbId) + '" aria-pressed="' + on + '">' + th
+        + '<span><b>' + uEsc(p.name) + '</b><small>OVR ' + (p.realOvr || 0) + (p.pos ? ' · ' + uEsc(p.pos) : '') + (p.added ? ' · thêm ' + uEsc(p.added) : '') + '</small></span>'
+        + '<span class="wn-tick">' + (on ? '✓' : '') + '</span></button>';
+    }).join('') + (total > 60 ? '<span class="wn-empty">Hiện 60/' + total + ' cầu thủ — gõ tên để lọc thêm.</span>' : '') || '<span class="wn-empty">Không tìm thấy cầu thủ phù hợp.</span>';
+  }
+  function wnCollect(){
+    return {
+      kicker: document.getElementById('wn-kicker-in').value.trim(),
+      title: document.getElementById('wn-title').value.trim(),
+      message: document.getElementById('wn-msg').value.trim(),
+      freq: document.getElementById('wn-freq').value === 'always' ? 'always' : 'once',
+      playerIds: wnPicked.slice()
+    };
+  }
+  async function wnInit(){
+    wnPaintPicked(); wnPaintList();
+    wnRemote = await wnFetch();
+    var c = wnRemote || {};
+    document.getElementById('wn-kicker-in').value = (typeof c.kicker === 'string') ? c.kicker : WN_DEFAULT_KICKER;
+    document.getElementById('wn-title').value = (typeof c.title === 'string') ? c.title : 'Chào mừng phiên bản mới! 🎉';
+    document.getElementById('wn-msg').value = (typeof c.message === 'string') ? c.message : 'Có cầu thủ mới vừa gia nhập Đội Bóng Của Đốm! Hoàn thành nhiệm vụ mỗi ngày để tích điểm, mở hộp quà và rinh các cầu thủ này về đội hình nhé 💪';
+    document.getElementById('wn-freq').value = c.freq === 'always' ? 'always' : 'once';
+    wnPicked = (c.playerIds || []).filter(function(id){ return PLAYER_DB_BY_ID[id]; }).slice(0, NOTICE_MAX_PLAYERS);
+    wnPaintStatus(); wnPaintPicked(); wnPaintList();
+  }
+  async function wnWrite(method, body, okMsg){
+    try{
+      var res = await fetch(NOTICE_URL, { method: method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+      if(!res.ok) throw new Error('HTTP ' + res.status);
+    }catch(err){
+      alert('Không ghi được lên Firebase (' + err.message + '). Kiểm tra mạng và quyền ghi (Rules) của node kidchart_welcome_notice.');
+      return false;
+    }
+    wnRemote = await wnFetch(); wnPaintStatus();
+    alert(okMsg);
+    return true;
+  }
+  document.getElementById('wn-list').addEventListener('click', function(e){
+    var b = e.target.closest('[data-wn-id]'); if(!b) return;
+    var id = b.getAttribute('data-wn-id'), i = wnPicked.indexOf(id);
+    if(i >= 0) wnPicked.splice(i, 1);
+    else {
+      if(wnPicked.length >= NOTICE_MAX_PLAYERS){ alert('Chọn tối đa ' + NOTICE_MAX_PLAYERS + ' cầu thủ để popup gọn đẹp.'); return; }
+      wnPicked.push(id);
+    }
+    wnPaintPicked(); wnPaintList();
+  });
+  document.getElementById('wn-picked').addEventListener('click', function(e){
+    var b = e.target.closest('[data-wn-del]'); if(!b) return;
+    var i = wnPicked.indexOf(b.getAttribute('data-wn-del')); if(i >= 0) wnPicked.splice(i, 1);
+    wnPaintPicked(); wnPaintList();
+  });
+  document.getElementById('wn-search').addEventListener('input', wnPaintList);
+  [['wn-sort-new','new'],['wn-sort-ovr','ovr'],['wn-sort-name','name']].forEach(function(p){
+    document.getElementById(p[0]).addEventListener('click', function(){
+      wnSort = p[1];
+      [['wn-sort-new','new'],['wn-sort-ovr','ovr'],['wn-sort-name','name']].forEach(function(q){ document.getElementById(q[0]).classList.toggle('on', q[1] === wnSort); });
+      wnPaintList();
+    });
+  });
+  document.getElementById('wn-preview').addEventListener('click', function(){
+    var c = wnCollect();
+    if(!c.message && !c.playerIds.length){ alert('Hãy nhập lời nhắn hoặc chọn ít nhất 1 cầu thủ để xem thử.'); return; }
+    wnShow(c, true);
+  });
+  document.getElementById('wn-publish').addEventListener('click', async function(){
+    var c = wnCollect();
+    if(!c.message && !c.playerIds.length){ alert('Hãy nhập lời nhắn hoặc chọn ít nhất 1 cầu thủ trước khi phát hành.'); return; }
+    if(!confirm('Phát hành thông báo này cho TẤT CẢ hồ sơ?\n\nMỗi hồ sơ sẽ thấy popup khi đăng nhập (theo tần suất đã chọn).')) return;
+    var now = Date.now();
+    c.enabled = true; c.version = now; c.updatedAt = now;
+    await wnWrite('PUT', c, '🚀 Đã phát hành thông báo!');
+  });
+  document.getElementById('wn-off').addEventListener('click', async function(){
+    if(!wnRemote){ alert('Chưa có thông báo nào để tắt.'); return; }
+    if(!confirm('Tắt thông báo? Người dùng sẽ không thấy popup nữa (nội dung vẫn được giữ để bật lại).')) return;
+    await wnWrite('PATCH', { enabled: false, updatedAt: Date.now() }, '⏹️ Đã tắt thông báo.');
+  });
+
   /* Quản trị viên: hiện nút 🛡️ và vào thẳng Trang quản trị ngay sau khi đăng nhập */
   if(authRole === 'admin'){
     var _apBtn = document.getElementById('btn-admin-console');
@@ -11586,6 +11956,8 @@
     var _land = null;
     try{ _land = sessionStorage.getItem('dbcd_admin_landing'); sessionStorage.removeItem('dbcd_admin_landing'); }catch(e){}
     if(_land) openAdminPage(AP_TABS.indexOf(_land) >= 0 ? _land : 'system');
+  } else {
+    maybeShowWelcomeNotice();   // Người dùng: popup chào mừng nếu Quản trị viên đã phát hành
   }
 })();
 </script>
