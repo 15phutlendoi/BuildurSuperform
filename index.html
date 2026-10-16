@@ -2888,6 +2888,13 @@
   :is(#season-modal, #season-match) .fe-save{ background:rgba(56,189,248,.16); font-weight:800; }
   :is(#season-modal, #season-match) .fe-set,:is(#season-modal, #season-match) .fe-next{ background:rgba(56,189,248,.12); color:#7DD3FC; font-weight:800; }
   :is(#season-modal, #season-match) .fe-warn{ background:rgba(245,158,11,.14); color:#FBBF24; }
+  :is(#season-modal, #season-match) .fe-var{ background:rgba(99,102,241,.22); border:1px solid #818CF8; font-weight:800; }
+  :is(#season-modal, #season-match) .fe-card{ background:rgba(250,204,21,.16); border:1px solid #FACC15; font-weight:800; }
+  :is(#season-modal, #season-match) .fe-red{ background:rgba(239,68,68,.22); border:1px solid #F87171; font-weight:900; }
+  :is(#season-modal, #season-match) .fe-inj{ background:rgba(239,68,68,.12); color:#FCA5A5; }
+  :is(#season-modal, #season-match) .fe-sub{ background:rgba(59,130,246,.16); }
+  :is(#season-modal, #season-match) .fe-xt{ background:rgba(168,85,247,.2); font-weight:800; }
+  #season-match .mx-d.gone{ opacity:.3; filter:grayscale(1); }
   :is(#season-modal, #season-match) .fe-ans{ background:rgba(139,92,246,.2); font-weight:800; }
   :is(#season-modal, #season-match) .fe-fire{ background:rgba(249,115,22,.2); color:#FDBA74; font-weight:800; }
   :is(#season-modal, #season-match) .fe-ht,:is(#season-modal, #season-match) .fe-ft{ background:rgba(148,163,184,.24); font-weight:900; }
@@ -2991,17 +2998,62 @@
   #season-match .in-kick{ min-width:0; width:100%; }
   #season-match .mx-tag{ position:absolute; left:6px; max-width:58%; overflow:hidden; text-overflow:ellipsis; font-size:11px; font-weight:900; padding:2px 8px; border-radius:99px; background:rgba(15,23,42,.72); color:#fff; white-space:nowrap; z-index:2; }
   #season-match .mx-tag.t1{ top:5px; } #season-match .mx-tag.t0{ bottom:5px; }
-  /* mỗi cầu thủ trên sân = chính thẻ cầu thủ (fcCardHTML); huy hiệu nhỏ bên cạnh = chỉ số hiệu dụng, viền màu = thể lực */
-  #season-match .mx-d{ position:absolute; transform:translate(-50%,-50%); width:var(--cw,50px); transition:opacity .3s; }
+  /* mỗi cầu thủ trên sân = chính thẻ cầu thủ (fcCardHTML); chuyển động bằng transform do mxPut đặt (đạo diễn trận đấu) */
+  #season-match .mx-d{ position:absolute; left:0; top:0; width:var(--cwp,12%); z-index:10; will-change:transform; transform:translate(-50%,-50%);
+    transition:opacity .3s, transform var(--d,.9s) var(--e,cubic-bezier(.45,.05,.25,1)) var(--dl,0s); }
   #season-match .mx-c{ position:relative; width:100%; transform-origin:50% 60%; filter:drop-shadow(0 2px 3px rgba(0,0,0,.55)); transition:transform .3s, filter .3s; }
   #season-match .mx-c .fc-card{ display:block; }
   #season-match .mx-c .in-txt{ height:auto; aspect-ratio:var(--fc-ar,.74); border-radius:8% / 6%; border:1px solid var(--sc,#fff); }
   #season-match .mx-o{ position:absolute; z-index:5; right:-14%; bottom:7%; display:grid; place-items:center; min-width:calc(var(--cw,50px) * .46); height:calc(var(--cw,50px) * .3); padding:0 calc(var(--cw,50px) * .06); border-radius:99px; font-size:max(9px, calc(var(--cw,50px) * .2)); font-weight:900; line-height:1; font-variant-numeric:tabular-nums; color:#fff; background:#2563EB; border:2px solid var(--sc,#fff); box-shadow:0 1px 3px rgba(0,0,0,.6); }
   #season-match .mx-d.s1 .mx-o{ background:#DC2626; }
-  #season-match .mx-pitch.act .mx-d:not(.on){ opacity:.5; }
-  #season-match .mx-d.on{ z-index:4; }
-  #season-match .mx-d.on .mx-c{ transform:scale(1.12); filter:drop-shadow(0 0 3px #FBBF24) drop-shadow(0 0 10px #FBBF24); }
-  #season-match .mx-ball{ position:absolute; left:50%; transform:translate(-50%,-50%); font-size:calc(var(--dw,26px) * .9); z-index:6; filter:drop-shadow(0 2px 3px rgba(0,0,0,.6)); }
+  #season-match .mx-pitch.act .mx-d:not(.on){ opacity:.74; }
+  #season-match .mx-d.on .mx-c{ transform:scale(1.1); filter:drop-shadow(0 0 3px #FBBF24) drop-shadow(0 0 9px #FBBF24); }
+  #season-match .mx-d.mv .mx-c{ filter:drop-shadow(0 6px 5px rgba(0,0,0,.5)); }
+  #season-match .mx-d.mv:not(.on) .mx-c{ transform:translateY(-4%) scale(1.04); }
+  #season-match .mx-pitch.key .mx-d.on .mx-c{ animation:mxPulse 1.1s ease-in-out infinite; }
+  #season-match .mx-d.cele{ z-index:60 !important; } #season-match .mx-d.cele .mx-c{ animation:mxCele .55s ease-in-out infinite; filter:drop-shadow(0 0 4px #FDE047) drop-shadow(0 0 12px #FACC15); }
+  #season-match .mx-d.sad .mx-c{ filter:grayscale(.7) drop-shadow(0 2px 3px rgba(0,0,0,.5)); transform:translateY(3%) scale(.96); }
+  #season-match .mx-d.shk .mx-c{ animation:mxShake .5s ease-in-out 2; filter:grayscale(.45) drop-shadow(0 2px 3px rgba(0,0,0,.55)); }
+  #season-match .mx-d.hero{ z-index:55 !important; } #season-match .mx-d.hero .mx-c{ filter:drop-shadow(0 0 3px #22D3EE) drop-shadow(0 0 10px #22D3EE); }
+  #season-match .mx-ball{ position:absolute; left:0; top:0; z-index:90; font-size:calc(var(--dw,26px) * .9); line-height:1; pointer-events:none; transform:translate(-50%,-50%); transition:transform var(--d,.9s) var(--e,cubic-bezier(.3,.1,.3,1)); }
+  #season-match .mx-bi{ display:block; filter:drop-shadow(0 3px 3px rgba(0,0,0,.65)); } #season-match .mx-br{ display:block; transition:transform .9s linear; }
+  #season-match .mx-fx{ position:absolute; inset:0; width:100%; height:100%; z-index:3; pointer-events:none; overflow:visible; }
+  #season-match .mx-fx .tr{ fill:none; stroke-linecap:round; stroke-dasharray:1; stroke-dashoffset:1; } #season-match .mx-fx .trd{ stroke:none; }
+  #season-match .mx-fx .tr.pass{ stroke:rgba(255,255,255,.92); stroke-width:.85; } #season-match .mx-fx .trd.pass{ fill:rgba(255,255,255,.92); }
+  #season-match .mx-fx .tr.run{ stroke:#FBBF24; stroke-width:.7; opacity:.9; } #season-match .mx-fx .trd.run{ fill:#FBBF24; }
+  #season-match .mx-fx .tr.shot{ stroke:#fff; stroke-width:1.5; filter:drop-shadow(0 0 1.2px #fff); } #season-match .mx-fx .trd.shot{ fill:#fff; }
+  #season-match .mx-lab{ position:absolute; z-index:110; transform:translate(-50%,-50%); display:flex; flex-direction:column; align-items:center; padding:3px 11px; border-radius:99px; background:rgba(15,23,42,.88); color:#fff; border:1px solid rgba(255,255,255,.55); pointer-events:none; white-space:nowrap; animation:mxLab 2.6s ease-out forwards; }
+  #season-match .mx-lab b{ font-size:13px; font-weight:900; line-height:1.15; } #season-match .mx-lab small{ font-size:10.5px; font-weight:700; opacity:.8; line-height:1.1; }
+  #season-match .mx-banner{ position:absolute; left:50%; top:46%; z-index:120; transform:translate(-50%,-50%); text-align:center; pointer-events:none; white-space:nowrap; display:flex; flex-direction:column; align-items:center; gap:2px; padding:8px 20px 9px; border-radius:16px; color:#fff; box-shadow:0 8px 24px rgba(0,0,0,.55); animation:mxBan 3s cubic-bezier(.2,.9,.3,1.2) forwards; }
+  #season-match .mx-banner b{ font-size:clamp(18px,3.4vw,30px); font-weight:900; letter-spacing:.02em; line-height:1.1; } #season-match .mx-banner small{ font-size:13px; font-weight:800; opacity:.92; }
+  #season-match .mx-banner.g{ background:linear-gradient(135deg,#F59E0B,#EA580C); border:2px solid #FDE68A; } #season-match .mx-banner.x{ background:linear-gradient(135deg,#B91C1C,#7F1D1D); border:2px solid #FCA5A5; }
+  #season-match .mx-ring{ position:absolute; z-index:80; width:12%; aspect-ratio:1; border-radius:50%; border:3px solid #FDE047; box-shadow:0 0 14px #FACC15; transform:translate(-50%,-50%) scale(.2); pointer-events:none; animation:mxRing .9s ease-out forwards; }
+  @keyframes mxPulse{ 0%,100%{ transform:scale(1.1); } 50%{ transform:scale(1.18) translateY(-3%); } }
+  @keyframes mxCele{ 0%,100%{ transform:translateY(0) rotate(-4deg) scale(1.08); } 50%{ transform:translateY(-16%) rotate(4deg) scale(1.16); } }
+  @keyframes mxShake{ 0%,100%{ transform:translateX(0); } 25%{ transform:translateX(-7%) rotate(-3deg); } 75%{ transform:translateX(7%) rotate(3deg); } }
+  @keyframes mxLab{ 0%{ opacity:0; transform:translate(-50%,-30%) scale(.8); } 12%{ opacity:1; transform:translate(-50%,-50%) scale(1); } 80%{ opacity:1; } 100%{ opacity:0; transform:translate(-50%,-90%) scale(1); } }
+  @keyframes mxBan{ 0%{ opacity:0; transform:translate(-50%,-50%) scale(.3); } 12%{ opacity:1; transform:translate(-50%,-50%) scale(1.08); } 20%{ transform:translate(-50%,-50%) scale(1); } 85%{ opacity:1; } 100%{ opacity:0; transform:translate(-50%,-50%) scale(1); } }
+  @keyframes mxRing{ 0%{ opacity:1; transform:translate(-50%,-50%) scale(.2); } 100%{ opacity:0; transform:translate(-50%,-50%) scale(3.2); } }
+  #season-match .mx-sh{ position:absolute; left:50%; top:78%; width:88%; height:34%; border-radius:50%; background:rgba(0,0,0,.55); filter:blur(2px); opacity:.55; transform:translate(-50%,0); z-index:-1; }
+  #season-match .mx-ball .mx-bi{ position:relative; }
+  #season-match .mx-gh{ position:absolute; z-index:85; width:calc(var(--dw,26px) * .72); aspect-ratio:1; border-radius:50%; transform:translate(-50%,-50%); pointer-events:none; }
+  #season-match .mx-gh.pass{ background:rgba(255,255,255,.7); filter:blur(.6px); } #season-match .mx-gh.lob{ background:rgba(255,255,255,.55); width:calc(var(--dw,26px) * .5); }
+  #season-match .mx-gh.shot{ width:calc(var(--dw,26px) * 1.05); background:radial-gradient(circle,#fff 0,#FDBA74 38%,rgba(251,146,60,0) 72%); }
+  #season-match .mx-gh.goal{ width:calc(var(--dw,26px) * 1.5); background:radial-gradient(circle,#fff 0,#FDE047 36%,rgba(250,204,21,0) 72%); }
+  #season-match .mx-pt{ position:absolute; z-index:105; border-radius:50%; pointer-events:none; box-shadow:0 0 5px rgba(255,255,255,.7); }
+  #season-match .mx-conf{ position:absolute; z-index:118; border-radius:1px; pointer-events:none; }
+  #season-match .mx-ring.w{ width:7%; border-width:2px; border-color:#fff; box-shadow:0 0 8px #fff; } #season-match .mx-ring.o{ width:9%; border-color:#FDBA74; box-shadow:0 0 10px #FB923C; } #season-match .mx-ring.c{ width:10%; border-color:#67E8F9; box-shadow:0 0 12px #22D3EE; }
+  #season-match .mx-pop{ position:absolute; z-index:115; font-size:calc(var(--dw,26px) * 1.7); line-height:1; transform:translate(-50%,-50%) scale(.3); pointer-events:none; filter:drop-shadow(0 3px 5px rgba(0,0,0,.6)); animation:mxPop 1s ease-out forwards; }
+  #season-match .mx-flash{ position:absolute; inset:0; z-index:100; pointer-events:none; border-radius:14px; background:radial-gradient(circle at 50% var(--fy,5%),rgba(253,224,71,.8),rgba(253,224,71,0) 62%); animation:mxFlash .8s ease-out forwards; }
+  #season-match .mx-flash.x{ background:radial-gradient(circle at 50% var(--fy,5%),rgba(248,113,113,.7),rgba(248,113,113,0) 62%); }
+  #season-match .mx-net{ position:absolute; left:38%; width:24%; height:5.6%; z-index:2; pointer-events:none; opacity:0; border:2px solid rgba(255,255,255,.95);
+    background:repeating-linear-gradient(0deg,rgba(255,255,255,.7) 0 1px,transparent 1px 6px),repeating-linear-gradient(90deg,rgba(255,255,255,.7) 0 1px,transparent 1px 6px); }
+  #season-match .mx-net.n0{ top:0; border-top:0; transform-origin:50% 0; } #season-match .mx-net.n1{ bottom:0; border-bottom:0; transform-origin:50% 100%; }
+  #season-match .mx-net.hit{ animation:mxNet 1.3s ease-out forwards; }
+  @keyframes mxPop{ 0%{ opacity:0; transform:translate(-50%,-50%) scale(.3); } 18%{ opacity:1; transform:translate(-50%,-50%) scale(1.3); } 35%{ transform:translate(-50%,-50%) scale(1); } 80%{ opacity:1; } 100%{ opacity:0; transform:translate(-50%,-80%) scale(1); } }
+  @keyframes mxFlash{ 0%{ opacity:0; } 15%{ opacity:1; } 100%{ opacity:0; } }
+  @keyframes mxNet{ 0%{ opacity:0; transform:scale(1,1); } 12%{ opacity:1; transform:scale(1.16,2.2); } 32%{ transform:scale(.96,.82); } 52%{ transform:scale(1.05,1.35); } 75%{ transform:scale(1,1); opacity:1; } 100%{ opacity:.8; transform:scale(1,1); } }
+  @media (prefers-reduced-motion:reduce){ #season-match .mx-d,#season-match .mx-ball{ transition:none; } #season-match .mx-d .mx-c,#season-match .mx-pitch.key .mx-d.on .mx-c,#season-match .mx-d.cele .mx-c,#season-match .mx-d.shk .mx-c{ animation:none; } #season-match .mx-lab,#season-match .mx-banner{ animation-duration:2.6s; } #season-match .mx-ring,#season-match .mx-flash,#season-match .mx-conf,#season-match .mx-gh,#season-match .mx-pt{ display:none; } #season-match .mx-pop{ animation-duration:1.4s; } #season-match .mx-net.hit{ animation:none; opacity:.85; } }
   #season-match .mx .mt-pdet{ display:none; } #season-match .mx .mt-feed{ max-height:30vh; } #season-match .mx .mt-feed.compact{ max-height:18vh; }
   @media (max-width:640px){ #season-match .in-wrap,#season-match .mx{ display:block; height:auto !important; } #season-match .mx-r,#season-match .in-r{ margin-top:10px; } }
   @media (prefers-reduced-motion:reduce){ #season-match .mx-l,#season-match .in-l{ scroll-behavior:auto; } }
@@ -3585,6 +3637,10 @@
     <label>🎚️ Độ khó đội máy (−15…+15 OVR, áp dụng cho mùa tạo sau)
       <input type="number" id="se-diff" min="-15" max="15" step="1">
     </label>
+    <label>🥅 Số bàn thắng kỳ vọng mỗi trận (cả hai đội cộng lại, 1,5–5,5)
+      <input type="number" id="se-goals-exp" min="1.5" max="5.5" step="0.05" placeholder="3.25">
+    </label>
+    <p class="hint-text" style="margin:-6px 0 0">Mặc định 3,25 (gần các trận thật). Chỉ là mức trung bình: từng trận vẫn có thể ít hay nhiều bàn hơn. Áp dụng cho trận bắt đầu sau khi đổi; trận đang dở giữ nguyên số cũ. Trận của các đội khác trong bảng xếp hạng cũng tính theo mức này.</p>
     <label>Học kỳ I: bắt đầu<input type="date" id="se-s1-start"></label>
     <label>Học kỳ I: kết thúc<input type="date" id="se-s1-end"></label>
     <label>Học kỳ II: bắt đầu<input type="date" id="se-s2-start"></label>
@@ -6895,7 +6951,7 @@
   }
 
   function fcCardHTML(p, extraCls){
-    if(!p || !cdnReady() || !p.image) return '';
+    if(!p || !cdnReady()) return '';
     var name = escHtml(p.name);
     var ovr = p.ovr || p.realOvr || 0;
     var upN = p.ovrBonus || 0;
@@ -6914,7 +6970,9 @@
     var elBadge = elCode ? '<div class="fc-element" style="'+elementColorVars(elCode)+'" title="'+escHtml(elementName(elCode))+' · CP '+escHtml(String(p.battle.cp))+'">'+elementIcon(elCode)+'</div>' : '';
     return '<div class="fc-card'+(p.background ? '' : ' no-bg')+upCls+(extraCls ? ' '+extraCls : '')+'">'
       + bg
-      + '<img class="fc-render" src="'+cdnUrl(p.image)+'" alt="'+name+'" data-ini="'+escHtml(initialsOf(p.name || '?'))+'" loading="lazy" onerror="window.fcRenderFail(this)">'
+      + (p.image
+          ? '<img class="fc-render" src="'+cdnUrl(p.image)+'" alt="'+name+'" data-ini="'+escHtml(initialsOf(p.name || '?'))+'" loading="lazy" onerror="window.fcRenderFail(this)">'
+          : '')
       + '<div class="fc-ovr"><b>'+ovr+'</b><span>'+escHtml(p.pos || '')+'</span></div>'
       + upChip
       + elBadge
@@ -7058,7 +7116,7 @@
       var id = squad.pitch[i];
       var filled = !!id;
       var main = filled ? players.find(function(p){ return p.id===id; }) : null;
-      var hasArt = filled && cdnReady() && main.image;
+      var hasArt = !!(filled && cdnReady() && main);
       var inner = filled ? (hasArt ? slotArtHTML(main) : '') : '<span class="slot-plus">+</span>';
       var fx = filled ? playerFx(main) : [];
       return '<div class="pitch-slot'+(filled?' filled':'')+(fx.length?' has-fx fx-'+fx[0]:'')+'" data-slot-type="pitch" data-slot-index="'+i+'" style="left:'+posObj.x+'%;top:'+posObj.y+'%">'
@@ -7075,7 +7133,7 @@
     benchWrap.innerHTML = squad.bench.map(function(id, i){
       var filled = !!id;
       var main = filled ? players.find(function(p){ return p.id===id; }) : null;
-      var hasArt = filled && cdnReady() && main.image;
+      var hasArt = !!(filled && cdnReady() && main);
       var inner = filled ? (hasArt ? slotArtHTML(main) : '') : '<span class="slot-plus">+</span>';
       return '<div class="bench-slot'+(filled?' filled':'')+'" data-slot-type="bench" data-slot-index="'+i+'">'
         + '<div class="slot-circle small'+(hasArt?' has-art':'')+'">'+inner+'</div>'
@@ -12596,6 +12654,7 @@
       matchDow: iv(c.matchDow, 0, 0, 6),    // ngày thi đấu của vòng (0 = Chủ nhật)
       maxWatch: iv(c.maxWatch, 2, 1, 20),   // số trận xem tối đa mỗi ngày
       diff: iv(c.diff, 0, -15, 15),         // chỉnh độ khó đội máy (cộng vào OVR, áp dụng cho mùa tạo sau)
+      gx: (function(){ var v = parseFloat(c.goalsExp); return (isNaN(v) || v < 1.5 || v > 5.5) ? 3.25 : Math.round(v * 100) / 100; })(),   // số bàn thắng kỳ vọng mỗi trận (cả hai đội cộng lại)
       s1: {id:'2026-1', name:'Học kỳ I · 2026–2027',  start: ds(c.s1Start, '2026-10-11'), end: ds(c.s1End, '2027-01-16')},
       s2: {id:'2026-2', name:'Học kỳ II · 2026–2027', start: ds(c.s2Start, '2027-01-17'), end: ds(c.s2End, '2027-05-29')},
       skip: skipRaw.split(/[\s,;]+/).filter(function(x){ return /^\d{4}-\d{2}-\d{2}$/.test(x); }),
@@ -12748,7 +12807,7 @@
 
   /* ---------- trận (BẢN TẠM — Giai đoạn 2 thay bằng tình huống nguy hiểm + câu hỏi + vòng quay) ---------- */
   function sPoisson(lam, rng){ var L = Math.exp(-lam), k = 0, p = 1; do { k++; p *= rng(); } while(p > L && k < 12); return k - 1; }
-  function sGoals(a, b, rng){ var d = (a - b) / 18; return [sPoisson(1.3 * Math.exp(d), rng), sPoisson(1.3 * Math.exp(-d), rng)]; }
+  function sGoals(a, b, rng){ var d = (a - b) / 18, k = sCfg().gx / 3.25; return [sPoisson(1.3 * k * Math.exp(d), rng), sPoisson(1.3 * k * Math.exp(-d), rng)]; }   // trận của các đội khác cũng theo số bàn kỳ vọng
   function sSimulate(se, r, lu, form){
     var fx = sFixtures(se.n)[r], scores = [], myEff = 0, cnt = 0;
     lu.starters.forEach(function(x){
@@ -13070,7 +13129,25 @@
   /* ===== BỘ MÁY TRẬN MÙA GIẢI v2 — thuần JS, không dùng DOM. Phía 0 = đội của bé, phía 1 = đội máy. =====
      Cầu thủ: {id,n,pos,o(OVR),f(phong độ %),st[pace,shooting,passing,dribbling,defending,physical],d(dbId),fit,stam}
      Đội: {name,style,fid,slots[11 vị trí ô],pitch[11 cầu thủ],bench[<=7],out[],subs}  */
-  var SE_P = {scale:0.26, fx:0.55, sigma:8, thr:[-3.5,-1.5,-3.0], qb:1.6, qc:4.0, fatK:0.35, subBelow:42, cntD:3.5, miss:0.45, synF:2.0, synS:1.0};
+  /* Đường cong thời gian (rút từ 6 trận thật, làm mượt 50%): hệ số theo vị trí tình huống 1..12 → cộng vào ngưỡng chặng 2-3 */
+  var SE_TB = [0.87,0.87,0.87,0.87,0.87,0.87,1.12,1.12,1.05,1.05,1.22,1.22].map(function(w){ return 30 * (w - 1); });
+  var SE_P = {scale:0.26, fx:0.55, sigma:8, thr:[-3.5,-1.5,-3.0], qb:1.6, qc:4.0, fatK:0.35, subBelow:42, cntD:3.5, miss:0.45, synF:2.0, synS:1.0, pLong:0.12, pCross:0.18, lsPen:9, crPen:2, gAdj:2.5, blD:0, pPen:0.15, pWood:0.30, pVar:0.22, varOff:0.5, cardK:1.9, pRed:0.02, pInj:0.04, subB:2.2, subW:3, tacSub:1};
+  /* Bàn thắng kỳ vọng/trận (cấu hình Quản trị) → độ chỉnh gAdj của chặng dứt điểm. Bảng này được hiệu chỉnh bằng mô phỏng hàng nghìn trận. */
+  var SE_GX = [[1.5, 15.12], [2.0, 11.04], [2.5, 7.6], [2.75, 5.88], [3.0, 4.16], [3.25, 2.55], [3.5, 0.72], [3.75, -1.0], [4.0, -2.82], [4.5, -6.8], [5.0, -12.17], [5.5, -20.55]];
+  function seGAdj(m){ var t = (m && m.gx > 0) ? m.gx : 3.25, T = SE_GX; if(t <= T[0][0]) return T[0][1]; for(var i = 1; i < T.length; i++){ if(t <= T[i][0]) return T[i - 1][1] + (T[i][1] - T[i - 1][1]) * (t - T[i - 1][0]) / (T[i][0] - T[i - 1][0]); } return T[T.length - 1][1]; }
+  /* Kịch bản trận (chọn theo seed, ẩn với bé khi đang đấu): mỗi kịch bản chỉ đổi 2–3 tham số có sẵn. */
+  var SE_SCN = {
+    blitz:   {vi:'Mở màn chớp nhoáng',        early:5, lateB:-1},
+    comeback:{vi:'Ngược dòng',                trail:3},
+    rain:    {vi:'Mưa bàn thắng',             gA:-2.6},
+    poss:    {vi:'Cầm bóng mà không thắng',   fin:2.5, cnt:2},
+    late:    {vi:'Phút cuối nghẹt thở',       lateB:3.5, early:-1.5},
+    red:     {vi:'Thẻ đỏ đảo chiều',          cardMul:2.6, redMul:4}
+  };
+  var SE_SCN_IDS = Object.keys(SE_SCN);
+  function seScnPick(seed){ var r = seRng(seHash(seed + ':scn'))(); if(r < 0.34) return ''; return SE_SCN_IDS[Math.min(SE_SCN_IDS.length - 1, Math.floor((r - 0.34) / 0.66 * SE_SCN_IDS.length))]; }
+  function seDown(t){ var n = 0; t.pitch.forEach(function(p){ if(p.gone) n++; }); return n; }   // số cầu thủ đang vắng trên sân (thẻ đỏ / chấn thương chưa thay được)
+
   var SE_GROUP = {GK:'GK',LB:'D',RB:'D',CB:'D',LWB:'D',RWB:'D',CDM:'M',CM:'M',CAM:'M',LM:'M',RM:'M',LW:'F',RW:'F',ST:'F',CF:'F',SS:'F'};
   var SE_ATT_W = {GK:0.05,CB:0.35,LB:1.2,RB:1.2,LWB:1.4,RWB:1.4,CDM:1.0,CM:2.0,CAM:2.6,LM:1.9,RM:1.9,LW:2.6,RW:2.6,ST:3.2,CF:3.0,SS:3.0};
   var SE_DEF_W = {GK:0.8,CB:3.0,LB:2.0,RB:2.0,LWB:1.8,RWB:1.8,CDM:2.6,CM:1.6,CAM:0.6,LM:0.9,RM:0.9,LW:0.5,RW:0.5,ST:0.4,CF:0.4,SS:0.5};
@@ -13138,7 +13215,7 @@
 
   /* ---------- tạo trận ---------- */
   function seCreate(setup){   // setup: {seed,N,teams:[team0,team1],qT,secs}
-    var m = {v:2, seed:setup.seed, N:setup.N || 12, i:0, goals:[0, 0], teams:setup.teams, last:null, cur:null, log:[], qT:setup.qT || 0, secs:setup.secs || 15, half:false, mom:[0, 0], feed:[]};
+    var m = {v:2, seed:setup.seed, N:setup.N || 12, i:0, goals:[0, 0], teams:setup.teams, last:null, cur:null, log:[], qT:setup.qT || 0, secs:setup.secs || 15, half:false, mom:[0, 0], feed:[], gx:setup.gx || 0, scn:(setup.scn != null ? setup.scn : seScnPick(setup.seed)), xt:false, xtDecided:false, redPick:false};
     m.teams.forEach(function(t){
       t.subs = 0; t.out = t.out || [];
       t.pitch.forEach(function(p, i){ p.stam = 100; p.mins = 0; p.fit = SE_HOOK.fit(p, t.slots[i]); });
@@ -13146,12 +13223,13 @@
     });
     return m;
   }
-  function seMinute(m, i){ return Math.round((i + 0.5) * 90 / m.N); }
+  function seMinute(m, i){ return i >= m.N ? 93 : Math.round((i + 0.5) * 90 / m.N); }   // tình huống bù giờ = phút 93
+  function seTotal(m){ return m.N + (m.xt ? 1 : 0); }
   function seS(m, side, p){
     var t = m.teams[side], syn = (m._syn && m._syn[side] != null) ? m._syn[side] : seSynergy(t).bonus, st = SE_STYLE[t.style], extra = 0;
     if(st.trail && m.goals[side] < m.goals[1 - side]) extra += st.trail;
     if(st.late && m.i >= m.N - 3) extra += st.late;
-    return (SE_P.scale * p.o * p.fit + SE_P.fx * p.o * (p.f / 100 - (1 - seFat(p.stam)))) * (1 + sWxPct(m.wx, p) / 100) + syn + extra;   // thời tiết × Hệ: ±5%
+    return (SE_P.scale * p.o * p.fit + SE_P.fx * p.o * (p.f / 100 - (1 - seFat(p.stam)))) * (1 + sWxPct(m.wx, p) / 100) + syn + extra + ((p.sub && m.i >= p.sub.at && m.i - p.sub.at < 2) ? SE_P.subB : 0);   // thời tiết × Hệ: ±5%
   }
   function seSynAll(m){ m._syn = [seSynergy(m.teams[0]).bonus, seSynergy(m.teams[1]).bonus]; }
 
@@ -13160,7 +13238,7 @@
     var rng = seRng(seHash(m.seed + ':p' + m.i)), t0 = m.teams[0], t1 = m.teams[1], s0 = SE_STYLE[t0.style], s1 = SE_STYLE[t1.style];
     var pm = s0.poss * (1 - s1.poss), pp = pm / (pm + (1 - s0.poss) * s1.poss), att, counter = false, L = m.last;
     if(!m.mom) m.mom = [0, 0];
-    pp = Math.max(0.15, Math.min(0.85, pp + 0.06 * (m.mom[0] - m.mom[1])));   // đà: trả lời đúng liên tiếp thì giữ bóng nhiều hơn
+    pp = Math.max(0.15, Math.min(0.85, pp + 0.06 * (m.mom[0] - m.mom[1]) + 0.05 * (seDown(t1) - seDown(t0))));   // thiếu người thì ít cầm bóng hơn   // đà: trả lời đúng liên tiếp thì giữ bóng nhiều hơn
     var kind = 'open', nx = m.next; m.next = null;   // nx: tình huống cố định từ kết quả trước (phạt góc / đá phạt / phạt đền)
     function byPoss(){ return rng() < pp ? 0 : 1; }
     if(nx && (nx.type === 'corner' || nx.type === 'freekick' || nx.type === 'penalty')){ att = nx.att; kind = nx.type; }
@@ -13172,22 +13250,28 @@
     if(counter) kind = 'counter';
     var def = 1 - att, tA = m.teams[att], tD = m.teams[def], sA = SE_STYLE[tA.style], sD = SE_STYLE[tD.style];
     var nA = sA.attN, nD = sD.defN;
+    if(kind === 'open'){   // biến thể pha mở học từ tường thuật thật: sai lầm hàng thủ / sút xa / tạt-đánh đầu
+      var rk = rng(), tiredD = tD.pitch.some(function(p, i){ return SE_GROUP[tD.slots[i]] === 'D' && p.stam < 45; }), pBl = (tiredD || m.mom[att] >= 2) ? 0.12 : 0.05;
+      if(rk < pBl) kind = 'blunder'; else if(rk < pBl + SE_P.pLong) kind = 'longshot'; else if(rk < pBl + SE_P.pLong + SE_P.pCross) kind = 'cross';
+    }
+    if(kind === 'blunder') nD = Math.max(2, nD - 1);
     if(counter){
       var dropped = L.partD.filter(function(id){ var q = tA.pitch.filter(function(p){ return p.id === id; })[0]; return q && SE_GROUP[tA.slots[tA.pitch.indexOf(q)]] !== 'D' && q.pos !== 'GK'; }).length;
       nA = Math.max(2, sA.attN - dropped);
       var fw = L.partA.filter(function(id){ var i = tD.pitch.map(function(p){ return p.id; }).indexOf(id); return i >= 0 && (SE_GROUP[tD.slots[i]] === 'M' || SE_GROUP[tD.slots[i]] === 'F'); }).length;
       nD = Math.max(2, sD.defN - Math.floor(fw / 2));
     }
+    nA = Math.max(2, nA - seDown(tA)); nD = Math.max(2, nD - seDown(tD));   // đội thiếu người: bớt 1 người ở cả tấn công lẫn phòng ngự
     function weights(t, W, modMap, nOf, prevIds){
-      return t.pitch.map(function(p, i){ var sl = t.slots[i]; return (W[sl] || 0.3) * (modMap[sl] || 1) * (prevIds.indexOf(p.id) >= 0 ? 0.55 : 1) * (0.6 + 0.4 * p.stam / 100); });
+      return t.pitch.map(function(p, i){ var sl = t.slots[i]; return (W[sl] || 0.3) * (modMap[sl] || 1) * (prevIds.indexOf(p.id) >= 0 ? 0.55 : 1) * (0.6 + 0.4 * p.stam / 100) * (p.gone ? 0 : 1); });
     }
     var prevA = L ? (L.att === att ? L.partA : L.partD) : [], prevD = L ? (L.att === def ? L.partA : L.partD) : [];
     var ia = sePick(tA.pitch.map(function(p, i){ return i; }), weights(tA, SE_ATT_W, sA.attMod, nA, prevA), nA, rng);
     var id = sePick(tD.pitch.map(function(p, i){ return i; }), weights(tD, SE_DEF_W, sD.defMod, nD, prevD), nD, rng);
     var taker = -1;   // người đá phạt đền / đá phạt / phạt góc
-    if(kind === 'penalty' || kind === 'freekick' || kind === 'corner'){
+    if(kind === 'penalty' || kind === 'freekick' || kind === 'corner' || kind === 'cross' || kind === 'longshot' || kind === 'blunder'){
       var bk = -1;
-      ia.forEach(function(i){ var p = tA.pitch[i]; if(tA.slots[i] === 'GK') return; var v = (p.st && p.st[kind === 'corner' ? 2 : 1]) || p.o; if(v > bk){ bk = v; taker = i; } });
+      ia.forEach(function(i){ var p = tA.pitch[i]; if(tA.slots[i] === 'GK') return; var v = (p.st && p.st[(kind === 'corner' || kind === 'cross') ? 2 : 1]) || p.o; if(v > bk){ bk = v; taker = i; } });
       if(taker < 0) taker = ia[0];
     }
     m.cur = {i:m.i, min:seMinute(m, m.i), att:att, counter:counter, kind:kind, taker:taker, ia:ia, id:id, nA:nA, nD:nD, baseA:sA.attN, baseD:sD.defN};
@@ -13201,27 +13285,64 @@
     var kind = c.kind || 'open';
     var rng = seRng(seHash(m.seed + ':r' + m.i)), att = c.att, def = 1 - att, tA = m.teams[att], tD = m.teams[def], sA = SE_STYLE[tA.style], sD = SE_STYLE[tD.style];
     seSynAll(m);
+    var sc = SE_SCN[m.scn] || null, gA = seGAdj(m) + (sc && sc.gA || 0), dom = SE_STYLE[tA.style].poss >= SE_STYLE[tD.style].poss ? att : 1 - att;
     var qb = (score == null) ? 0 : (score - SE_P.qc) * SE_P.qb;
     var sgA = SE_P.sigma * sA.sig * (1 + SE_P.miss * (c.baseA - c.nA)), sgD = SE_P.sigma * sD.sig * (1 + SE_P.miss * (c.baseD - c.nD));
     function mean(side, t, idx){ var s = 0; idx.forEach(function(i){ s += seS(m, side, t.pitch[i]); }); return s / idx.length; }
     var mA = mean(att, tA, c.ia), mD = mean(def, tD, c.id);
     var gkI = 0; tD.slots.forEach(function(p, i){ if(p === 'GK') gkI = i; });
-    var shPool = (kind === 'corner' && c.taker >= 0 && c.ia.length > 1) ? c.ia.filter(function(i){ return i !== c.taker; }) : c.ia;
-    var shI = ((kind === 'penalty' || kind === 'freekick') && c.taker >= 0) ? c.taker : sePick(shPool, shPool.map(function(i){ var p = tA.pitch[i]; return (SE_SHOT_W[tA.slots[i]] || 0.3) + 0.05 + ((p.st && p.st[1]) || 60) / 400; }), 1, rng)[0];
+    var shPool = ((kind === 'corner' || kind === 'cross') && c.taker >= 0 && c.ia.length > 1) ? c.ia.filter(function(i){ return i !== c.taker; }) : c.ia;
+    var shI = ((kind === 'penalty' || kind === 'freekick' || kind === 'longshot' || kind === 'blunder') && c.taker >= 0) ? c.taker : sePick(shPool, shPool.map(function(i){ var p = tA.pitch[i]; return ((SE_SHOT_W[tA.slots[i]] || 0.3) + 0.05 + ((p.st && p.st[1]) || 60) / 400) * ((p.sub && m.i >= p.sub.at && m.i - p.sub.at < 2) ? SE_P.subW : 1) * (p.gone ? 0 : 1); }), 1, rng)[0];
     var res = 'goal', failK = -1, k, stages = [];
     for(k = 0; k < 3; k++){
       if(k === 0 && kind !== 'open' && kind !== 'counter'){ stages.push(true); continue; }   // bóng chết: bỏ chặng đẩy bóng
-      if(k === 1 && kind === 'penalty'){ stages.push(true); continue; }
+      if(k === 1 && (kind === 'penalty' || kind === 'longshot' || kind === 'blunder')){ stages.push(true); continue; }
       var A = (k === 2 ? seS(m, att, tA.pitch[shI]) : mA) + (att === 0 ? qb : 0), D = (k === 2 ? seS(m, def, tD.pitch[gkI]) : mD) + (def === 0 ? qb : 0);
       A += sA.att[k] + (c.counter && sA.cAtt ? sA.cAtt[k] : 0) - sD.stop[k];
       A += 0.9 * m.mom[att]; D += 0.9 * m.mom[def];
       if(k === 2 && kind === 'penalty') A += 5;
+      if(k === 2 && kind === 'longshot') A -= SE_P.lsPen;   // sút xa khó vào hơn
+      if(k === 2 && kind !== 'penalty') A -= gA;     // chỉnh chung theo số bàn kỳ vọng (cấu hình)
+      if(sc){   // kịch bản trận
+        if(k > 0 && sc.early && m.i <= 1) A += sc.early;
+        if(k > 0 && sc.lateB && m.i >= 9) A += sc.lateB;
+        if(k > 0 && sc.trail && m.i >= 4 && m.goals[att] < m.goals[def]) A += sc.trail;
+        if(k === 2 && sc.fin && att === dom) A -= sc.fin;
+        if(sc.cnt && c.counter && att !== dom) A += sc.cnt;
+      }
+      if(k === 2 && kind === 'cross') A -= SE_P.crPen;      // đánh đầu hơi khó hơn sút thường
+      if(k === 2 && kind === 'blunder') D -= SE_P.blD;      // thủ môn/hậu vệ mắc lỗi → dễ ghi bàn
+      if(k > 0) A += SE_TB[Math.min(11, Math.floor(m.i * 12 / m.N))];   // bàn thắng dồn về cuối trận như thực tế
       if(c.counter) D -= SE_P.cntD;
-      var ok = (A + seGauss(rng) * sgA) > (D + seGauss(rng) * sgD) + SE_P.thr[k];
-      stages.push(ok);
-      if(!ok){ failK = k; res = (k === 0) ? 'lost_early' : (k === 1 ? 'cleared' : 'saved'); break; }
+      var sOk = (A + seGauss(rng) * sgA) > (D + seGauss(rng) * sgD) + SE_P.thr[k];   // (đổi tên: trước đây ghi đè tham số ok của câu trả lời)
+      stages.push(sOk);
+      if(!sOk){ failK = k; res = (k === 0) ? 'lost_early' : (k === 1 ? 'cleared' : 'saved'); break; }
     }
     var stopper = sePick(c.id, c.id.map(function(i){ return (SE_DEF_W[tD.slots[i]] || 0.3); }), 1, rng)[0];
+    var ev = seRng(seHash(m.seed + ':e' + m.i)), varChk = null, card = null;   // sự kiện chèn dùng bộ số ngẫu nhiên riêng → không làm lệch kết quả cũ
+    if(res === 'goal' && ev() < SE_P.pVar){   // VAR xem lại bàn thắng
+      var offV = ev() < SE_P.varOff, wv = ev();
+      varChk = {off:offV, why:offV ? (wv < 0.6 ? 'offside' : (wv < 0.85 ? 'foul' : 'handball')) : ''};
+      if(offV){ res = 'saved'; failK = 2; }
+    }
+    var voff = !!(varChk && varChk.off);
+    var fP = (kind === 'penalty') ? 0.55 : (kind === 'freekick' ? 0.45 : (res === 'lost_early' ? (c.counter ? 0.42 : 0.22) : (res === 'cleared' ? 0.12 : 0)));
+    fP *= SE_P.cardK * (sc && sc.cardMul || 1);
+    if(fP > 0 && ev() < fP){
+      var ti = -1;
+      if(kind === 'penalty' || kind === 'freekick'){ c.id.forEach(function(i){ if(ti < 0 && tD.slots[i] !== 'GK' && !tD.pitch[i].gone) ti = i; }); }
+      else if(tD.slots[stopper] !== 'GK' && !tD.pitch[stopper].gone) ti = stopper;
+      if(ti >= 0){
+        var tp = tD.pitch[ti];
+        if(tp.yc >= 1 && ev() < 0.55) ti = -1;   // trọng tài châm chước: đã có thẻ vàng thì nhiều khi chỉ nhắc nhở
+      }
+      if(ti >= 0){
+        var tt = (tp.yc >= 1) ? 'y2' : (ev() < SE_P.pRed * (sc && sc.redMul || 1) ? 'r' : 'y');
+        card = {side:def, id:tp.id, t:tt, f:(kind !== 'penalty' && kind !== 'freekick')};
+        if(tt === 'y') tp.yc = 1; else { tp.yc = (tt === 'y2' ? 2 : (tp.yc || 0)); tp.gone = 'red'; }
+      }
+    }
+    var shP = tA.pitch[shI], supAct = !!(shP.sub && m.i >= shP.sub.at && m.i - shP.sub.at < 2);
     if(res === 'goal') m.goals[att]++;
     var rec = {i:m.i, min:c.min, att:att, counter:c.counter, res:res, failK:failK, score:score,
       pa:c.ia.map(function(i){ return tA.pitch[i].id; }), pd:c.id.map(function(i){ return tD.pitch[i].id; }),
@@ -13238,36 +13359,41 @@
       t.bench.forEach(function(p){ p.stam = Math.min(100, p.stam + 1.5); });
     });
     // diễn biến kế tiếp: kết quả pha này quyết định pha sau (phạt góc / đá phạt / phạt đền)
-    var rn = rng(), nxt = null;
-    if(kind === 'open' || kind === 'counter'){
-      if(res === 'saved' && rn < 0.40) nxt = {type:'corner', att:att};
-      else if(res === 'cleared'){ if(rn < 0.28) nxt = {type:'corner', att:att}; else if(rn < 0.36) nxt = {type:'freekick', att:att}; else if(rn < 0.43) nxt = {type:'penalty', att:att}; }
+    var rn = rng(), nxt = null, wd = rng(), wsd = rng(), wood = (res === 'saved' && !voff && kind !== 'penalty' && wd < SE_P.pWood) ? (wsd < 0.5 ? 'post' : 'bar') : '';
+    if(kind !== 'corner' && kind !== 'freekick' && kind !== 'penalty' && !voff){   // open / counter / longshot / cross / blunder
+      if(res === 'saved' && rn < (wood ? 0.55 : 0.40)) nxt = {type:'corner', att:att};
+      else if(res === 'cleared'){ if(rn < 0.28) nxt = {type:'corner', att:att}; else if(rn < 0.36) nxt = {type:'freekick', att:att}; else if(rn < 0.36 + SE_P.pPen) nxt = {type:'penalty', att:att}; }
       else if(res === 'lost_early' && rn < 0.10) nxt = {type:'freekick', att:att};
     }
+    if(card && card.f && !nxt && ev() < 0.5) nxt = {type:'freekick', att:att};   // phạm lỗi bị thẻ → đối phương được đá phạt
     m.next = nxt;
     // đà của câu trả lời: đúng → đội bé lên đà; sai → đội bạn lên đà
     if(ok === true){ m.mom[0] = Math.min(3, m.mom[0] + 1); m.mom[1] = Math.max(0, m.mom[1] - 1); }
     else if(ok === false){ m.mom[1] = Math.min(3, m.mom[1] + 1); m.mom[0] = Math.max(0, m.mom[0] - 1); }
-    rec.kind = kind; rec.next = nxt ? nxt.type : ''; rec.taker = (c.taker >= 0 && tA.pitch[c.taker]) ? tA.pitch[c.taker].id : ''; rec.mom = [m.mom[0], m.mom[1]];
+    rec.kind = kind; rec.wood = wood; rec.next = nxt ? nxt.type : ''; rec.taker = (c.taker >= 0 && tA.pitch[c.taker]) ? tA.pitch[c.taker].id : ''; rec.mom = [m.mom[0], m.mom[1]];
+    rec.varChk = varChk; rec.card = card; rec.sup = !!(supAct && res === 'goal');
     m.last = {att:att, res:res, partA:rec.pa, partD:rec.pd};
     m.log.push(rec); m.i++; m.cur = null;
-    rec.oppSubs = (m.i < m.N) ? seAutoSubs(m, 1) : [];
+    if(m.i === m.N && !m.xtDecided){ m.xtDecided = true; if(Math.abs(m.goals[0] - m.goals[1]) <= 1) m.xt = true; }   // phút bù giờ: chỉ khi hai đội chênh ≤ 1 bàn
+    if(card && card.t !== 'y' && card.side === 0) m.redPick = true;   // đội bé bị thẻ đỏ → được chọn lại phong cách chơi
+    rec.inj = seInjury(m, ev, c);
+    rec.oppSubs = (m.i < seTotal(m)) ? seAutoSubs(m, 1).concat(seTactic(m, 1)) : [];
     m.half = (m.i === Math.floor(m.N / 2));
     return rec;
   }
 
   /* ---------- thay người / đổi phong cách ---------- */
-  function seCanSub(t, pi, bi){ var out = t.pitch[pi], inn = t.bench[bi]; if(!out || !inn || t.subs >= 7) return false; return (t.slots[pi] === 'GK') === (inn.pos === 'GK'); }
+  function seCanSub(t, pi, bi){ var out = t.pitch[pi], inn = t.bench[bi]; if(!out || !inn || t.subs >= 7 || out.gone === 'red') return false; return (t.slots[pi] === 'GK') === (inn.pos === 'GK'); }
   function seSub(m, side, pi, bi){
     var t = m.teams[side]; if(!seCanSub(t, pi, bi)) return false;
     var out = t.pitch[pi], inn = t.bench[bi];
-    inn.fit = SE_HOOK.fit(inn, t.slots[pi]); t.pitch[pi] = inn; t.bench.splice(bi, 1); t.out.push(out); t.subs++;
+    inn.fit = SE_HOOK.fit(inn, t.slots[pi]); if(m.i > 0) inn.sub = {at:m.i}; t.pitch[pi] = inn; t.bench.splice(bi, 1); t.out.push(out); t.subs++;
     return {out:out.id, inn:inn.id};
   }
   function seAutoSubs(m, side){
     var t = m.teams[side], made = [];
     for(var n = 0; n < 2; n++){
-      var wi = -1, ws = 999; t.pitch.forEach(function(p, i){ if(t.slots[i] !== 'GK' && p.stam < ws){ ws = p.stam; wi = i; } });
+      var wi = -1, ws = 999; t.pitch.forEach(function(p, i){ if(t.slots[i] !== 'GK' && !p.gone && p.stam < ws){ ws = p.stam; wi = i; } });
       if(wi < 0 || ws >= SE_P.subBelow || t.subs >= 7) break;
       var cur = t.pitch[wi], best = -1, bv = -999;
       t.bench.forEach(function(b, j){ if(b.pos === 'GK') return; var f = SE_HOOK.fit(b, t.slots[wi]), v = b.o * f * 1.0; if(v > bv){ bv = v; best = j; } });
@@ -13276,8 +13402,37 @@
     }
     return made;
   }
+  /* chấn thương: cầu thủ kiệt sức/đau phải rời sân; còn lượt và còn dự bị thì thay luôn, không thì đội thiếu người */
+  function seInjury(m, ev, c){
+    if(m.i >= seTotal(m) || ev() >= SE_P.pInj) return null;
+    var cands = [], tot = 0;
+    [[c.att, c.ia], [1 - c.att, c.id]].forEach(function(pr){ var t = m.teams[pr[0]]; pr[1].forEach(function(i){ var p = t.pitch[i]; if(p && !p.gone && t.slots[i] !== 'GK'){ var w = 115 - p.stam; cands.push({side:pr[0], i:i, w:w}); tot += w; } }); });
+    if(!cands.length) return null;
+    var x = ev() * tot, pk = cands[cands.length - 1];
+    for(var q = 0; q < cands.length; q++){ x -= cands[q].w; if(x < 0){ pk = cands[q]; break; } }
+    var t2 = m.teams[pk.side], p2 = t2.pitch[pk.i], res = {side:pk.side, out:p2.id, inn:''};
+    p2.gone = 'inj';
+    if(t2.subs < 7){
+      var best = -1, bv = -999;
+      t2.bench.forEach(function(b, j){ if(b.pos === 'GK') return; var v = b.o * SE_HOOK.fit(b, t2.slots[pk.i]); if(v > bv){ bv = v; best = j; } });
+      if(best >= 0){ var nid = t2.bench[best].id; if(seSub(m, pk.side, pk.i, best)) res.inn = nid; }
+    }
+    return res;
+  }
+  /* thay người chiến thuật của đội máy: 1 người ở nghỉ giữa hiệp và 1 người ở khoảng phút 60 — người vào sân được tiếp thêm sung sức (xem seS) */
+  function seTactic(m, side){
+    var t = m.teams[side], made = [];
+    if(!SE_P.tacSub || (m.i !== 6 && m.i !== 8) || t.subs >= 7) return made;
+    var wi = -1, ws = 999; t.pitch.forEach(function(p, i){ if(t.slots[i] !== 'GK' && !p.gone && p.stam < ws){ ws = p.stam; wi = i; } });
+    if(wi < 0 || ws >= 80) return made;
+    var cur = t.pitch[wi], trail = m.goals[side] < m.goals[1 - side], best = -1, bv = -999;
+    t.bench.forEach(function(b, j){ if(b.pos === 'GK') return; var v = b.o * SE_HOOK.fit(b, t.slots[wi]) + (trail && SE_GROUP[b.pos] === 'F' ? 4 : 0); if(v > bv){ bv = v; best = j; } });
+    if(best < 0 || bv < cur.o * cur.fit * seFat(cur.stam) - 3) return made;
+    var r = seSub(m, side, wi, best); if(r) made.push(r);
+    return made;
+  }
   function seSetStyle(m, side, id){ if(SE_STYLE[id]) m.teams[side].style = id; }
-  function seDone(m){ return m.i >= m.N; }
+  function seDone(m){ return m.i >= seTotal(m); }
   /*ENGINE_END*/
 
   /* =====================================================================
@@ -13352,7 +13507,7 @@
     var all = lu.starters.concat(lu.bench), ids = all.map(function(x){ return x.id; }), form = sPlayerForm(se, r, ids, pts);
     var styleId = (st.styleBy && st.styleBy[lu.f.id]) || 'flex';
     var mine = sTeamFromLineup(lu, form, styleId), theirs = sOppTeam(se, opp.team.id, all.map(function(x){ return x.p.name; }), r);
-    var m = seCreate({seed:hashStr(se.id + ':live:' + r), N:12, teams:[mine, theirs], qT:Math.min(1, (se.tier - 1) / 9 * 0.6), secs:settings.quizSeconds || 15});
+    var m = seCreate({seed:hashStr(se.id + ':live:' + r), N:12, gx:sCfg().gx, teams:[mine, theirs], qT:Math.min(1, (se.tier - 1) / 9 * 0.6), secs:settings.quizSeconds || 15});
     m.r = r; m.home = opp.home; m.wx = (function(){ var q = sRd(se, r); return (q && typeof q.wx === 'number') ? q.wx : sRollWx(); })(); SE_WX_CUR = m.wx; m.phase = 'break'; m.halfDone = false; m.pts = pts;
     m.lineup0 = {formationId:lu.f.id, pitch:lu.starters.map(function(x){ return x.id; }), bench:lu.bench.map(function(x){ return x.id; })};
     return m;
@@ -13393,8 +13548,8 @@
   function sStyleInfo(id){ return SEASON_STYLES.filter(function(x){ return x.id === id; })[0] || SEASON_STYLES[3]; }
   function sAvgStam(t){ var s = 0; t.pitch.forEach(function(p){ s += p.stam; }); return Math.round(s / t.pitch.length); }
   function sPRow(p, slot, kind, i, sel, ro){
-    var ar = sArrow(p.f), fit = p.fit < 0.97 ? ' <span title="Lệch vị trí" style="color:#FBBF24">⚠</span>' : '';
-    return '<' + (ro ? 'div' : 'button type="button" data-mt="sel" data-k="' + kind + '" data-i="' + i + '"') + ' class="mt-pl' + (sel ? ' sel' : '') + '"><span class="mt-pos">' + escHtml(slot) + '</span><span class="mt-nm">' + escHtml(p.n) + fit + sWxBadge(p) + '</span><span class="mt-ov">' + sEffOvr(p) + '</span><span class="mt-ar ' + ar.cls + '">' + ar.ic + '</span><span class="mt-bar"><i style="width:' + Math.round(p.stam) + '%;background:' + sStamCls(p.stam) + '"></i></span></' + (ro ? 'div' : 'button') + '>';
+    var cb = p.gone === 'red' ? ' 🟥' : (p.gone === 'inj' ? ' 🚑' : (p.yc === 1 ? ' 🟨' : '')), ar = sArrow(p.f), fit = p.fit < 0.97 ? ' <span title="Lệch vị trí" style="color:#FBBF24">⚠</span>' : '';
+    return '<' + (ro ? 'div' : 'button type="button" data-mt="sel" data-k="' + kind + '" data-i="' + i + '"') + ' class="mt-pl' + (sel ? ' sel' : '') + '"><span class="mt-pos">' + escHtml(slot) + '</span><span class="mt-nm">' + escHtml(p.n) + fit + cb + sWxBadge(p) + '</span><span class="mt-ov">' + sEffOvr(p) + '</span><span class="mt-ar ' + ar.cls + '">' + ar.ic + '</span><span class="mt-bar"><i style="width:' + Math.round(p.stam) + '%;background:' + sStamCls(p.stam) + '"></i></span></' + (ro ? 'div' : 'button') + '>';
   }
   var SE_NEWS = {
     tiki:{i:'PG', c:'Pep Guardiola', b:'Sinh 1971 · Tây Ban Nha', cl:'Barcelona · Bayern Munich · Man City', fm:[4,3,3],
@@ -13489,9 +13644,9 @@
     var t0 = m.teams[0], t1 = m.teams[1], s0 = sStyleInfo(t0.style), s1 = sStyleInfo(t1.style), mins = m.i ? seMinute(m, m.i - 1) : 0;
     return '<div class="mt-hd"><button type="button" class="mt-exit" data-mt="exit" aria-label="Tạm thoát">⏸</button>'
       + '<div class="mt-sc"><b>' + sMyLogo() + escHtml(t0.name) + '</b><em>' + m.goals[0] + ' – ' + m.goals[1] + '</em><b>' + (sLogoFor(t1.name) || '🛡️ ') + escHtml(t1.name) + '</b></div>'
-      + '<div class="mt-meta"><span>⏱ ' + (seDone(m) ? 'Hết giờ' : (m.i >= m.N / 2 ? 'Hiệp 2' : 'Hiệp 1')) + ' · ' + mins + '’ · tình huống ' + Math.min(m.i + 1, m.N) + '/' + m.N + '</span>'
+      + '<div class="mt-meta"><span>⏱ ' + (seDone(m) ? 'Hết giờ' : (m.i >= m.N ? 'Bù giờ' : (m.i >= m.N / 2 ? 'Hiệp 2' : 'Hiệp 1'))) + ' · ' + mins + '’ · tình huống ' + Math.min(m.i + 1, seTotal(m)) + '/' + seTotal(m) + '</span>'
       + '<span>' + s0.ic + ' ' + escHtml(s0.name) + ' vs ' + s1.ic + ' ' + escHtml(s1.name) + '</span><span>🔋 ' + sAvgStam(t0) + '% · ' + sAvgStam(t1) + '%</span></div>' + comHeadExtra(m)
-      + '<div class="mt-prog"><i style="width:' + Math.round(m.i / m.N * 100) + '%"></i></div></div>';
+      + '<div class="mt-prog"><i style="width:' + Math.round(m.i / seTotal(m) * 100) + '%"></i></div></div>';
   }
   function sNarrHTML(m, rec){
     var A = m.teams[rec.att], D = m.teams[1 - rec.att], names = rec.pa.slice(0, 3).map(function(id){ return sNm(A, id); }).join(', ');
@@ -13519,9 +13674,11 @@
     conte:'attacking down the wings', wenger:'quick passing'};
   var COM_WORDS = {kickoff:['Kick-off','Giao bóng'], corner:['Corner kick','Phạt góc'], freekick:['Free kick','Đá phạt'], penalty:['Penalty','Phạt đền'],
     counter:['Counter-attack','Phản công'], save:['Save','Cứu thua'], goalkick:['Goal kick','Phát bóng lên'], halftime:['Half-time','Nghỉ giữa hiệp'],
-    fulltime:['Full-time','Hết giờ'], tackle:['Tackle','Cướp bóng'], clear:['Clear the ball','Phá bóng'], foul:['Foul','Phạm lỗi'],
-    pass:['Pass','Chuyền bóng'], wall:['Wall','Hàng rào'], goal:['Goal','Bàn thắng'], shot:['Shot','Cú sút']};
-  var COM_ICON = {pre:'📋', play:'👟', key:'⚡', goal:'⚽', goalx:'😬', save:'🧤', set:'🚩', warn:'⚠️', ans:'🧠', info:'🗣️', next:'👀', ht:'⏸️', ft:'🏁', fire:'🔥'};
+    fulltime:['Full-time','Hết giờ'], longshot:['Long shot','Sút xa'], cross:['Cross','Tạt bóng'], header:['Header','Đánh đầu'], post:['Post','Cột dọc'], crossbar:['Crossbar','Xà ngang'], mistake:['Mistake','Sai lầm'], tackle:['Tackle','Cướp bóng'], clear:['Clear the ball','Phá bóng'], foul:['Foul','Phạm lỗi'],
+    pass:['Pass','Chuyền bóng'], wall:['Wall','Hàng rào'], goal:['Goal','Bàn thắng'], shot:['Shot','Cú sút'],
+    var:['VAR','Trọng tài video'], offside:['Offside','Việt vị'], handball:['Handball','Chạm tay'], yellow:['Yellow card','Thẻ vàng'], red:['Red card','Thẻ đỏ'],
+    injury:['Injury','Chấn thương'], substitute:['Substitute','Cầu thủ dự bị / thay người'], extratime:['Extra time','Bù giờ']};
+  var COM_ICON = {pre:'📋', play:'👟', key:'⚡', goal:'⚽', goalx:'😬', save:'🧤', set:'🚩', warn:'⚠️', ans:'🧠', info:'🗣️', next:'👀', ht:'⏸️', ft:'🏁', fire:'🔥', var:'📺', card:'🟨', red:'🟥', inj:'🚑', sub:'🔁', xt:'⏱️'};
   var comVoice = false; try{ comVoice = localStorage.getItem('se_com_voice') === '1'; }catch(e){}
 
   function comL(min, k, t, w){ var o = {min:min, k:k, t:t}; if(w) o.w = w; return o; }
@@ -13590,6 +13747,18 @@
       add(2, 'set', 'Foul by {d1}. Free kick for {A}!', 'foul');
       add(1, 'play', '{tk} puts the ball down. {D} make a wall.', 'wall');
       add(1, 'play', '{tk} takes a few steps back...');
+    } else if(kind === 'longshot'){
+      add(2, 'play', '{A} are near the box. {tk} has the ball.');
+      add(1, 'play', '{tk} sees some space. {d1} is too far away!');
+      add(0, 'play', '{tk} pulls back his foot... a long shot!', 'longshot');
+    } else if(kind === 'cross'){
+      add(2, 'play', '{tk} runs down the wing for {A}.');
+      add(1, 'play', '{tk} looks up. Players are waiting in the box.');
+      add(0, 'play', '{tk} swings a cross into the box!', 'cross');
+    } else if(kind === 'blunder'){
+      add(2, 'warn', 'Mistake! {d1} loses the ball in a bad place.', 'mistake');
+      add(1, 'play', '{tk} runs onto the loose ball!');
+      add(0, 'play', mine ? '{tk} is close to the goal. This is a big chance!' : 'Danger! {tk} is running at our goal!');
     } else {
       add(2, 'set', 'PENALTY! The referee points to the spot!', 'penalty');
       add(1, 'play', '{d1} fouled {p1} in the box.', 'foul');
@@ -13604,7 +13773,7 @@
   }
   function comKey(m, cur){
     var A = m.teams[cur.att], mine = cur.att === 0, kind = cur.kind || 'open';
-    var what = kind === 'penalty' ? 'Penalty for ' : (kind === 'corner' ? 'Corner for ' : (kind === 'freekick' ? 'Free kick for ' : 'Big chance for '));
+    var what = {penalty:'Penalty for ', corner:'Corner for ', freekick:'Free kick for ', longshot:'Long shot chance for ', cross:'Cross into the box for ', blunder:'Big mistake! Chance for '}[kind] || 'Big chance for ';
     return comL(cur.min, 'key', 'KEY MOMENT! ' + what + A.name + '. ' + (mine ? 'Answer to help your team score!' : 'Answer to help your team defend!') + (m.i < 2 ? ' Right and fast = more power!' : ''));
   }
 
@@ -13621,18 +13790,43 @@
     if(kind === 'penalty') add('play', '{sh} runs up and shoots...');
     else if(kind === 'corner') add('play', shot ? '{tk} swings it in... {sh} jumps for the ball!' : '{tk} swings the ball in...');
     else if(kind === 'freekick') add('play', shot ? '{sh} curls the ball towards goal...' : '{tk} sends the ball into the box...');
+    else if(kind === 'longshot') add('play', '{sh} shoots from far away!');
+    else if(kind === 'cross') add('play', shot ? '{tk} crosses... {sh} rises for a header!' : '{tk} crosses the ball into the box...', shot ? 'header' : null);
     else if(shot) add('play', '{sh} takes the shot...');
     else if(rec.res === 'cleared') add('play', '{p2} tries a pass into the box...');
     else add('play', '{p1} tries to keep the ball...');
-    if(rec.res === 'goal'){
-      if(mine){ add('goal', 'GOAL!!! {sh} scores for {A}! ' + sc, 'goal'); add('info', comPick(['What a moment!', 'The fans go wild!', 'Brilliant!'], r)); }
-      else { add('goalx', 'Goal for {A}. {sh} scores. ' + sc, 'goal'); }
+    var vc = rec.varChk, voff = !!(vc && vc.off);
+    if(vc){
+      add('var', 'The ball is in the net! The referee waits... VAR is checking.', 'var');
+      if(voff) add('var', vc.why === 'offside' ? 'VAR says: OFFSIDE! No goal for {A}.' : (vc.why === 'foul' ? 'VAR sees a foul before the goal. No goal for {A}!' : 'VAR sees a handball. No goal for {A}!'), vc.why === 'offside' ? 'offside' : (vc.why === 'foul' ? 'foul' : 'handball'));
+      else add('var', 'VAR says: the goal stands!');
+    }
+    if(voff){ add('warn', mine ? 'So close! A great chance, but no goal this time.' : 'Phew! We are lucky. The goal does not count.'); }
+    else if(rec.res === 'goal'){
+      if(mine){ add('goal', 'GOAL!!! {sh} scores for {A}! ' + sc, 'goal'); add('info', comPick(['What a moment!', 'The fans go wild!', 'Brilliant!'], r)); if(rec.sup) add('sub', 'Super sub! {sh} came on from the bench and scored!', 'substitute'); }
+      else { add('goalx', 'Goal for {A}. {sh} scores. ' + sc, 'goal'); if(rec.sup) add('sub', 'A super sub! {sh} came off the bench and scored for {A}.', 'substitute'); }
     } else if(rec.res === 'saved'){
       if(kind === 'penalty') add('save', mine ? 'Penalty saved! {gk} dives the right way!' : 'Penalty saved! Our keeper {gk} is a hero!', 'save');
+      else if(rec.wood){ var wn = rec.wood === 'bar' ? 'crossbar' : 'post'; add('save', mine ? 'So close! The ball hits the ' + wn + '!' : 'Phew! The ball hits the ' + wn + '. Lucky!', wn); }
       else add('save', mine ? 'Great save by {gk}! {D} stay in the game.' : 'Great save by {gk}! Our keeper stops it!', 'save');
+    } else if(rec.res === 'cleared' && rec.card && rec.card.f){
+      add('play', 'Foul! {st} stops the attack the wrong way.', 'foul');
     } else if(rec.res === 'cleared'){
       add('play', kind === 'corner' ? 'Cleared! {st} heads the ball away.' : comPick(['Blocked! {st} clears the ball away.', '{st} stops it. The danger is over.'], r), 'clear');
-    } else add('play', '{st} wins the ball with a tackle!', 'tackle');
+    } else add('play', (rec.card && rec.card.f) ? 'Foul! {st} brings down the attacker.' : '{st} wins the ball with a tackle!', (rec.card && rec.card.f) ? 'foul' : 'tackle');
+    if(rec.card){
+      var cd = rec.card, ct2 = m.teams[cd.side], cn = comNmId(ct2, cd.id);
+      if(cd.t === 'y') add('card', 'Yellow card for ' + cn + '. Be careful now!', 'yellow');
+      else if(cd.t === 'y2') add('red', 'Second yellow card for ' + cn + '... that is a RED card! ' + ct2.name + ' play with ' + (11 - seDown(ct2)) + ' players.', 'red');
+      else add('red', 'RED CARD! ' + cn + ' is sent off! ' + ct2.name + ' play with ' + (11 - seDown(ct2)) + ' players.', 'red');
+    }
+    if(rec.inj){
+      var ij = rec.inj, it = m.teams[ij.side], inm = comNmId(it, ij.out);
+      add('inj', 'Injury! ' + inm + ' is hurt and cannot go on.', 'injury');
+      if(ij.inn) add('sub', 'Substitution: ' + comNmId(it, ij.inn) + ' comes on for ' + inm + '.', 'substitute');
+      else add('warn', it.name + ' have no more substitutes. They play with ' + (11 - seDown(it)) + ' players.');
+    }
+    (rec.oppSubs || []).forEach(function(sb){ add('sub', m.teams[1].name + ' make a change: ' + comNmId(m.teams[1], sb.inn) + ' comes on for ' + comNmId(m.teams[1], sb.out) + '.', 'substitute'); });
     if(!rec.skipped && rec.q){
       if(ok && mine && rec.res === 'goal') add('fire', 'Your answer helped the team score!');
       else if(ok && !mine && rec.res !== 'goal') add('fire', 'Your answer helped the defence!');
@@ -13656,6 +13850,7 @@
       var mo = rec.mom || [0, 0];
       if(mo[0] >= 2) add('fire', 'Momentum! Your team is playing with fire!');
       else if(mo[1] >= 2) add('warn', 'The other team is pushing. A right answer can calm them down.');
+      if(m.xt && rec.i === m.N - 1) out.push(comL(90, 'xt', 'Extra time! The referee adds 3 minutes. One more chance for both teams!', 'extratime'));
     }
     return out;
   }
@@ -13699,13 +13894,14 @@
     });
   }
   /* Ghi dòng vào nhật ký + lưu TRƯỚC, rồi mới hiện từng dòng (thoát giữa chừng không mất diễn biến). */
-  async function comPlay(m, lines, tok, fast){
+  async function comPlay(m, lines, tok, fast, hook){
     var c = sMC; comPush(m, lines); if(c) sSave(c.st);
     var box = sEl('mt-feed'); if(!box) return;
     for(var i = 0; i < lines.length; i++){
       if(!sAlive(tok)) return;
       var row = document.createElement('div'); row.className = 'fe fe-' + lines[i].k + ' fe-in typing'; row.innerHTML = comRowInner(lines[i]);
       box.appendChild(row); box.scrollTop = box.scrollHeight;
+      if(hook){ try{ hook(lines[i], i, lines); }catch(e){} }
       await comWait(reducedMotion() || (sMC && sMC.skip) ? 0 : 450, tok);
       row.classList.remove('typing');
       if(lines[i].k === 'goal'){ try{ if(!reducedMotion()) spawnConfetti(40, 'perfect'); }catch(e){} }
@@ -13960,23 +14156,477 @@
     if(c) c.mineBy = by;
     return by;
   }
-  function mxPitchHTML(m, cur){
-    var h = '', by = mxMineBy();
+  /* =====================================================================
+     ĐẠO DIỄN TRẬN ĐẤU (mx*): toàn bộ thẻ cầu thủ trên sân di chuyển theo diễn biến.
+     Sân dọc 68:105, đội bé ở NỬA DƯỚI tấn công lên trên, đội bạn ở nửa trên tấn công xuống. Toạ độ = % bề rộng / % chiều cao sân.
+     Nhịp: sMatchNext gọi hook theo từng dòng bình luận →
+       build (dẫn dắt)  → key (câu hỏi, giữ thế trận) → out (cú dứt điểm → bàn thắng / cứu thua / phá bóng / cướp bóng) → next (tình huống kế tiếp).
+     Mọi thẻ đều di chuyển ở MỌI nhịp: cả khối đội bám theo bóng (mxShape), người tham gia pha bóng được ghim vị trí riêng (pins),
+     rồi mxSeparate đẩy các thẻ chạm nhau ra. Chuyển động dùng CSS transform nên mượt, tắt hẳn khi bật "giảm chuyển động".
+     ===================================================================== */
+  var MX_GF = {GK:0.08, D:0.55, M:0.85, F:1}, MX_KX = {GK:0.10, D:0.20, M:0.28, F:0.22}, MX_CH = 87.5;   // MX_CH: chiều cao thẻ (% chiều cao sân) = MX_CH × cỡ thẻ (% bề rộng) / 100
+  function mxLayout(m){
+    var fp = function(t){ return (FORMATIONS.filter(function(x){ return x.id === t.fid; })[0] || FORMATIONS[0]).positions; };
+    var lay = inSolve(fp(m.teams[0]), fp(m.teams[1])); lay.cc = Math.min(lay.c, 0.125); return lay;
+  }
+  function mxSig(m){ return [m.wx, m.teams[0].fid, m.teams[0].pitch.map(function(p){ return p.id + (p.gone ? 'x' : ''); }).join(','), m.teams[1].fid, m.teams[1].pitch.map(function(p){ return p.id + (p.gone ? 'x' : ''); }).join(',')].join('|'); }
+  function mxPitchHTML(m){
+    var h = '', by = mxMineBy(), lay = sMC.mxLay = mxLayout(m);
     [0, 1].forEach(function(side){
-      var t = m.teams[side], f = FORMATIONS.filter(function(x){ return x.id === t.fid; })[0] || FORMATIONS[0];
-      t.pitch.forEach(function(pl, i){
-        var ps = f.positions[i] || {x:50, y:50}, Y = side === 0 ? 100 - (100 - ps.y) * 0.5 : (100 - ps.y) * 0.5, X = Math.max(10, Math.min(90, side === 0 ? ps.x : 100 - ps.x));
-        var on = cur && ((cur.att === side && cur.ia.indexOf(i) > -1) || (cur.att !== side && cur.id.indexOf(i) > -1));
-        h += '<div class="mx-d s' + side + (on ? ' on' : '') + '" title="' + escHtml(comShort(pl)) + '" style="left:' + X.toFixed(1) + '%;top:' + Math.max(5.5, Math.min(94.5, Y)).toFixed(1) + '%;--sc:' + sStamCls(pl.stam) + '"><div class="mx-c">' + inArt(pl, side, by) + '</div><b class="mx-o">' + sEffOvr(pl) + '</b></div>';
+      m.teams[side].pitch.forEach(function(pl, i){
+        h += '<div class="mx-d s' + side + (pl.gone ? ' gone' : '') + '" data-s="' + side + '" data-i="' + i + '" title="' + escHtml(comShort(pl)) + '" style="--sc:' + sStamCls(pl.stam) + '"><div class="mx-c">' + inArt(pl, side, by) + '</div><b class="mx-o">' + sEffOvr(pl) + '</b></div>';
       });
     });
-    var ball = cur ? '<div class="mx-ball" style="top:' + (cur.att === 0 ? 40 : 60) + '%">⚽</div>' : '';
-    return '<div class="mx-pitch' + (cur ? ' act' : '') + '">' + sGrassHTML(m) + '<span class="mx-wx">' + sWx(m).ic + ' ' + sWx(m).name + '</span><span class="mx-tag t1">🟥 ' + escHtml(m.teams[1].name) + '</span><span class="mx-tag t0">🟦 ' + escHtml(m.teams[0].name) + '</span>' + h + ball + '</div>';
+    return '<div class="mx-pitch" style="--cwp:' + (lay.cc * 100).toFixed(2) + '%">' + sGrassHTML(m) + '<svg class="mx-fx" viewBox="0 0 68 105" preserveAspectRatio="none" aria-hidden="true"></svg><div class="mx-net n0"></div><div class="mx-net n1"></div>'
+      + '<span class="mx-wx">' + sWx(m).ic + ' ' + sWx(m).name + '</span><span class="mx-tag t1">🟥 ' + escHtml(m.teams[1].name) + '</span><span class="mx-tag t0">🟦 ' + escHtml(m.teams[0].name) + '</span>'
+      + h + '<div class="mx-ball"><i class="mx-sh"></i><div class="mx-bi"><span class="mx-br">⚽</span></div></div></div>';
+  }
+  function mxInit(c, el){
+    var m = c.m, lay = c.mxLay, D = {c:c, el:el, svg:el.querySelector('.mx-fx'), ball:el.querySelector('.mx-ball'), bi:el.querySelector('.mx-bi'), br:el.querySelector('.mx-br'), sh:el.querySelector('.mx-sh'), nets:[el.querySelector('.mx-net.n0'), el.querySelector('.mx-net.n1')],
+      cw:lay.cc * 100, ch:lay.cc * MX_CH, W:0, H:0, pl:[[], []], pos:[[], []], base:[[], []], grp:[[], []], bx:50, by:50, ang:0, X:null, stIdx:-1, timers:[]};
+    [0, 1].forEach(function(s){
+      m.teams[s].pitch.forEach(function(p, i){
+        D.pl[s][i] = el.querySelector('.mx-d[data-s="' + s + '"][data-i="' + i + '"]');
+        var b = lay.pos[s][i] || {x:50, y:50}, sl = m.teams[s].slots[i];
+        D.base[s][i] = {x:b.x, y:b.y}; D.pos[s][i] = {x:b.x, y:b.y};
+        D.grp[s][i] = (sl === 'GK' || SE_GROUP[sl] === 'GK') ? 'GK' : (SE_GROUP[sl] || 'M');
+      });
+    });
+    c.dir = D; mxRelayout(D);
+    if(!D.W && window.requestAnimationFrame) requestAnimationFrame(function(){ if(c.dir === D) mxRelayout(D); });
+    return D;
+  }
+  function mxPx(D, x, y){ return 'translate3d(' + (x * D.W / 100).toFixed(1) + 'px,' + (y * D.H / 100).toFixed(1) + 'px,0) translate(-50%,-50%)'; }
+  function mxRelayout(D){   // đổi kích thước sân → đặt lại toạ độ pixel (không hoạt hoạ)
+    var el = D.el; D.W = el.clientWidth || 0; D.H = el.clientHeight || 0; if(!D.W || !D.H) return;
+    el.style.setProperty('--cw', Math.round(D.W * D.cw / 100) + 'px'); el.style.setProperty('--dw', Math.round(D.W * 0.085) + 'px');
+    [0, 1].forEach(function(s){ D.pl[s].forEach(function(e, i){ if(!e) return; e.style.setProperty('--d', '0s'); e.style.setProperty('--dl', '0s'); e.style.transform = mxPx(D, D.pos[s][i].x, D.pos[s][i].y); e.style.zIndex = 10 + Math.round(D.pos[s][i].y / 5); }); });
+    D.ball.style.setProperty('--d', '0s'); D.ball.style.transform = mxPx(D, D.bx, D.by);
+  }
+  function mxRefresh(D, m){   // thể lực / chỉ số hiệu dụng thay đổi sau mỗi tình huống
+    [0, 1].forEach(function(s){ m.teams[s].pitch.forEach(function(pl, i){ var e = D.pl[s][i]; if(!e) return; e.style.setProperty('--sc', sStamCls(pl.stam)); var o = e.querySelector('.mx-o'); if(o) o.textContent = sEffOvr(pl); }); });
+  }
+  function mxLater(D, ms, fn){ if(reducedMotion()){ fn(); return; } D.timers.push(setTimeout(function(){ try{ fn(); }catch(e){} }, ms)); }
+  function mxClearT(D){ D.timers.forEach(clearTimeout); D.timers = []; }
+  function mxClearFx(D){
+    [0, 1].forEach(function(s){ D.pl[s].forEach(function(e){ if(!e) return; e.classList.remove('cele', 'sad', 'fall', 'shk', 'hero', 'jump'); var c = e.firstChild; if(c && c.getAnimations) c.getAnimations().forEach(function(a){ a.cancel(); }); }); });
+    Array.prototype.forEach.call(D.el.querySelectorAll('.mx-lab, .mx-banner, .mx-ring, .mx-pop, .mx-flash, .mx-conf'), function(n){ n.parentNode.removeChild(n); });
+    D.nets.forEach(function(n){ if(n) n.classList.remove('hit'); });
+  }
+  function mxUnhi(D){ [0, 1].forEach(function(s){ D.pl[s].forEach(function(e){ if(e) e.classList.remove('on'); }); }); }
+  function mxHi(D, X){ mxUnhi(D); X.ia.forEach(function(i){ var e = D.pl[X.att][i]; if(e) e.classList.add('on'); }); X.id.forEach(function(i){ var e = D.pl[X.def][i]; if(e) e.classList.add('on'); }); }
+
+  /* ---- chuyển động cơ bản ---- */
+  function mxPut(D, s, i, x, y, dur, dl){
+    var e = D.pl[s][i]; if(!e) return;
+    x = Math.max(D.cw / 2 + 0.5, Math.min(100 - D.cw / 2 - 0.5, x)); y = Math.max(D.ch / 2 + 0.5, Math.min(100 - D.ch / 2 - 0.5, y));
+    var o = D.pos[s][i], d = Math.sqrt(Math.pow((x - o.x) * 0.68, 2) + Math.pow((y - o.y) * 1.05, 2)), rm = reducedMotion();
+    var du = rm ? 0 : (dur != null ? dur : Math.max(0.55, Math.min(1.7, d / 26 + 0.4)));
+    o.x = x; o.y = y;
+    e.style.setProperty('--d', du + 's'); e.style.setProperty('--dl', (rm ? 0 : (dl || 0)) + 's'); e.style.transform = mxPx(D, x, y); e.style.zIndex = 10 + Math.round(y / 5);
+    if(d > 1 && !rm){ e.classList.add('mv'); clearTimeout(e._mt); e._mt = setTimeout(function(){ e.classList.remove('mv'); }, (du + (dl || 0)) * 1000 + 80); }
+  }
+  var MX_EASE = {pass:'cubic-bezier(.2,.65,.35,1)', shot:'cubic-bezier(.04,.8,.2,1)', goal:'cubic-bezier(.05,.75,.25,1)', lob:'cubic-bezier(.4,0,.3,1)', roll:'cubic-bezier(.3,.1,.3,1)'};
+  /* Bóng: fx = pass (lăn mặt cỏ, vệt trắng) · lob (bay bổng, bóng đổ nhỏ lại) · shot (sút mạnh, vệt lửa) · goal (vào lưới, vệt vàng) · roll (lăn nhẹ). */
+  function mxBall(D, x, y, dur, arc, fx){
+    x = Math.max(1.5, Math.min(98.5, x)); y = Math.max(1.5, Math.min(98.5, y));
+    var d = Math.sqrt(Math.pow((x - D.bx) * 0.68, 2) + Math.pow((y - D.by) * 1.05, 2)), rm = reducedMotion();
+    var du = rm ? 0 : (dur != null ? dur : Math.max(0.35, Math.min(1.4, d / 55 + 0.25)));
+    D.ball.style.setProperty('--d', du + 's'); D.ball.style.setProperty('--e', MX_EASE[fx] || MX_EASE.roll); D.ball.style.transform = mxPx(D, x, y);
+    D.ang += d * (fx === 'shot' || fx === 'goal' ? 20 : 9); D.br.style.transition = 'transform ' + du + 's linear'; D.br.style.transform = 'rotate(' + D.ang.toFixed(0) + 'deg)';
+    if(!rm && D.bi.animate){
+      if(arc){
+        D.bi.animate([{transform:'translateY(0) scale(1)'}, {transform:'translateY(-' + Math.round(arc * 90) + '%) scale(' + (1 + arc) + ')', offset:0.5}, {transform:'translateY(0) scale(1)'}], {duration:du * 1000, easing:'ease-in-out'});
+        D.sh.animate([{transform:'translate(-50%,0) scale(1)', opacity:0.55}, {transform:'translate(-50%,0) scale(' + (1 - arc * 0.5) + ')', opacity:0.25, offset:0.5}, {transform:'translate(-50%,0) scale(1)', opacity:0.55}], {duration:du * 1000, easing:'ease-in-out'});
+      }
+      if(fx && fx !== 'roll' && du > 0.2) mxGhosts(D, du * 1000, fx);
+    }
+    D.bx = x; D.by = y;
+  }
+  function mxGhosts(D, ms, fx){   // vệt bóng mờ dần dọc đường bay (đọc vị trí thật của bóng khi đang chạy transition)
+    var t0 = performance.now(), last = 0;
+    (function f(t){
+      if(t - t0 > ms || D.c.dir !== D) return;
+      if(t - last > (fx === 'pass' || fx === 'lob' ? 45 : 26)){
+        last = t; var r = D.ball.getBoundingClientRect(), pr = D.el.getBoundingClientRect();
+        if(pr.width){
+          var g = document.createElement('i'); g.className = 'mx-gh ' + fx; g.style.left = ((r.left + r.width / 2 - pr.left) / pr.width * 100).toFixed(2) + '%'; g.style.top = ((r.top + r.height / 2 - pr.top) / pr.height * 100).toFixed(2) + '%';
+          D.el.insertBefore(g, D.ball); var a = g.animate([{opacity:fx === 'pass' || fx === 'lob' ? 0.55 : 0.95, transform:'translate(-50%,-50%) scale(1)'}, {opacity:0, transform:'translate(-50%,-50%) scale(.25)'}], {duration:fx === 'pass' || fx === 'lob' ? 420 : 560, easing:'ease-out'}); a.onfinish = function(){ if(g.parentNode) g.parentNode.removeChild(g); };
+        }
+      }
+      requestAnimationFrame(f);
+    })(t0);
+  }
+  function mxPart(D, x, y, n, cols, dist, ms){   // chùm tia / bụi toả ra từ điểm va chạm (dist = % bề rộng sân)
+    if(reducedMotion()) return; var sz = Math.max(4, D.W * 0.013), R = D.W * dist / 100;
+    for(var i = 0; i < n; i++){
+      var a = (i / n) * 6.283 + Math.random() * 0.7, r = R * (0.5 + Math.random() * 0.7), e = document.createElement('i'), q = sz * (0.6 + Math.random() * 0.9);
+      e.className = 'mx-pt'; e.style.cssText = 'left:' + x + '%;top:' + y + '%;width:' + q + 'px;height:' + q + 'px;background:' + cols[i % cols.length];
+      D.el.appendChild(e);
+      var an = e.animate([{transform:'translate(-50%,-50%) scale(1)', opacity:1}, {transform:'translate(calc(-50% + ' + (Math.cos(a) * r).toFixed(1) + 'px),calc(-50% + ' + (Math.sin(a) * r).toFixed(1) + 'px)) scale(.15)', opacity:0}], {duration:ms * (0.7 + Math.random() * 0.5), easing:'cubic-bezier(.1,.8,.3,1)'});
+      an.onfinish = (function(el){ return function(){ if(el.parentNode) el.parentNode.removeChild(el); }; })(e);
+    }
+  }
+  function mxHops(D, dur, n, h){   // bóng nảy nhỏ dần rồi nằm yên
+    if(reducedMotion() || !D.bi.animate) return;
+    var fr = [{transform:'translateY(0)', offset:0, easing:'ease-out'}];
+    for(var k = 0; k < n; k++){ var hh = Math.round(h * Math.pow(0.55, k)); fr.push({transform:'translateY(-' + hh + '%)', offset:(k + 0.5) / n, easing:'ease-in'}); fr.push({transform:'translateY(0)', offset:(k + 1) / n, easing:k < n - 1 ? 'ease-out' : 'linear'}); }
+    D.bi.animate(fr, {duration:dur});
+  }
+  function mxSquash(D){ if(!reducedMotion() && D.bi.animate) D.bi.animate([{transform:'scale(1)'}, {transform:'scale(1.35,.65)', offset:0.3}, {transform:'scale(.85,1.15)', offset:0.6}, {transform:'scale(1)'}], {duration:360}); }
+  function mxShake(D, k){ if(reducedMotion() || !D.el.animate) return; k = k || 1; D.el.animate([{transform:'translate(0,0)'}, {transform:'translate(' + (-1.2 * k) + '%,' + (0.5 * k) + '%)'}, {transform:'translate(' + k + '%,' + (-0.6 * k) + '%)'}, {transform:'translate(' + (-0.6 * k) + '%,' + (0.3 * k) + '%)'}, {transform:'translate(0,0)'}], {duration:340}); }
+  function mxPop(D, x, y, emoji){ var n = document.createElement('div'); n.className = 'mx-pop'; n.textContent = emoji; n.style.left = x + '%'; n.style.top = y + '%'; n.addEventListener('animationend', function(){ if(n.parentNode) n.parentNode.removeChild(n); }); D.el.appendChild(n); }
+  function mxFlash(D, att, cls){ var n = document.createElement('div'); n.className = 'mx-flash ' + cls; n.style.setProperty('--fy', att === 0 ? '4%' : '96%'); n.addEventListener('animationend', function(){ if(n.parentNode) n.parentNode.removeChild(n); }); D.el.appendChild(n); }
+  function mxNet(D, att){ var n = D.nets[att]; if(!n) return; n.classList.remove('hit'); void n.offsetWidth; n.classList.add('hit'); }
+  function mxLunge(D, s, i){ var c = D.pl[s][i] && D.pl[s][i].firstChild; if(c && c.animate && !reducedMotion()) c.animate([{transform:'translateY(0)'}, {transform:'translateY(' + (s === 0 ? -10 : 10) + '%) scale(1.14)', offset:0.4}, {transform:'translateY(0)'}], {duration:380, easing:'ease-out'}); }
+  function mxKick(D, s, i, x, y, strong){ mxLunge(D, s, i); mxRing(D, x, y, strong ? 'o' : 'w'); mxPart(D, x, y, strong ? 10 : 6, strong ? ['#FDBA74', '#FB923C', '#fff'] : ['#fff', '#E2E8F0'], strong ? 5 : 3.5, 450); }
+  function mxConfetti(D, att){   // mưa giấy màu rơi từ phía khung thành vừa bị thủng lưới
+    if(reducedMotion()) return; var cols = ['#FDE047', '#F97316', '#38BDF8', '#F472B6', '#4ADE80', '#fff'], y0 = att === 0 ? 3 : 97, dir = att === 0 ? 1 : -1;
+    for(var i = 0; i < 30; i++){
+      var e = document.createElement('i'), x = 8 + Math.random() * 84, h = D.H * (0.3 + Math.random() * 0.4) * dir, w = (Math.random() - 0.5) * D.W * 0.25, q = Math.max(5, D.W * 0.016);
+      e.className = 'mx-conf'; e.style.cssText = 'left:' + x + '%;top:' + y0 + '%;width:' + q + 'px;height:' + (q * 1.6) + 'px;background:' + cols[i % cols.length];
+      D.el.appendChild(e);
+      var an = e.animate([{transform:'translate(0,0) rotate(0deg)', opacity:1}, {transform:'translate(' + (w * 0.4).toFixed(0) + 'px,' + (h * 0.55).toFixed(0) + 'px) rotate(' + (200 + Math.random() * 300).toFixed(0) + 'deg)', opacity:1, offset:0.6}, {transform:'translate(' + w.toFixed(0) + 'px,' + h.toFixed(0) + 'px) rotate(' + (500 + Math.random() * 400).toFixed(0) + 'deg)', opacity:0}], {duration:1500 + Math.random() * 900, delay:Math.random() * 350, easing:'ease-out', fill:'backwards'});
+      an.onfinish = (function(el){ return function(){ if(el.parentNode) el.parentNode.removeChild(el); }; })(e);
+    }
+  }
+  function mxFeetAt(D, s, x, y){ var f = s === 0 ? -1 : 1; return {x:x + D.cw * 0.3, y:y + f * D.ch * 0.55}; }
+  function mxTrail(D, x1, y1, x2, y2, kind){   // đường chuyền / đường chạy / đường sút vẽ dần trên sân rồi mờ đi
+    if(reducedMotion() || !D.svg || !D.svg.ownerDocument.createElementNS) return;
+    var ns = 'http://www.w3.org/2000/svg', l = document.createElementNS(ns, 'line'), dot = document.createElementNS(ns, 'circle'), g = D.svg;
+    function c(v, k){ return (Math.max(0, Math.min(100, v)) * k).toFixed(2); }
+    l.setAttribute('x1', c(x1, 0.68)); l.setAttribute('y1', c(y1, 1.05)); l.setAttribute('x2', c(x2, 0.68)); l.setAttribute('y2', c(y2, 1.05)); l.setAttribute('pathLength', '1'); l.setAttribute('class', 'tr ' + kind);
+    dot.setAttribute('cx', c(x2, 0.68)); dot.setAttribute('cy', c(y2, 1.05)); dot.setAttribute('r', kind === 'shot' ? '1.5' : '1.1'); dot.setAttribute('class', 'trd ' + kind); dot.style.opacity = '0';
+    g.appendChild(l); g.appendChild(dot);
+    while(g.childNodes.length > 10) g.removeChild(g.firstChild);
+    if(l.animate){
+      l.animate([{strokeDashoffset:1}, {strokeDashoffset:0}], {duration:kind === 'shot' ? 260 : 420, easing:'ease-out', fill:'forwards'});
+      dot.animate([{opacity:0}, {opacity:1}], {duration:160, delay:kind === 'shot' ? 220 : 380, fill:'forwards'});
+      var life = kind === 'shot' ? 2600 : 2200;
+      [l, dot].forEach(function(n){ var a = n.animate([{opacity:1}, {opacity:0}], {duration:700, delay:life, fill:'forwards'}); a.onfinish = function(){ if(n.parentNode) n.parentNode.removeChild(n); }; });
+    }
+  }
+  function mxLabel(D, x, y, w){
+    var cw = Array.isArray(w) ? w : COM_WORDS[w]; if(!cw) return;
+    var n = document.createElement('div'); n.className = 'mx-lab'; n.style.left = Math.max(18, Math.min(82, x)) + '%'; n.style.top = Math.max(6, Math.min(94, y)) + '%';
+    n.innerHTML = '<b>' + cw[0] + '</b><small>' + cw[1] + '</small>'; n.addEventListener('animationend', function(){ if(n.parentNode) n.parentNode.removeChild(n); }); D.el.appendChild(n);
+  }
+  function mxBanner(D, text, sub, cls){
+    var n = document.createElement('div'); n.className = 'mx-banner ' + cls; n.innerHTML = '<b>' + escHtml(text) + '</b>' + (sub ? '<small>' + escHtml(sub) + '</small>' : '');
+    n.addEventListener('animationend', function(){ if(n.parentNode) n.parentNode.removeChild(n); }); D.el.appendChild(n);
+  }
+  function mxRing(D, x, y, cls){ var n = document.createElement('div'); n.className = 'mx-ring ' + (cls || 'g'); n.style.left = x + '%'; n.style.top = y + '%'; n.addEventListener('animationend', function(){ if(n.parentNode) n.parentNode.removeChild(n); }); D.el.appendChild(n); }
+  function mxAnim(D, s, i, frames, ms){   // hoạt hoạ riêng cho phần thẻ (xoay / nhảy), giữ nguyên trạng thái cuối
+    var e = D.pl[s][i], c = e && e.firstChild; if(!c || !c.animate || reducedMotion()) return;
+    c.animate(frames, {duration:ms, easing:'ease-out', fill:'forwards'});
+  }
+
+  /* ---- thế trận: cả khối đội bám theo bóng ---- */
+  function mxShape(D, o){
+    var pts = [];
+    [0, 1].forEach(function(s){
+      var fwd = s === 0 ? -1 : 1, p = s === 0 ? (100 - o.by) / 100 : o.by / 100, mine = o.att === s, dfn = o.att >= 0 && !mine;
+      D.base[s].forEach(function(b, i){
+        var g = D.grp[s][i], gf = MX_GF[g], ty = fwd * (p - 0.5) * (mine ? 32 : 14) * gf, tx = (o.bx - b.x) * MX_KX[g];
+        if(mine) ty += fwd * 2.5 * gf; else if(dfn) ty -= fwd * 2 * gf;
+        if(o.cnt && dfn && (g === 'M' || g === 'F')) ty += fwd * 9;   // phản công: đội vừa tấn công còn đang dâng cao
+        if(g === 'GK') tx = Math.max(-6, Math.min(6, tx));
+        pts.push({s:s, i:i, x:b.x + tx, y:b.y + ty, g:g});
+      });
+    });
+    return pts;
+  }
+  function mxSeparate(D, pts){
+    var w = D.cw * 0.86, h = D.ch * 0.86, x0 = D.cw / 2 + 0.5, x1 = 100 - x0, y0 = D.ch / 2 + 0.5, y1 = 100 - y0;
+    for(var it = 0; it < 14; it++){
+      for(var a = 0; a < pts.length; a++) for(var b = a + 1; b < pts.length; b++){
+        var A = pts[a], B = pts[b], dx = B.x - A.x, dy = B.y - A.y, ox = w - Math.abs(dx), oy = h - Math.abs(dy);
+        if(ox <= 0 || oy <= 0) continue;
+        var wa = A.fx ? 0 : 1, wb = B.fx ? 0 : 1, ws = wa + wb; if(!ws) continue;
+        if(oy * 1.544 <= ox){ var sy = dy > 0 ? 1 : (dy < 0 ? -1 : (a % 2 ? 1 : -1)); A.y -= sy * oy * wa / ws; B.y += sy * oy * wb / ws; }
+        else { var sx = dx > 0 ? 1 : (dx < 0 ? -1 : (a % 2 ? 1 : -1)); A.x -= sx * ox * wa / ws; B.x += sx * ox * wb / ws; }
+      }
+      pts.forEach(function(q){ q.x = Math.max(x0, Math.min(x1, q.x)); q.y = Math.max(y0, Math.min(y1, q.y)); });
+    }
+  }
+  function mxPin(pins, s, i, x, y){ if(i != null && i >= 0) pins[s + ':' + i] = [x, y]; }
+  function mxScene(D, o){   // o: {bx,by,att,cnt,pins,dur,excl:{att,d}}
+    var pts = mxShape(D, o), pins = o.pins || {};
+    pts.forEach(function(q){ var p = pins[q.s + ':' + q.i]; if(p){ q.x = p[0]; q.y = p[1]; q.fx = true; } });
+    if(o.excl) pts.forEach(function(q){ if(q.fx || q.g === 'GK') return; var dg = o.excl.att === 0 ? q.y : 100 - q.y; if(dg < o.excl.d) q.y += (o.excl.att === 0 ? 1 : -1) * (o.excl.d - dg); });
+    mxSeparate(D, pts);
+    pts.forEach(function(q){ mxPut(D, q.s, q.i, q.x, q.y, o.dur, q.fx ? 0 : Math.random() * 0.18); });
+  }
+  function mxIdx(t, id){ for(var i = 0; i < t.pitch.length; i++) if(t.pitch[i].id === id) return i; return 0; }
+  function mxCtx(D, cur){
+    var m = D.c.m, att = cur.att, fwd = att === 0 ? -1 : 1, r = seRng(seHash(m.seed + ':mx' + cur.i)), tD = m.teams[1 - att], gk = 0;
+    tD.slots.forEach(function(p, i){ if(p === 'GK') gk = i; });
+    var X = {cur:cur, att:att, def:1 - att, fwd:fwd, ia:cur.ia.slice(), id:cur.id.slice(), gk:gk, side:r() < 0.5 ? -1 : 1, dirX:r() < 0.5 ? -1 : 1, kind:cur.kind || (cur.counter ? 'counter' : 'open'), tk:cur.taker, sh:null,
+      restart:(m.i === 0 || (m.last && m.last.res === 'goal'))};
+    X.Y = function(dy){ return (att === 0 ? 0 : 100) - fwd * dy; };   // toạ độ y cách vạch cầu môn đang bị tấn công dy%
+    X.a = function(k){ var v = X.ia[k]; return v != null ? v : X.ia[X.ia.length - 1]; };
+    return X;
+  }
+  function mxWall(D, X, spot, pins){   // hàng rào + vị trí chờ của hai đội trong đá phạt / phạt góc
+    var n = Math.min(3, X.id.length), wc = {x:spot.x + (50 - spot.x) * (8.7 / 25), y:spot.y + X.fwd * 8.7};
+    for(var k = 0; k < n; k++) mxPin(pins, X.def, X.id[k], wc.x + (k - (n - 1) / 2) * D.cw * 0.92, wc.y);
+    return wc;
+  }
+  function mxBoxSpots(D, X, taker, pins, skipDef){   // người tấn công còn lại chạy vào vòng cấm, hậu vệ kèm bên cạnh
+    var xs = [-4, 12, -20, 26], ys = [8, 12, 13, 17], k = 0, others = X.ia.filter(function(q){ return q !== taker; });
+    others.forEach(function(i){ mxPin(pins, X.att, i, 50 + X.side * xs[k % 4], X.Y(ys[k % 4])); k++; });
+    if(!others.length) return;
+    X.id.forEach(function(i, j){
+      if(j < (skipDef || 0)) return; var pa = pins[X.att + ':' + others[(j - (skipDef || 0)) % others.length]];
+      if(pa) mxPin(pins, X.def, i, pa[0] + (pa[0] < 50 ? 1 : -1) * D.cw * 0.95, pa[1] + X.fwd * D.ch * 0.25);
+    });
+  }
+  function mxGKPin(D, X, pins, bx){ mxPin(pins, X.def, X.gk, 50 + (bx - 50) * 0.25, X.Y(2)); }
+
+  /* ---- dẫn dắt: mỗi loại tình huống có chuỗi "chặng" khớp với các dòng bình luận ---- */
+  function mxFinal(D, X){   // chặng cuối: hai tiền đạo áp sát vòng cấm, hậu vệ lùi thành hàng
+    var a = X.a(0), b = X.a(1), c = X.a(2), S = X.side, pins = {}, pb = {x:50 + S * 14, y:X.Y(27)}, pc = {x:50 - S * 12, y:X.Y(22)};
+    var from = D.pos[X.att][a], pcur = D.pos[X.att][c];
+    mxPin(pins, X.att, b, pb.x, pb.y); mxPin(pins, X.att, c, pc.x, pc.y); if(a !== b && a !== c) mxPin(pins, X.att, a, 50 + S * 34, X.Y(38));
+    X.id.forEach(function(i, k){
+      if(k === 0) mxPin(pins, X.def, i, pb.x, pb.y + X.fwd * D.ch * 0.95);
+      else if(k === 1) mxPin(pins, X.def, i, pc.x, pc.y + X.fwd * D.ch * 0.95);
+      else mxPin(pins, X.def, i, 50 + (k % 2 ? 1 : -1) * 30, X.Y(18));
+    });
+    mxGKPin(D, X, pins, pb.x);
+    mxTrail(D, pcur.x, pcur.y, pc.x, pc.y, 'run'); mxTrail(D, from.x, from.y, pb.x, pb.y, 'pass');
+    mxScene(D, {bx:pb.x, by:pb.y, att:X.att, pins:pins, cnt:X.kind === 'counter'});
+    var f = mxFeetAt(D, X.att, pb.x, pb.y); mxBall(D, f.x, f.y, 0.9, 0, 'pass');
+  }
+  var MX_ST = {
+    open:[
+      function(D, X){   // 0 · bóng ở giữa sân, người cầm bóng nhận bóng
+        var i = X.a(0), b = D.base[X.att][i], P = X.restart ? {x:50, y:50} : {x:b.x, y:Math.max(25, Math.min(75, b.y + X.fwd * 6))}, pins = {};
+        mxPin(pins, X.att, i, P.x, P.y); mxScene(D, {bx:P.x, by:P.y, att:X.restart ? -1 : X.att, pins:pins});
+        var f = mxFeetAt(D, X.att, P.x, P.y); mxBall(D, f.x, f.y, 0.9);
+      },
+      function(D, X){   // 1 · chuyền cho đồng đội, đồng đội chạy lên
+        var a = X.a(0), b = X.a(1), pa = D.pos[X.att][a], pb = D.pos[X.att][b], T = {x:pb.x + (50 - pb.x) * 0.15, y:pb.y + X.fwd * 11}, pins = {};
+        mxPin(pins, X.att, a, pa.x, pa.y + X.fwd * 3); mxPin(pins, X.att, b, T.x, T.y);
+        var f0 = mxFeetAt(D, X.att, pa.x, pa.y), f = mxFeetAt(D, X.att, T.x, T.y);
+        mxTrail(D, f0.x, f0.y, f.x, f.y, 'pass'); mxScene(D, {bx:T.x, by:T.y, att:X.att, pins:pins}); mxKick(D, X.att, a, f0.x, f0.y, false); mxBall(D, f.x, f.y, 0.85, 0, 'pass');
+      },
+      function(D, X){   // 2 · hậu vệ lao ra đóng khoảng trống
+        var b = X.a(1), c = X.a(2), pb = D.pos[X.att][b], pc = D.pos[X.att][c], nb = {x:pb.x, y:pb.y + X.fwd * 3}, nc = {x:pc.x, y:pc.y + X.fwd * 9}, pins = {};
+        mxPin(pins, X.att, b, nb.x, nb.y); if(c !== b) mxPin(pins, X.att, c, nc.x, nc.y);
+        if(X.id[0] != null) mxPin(pins, X.def, X.id[0], nb.x, nb.y + X.fwd * D.ch * 0.95);
+        if(X.id[1] != null) mxPin(pins, X.def, X.id[1], nc.x, nc.y + X.fwd * D.ch * 0.95);
+        if(c !== b) mxTrail(D, pc.x, pc.y, nc.x, nc.y, 'run');
+        mxScene(D, {bx:nb.x, by:nb.y, att:X.att, pins:pins}); var f = mxFeetAt(D, X.att, nb.x, nb.y); mxBall(D, f.x, f.y, 0.7);
+      },
+      mxFinal
+    ],
+    counter:[
+      function(D, X){   // 0 · cướp được bóng
+        var i = X.a(0), P = {x:D.base[X.att][i].x, y:X.att === 0 ? 60 : 40}, pins = {}; mxPin(pins, X.att, i, P.x, P.y);
+        mxScene(D, {bx:P.x, by:P.y, att:X.att, pins:pins, cnt:true}); var f = mxFeetAt(D, X.att, P.x, P.y); mxBall(D, f.x, f.y, 0.7); mxLabel(D, P.x, P.y + (X.att === 0 ? 10 : -10), 'counter');
+      },
+      function(D, X){   // 1 · chạy nước rút
+        var a = X.a(0), b = X.a(1), pa = D.pos[X.att][a], pb = D.pos[X.att][b], na = {x:pa.x + (50 - pa.x) * 0.4, y:X.Y(46)}, nb = {x:pb.x, y:X.Y(52)}, pins = {};
+        mxPin(pins, X.att, a, na.x, na.y); if(b !== a) mxPin(pins, X.att, b, nb.x, nb.y);
+        mxTrail(D, pa.x, pa.y, na.x, na.y, 'run'); mxScene(D, {bx:na.x, by:na.y, att:X.att, pins:pins, cnt:true, dur:1.3}); var f = mxFeetAt(D, X.att, na.x, na.y); mxBall(D, f.x, f.y, 1.2, 0, 'pass');
+      },
+      function(D, X){   // 2 · đồng đội nhập cuộc, chỉ còn một hậu vệ kịp lùi về
+        var a = X.a(0), b = X.a(1), S = X.side, pins = {}, pa = {x:50 + S * 12, y:X.Y(34)}, pb = {x:50 - S * 16, y:X.Y(38)};
+        mxPin(pins, X.att, a, pa.x, pa.y); if(b !== a) mxPin(pins, X.att, b, pb.x, pb.y);
+        if(X.id[0] != null) mxPin(pins, X.def, X.id[0], 50, X.Y(20));
+        mxTrail(D, D.pos[X.att][a].x, D.pos[X.att][a].y, pa.x, pa.y, 'run');
+        mxScene(D, {bx:pa.x, by:pa.y, att:X.att, pins:pins, cnt:true, dur:1.1}); var f = mxFeetAt(D, X.att, pa.x, pa.y); mxBall(D, f.x, f.y, 1, 0, 'pass');
+      },
+      mxFinal
+    ],
+    corner:[
+      function(D, X){   // 0 · phạt góc: người đá ra cột cờ góc
+        var fl = {x:50 + X.side * 47, y:X.Y(1)}, pins = {}; mxPin(pins, X.att, X.tk, fl.x, fl.y);
+        mxScene(D, {bx:fl.x, by:fl.y, att:X.att, pins:pins}); mxBall(D, fl.x - X.side * 2.5, fl.y + X.fwd * -2, 0.9); mxLabel(D, 50, X.Y(22), 'corner');
+      },
+      function(D, X){   // 1 · mọi người bắt đầu chạy vào vòng cấm
+        var fl = {x:50 + X.side * 47, y:X.Y(1)}, pins = {}; mxPin(pins, X.att, X.tk, fl.x, fl.y);
+        X.ia.forEach(function(i, k){ if(i !== X.tk) mxPin(pins, X.att, i, 50 + X.side * (-8 + k * 12), X.Y(24 + k * 2)); });
+        X.id.forEach(function(i, k){ mxPin(pins, X.def, i, 50 + X.side * (-14 + k * 10), X.Y(19)); }); mxGKPin(D, X, pins, 50);
+        mxScene(D, {bx:50, by:X.Y(10), att:X.att, pins:pins, dur:0.9});
+      },
+      function(D, X){   // 2 · tất cả đã vào vị trí trong vòng cấm
+        var fl = {x:50 + X.side * 47, y:X.Y(1)}, pins = {}; mxPin(pins, X.att, X.tk, fl.x, fl.y); mxBoxSpots(D, X, X.tk, pins); mxGKPin(D, X, pins, 50);
+        mxScene(D, {bx:50, by:X.Y(10), att:X.att, pins:pins, dur:1});
+      },
+      function(D, X){   // 3 · quả tạt bay vào vòng cấm
+        var fl = {x:50 + X.side * 47, y:X.Y(1)}, T = {x:50 - X.side * 2, y:X.Y(9)};
+        mxTrail(D, fl.x, fl.y, T.x, T.y, 'pass'); mxKick(D, X.att, X.tk, fl.x, fl.y, true); mxBall(D, T.x, T.y, 1.1, 0.7, 'lob');
+      }
+    ],
+    freekick:[
+      function(D, X){   // 0 · hậu vệ phạm lỗi, đội bạn được đá phạt
+        var sp = {x:50 + X.side * 16, y:X.Y(25)}, pins = {}; if(X.tk >= 0) mxPin(pins, X.att, X.tk, sp.x - X.side * 5, sp.y - X.fwd * 3);
+        if(X.id[0] != null) mxPin(pins, X.def, X.id[0], sp.x + X.side * 9, sp.y + X.fwd * 4);
+        mxScene(D, {bx:sp.x, by:sp.y, att:X.att, pins:pins}); mxBall(D, sp.x, sp.y, 0.9); mxLabel(D, sp.x, sp.y - X.fwd * 9, 'foul');
+      },
+      function(D, X){   // 1 · đặt bóng, đội bạn dựng hàng rào
+        var sp = {x:50 + X.side * 16, y:X.Y(25)}, pins = {}; if(X.tk >= 0) mxPin(pins, X.att, X.tk, sp.x - X.side * 5, sp.y - X.fwd * 3);
+        mxWall(D, X, sp, pins); mxBoxSpots(D, X, X.tk, pins, 3); mxGKPin(D, X, pins, sp.x - X.side * 14);
+        mxScene(D, {bx:sp.x, by:sp.y, att:X.att, pins:pins, dur:1.1}); mxBall(D, sp.x, sp.y, 0.4); mxLabel(D, 50, X.Y(14.5), 'wall');
+      },
+      function(D, X){   // 2 · người đá lùi lại lấy đà
+        var sp = {x:50 + X.side * 16, y:X.Y(25)}, pins = {}, bk = {x:sp.x - X.side * 7, y:sp.y - X.fwd * 8};
+        if(X.tk >= 0){ mxPin(pins, X.att, X.tk, bk.x, bk.y); mxTrail(D, bk.x, bk.y, sp.x, sp.y, 'run'); }
+        mxWall(D, X, sp, pins); mxBoxSpots(D, X, X.tk, pins, 3); mxGKPin(D, X, pins, sp.x - X.side * 14);
+        mxScene(D, {bx:sp.x, by:sp.y, att:X.att, pins:pins, dur:1});
+      }
+    ],
+    penalty:[
+      function(D, X){   // 0 · trọng tài chỉ vào chấm phạt đền
+        var sp = {x:50, y:X.Y(10.5)}, pins = {}; mxPin(pins, X.att, X.tk, 50 - X.side * 4, X.Y(21)); mxPin(pins, X.def, X.gk, 50, X.Y(2));
+        mxScene(D, {bx:50, by:sp.y, att:X.att, pins:pins, excl:{att:X.att, d:20}}); mxBall(D, sp.x, sp.y, 0.9); mxLabel(D, 50, X.Y(27), 'penalty');
+      },
+      function(D, X){   // 1 · cầu thủ bị phạm lỗi trong vòng cấm
+        var a = X.a(0), pins = {}, pa = {x:50 + X.side * 12, y:X.Y(8)}; mxPin(pins, X.att, a, pa.x, pa.y); if(X.id[0] != null) mxPin(pins, X.def, X.id[0], pa.x - X.side * D.cw * 0.7, pa.y + X.fwd * 4);
+        mxPin(pins, X.def, X.gk, 50, X.Y(2)); mxScene(D, {bx:pa.x, by:pa.y, att:X.att, pins:pins, dur:0.9, excl:{att:X.att, d:20}});
+        mxBall(D, pa.x, pa.y - X.fwd * 4, 0.7); mxLabel(D, pa.x, X.Y(20), 'foul'); mxAnim(D, X.att, a, [{transform:'rotate(0deg)'}, {transform:'rotate(' + (X.side * 68) + 'deg) scale(.95)', filter:'grayscale(.6)'}], 500);
+      },
+      function(D, X){   // 2 · đặt bóng lên chấm, mọi người đứng ngoài vòng cấm
+        var sp = {x:50, y:X.Y(10.5)}, pins = {}, a = X.a(0); mxPin(pins, X.att, X.tk, 50 - X.side * 3, X.Y(15.5)); mxPin(pins, X.def, X.gk, 50, X.Y(2));
+        var e = D.pl[X.att][a]; if(e && e.firstChild && e.firstChild.getAnimations) e.firstChild.getAnimations().forEach(function(q){ q.cancel(); });
+        mxScene(D, {bx:50, by:sp.y, att:X.att, pins:pins, excl:{att:X.att, d:20}, dur:1.1}); mxBall(D, sp.x, sp.y, 0.7);
+      }
+    ]
+  };
+
+  /* ---- hook: dòng bình luận → chuyển động ---- */
+  var MXD = {
+    begin:function(D, cur){
+      mxClearT(D); mxClearFx(D); var X = D.X = mxCtx(D, cur); D.stIdx = -1; D.el.classList.add('act'); D.el.classList.remove('key'); mxHi(D, X);
+      if(!D.W) mxRelayout(D);
+    },
+    build:function(D, cur, rank, total){
+      var X = D.X; if(!X) return; var arr = MX_ST[X.kind] || MX_ST.open, idx = total <= 1 ? 0 : Math.round(rank * (arr.length - 1) / (total - 1));
+      arr[Math.max(0, Math.min(arr.length - 1, idx))](D, X); D.stIdx = idx;
+    },
+    key:function(D){
+      var X = D.X; if(!X) return; var arr = MX_ST[X.kind] || MX_ST.open;
+      if(D.stIdx < arr.length - 1){ arr[arr.length - 1](D, X); D.stIdx = arr.length - 1; }
+      D.el.classList.add('key');
+    },
+    out:function(D, rec, l){
+      var X = D.X; if(!X) return;
+      if(l.k === 'goal' || l.k === 'goalx') mxGoal(D, rec);
+      else if(l.k === 'save') mxSave(D, rec);
+      else if(l.k === 'play' && l.w === 'clear') mxClear(D, rec);
+      else if(l.k === 'play' && l.w === 'tackle') mxTackle(D, rec);
+      else if(l.k === 'play' && !l.w) mxWind(D, rec);
+      else if(l.k === 'next') mxNext(D, rec);
+      else if(l.k === 'ft' || l.k === 'ht') mxReset(D);
+    }
+  };
+  function mxDo(fn){
+    var c = sMC; if(!c || !c.dir || !MXD[fn]) return;
+    try{ MXD[fn].apply(null, [c.dir].concat(Array.prototype.slice.call(arguments, 1))); }catch(e){ if(window.console) console.warn('mx', fn, e); }
+  }
+
+  /* ---- kết quả tình huống ---- */
+  function mxPrep(D, rec){ var X = D.X, m = D.c.m; if(X.sh == null){ X.sh = mxIdx(m.teams[X.att], rec.shooter); X.stI = mxIdx(m.teams[X.def], rec.stopper); } return X; }
+  function mxWind(D, rec){   // "sút...", "chuyền vào vòng cấm...", "cố giữ bóng..."
+    var X = mxPrep(D, rec), shot = rec.res === 'goal' || rec.res === 'saved', pins = {}, S = X.side, k = X.kind, sp = D.pos[X.att][X.sh];
+    if(k === 'penalty'){
+      mxPin(pins, X.att, X.sh, 50 - S * 2, X.Y(13.2)); mxPin(pins, X.def, X.gk, 50 - X.dirX * 2, X.Y(2)); mxScene(D, {bx:50, by:X.Y(10.5), att:X.att, pins:pins, dur:0.8, excl:{att:X.att, d:20}});
+    } else if(k === 'corner'){
+      if(shot){ var jp = {x:50 - S * 2, y:X.Y(9)}; mxPin(pins, X.att, X.sh, jp.x, jp.y); X.ia.forEach(function(i, q){ if(i !== X.sh && i !== X.tk) mxPin(pins, X.att, i, 50 + S * (10 + q * 7), X.Y(12 + q * 2)); }); X.id.forEach(function(i, q){ mxPin(pins, X.def, i, 50 - S * (12 - q * 9), X.Y(11 + q)); });
+        mxScene(D, {bx:jp.x, by:jp.y, att:X.att, pins:pins, dur:0.8}); mxAnim(D, X.att, X.sh, [{transform:'translateY(0) scale(1)'}, {transform:'translateY(-28%) scale(1.16)'}], 450); }
+      else { mxPin(pins, X.def, X.stI, 50 - S * 2, X.Y(11)); mxScene(D, {bx:50, by:X.Y(10), att:X.att, pins:pins, dur:0.8}); mxBall(D, 50 - S * 2, X.Y(9), 0.5); }
+    } else if(k === 'freekick'){
+      var spt = {x:50 + S * 16, y:X.Y(25)};
+      if(shot){ var wc = {x:spt.x + (50 - spt.x) * 0.42, y:spt.y + X.fwd * 11}; mxPin(pins, X.att, X.sh, spt.x - S * 2, spt.y - X.fwd * 2); mxWall(D, X, spt, pins); mxGKPin(D, X, pins, spt.x - S * 14);
+        mxScene(D, {bx:wc.x, by:wc.y, att:X.att, pins:pins, dur:0.7}); mxTrail(D, spt.x, spt.y, wc.x, wc.y, 'shot'); mxKick(D, X.att, X.sh, spt.x, spt.y, true); mxBall(D, wc.x, wc.y, 0.6, 0.55, 'shot'); }
+      else { mxPin(pins, X.def, X.stI, 50 + S * 2, X.Y(11)); mxPin(pins, X.att, X.tk, spt.x - S * 2, spt.y - X.fwd * 2); mxScene(D, {bx:50, by:X.Y(10), att:X.att, pins:pins, dur:0.8}); mxTrail(D, spt.x, spt.y, 50, X.Y(10), 'pass'); mxKick(D, X.att, X.tk, spt.x, spt.y, false); mxBall(D, 50, X.Y(10), 0.9, 0.6, 'lob'); }
+    } else if(shot){   // open / counter: người dứt điểm vào vị trí sút, đồng đội ập vào vòng cấm
+      var P = {x:Math.max(34, Math.min(66, sp.x)), y:X.Y(17)}; mxPin(pins, X.att, X.sh, P.x, P.y);
+      X.ia.forEach(function(i, q){ if(i !== X.sh) mxPin(pins, X.att, i, 50 + (q % 2 ? 1 : -1) * (12 + q * 6), X.Y(10 + q * 2)); });
+      X.id.forEach(function(i, q){ mxPin(pins, X.def, i, 50 + (q % 2 ? -1 : 1) * (6 + q * 10), X.Y(11 + q)); }); mxPin(pins, X.def, X.gk, 50 + (P.x - 50) * 0.3, X.Y(2));
+      mxTrail(D, sp.x, sp.y, P.x, P.y, 'run'); mxScene(D, {bx:P.x, by:P.y, att:X.att, pins:pins, dur:0.8}); var f = mxFeetAt(D, X.att, P.x, P.y); mxBall(D, f.x, f.y, 0.7);
+    } else if(rec.res === 'cleared'){   // chuyền vào vòng cấm nhưng bị hậu vệ chờ sẵn
+      var T = {x:50 + X.dirX * 4, y:X.Y(11)}; mxPin(pins, X.def, X.stI, T.x, T.y + X.fwd * D.ch * 0.2); X.ia.forEach(function(i, q){ if(q > 0) mxPin(pins, X.att, i, 50 + (q % 2 ? 1 : -1) * (14 + q * 4), X.Y(12 + q * 2)); });
+      mxTrail(D, D.bx, D.by, T.x, T.y, 'pass'); mxScene(D, {bx:T.x, by:T.y, att:X.att, pins:pins, dur:0.9}); mxKick(D, X.att, X.a(1), D.bx, D.by, false); mxBall(D, T.x, T.y, 0.9, 0.5, 'lob');
+    } else {   // lost_early: cố rê bóng, hậu vệ áp sát
+      var a = X.a(0), pa = D.pos[X.att][a], np = {x:pa.x, y:pa.y + X.fwd * 6}; mxPin(pins, X.att, a, np.x, np.y); mxPin(pins, X.def, X.stI, np.x + S * D.cw * 0.45, np.y + X.fwd * D.ch * 0.85);
+      mxScene(D, {bx:np.x, by:np.y, att:X.att, pins:pins, dur:0.8}); var f2 = mxFeetAt(D, X.att, np.x, np.y); mxBall(D, f2.x, f2.y, 0.7);
+    }
+  }
+  function mxGoal(D, rec){   // SÚT VÀO LƯỚI: đá mạnh → vệt lửa → lưới rung + tia sáng + rung sân → bóng rơi trong lưới → ăn mừng
+    var X = mxPrep(D, rec), m = D.c.m, mine = rec.att === 0, tx = 50 + X.dirX * 6.5, gy = X.Y(0.8), gkp = D.pos[X.def][X.gk], sp = D.pos[X.att][X.sh], from = {x:D.bx, y:D.by};
+    var dist = Math.sqrt(Math.pow((tx - from.x) * 0.68, 2) + Math.pow((gy - from.y) * 1.05, 2)), dur = Math.max(0.6, Math.min(1, dist / 55 + 0.3));
+    D.el.classList.remove('key');
+    mxKick(D, X.att, X.sh, from.x, from.y, true); mxTrail(D, from.x, from.y, tx, gy, 'shot'); mxBall(D, tx, gy, dur, 0, 'goal');
+    mxPut(D, X.def, X.gk, 50 - X.dirX * 11, gkp.y, dur * 0.95); mxAnim(D, X.def, X.gk, [{transform:'rotate(0deg)'}, {transform:'rotate(' + (-X.dirX * 26) + 'deg) scale(1.08)'}], 380);
+    mxLater(D, dur * 1000 - 40, function(){   // chạm lưới
+      mxNet(D, X.att); mxRing(D, tx, X.Y(2.5), 'g'); mxPart(D, tx, X.Y(3), 24, ['#FDE047', '#FACC15', '#fff', '#FB923C'], 17, 950); mxFlash(D, X.att, mine ? 'g' : 'x'); mxShake(D, 1.4);
+      mxBall(D, tx + X.dirX * 1.5, X.Y(5.8), 0.55, 0, 'roll'); mxHops(D, 760, 3, 150);   // bóng rơi xuống trong lưới, nảy nhỏ dần
+    });
+    mxLater(D, dur * 1000 + 450, function(){
+      var edge = sp.x < 50 ? 14 : 86, tg = {x:edge, y:X.Y(15)}, cand = [];
+      mxPut(D, X.att, X.sh, tg.x, tg.y, 1.3); D.pl[X.att][X.sh].classList.add('cele');
+      D.pl[X.att].forEach(function(e, i){ if(i !== X.sh && D.grp[X.att][i] !== 'GK') cand.push({i:i, d:Math.abs(D.pos[X.att][i].x - tg.x) + Math.abs(D.pos[X.att][i].y - tg.y)}); });
+      cand.sort(function(a, b){ return a.d - b.d; }); cand.slice(0, 3).forEach(function(q, k){ mxPut(D, X.att, q.i, tg.x + (edge < 50 ? 1 : -1) * (0.9 + k * 0.85) * D.cw, tg.y + (k % 2 ? 1 : -1) * D.ch * 0.5 * (k ? 1 : 0), 1.2); D.pl[X.att][q.i].classList.add('cele'); });
+      D.pl[X.def].forEach(function(e){ if(e) e.classList.add('sad'); });
+      mxBanner(D, mine ? 'BÀN THẮNG!' : 'ĐỐI THỦ GHI BÀN', comShort(m.teams[X.att].pitch[X.sh]) + ' · ' + rec.min + '’', mine ? 'g' : 'x'); if(mine) mxConfetti(D, X.att);
+    });
+  }
+  function mxSave(D, rec){   // CỨU THUA: bóng sút mạnh → thủ môn bay người → găng tay + tia → bắt dính (bóng nằm trong tay) hoặc đẩy ra biên
+    var X = mxPrep(D, rec), px = 50 + X.dirX * 8, py = X.Y(3.5), gkp = D.pos[X.def][X.gk], from = {x:D.bx, y:D.by}, parry = rec.next === 'corner';
+    var dist = Math.sqrt(Math.pow((px - from.x) * 0.68, 2) + Math.pow((py - from.y) * 1.05, 2)), dur = Math.max(0.55, Math.min(0.95, dist / 60 + 0.28));
+    D.el.classList.remove('key');
+    mxKick(D, X.att, X.sh, from.x, from.y, true); mxTrail(D, from.x, from.y, px, py, 'shot'); mxBall(D, px, py, dur, 0, 'shot');
+    mxPut(D, X.def, X.gk, px, gkp.y, dur * 0.95); mxAnim(D, X.def, X.gk, [{transform:'rotate(0deg)'}, {transform:'rotate(' + (X.dirX * 26) + 'deg) scale(1.1)'}], 330);
+    mxLater(D, dur * 1000 - 30, function(){   // thủ môn chạm bóng
+      D.pl[X.att][X.sh].classList.add('shk'); D.pl[X.def][X.gk].classList.add('hero');
+      mxPop(D, px, X.Y(7.5), '🧤'); mxRing(D, px, py, 'c'); mxPart(D, px, py, 12, ['#67E8F9', '#fff', '#A5F3FC'], 9, 650); mxShake(D, 0.7);
+      mxLabel(D, px, X.Y(20), rec.wood ? (rec.wood === 'bar' ? ['Crossbar!', 'Trúng xà ngang!'] : ['Post!', 'Trúng cột dọc!']) : (parry ? ['Save · Parried', 'Đẩy ra'] : ['Save · Caught', 'Bắt dính']));
+      if(parry){   // đẩy ra: bóng bật ra ngoài biên ngang, quay mạnh và nảy
+        var out = {x:(X.dirX > 0 ? 95 : 5), y:X.Y(1.8)}; mxTrail(D, px, py, out.x, out.y, 'pass'); mxBall(D, out.x, out.y, 0.8, 0.3, 'lob'); mxLater(D, 820, function(){ mxHops(D, 500, 2, 110); });
+      } else {   // bắt dính: bóng ép vào găng rồi nằm gọn trong tay
+        mxSquash(D); mxLater(D, 140, function(){ var gp = D.pos[X.def][X.gk], f = mxFeetAt(D, X.def, gp.x, gp.y); mxBall(D, f.x, f.y, 0.4, 0, 'roll'); });
+      }
+    });
+  }
+  function mxClear(D, rec){   // CẢN PHÁ: bóng đập vào hậu vệ → khiên + tia → bóng bật ra, bay bổng ra xa / ra biên
+    var X = mxPrep(D, rec), bp = {x:D.bx, y:D.by}, out = rec.next === 'corner' ? {x:(bp.x < 50 ? 5 : 95), y:X.Y(2)} : {x:50 + X.dirX * 30, y:X.Y(34)};
+    D.el.classList.remove('key'); mxPut(D, X.def, X.stI, bp.x, bp.y + X.fwd * D.ch * 0.3, 0.45); D.pl[X.def][X.stI].classList.add('hero');
+    mxLater(D, 420, function(){
+      mxPop(D, bp.x, bp.y - X.fwd * 8, '🛡️'); mxRing(D, bp.x, bp.y, 'c'); mxPart(D, bp.x, bp.y, 10, ['#67E8F9', '#fff', '#BAE6FD'], 7, 600); mxSquash(D); mxShake(D, 0.5); mxLabel(D, bp.x, bp.y - X.fwd * 15, 'clear'); mxLunge(D, X.def, X.stI);
+      mxLater(D, 130, function(){ mxTrail(D, bp.x, bp.y, out.x, out.y, 'pass'); mxBall(D, out.x, out.y, 1, 0.55, 'lob'); mxLater(D, 1020, function(){ mxHops(D, 600, 2, 120); }); });
+    });
+  }
+  function mxTackle(D, rec){   // CƯỚP BÓNG: chân hậu vệ chạm bóng → bụi + va chạm → bóng nảy về phía hậu vệ
+    var X = mxPrep(D, rec), a = X.a(0), pa = D.pos[X.att][a];
+    D.el.classList.remove('key'); mxPut(D, X.def, X.stI, pa.x + X.side * D.cw * 0.45, pa.y + X.fwd * D.ch * 0.8, 0.45);
+    D.pl[X.def][X.stI].classList.add('hero'); mxLabel(D, pa.x, pa.y - X.fwd * 13, 'tackle');
+    mxLater(D, 420, function(){
+      D.pl[X.att][a].classList.add('shk'); mxPop(D, pa.x, pa.y + X.fwd * 4, '💥'); mxRing(D, D.bx, D.by, 'w'); mxPart(D, D.bx, D.by, 12, ['#D6B88A', '#A8895C', '#E7D3A7'], 7, 650); mxLunge(D, X.def, X.stI); mxSquash(D);
+      mxLater(D, 120, function(){ var sp = D.pos[X.def][X.stI], f = mxFeetAt(D, X.def, sp.x, sp.y); mxTrail(D, D.bx, D.by, f.x, f.y, 'pass'); mxBall(D, f.x, f.y, 0.6, 0.25, 'pass'); mxHops(D, 600, 2, 90); });
+    });
+  }
+  function mxNext(D, rec){   // "Next: ..." — đưa hai đội về thế trận của tình huống kế tiếp
+    var X = D.X, nx = rec.next, def = X.def, pins = {}; mxClearT(D); mxClearFx(D); mxUnhi(D); D.el.classList.remove('act', 'key');
+    if(rec.res === 'goal' && !nx){ mxReset(D); return; }
+    if(nx === 'corner'){ var fl = {x:D.bx < 50 ? 4 : 96, y:X.Y(1.5)}; mxScene(D, {bx:fl.x, by:fl.y, att:X.att, dur:1.2}); mxBall(D, fl.x, fl.y, 1.1); return; }
+    if(nx === 'freekick'){ var sp = {x:50 + (D.bx < 50 ? -16 : 16), y:X.Y(25)}; mxScene(D, {bx:sp.x, by:sp.y, att:X.att, dur:1.2}); mxBall(D, sp.x, sp.y, 1.1); return; }
+    if(nx === 'penalty'){ mxPin(pins, def, X.gk, 50, X.Y(2)); mxScene(D, {bx:50, by:X.Y(10.5), att:X.att, pins:pins, dur:1.2, excl:{att:X.att, d:20}}); mxBall(D, 50, X.Y(10.5), 1.1); return; }
+    if(rec.res === 'saved'){ var g = D.pos[def][X.gk]; mxScene(D, {bx:g.x, by:g.y, att:def, dur:1.2}); var f = mxFeetAt(D, def, g.x, g.y); mxBall(D, f.x, f.y, 0.8); return; }
+    var s = D.pos[def][X.stI != null ? X.stI : 0]; mxScene(D, {bx:s.x, by:s.y, att:def, dur:1.2}); var f2 = mxFeetAt(D, def, s.x, s.y); mxBall(D, f2.x, f2.y, 0.8);
+  }
+  function mxReset(D){   // giao bóng / nghỉ giữa hiệp / hết giờ: cả hai đội về vị trí xuất phát
+    mxClearT(D); mxClearFx(D); mxUnhi(D); D.el.classList.remove('act', 'key');
+    [0, 1].forEach(function(s){ D.pl[s].forEach(function(e, i){ mxPut(D, s, i, D.base[s][i].x, D.base[s][i].y, 1.6, Math.random() * 0.25); }); });
+    mxBall(D, 50, 50, 1.4);
   }
   function mxSize(){
     var mx = sEl('mx'); if(!mx) return;
     var H = mxAvail(mx), W = Math.round(Math.max(240, Math.min(H * 68 / 105, mx.clientWidth * 0.56)));
     mx.style.height = H + 'px'; mx.style.setProperty('--pw', W + 'px'); mx.style.setProperty('--dw', Math.round(W * 0.085) + 'px'); mx.style.setProperty('--cw', Math.round(W * 0.12) + 'px');
+    if(sMC && sMC.dir) mxRelayout(sMC.dir);
   }
   function mxScroll(){ var l = sEl('mx-l'), b = l && l.querySelector('.mx-body'); [l, b].forEach(function(x){ if(x && x.scrollTo && x.scrollHeight > x.clientHeight + 2) x.scrollTo({top:x.scrollHeight, behavior:'smooth'}); }); }
   window.addEventListener('resize', function(){ mxSize(); });
@@ -13987,9 +14637,14 @@
     if(!host){ v.style.display = ''; v.innerHTML = '<div id="season-match"></div>'; host = sEl('season-match'); }
     var m = sMC && sMC.m;
     if(m && html.indexOf('id="in-wrap"') < 0){
-      var cur = (m.phase === 'q') ? (sMC.curNow || m.cur) : null;
-      host.innerHTML = '<div class="mx" id="mx"><div class="mx-l" id="mx-l">' + html + '</div><div class="mx-r">' + mxPitchHTML(m, cur) + '</div></div>';
+      var c = sMC, sig = mxSig(m), keep = null;   // giữ nguyên sân (và vị trí các thẻ) giữa các lần vẽ lại cột bên trái
+      if(c.pitchEl && c.pitchSig === sig && c.dir){ keep = c.pitchEl; if(keep.parentNode) keep.parentNode.removeChild(keep); }
+      else if(c.dir){ mxClearT(c.dir); c.dir = null; }
+      host.innerHTML = '<div class="mx" id="mx"><div class="mx-l" id="mx-l">' + html + '</div><div class="mx-r">' + (keep ? '' : mxPitchHTML(m)) + '</div></div>';
+      var mr = host.querySelector('.mx-r');
+      if(keep) mr.appendChild(keep); else { c.pitchEl = mr.querySelector('.mx-pitch'); c.pitchSig = sig; }
       mxSize();
+      if(keep) mxRefresh(c.dir, m); else mxInit(c, c.pitchEl);
       var l = sEl('mx-l'); if(l && m.phase !== 'q' && (!sMC.tab || sMC.tab === 'sit')){ l.style.scrollBehavior = 'auto'; l.scrollTop = l.scrollHeight; l.style.scrollBehavior = ''; }
     } else {
       host.innerHTML = html;
@@ -13999,14 +14654,15 @@
     var fd = sEl('mt-feed'); if(fd) fd.scrollTop = fd.scrollHeight;
   }
   function sStatsHTML(m){
-    var S = [0, 1].map(function(){ return {g:0, att:0, sh:0, on:0, sv:0, cnt:0, q:0}; });
+    var S = [0, 1].map(function(){ return {g:0, att:0, sh:0, on:0, sv:0, cnt:0, q:0, y:0, r:0}; });
     m.log.forEach(function(x){
       var a = S[x.att], d = S[1 - x.att]; a.att++; if(x.counter) a.cnt++;
+      if(x.card){ var cs = S[x.card.side]; if(x.card.t !== 'r') cs.y++; if(x.card.t !== 'y') cs.r++; }
       if(x.failK < 0 || x.failK === 2){ a.sh++; if(x.res === 'goal'){ a.on++; a.g++; } else { a.on++; d.sv++; } }
       if(x.att === 0 && x.q && x.q.ok) a.q++;
     });
     var tot = (S[0].att + S[1].att) || 1, t0 = m.teams[0], t1 = m.teams[1];
-    var rows = [['Bàn thắng', S[0].g, S[1].g], ['Kiểm soát (theo tình huống, %)', Math.round(S[0].att / tot * 100), Math.round(S[1].att / tot * 100)], ['Tình huống nguy hiểm', S[0].att, S[1].att], ['Cú sút', S[0].sh, S[1].sh], ['Sút trúng đích', S[0].on, S[1].on], ['Phản công', S[0].cnt, S[1].cnt], ['Thủ môn cản phá', S[0].sv, S[1].sv], ['Thể lực trung bình (%)', sAvgStam(t0), sAvgStam(t1)], ['Lượt thay người', t0.subs, t1.subs], ['Câu hỏi bé trả lời đúng', S[0].q, '–']];
+    var rows = [['Bàn thắng', S[0].g, S[1].g], ['Kiểm soát (theo tình huống, %)', Math.round(S[0].att / tot * 100), Math.round(S[1].att / tot * 100)], ['Tình huống nguy hiểm', S[0].att, S[1].att], ['Cú sút', S[0].sh, S[1].sh], ['Sút trúng đích', S[0].on, S[1].on], ['Phản công', S[0].cnt, S[1].cnt], ['Thủ môn cản phá', S[0].sv, S[1].sv], ['Thẻ vàng', S[0].y, S[1].y], ['Thẻ đỏ', S[0].r, S[1].r], ['Thể lực trung bình (%)', sAvgStam(t0), sAvgStam(t1)], ['Lượt thay người', t0.subs, t1.subs], ['Câu hỏi bé trả lời đúng', S[0].q, '–']];
     return '<div class="ms-box">' + rows.map(function(r){ var a = +r[1] || 0, b = +r[2] || 0, tt = (a + b) || 1;
       return '<div class="ms-row"><div class="ms-v"><b>' + r[1] + '</b><span>' + r[0] + '</span><b>' + r[2] + '</b></div><div class="ms-bar"><i style="width:' + Math.round(a / tt * 50) + '%"></i><i class="o" style="width:' + Math.round(b / tt * 50) + '%"></i></div></div>'; }).join('') + '</div>';
   }
@@ -14028,6 +14684,7 @@
       body += sFeedBox(m, 14) + (m.note ? '<div class="mt-line mt-warn">' + escHtml(m.note) + '</div>' : '');
       if(!done){
         if(m.half && !m.halfDone){ t.fidName = sFidName(t.fid); body += '<div class="mt-half">⏸ Giờ nghỉ giữa hiệp: đổi phong cách và thay người</div><div id="st-wrap">' + sStyleBox(t, t.style) + '</div>'; }
+        else if(m.redPick){ t.fidName = sFidName(t.fid); body += '<div class="mt-half">🟥 Đội mình thiếu người! Chọn lại phong cách chơi cho hợp nhé</div><div id="st-wrap">' + sStyleBox(t, t.style) + '</div>'; }
         foot += '<div class="se-btns"><button type="button" class="se-btn" data-mt="next">' + (m.i === 0 ? '⚽ Bắt đầu trận' : (m.half && !m.halfDone ? '▶ Bắt đầu hiệp 2' : '▶ Tình huống tiếp theo')) + '</button></div>';
       } else foot += '<div class="se-btns"><button type="button" class="se-btn" data-mt="end">🏁 Xem kết quả trận</button></div>';
     }
@@ -14102,14 +14759,16 @@
     var c = sMC; if(!c) return; var m = c.m, tok = c.tok;
     comEnsure(m);
     if(m.half && !m.halfDone) m.halfDone = true;
+    m.redPick = false;
     m.note = ''; c.sel = null; c.tab = 'sit'; c.skip = false;
     var cur = sePrepare(m); cur.asked = true; m.phase = 'q'; sSave(c.st);   // lưu TRƯỚC khi hiện câu hỏi
     seSynAll(m);
-    c.curNow = cur; sMatchShow(sMHead(m) + '<div class="mx-body sit">' + sSitHTML(m, cur) + '</div>');
-    await comPlay(m, comBuild(m, cur), tok); if(!sAlive(tok)) return;          // 1) dẫn dắt như livescore
+    c.curNow = cur; sMatchShow(sMHead(m) + '<div class="mx-body sit">' + sSitHTML(m, cur) + '</div>'); mxDo('begin', cur);
+    await comPlay(m, comBuild(m, cur), tok, false, function(l, i, all){   // thẻ cầu thủ di chuyển theo từng dòng dẫn dắt
+      if(l.k !== 'play' && l.k !== 'set') return; var rank = 0, total = 0; all.forEach(function(x, j){ if(x.k === 'play' || x.k === 'set'){ total++; if(j < i) rank++; } }); mxDo('build', cur, rank, total); }); if(!sAlive(tok)) return;          // 1) dẫn dắt như livescore
     c.skip = false;
     var fd = sEl('mt-feed'); if(fd) fd.classList.add('compact');
-    await comPlay(m, [comKey(m, cur)], tok, true); if(!sAlive(tok)) return;      // 2) KEY MOMENT
+    await comPlay(m, [comKey(m, cur)], tok, true, function(){ mxDo('key'); }); if(!sAlive(tok)) return;      // 2) KEY MOMENT
     var sk = document.querySelector('#season-match .mt-skiprow'); if(sk) sk.style.display = 'none';
     var qp = sQuiz(m, tok), qe = sEl('mt-q'); if(qe && qe.scrollIntoView) qe.scrollIntoView({block:'nearest', behavior:'smooth'});
     var res = await qp; if(!sAlive(tok)) return; mxScroll();                                  // 3) bé trả lời
@@ -14118,7 +14777,7 @@
     await sSpin(res.score, tok); if(!sAlive(tok)) return; mxScroll();
     var rec = seResolve(m, res.score, !!res.ok); rec.q = {ok:!!res.ok, sec:res.secLeft || 0, timeout:!!res.timeout}; m.phase = 'break';
     c.skip = false;
-    var ivs = setInterval(mxScroll, 700); await comPlay(m, comOutcome(m, rec), tok); clearInterval(ivs); if(!sAlive(tok)) return;          // 4) kết quả + "Next:"
+    var ivs = setInterval(mxScroll, 700); await comPlay(m, comOutcome(m, rec), tok, false, function(l){ mxDo('out', rec, l); }); clearInterval(ivs); if(!sAlive(tok)) return;          // 4) kết quả + "Next:"
     sSave(c.st);
     sMatchRender();
   }
@@ -14152,7 +14811,7 @@
     sSave(st); var name0 = m.teams[0].name, name1 = m.teams[1].name, wordsHtml = comWordsHTML(m);
     sTok++; sMC = null; document.body.classList.remove('se-match');
     sModalOpen('<h3>Kết quả vòng ' + (r + 1) + '</h3><div class="se-score"><b>' + sMyLogo() + escHtml(name0) + '</b><em>' + mine + ' – ' + theirs + '</em><b>' + escHtml(name1) + '</b></div>'
-      + '<p class="sl-intro">' + (mine > theirs ? '🎉 Thắng rồi! +3 điểm.' : mine < theirs ? '💪 Thua một trận, tuần sau gỡ lại nhé!' : '🤝 Hòa nhau, mỗi đội 1 điểm.') + '</p>' + (goalsHtml ? '<div class="mt-log">' + goalsHtml + '</div>' : '') + wordsHtml
+      + (SE_SCN[m.scn] ? '<p class="sl-intro"><small>🎬 Kiểu trận hôm nay: <b>' + SE_SCN[m.scn].vi + '</b></small></p>' : '') + '<p class="sl-intro">' + (mine > theirs ? '🎉 Thắng rồi! +3 điểm.' : mine < theirs ? '💪 Thua một trận, tuần sau gỡ lại nhé!' : '🤝 Hòa nhau, mỗi đội 1 điểm.') + '</p>' + (goalsHtml ? '<div class="mt-log">' + goalsHtml + '</div>' : '') + wordsHtml
       + (done ? '<p class="sl-intro"><b>' + (promoted ? '🏆 Lên hạng!' : 'Ở lại hạng này, mùa sau cố gắng thêm nhé!') + '</b></p>' : '') + '<div class="se-btns"><button type="button" class="se-btn" data-se="close">Đóng</button></div>');
     seasonRender();
   }
@@ -14178,7 +14837,7 @@
   function sPickStyle(id){
     if(!SE_STYLE[id]) return;
     if(sMC){
-      var m = sMC.m; if(!(m.half && !m.halfDone) && m.i !== 0) return;   // chỉ đổi trước trận hoặc giờ nghỉ giữa hiệp
+      var m = sMC.m; if(!(m.half && !m.halfDone) && m.i !== 0 && !m.redPick) return;   // chỉ đổi trước trận hoặc giờ nghỉ giữa hiệp
       seSetStyle(m, 0, id); sSave(sMC.st); var t = m.teams[0]; t.fidName = sFidName(t.fid);
       var w = sEl('st-wrap'); if(w) w.innerHTML = sStyleBox(t, id); sMatchRender(); return;
     }
@@ -14233,13 +14892,13 @@
   /* ---------- Cài đặt Quản trị (tab Đấu Trường): ghi thẳng vào settings.season ---------- */
   function sAdminFill(){
     var c = sCfg();
-    var map = {'se-week-dow':c.weekDow, 'se-match-dow':c.matchDow, 'se-max-watch':c.maxWatch, 'se-diff':c.diff,
+    var map = {'se-week-dow':c.weekDow, 'se-match-dow':c.matchDow, 'se-max-watch':c.maxWatch, 'se-diff':c.diff, 'se-goals-exp':c.gx,
       'se-s1-start':c.s1.start, 'se-s1-end':c.s1.end, 'se-s2-start':c.s2.start, 'se-s2-end':c.s2.end, 'se-skip':c.skipRaw};
     Object.keys(map).forEach(function(id){ var e = sEl(id); if(e) e.value = map[id]; });
   }
   function sAdminSave(){
     var g = function(id){ var e = sEl(id); return e ? e.value : ''; };
-    settings.season = {weekDow:g('se-week-dow'), matchDow:g('se-match-dow'), maxWatch:g('se-max-watch'), diff:g('se-diff'),
+    settings.season = {weekDow:g('se-week-dow'), matchDow:g('se-match-dow'), maxWatch:g('se-max-watch'), diff:g('se-diff'), goalsExp:g('se-goals-exp'),
       s1Start:g('se-s1-start'), s1End:g('se-s1-end'), s2Start:g('se-s2-start'), s2End:g('se-s2-end'), skipWeeks:g('se-skip')};
     saveSettings();
   }
