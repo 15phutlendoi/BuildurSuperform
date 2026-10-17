@@ -2932,6 +2932,7 @@
   :is(#season-modal, #season-match) .fe-goal{ background:linear-gradient(135deg,rgba(16,185,129,.45),rgba(245,158,11,.35)); border:1px solid #34D399; font-weight:900; font-size:16.5px; }
   :is(#season-modal, #season-match) .fe-goalx{ background:rgba(239,68,68,.22); border:1px solid #F87171; font-weight:800; }
   :is(#season-modal, #season-match) .fe-save{ background:rgba(56,189,248,.16); font-weight:800; }
+  :is(#season-modal, #season-match) .fe-rs{ background:rgba(52,211,153,.10); color:#A7F3D0; font-weight:700; }
   :is(#season-modal, #season-match) .fe-set,:is(#season-modal, #season-match) .fe-next{ background:rgba(56,189,248,.12); color:#7DD3FC; font-weight:800; }
   :is(#season-modal, #season-match) .fe-warn{ background:rgba(245,158,11,.14); color:#FBBF24; }
   :is(#season-modal, #season-match) .fe-var{ background:rgba(99,102,241,.22); border:1px solid #818CF8; font-weight:800; }
@@ -3174,6 +3175,54 @@
     #season-match .mx-foot{ position:sticky; bottom:calc(var(--dock-h,96px) + 8px); z-index:5; padding:8px 0 4px; background:linear-gradient(0deg,var(--night,#0B1224) 70%,transparent); }
     #season-match .mx-r,#season-match .in-r{ display:block; }
   }
+  /* ---- Scout: đối kháng chiến thuật ---- */
+  .sc-box{ margin:8px 0; padding:10px 12px; border-radius:12px; border:1px solid var(--glass-line); background:rgba(15,23,42,.5); font-size:13px; line-height:1.5; text-align:left; }
+  .sc-h{ display:flex; align-items:baseline; gap:8px; margin-bottom:6px; font-weight:900; } .sc-h small{ color:var(--ink-soft); font-weight:600; }
+  .sc-tot,.sc-row em{ font-style:normal; font-weight:900; padding:1px 8px; border-radius:99px; background:rgba(148,163,184,.2); }
+  .sc-tot.g,.sc-row em.g{ background:rgba(52,211,153,.18); color:#6EE7B7; } .sc-tot.b,.sc-row em.b{ background:rgba(248,113,113,.18); color:#FCA5A5; }
+  .sc-row{ display:flex; flex-wrap:wrap; align-items:center; gap:6px 8px; margin-top:8px; } .sc-row span{ color:var(--ink-soft); font-weight:700; } .sc-row b{ font-weight:800; }
+  .sc-why{ margin:3px 0 0; padding-left:2px; font-size:12.5px; color:var(--ink-soft); } .sc-why.g{ color:#86EFAC; } .sc-why.b{ color:#FCA5A5; }
+  .sc-rec{ margin-top:8px; padding:8px 10px; border-radius:10px; background:rgba(245,158,11,.1); border:1px solid rgba(245,158,11,.28); font-size:12.5px; }
+  .sc-rec small{ display:block; margin-top:2px; color:var(--ink-soft); } .sc-why-i{ color:var(--ink-soft); }
+  .sc-ap{ margin-left:6px; padding:3px 10px; border:0; border-radius:8px; font-weight:800; font-size:12px; cursor:pointer; background:var(--gold); color:#1B1303; }
+  .sc-vs{ margin-top:8px; } .sc-vs p{ margin:4px 0; } .sc-vs small{ color:var(--ink-soft); }
+  .sc-chip{ display:inline-block; margin:2px 4px 2px 0; padding:2px 8px; border-radius:99px; background:rgba(148,163,184,.16); font-size:12px; }
+  .sd-mu{ font-style:normal; font-weight:900; font-size:11px; margin-left:6px; } .sd-mu.g{ color:#34D399; } .sd-mu.b{ color:#F87171; }
+  .st-scout .sc-box{ margin:8px 0 0; }
+  /* ---- Tab Sơ đồ: sơ đồ, phong cách, thay người (nút to, dễ chạm) ---- */
+  #season-match .mx-body[hidden]{ display:none !important; }
+  #season-match .sf-note{ margin:0 0 8px; font-size:12.5px; color:var(--ink-soft); line-height:1.5; } #season-match .sf-note b{ color:var(--ink); }
+  #season-match .sf-grid{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; max-height:300px; overflow-y:auto; overscroll-behavior:contain; padding:2px; }
+  #season-match .sf-grid.off{ opacity:.6; }
+  #season-match .sf-o{ display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:2px 6px; min-height:52px; padding:8px 12px; border-radius:12px; border:2px solid var(--glass-line); background:rgba(148,163,184,.1); color:var(--ink); font:inherit; text-align:left; cursor:pointer; }
+  #season-match .sf-o b{ font-size:14px; } #season-match .sf-o em{ font-style:normal; font-weight:900; font-size:12px; color:var(--ink-soft); } #season-match .sf-o em.g{ color:#34D399; } #season-match .sf-o em.b{ color:#F87171; }
+  #season-match .sf-o small{ flex-basis:100%; font-size:11px; color:var(--gold); font-weight:800; }
+  #season-match .sf-o.cur{ border-color:var(--gold); background:rgba(245,158,11,.14); } #season-match .sf-o.pick{ border-color:#38BDF8; background:rgba(56,189,248,.16); box-shadow:0 0 0 3px rgba(56,189,248,.25); }
+  #season-match .sf-o:disabled{ cursor:default; } #season-match .sf-o:not(:disabled):active{ transform:scale(.98); }
+  #season-match .sf-prev{ margin-top:10px; padding:10px 12px; border-radius:12px; background:rgba(56,189,248,.1); border:1px solid rgba(56,189,248,.35); font-size:13px; }
+  #season-match .sf-prev small{ display:block; margin:3px 0 6px; color:var(--ink-soft); } #season-match .sf-prev ul{ margin:0 0 8px; padding-left:18px; } #season-match .sf-prev .w{ color:#FBBF24; font-weight:800; }
+  #season-match .mt-lock .sd-btn{ pointer-events:none; opacity:.6; }
+  #season-match .sb-grid{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; margin:4px 0 10px; }
+  #season-match .sb-p{ position:relative; display:grid; grid-template-columns:auto minmax(0,1fr) auto; grid-template-areas:'pos nm ov' 'bar bar bar' 'tag tag tag'; align-items:center; gap:4px 8px; width:100%; min-height:72px; padding:11px 12px 9px; border-radius:14px; border:2px solid var(--glass-line); background:rgba(148,163,184,.1); color:var(--ink); font:inherit; text-align:left; cursor:pointer; -webkit-tap-highlight-color:transparent; transition:background .15s,border-color .15s,box-shadow .15s; }
+  #season-match .sb-pos{ grid-area:pos; min-width:42px; height:32px; padding:0 6px; display:grid; place-items:center; border-radius:9px; background:rgba(15,23,42,.75); font-weight:900; font-size:13px; }
+  #season-match .sb-nm{ grid-area:nm; min-width:0; font-weight:800; font-size:15.5px; line-height:1.2; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  #season-match .sb-ov{ grid-area:ov; font-family:var(--font-display); font-weight:900; font-size:22px; }
+  #season-match .sb-bar{ grid-area:bar; height:7px; border-radius:99px; background:rgba(148,163,184,.25); overflow:hidden; } #season-match .sb-bar i{ display:block; height:100%; }
+  #season-match .sb-tag{ grid-area:tag; min-height:16px; font-size:12px; font-weight:700; color:var(--ink-soft); }
+  #season-match .sb-p.sel{ border-color:var(--gold); background:rgba(245,158,11,.22); box-shadow:0 0 0 4px rgba(245,158,11,.25); }
+  #season-match .sb-p.out{ border-color:#F87171; background:rgba(248,113,113,.15); } #season-match .sb-p.in{ border-color:#34D399; background:rgba(52,211,153,.15); }
+  #season-match .sb-p.out .sb-tag{ color:#FCA5A5; } #season-match .sb-p.in .sb-tag{ color:#6EE7B7; }
+  #season-match .sb-p:disabled{ opacity:.5; cursor:default; } #season-match .sb-p:focus-visible{ outline:3px solid var(--gold); outline-offset:2px; }
+  @media (hover:hover){ #season-match .sb-p:not(:disabled):hover{ background:rgba(148,163,184,.2); } }
+  #season-match .sb-num{ position:absolute; top:-9px; right:-6px; width:26px; height:26px; border-radius:50%; display:grid; place-items:center; font-weight:900; font-size:14px; background:#fff; color:#0F172A; box-shadow:0 2px 6px rgba(0,0,0,.4); }
+  #season-match .sb-num.sm{ position:static; width:24px; height:24px; flex:none; box-shadow:none; font-size:13px; }
+  #season-match .sb-sum{ margin-top:6px; padding:10px 12px; border-radius:14px; background:rgba(15,23,42,.55); border:1px solid var(--glass-line); }
+  #season-match .sb-sum ul{ list-style:none; margin:0 0 10px; padding:0; display:grid; gap:8px; }
+  #season-match .sb-sum li{ display:flex; align-items:center; gap:10px; font-size:14px; } #season-match .sb-sum li > div{ flex:1; min-width:0; } #season-match .sb-sum small{ display:block; font-size:12px; color:var(--ink-soft); line-height:1.4; }
+  #season-match .sb-x{ flex:none; width:44px; height:44px; border:0; border-radius:12px; background:rgba(148,163,184,.2); color:var(--ink); font-size:16px; font-weight:900; cursor:pointer; }
+  #season-match .sb-sum .se-btns .se-btn,#season-match .sf-prev .se-btns .se-btn{ min-height:52px; font-size:15px; }
+  #season-match .sb-outl{ display:flex; flex-wrap:wrap; gap:6px; margin-bottom:4px; } #season-match .sb-o{ padding:5px 10px; border-radius:99px; background:rgba(148,163,184,.14); font-size:12.5px; color:var(--ink-soft); text-decoration:line-through; }
+  @media (max-width:420px){ #season-match .sb-grid,#season-match .sf-grid{ grid-template-columns:1fr; } }
 </style>
 
 </head>
@@ -7649,7 +7698,7 @@
   var battleState = null;      // {b, timer, auto}
   var BATTLE_TURN_DELAY = 900; // ms giữa các lượt khi tự động đánh
   /* Thưởng Đấu Trường tính CÙNG THANG với Hiến thẻ (phần của 1 cấp OVR, quy ra ⚡ theo chi phí cấp hiện tại):
-     thắng = như hiến chính đối thủ vừa hạ cho thẻ ra sân (xếp bậc bằng fuseAnalyze: trùng thẻ / cùng Overall / cùng Hệ-Vị trí / cùng đội-quốc gia / khác);
+     thắng = như hiến chính đối thủ vừa hạ cho thẻ ra sân (chấm bằng fuseAnalyze: 4 tiêu chí Overall / Vị trí / Hệ / Đội-Quốc gia, giống hệt bảng của Hiến thẻ);
      thua = BATTLE_LOSE_FACTOR × mức thắng (mặc định 0: thua không nhận gì). Chỉnh nhanh hệ số thua ở đây. */
   var BATTLE_LOSE_FACTOR = 0;   // thua không nhận ⚡ (đặt >0 nếu muốn thua vẫn nhận một phần)
   /* Nâng cấp OVR KHÔNG GIỚI HẠN: chi phí +1 OVR kế tiếp = 2 + số OVR đã cộng (2,3,4,5…) → lúc đầu lên nhanh cho đã,
@@ -9894,7 +9943,7 @@
     var players = loadPlayers(), out = [];
     for(var i = 0; i < 3; i++){
       var card = st.mine[i], enemy = st.theirs[i];
-      var fz = fuseAnalyze(card, enemy);
+      var fz = fuseAnalyze(card, enemy); fz.v = Math.min(fz.v, BATTLE_FRAC_CAP);
       var weight = won ? REWARD3.base + (i === mvp ? REWARD3.mvp : 0) : BATTLE_LOSE_FACTOR * REWARD3.base;
       var frac = fz.v * weight, share = roadGain / 3;
       var oldOvr = card.ovr || card.realOvr || 0;
@@ -9939,7 +9988,7 @@
     if(!battleState || battleState.rewardApplied) return null;
     battleState.rewardApplied = true;
     var won = (battleState.b.winner === 0);
-    var fz = fuseAnalyze(battleState.cardA, battleState.cardB);          // đối thủ coi như "thẻ hiến" cho thẻ ra sân
+    var fz = fuseAnalyze(battleState.cardA, battleState.cardB); fz.v = Math.min(fz.v, BATTLE_FRAC_CAP);   // đối thủ coi như "thẻ hiến" cho thẻ ra sân (tối đa +1 cấp/trận)
     var fracWin = fz.v, frac = won ? fracWin : fracWin * BATTLE_LOSE_FACTOR;   // phần của 1 cấp OVR
     var gain = 0;      // Năng Lượng thưởng mốc Hành trình (cộng riêng, giữ nguyên)
     var road = null;   // kết quả Hành trình (nếu là trận Hành trình)
@@ -12150,61 +12199,66 @@
   /* ================== NÂNG CẤP THẺ BẰNG THẺ KHÁC (Hiến thẻ) ==================
      Đơn vị là PHẦN CỦA MỘT CẤP OVR (+1 OVR = 1 cấp). Mỗi thẻ hiến cộng tiến độ lên cấp kế tiếp của thẻ đích,
      rồi đổi về Năng Lượng theo chi phí hiện tại (battleCostForNext) để dùng chung thanh ⚡ với Đấu Trường.
-     Bậc ưu tiên (mẫu số FUSE_DEN = cần bao nhiêu thẻ để được +1 OVR):
-       1) Chính thẻ đó (trùng cầu thủ)                   +1 nếu bằng Overall; thấp hơn 1 → +1/2; thấp hơn 2 → +1/4 ...
-       2) Cùng Overall                                   +1/4
-       3) Cùng Hệ hoặc cùng Vị trí                       +1/8
-       4) Cùng đội hoặc cùng quốc gia                    +1/10
-       5) Thẻ khác                                       +1/20
-     Bậc 1 luôn chia đôi theo từng Overall thấp hơn (1/2, 1/4, 1/8...): 2 thẻ trùng thấp hơn 1 Overall = đúng +1,
-     giống hệt việc tự nâng chúng lên bằng Overall rồi hiến, nên không có đường vòng nào lợi hơn.
-     Bậc 3–5: thẻ hiến thấp hơn thẻ đích 1 Overall thì giữ nguyên mức trên; thấp hơn 2 thì chia đôi (1/16, 1/20, 1/40...);
-     mỗi thêm 1 Overall thấp hơn lại chia đôi tiếp. Thẻ hiến cao hơn hoặc bằng thì tính đủ mức. */
-  var FUSE_DEN = { dup:1, ovr:2, elpos:3, clubnat:4, other:5 };   // số thẻ cần để +1 OVR ở mức Overall chuẩn (FUSE_HARD_REF)
-  /* ĐỘ KHÓ THEO OVERALL (dùng chung cho Hiến thẻ và thưởng Đấu Trường): mỗi cấp cần × hệ số này so với mức chuẩn.
-     hệ số = 1 + SLOPE × (OVR hiện tại − REF), sàn MIN. Ví dụ OVR 70 → ×1 · 80 → ×1,5 · 90 → ×2 · 100 → ×2,5 · 120 → ×3,5
-     (tăng đều, không bao giờ bị chặn nhưng cũng không vọt lên). Chỉnh 3 hằng số dưới đây để dễ/khó hơn. */
-  var FUSE_HARD_REF = 70, FUSE_HARD_SLOPE = 0.05, FUSE_HARD_MIN = 0.5;
-  function fuseHardness(t){ return Math.max(FUSE_HARD_MIN, 1 + FUSE_HARD_SLOPE * ((t && t.ovr || 0) - FUSE_HARD_REF)); }
+     CHẤM ĐIỂM THEO 4 TIÊU CHÍ (tổng 100% = +1 OVR), thẻ hiến càng giống thẻ đích càng nhiều:
+       ⭐ Overall (bằng hoặc cao hơn thẻ đích)  30%
+       🎯 Vị trí                                 20%
+       🔥 Hệ                                     20%
+       🏟️ Đội 12% + 🌍 Quốc gia 8%               20%   (cùng cả hai = đủ 20%)
+       🎴 Nền cho mọi thẻ                        10%
+     • Giống cả 4 tiêu chí (hoặc chính thẻ đó, trùng cầu thủ) = +1 OVR. Ví dụ Palmer 122 hiến cho Palmer 122 → 123.
+     • Overall của thẻ hiến CAO hơn thẻ đích: mỗi Overall cao hơn nhân FUSE_OVR_STEP (×1,5). Ví dụ thẻ 125 chỉ cùng đội
+       với thẻ 122: 52% × 1,5³ ≈ 175%.
+     • Overall THẤP hơn: mất phần điểm Overall và mỗi Overall thấp hơn thì chia cho FUSE_OVR_STEP (×0,67, ×0,44…).
+       Riêng trùng cầu thủ chỉ nhân hệ số, không mất thêm điểm Overall.
+     • Không còn "độ khó theo Overall": Overall của thẻ đích cao không làm mỗi cấp khó hơn nữa. */
+  var FUSE_W = { base:0.10, ovr:0.30, pos:0.20, el:0.20, club:0.12, nat:0.08 };   // tổng = 1 → giống cả 4 tiêu chí = +1 OVR
+  var FUSE_OVR_STEP = 1.5;       // mỗi 1 Overall CAO hơn thẻ đích: nhân hệ số này; mỗi 1 Overall THẤP hơn: chia cho hệ số này (1.5 → ×1,5 / ×0,67)
+  var BATTLE_FRAC_CAP = 1;       // Đấu Trường: 1 trận thắng tối đa +1 cấp (dù đối thủ Overall cao hơn nhiều)
   var FUSE_TIERS = [
-    {key:'dup',     icon:'🧬', label:'Chính thẻ này (trùng cầu thủ)'},
-    {key:'ovr',     icon:'⭐', label:'Cùng Overall'},
-    {key:'elpos',   icon:'🔥', label:'Cùng Hệ hoặc cùng Vị trí'},
-    {key:'clubnat', icon:'🏟️', label:'Cùng đội hoặc cùng quốc gia'},
-    {key:'other',   icon:'🎴', label:'Thẻ khác'}
+    {key:'dup',   icon:'🧬', label:'Chính thẻ này (trùng cầu thủ)'},
+    {key:'m4',    icon:'💎', label:'Giống cả 4 tiêu chí'},
+    {key:'m3',    icon:'⭐', label:'Giống 3/4 tiêu chí'},
+    {key:'m2',    icon:'🔥', label:'Giống 2/4 tiêu chí'},
+    {key:'other', icon:'🎴', label:'Giống 0–1 tiêu chí'}
   ];
   var fuseState = null;   // {targetId, selected:{id:true}, changed, result}
 
   function fuseFmt(x){ return String(Math.round(x * 10) / 10); }     // làm tròn Năng Lượng lẻ để hiển thị
   function fuseFracText(x){ return x > 0 ? '+' + Math.max(1, Math.round(x * 100)) + '%' : '0'; }
   function fuseFmt2(x){ return String(Math.round(x * 100) / 100); }
-  function fuseFrac(den){ return den <= 1.05 ? '+1' : (den >= 1000 ? '+<1/1000' : '+1/' + (Math.round(den * 10) / 10)); }
+  function fuseFrac(v){ return (v >= 0.995 && v <= 1.005) ? '+1' : (v < 0.005 ? '+<1%' : '+' + Math.floor(v * 100 + 1e-6) + '%'); }   // v = phần của 1 cấp OVR (có thể > 1)
   function fuseClubKey(p){ return p.clubLogo || p.club || ''; }
   function fuseNationKey(p){ return p.nationFlag || p.nation || ''; }
 
   /* Chấm 1 thẻ hiến so với thẻ đích -> {tier, den, v (phần cấp), halves, tags} */
   function fuseAnalyze(t, f){
     var tOvr = t.ovr || 0, fOvr = f.ovr || 0, gap = tOvr - fOvr;     // gap > 0: thẻ hiến thấp hơn
-    var sameOvr = !!(tOvr > 0 && fOvr === tOvr);
     var sameCard = !!(t.dbId && f.dbId === t.dbId);
+    var ovrOk = gap <= 0;                                            // Overall bằng hoặc cao hơn → đủ điểm Overall
     var tEl = t.battle && t.battle.element, fEl = f.battle && f.battle.element;
     var elM = !!(tEl && fEl && tEl === fEl), posM = !!(t.pos && f.pos === t.pos);
     var clubM = !!(fuseClubKey(t) && fuseClubKey(f) === fuseClubKey(t));
     var natM = !!(fuseNationKey(t) && fuseNationKey(f) === fuseNationKey(t));
-    var tier = sameCard ? 'dup' : (sameOvr ? 'ovr'
-             : ((elM || posM) ? 'elpos' : ((clubM || natM) ? 'clubnat' : 'other')));
-    // bậc 1: chia đôi từ Overall thấp hơn thứ 1 (1, 1/2, 1/4...); bậc 3–5: chia đôi từ Overall thấp hơn thứ 2; bậc 2: không chia
-    var halves = tier === 'dup' ? Math.max(0, gap) : (tier === 'ovr' ? 0 : Math.max(0, gap - 1));
-    var den = FUSE_DEN[tier] * Math.pow(2, halves) * fuseHardness(t);   // đã tính độ khó theo Overall của thẻ đích
+    var halves = Math.max(0, gap);                                   // số Overall thấp hơn (mỗi Overall chia FUSE_OVR_STEP)
+    var score;
+    if(sameCard){ score = 1; }                                       // cùng cầu thủ: coi như giống đủ 4 tiêu chí, Overall thấp hơn chỉ chia đôi
+    else {
+      score = FUSE_W.base + (ovrOk ? FUSE_W.ovr : 0) + (posM ? FUSE_W.pos : 0) + (elM ? FUSE_W.el : 0)
+            + (clubM ? FUSE_W.club : 0) + (natM ? FUSE_W.nat : 0);
+    }
+    var v = score * Math.pow(FUSE_OVR_STEP, -gap);                   // cao hơn → nhân thêm (gap < 0), thấp hơn → chia bớt; không chặn trên
+    var hit = (ovrOk ? 1 : 0) + (posM ? 1 : 0) + (elM ? 1 : 0) + ((clubM || natM) ? 1 : 0);
+    var tier = sameCard ? 'dup' : (hit >= 4 ? 'm4' : (hit === 3 ? 'm3' : (hit === 2 ? 'm2' : 'other')));
     var tags = [];
-    if(sameCard) tags.push(sameOvr ? 'Trùng thẻ' : (gap > 0 ? 'Trùng cầu thủ, thấp hơn ' + gap + ' Overall: chia ' + Math.pow(2, gap) : 'Trùng cầu thủ, cao hơn Overall'));
-    if(sameOvr && !sameCard) tags.push('Overall ' + fOvr);
-    if(elM && !sameCard) tags.push('Hệ ' + elementName(fEl));
+    if(sameCard) tags.push(ovrOk ? (gap < 0 ? 'Trùng cầu thủ, cao hơn Overall' : 'Trùng thẻ') : 'Trùng cầu thủ');
+    else if(ovrOk && gap === 0) tags.push('Overall ' + fOvr);
     if(posM && !sameCard) tags.push('Vị trí ' + f.pos);
+    if(elM && !sameCard) tags.push('Hệ ' + elementName(fEl));
     if(clubM && !sameCard) tags.push('Cùng đội');
     if(natM && !sameCard) tags.push('Cùng quốc gia');
-    if(halves > 0 && !sameCard) tags.push('Thấp hơn ' + gap + ' Overall: chia ' + Math.pow(2, halves));
-    return {tier:tier, den:den, v:1 / den, halves:halves, tags:tags};
+    if(gap < 0) tags.push('Cao hơn ' + (-gap) + ' Overall: ×' + (Math.round(Math.pow(FUSE_OVR_STEP, -gap) * 100) / 100));
+    if(gap > 0) tags.push('Thấp hơn ' + gap + ' Overall: ×' + (Math.round(Math.pow(FUSE_OVR_STEP, -gap) * 1000) / 1000));
+    return {tier:tier, den:(v > 0 ? 1 / v : 1e9), v:v, halves:halves, tags:tags};
   }
 
   /* Cộng v (phần cấp) vào thẻ đích -> số cấp lên + Năng Lượng dư (đổi theo chi phí cấp mới) */
@@ -12291,7 +12345,7 @@
     }
 
     var cands = fuseCandidates(t);
-    var legend = '<div class="fuse-legend">📈 Thẻ này đang OVR <b>'+(t.ovr||0)+'</b>: mỗi cấp cần <b>×'+(Math.round(fuseHardness(t)*100)/100)+'</b> so với mức chuẩn.'
+    var legend = '<div class="fuse-legend">🎯 Thẻ hiến giống thẻ này ở <b>4 tiêu chí</b> (Overall · Vị trí · Hệ · Đội/Quốc gia) càng nhiều thì tiến độ càng lớn: giống cả 4 = <b>+1 OVR</b>. Overall cao hơn thì được <b>nhân thêm</b>, thấp hơn thì bị <b>giảm</b> theo từng bậc.'
       + '<br>⚠️ Thẻ đã hiến sẽ <b>mất khỏi kho</b>.</div>';
     var html = head + legend;
     if(!cands.length){
@@ -12304,7 +12358,7 @@
       FUSE_TIERS.forEach(function(tr){
         var grp = cands.filter(function(c){ return c.a.tier === tr.key; });
         if(!grp.length) return;
-        html += '<div class="fuse-group-h"><span>'+tr.icon+' '+tr.label+' ('+grp.length+')</span><small>tối đa '+fuseFrac(FUSE_DEN[tr.key]*fuseHardness(t))+' OVR / thẻ</small></div><div class="fuse-grid">'
+        html += '<div class="fuse-group-h"><span>'+tr.icon+' '+tr.label+' ('+grp.length+')</span><small>tối đa '+fuseFrac(Math.max.apply(null, grp.map(function(c){ return c.a.v; })))+' OVR / thẻ</small></div><div class="fuse-grid">'
           + grp.map(function(c){
               var p = c.card, a = c.a;
               var card = fcCardHTML(p) || playerCardHTML(p, false);
@@ -12313,7 +12367,7 @@
               if(p.ovrBonus) flags.push('<div class="fuse-flag warn">Đã nâng +'+p.ovrBonus+'</div>');
               if(a.tags.length) flags.push('<div class="fuse-flag">'+escHtml(a.tags.join(' · '))+'</div>');
               return '<div class="fuse-item" role="button" tabindex="0" aria-pressed="false" data-fid="'+escHtml(p.id)+'"><div class="fuse-check">✓</div>'+card
-                + '<div class="fuse-pill">'+fuseFrac(a.den)+' OVR</div>'+flags.join('')+'</div>';
+                + '<div class="fuse-pill">'+fuseFrac(a.v)+' OVR</div>'+flags.join('')+'</div>';
             }).join('')
           + '</div>';
       });
@@ -12417,7 +12471,7 @@
   function rulesHTML(){
     var perDay = (typeof battleLimit === 'function') ? battleLimit() : 1;
     var sec = settings.quizSeconds || 15;
-    var tiers = FUSE_TIERS.slice(1).map(function(x){ return '<li>'+x.icon+' '+x.label+': <b>'+fuseFrac(FUSE_DEN[x.key])+'</b> tiến độ lên cấp</li>'; }).join('');
+    var W = FUSE_W, pc = function(x){ return Math.round(x * 100) + '%'; };
     return ''
     + '<section class="rules-sec" id="rules-sec-battle"><h4>⚔️ Đấu Trường</h4><ul>'
     + '<li>Có 2 cách chơi: <b>Hành trình</b> (vượt lần lượt các trận từ rất dễ đến khó) hoặc <b>Đấu nhanh</b> với đối thủ ngẫu nhiên.</li>'
@@ -12435,10 +12489,16 @@
     + '<li>Đủ ⚡ Năng Lượng là thẻ được cộng thêm <b>+1 OVR</b>. Nâng cấp <b>không giới hạn</b>, thẻ càng mạnh càng sáng (mốc +5 bạc, +10 vàng, +20 kim cương).</li>'
     + '<li>Cấp kế tiếp cần <b>'+BATTLE_OVR_COST_BASE+' + số OVR đã cộng</b> ⚡ (2, 3, 4, 5…), nên lúc đầu lên rất nhanh.</li>'
     + '<li>Mỗi +1 OVR cộng thêm: ⚔️ Lực chiến <b>+'+BATTLE_LEVEL_STATS.cp+'</b> · ❤️ Thể lực <b>+'+BATTLE_LEVEL_STATS.hp+'</b> · 🛡️ Giáp <b>+'+BATTLE_LEVEL_STATS.armor+'</b>.</li>'
-    + '<li><b>Hiến thẻ</b> là cách khác để lên cấp: chọn thẻ trong kho để tăng tiến độ. Thẻ càng giống thẻ cần nâng, tiến độ càng nhiều (ở mức Overall chuẩn):</li></ul>'
-    + '<ul style="margin-top:6px"><li>🧬 Trùng cầu thủ: bằng Overall <b>+1</b>, thấp hơn 1 Overall <b>+1/2</b>, thấp hơn 2 <b>+1/4</b>… (mỗi Overall thấp hơn thì chia đôi)</li>'+tiers+'</ul>'
-    + '<ul style="margin-top:6px"><li>Với các bậc 🔥 🏟️ 🎴: thấp hơn <b>2 Overall</b> trở lên thì chia đôi, mỗi Overall thấp hơn thêm lại chia đôi.</li>'
-    + '<li>Thẻ có Overall càng cao thì mỗi cấp càng khó lên.</li></ul>'
+    + '<li><b>Hiến thẻ</b> là cách khác để lên cấp: chọn thẻ trong kho để tăng tiến độ. Thẻ hiến càng giống thẻ cần nâng thì tiến độ càng nhiều. Con được chấm theo <b>4 tiêu chí</b>:</li></ul>'
+    + '<ul style="margin-top:6px"><li>⭐ <b>Overall</b> bằng hoặc cao hơn thẻ cần nâng: <b>'+pc(W.ovr)+'</b></li>'
+    + '<li>🎯 Cùng <b>Vị trí</b>: <b>'+pc(W.pos)+'</b></li>'
+    + '<li>🔥 Cùng <b>Hệ</b>: <b>'+pc(W.el)+'</b></li>'
+    + '<li>🏟️ Cùng <b>Đội</b>: <b>'+pc(W.club)+'</b> · 🌍 cùng <b>Quốc gia</b>: <b>'+pc(W.nat)+'</b> (cùng cả hai: '+pc(W.club + W.nat)+')</li>'
+    + '<li>🎴 Mọi thẻ đều được cộng nền: <b>'+pc(W.base)+'</b></li></ul>'
+    + '<ul style="margin-top:6px"><li>💎 Giống <b>cả 4 tiêu chí</b> (hoặc 🧬 trùng cầu thủ, bằng Overall) = <b>+1 OVR</b>. Ví dụ: Palmer 122 hiến cho Palmer 122 thì thẻ lên <b>123</b>.</li>'
+    + '<li>📈 Thẻ hiến có <b>Overall cao hơn</b> thẻ cần nâng: mỗi Overall cao hơn tiến độ nhân <b>×'+FUSE_OVR_STEP+'</b> (có thể vượt +1 cấp, ví dụ thẻ 125 cùng đội với thẻ 122 được khoảng <b>+175%</b>).</li>'
+    + '<li>📉 Thẻ hiến có <b>Overall thấp hơn</b>: mất phần điểm Overall, và mỗi Overall thấp hơn tiến độ nhân <b>×'+(Math.round(100 / FUSE_OVR_STEP) / 100)+'</b>. Thẻ trùng cầu thủ thấp hơn chỉ nhân hệ số này, không mất thêm điểm.</li>'
+    + '<li>Thẻ cần nâng có Overall cao cũng <b>không</b> làm mỗi cấp khó hơn nữa.</li></ul>'
     + '<p class="rules-note">⚠️ Thẻ đã hiến sẽ mất khỏi kho. Thua trận thì không mất thẻ nào.</p></section>'
     + '<section class="rules-sec" id="rules-sec-squad"><h4>🎴 Xếp đội hình</h4><ul>'
     + '<li>Chạm vào một vị trí trên sân hoặc một ô dự bị: cầu thủ đang đứng đó hiện ở trên cùng, bên dưới là danh sách xếp theo OVR cao nhất cho vị trí đó.</li>'
@@ -12892,18 +12952,20 @@
     return p;
   }
   /* Mốc phong độ 0% = 7 ngày × điểm hoàn thành hằng ngày của CHÍNH user này (Cài đặt → mục tiêu ngày × 10; mặc định 9 → 90 điểm/ngày → 630/tuần).
-     Dưới mốc: −15% (0 điểm) … 0%. Trên mốc: 0% … +15% (đủ 700 = 100 điểm × 7 ngày). Đọc lại cài đặt mỗi lần tính nên đổi mục tiêu ngày là có hiệu lực ngay. */
+     Dưới mốc: −SE_FORM_MAX% (0 điểm) … 0%. Trên mốc: 0% … +SE_FORM_MAX% (đủ 700 = 100 điểm × 7 ngày); hiện ±6%. Đọc lại cài đặt mỗi lần tính nên đổi mục tiêu ngày là có hiệu lực ngay. */
+  var SE_FORM_MAX = 6;   // biên độ phong độ ĐỘI theo điểm nhiệm vụ tuần: ±6% (trước đây ±15%)
   function sFormBase(){ var g = Number(settings.dailyGoal); if(!(g >= 1 && g <= 10)) g = 9; return Math.round(g) * 10 * 7; }
   function sTeamForm(pts){
     var B = sFormBase(), M = 700; pts = Math.max(0, Number(pts) || 0);
-    if(pts <= B) return -15 * (1 - pts / B);
-    return M > B ? Math.min(15, (pts - B) / (M - B) * 15) : 15;
+    if(pts <= B) return -SE_FORM_MAX * (1 - pts / B);
+    return M > B ? Math.min(SE_FORM_MAX, (pts - B) / (M - B) * SE_FORM_MAX) : SE_FORM_MAX;
   }
-  function sArrow(pct){
-    if(pct >= 10) return {ic:'↑↑', cls:'uu'};
-    if(pct >= 3)  return {ic:'↑',  cls:'u'};
-    if(pct > -3)  return {ic:'→',  cls:'n'};
-    if(pct > -10) return {ic:'↓',  cls:'d'};
+  function sArrow(pct, k){
+    k = k || 1;   // k < 1: co ngưỡng mũi tên (dùng cho phong độ đội, biên độ nhỏ hơn)
+    if(pct >= 10 * k) return {ic:'↑↑', cls:'uu'};
+    if(pct >= 3 * k)  return {ic:'↑',  cls:'u'};
+    if(pct > -3 * k)  return {ic:'→',  cls:'n'};
+    if(pct > -10 * k) return {ic:'↓',  cls:'d'};
     return {ic:'↓↓', cls:'dd'};
   }
   /* Chia phong độ đội xuống từng cầu thủ bằng một lần bốc theo hạt giống (mùa + vòng + mã thẻ):
@@ -13044,7 +13106,7 @@
     } else {
       var stt = sStatus(se, next, cfg, today), ws = se.weeks[next], opp = sOpp(se, next);
       var pts = (typeof (se.rounds[next] || {}).pts === 'number') ? se.rounds[next].pts : sWeekPts(ws);
-      var fm = sTeamForm(pts), ar = sArrow(fm), left = sQuotaLeft(st, cfg);
+      var fm = sTeamForm(pts), ar = sArrow(fm, SE_FORM_MAX / 15), left = sQuotaLeft(st, cfg);
       var live = !!(se.rounds[next] && se.rounds[next].live);
       var sty = SEASON_STYLES.filter(function(x){ return x.id === opp.team.style; })[0];
       h += '<div class="se-now-t">Vòng ' + (next + 1) + '/' + se.R + ' · ' + SEASON_STATUS_TXT[stt] + '</div>'
@@ -13124,6 +13186,46 @@
     return '<div class="lp-slot sl-wrap' + (pos ? '' : ' static') + (lpFlash && lpFlash.indexOf(x.id) >= 0 ? ' lp-flash' : '') + '"' + (ref ? ' data-lref="' + ref + '"' : '') + (pos ? ' style="' + pos + '"' : '') + ' title="' + escHtml(p.name || '') + '"><div class="sl-card" data-id="' + escHtml(x.id) + '"><div class="sl-inner"><div class="sl-back"><i>⚽</i><small>' + escHtml(label) + '</small></div>' + sCardFace(x, fm, true) + '</div></div>'
       + (v ? '<span class="lp-wxdot ' + (v > 0 ? 'up' : 'dn') + '" aria-label="Thời tiết ' + (v > 0 ? 'có lợi' : 'bất lợi') + '">' + (v > 0 ? '▲' : '▼') + '</span>' : '') + '</div>';
   }
+  /* ===== SCOUT: khuyến nghị sơ đồ + phong cách khắc chế đối thủ ===== */
+  var seOppNow = null;   // đối thủ vòng sắp tới (đặt khi dựng bảng phong cách ở trang Mùa giải)
+  function seMuTxt(v){ var n = Math.round(v * 100); return (n > 0 ? '+' : '') + n; }
+  function seMuLbl(v){ var a = Math.abs(v), s = a >= 0.15 ? 'rất rõ' : (a >= 0.08 ? 'rõ' : (a >= 0.03 ? 'nhỉnh hơn' : '')); return !s ? 'cân bằng' : (v > 0 ? 'ta ' + s + ' lợi thế' : 'đối thủ ' + s + ' lợi thế'); }
+  function seShortStyle(id){ var s = sStyleInfo(id); return s.ic + ' ' + s.name.replace(/\s*\(.*$/, ''); }
+  function seScoutRec(tm, th){
+    var cur = tm.style, K2 = SE_MU_K * 2;
+    function fit(id){ return Math.round(Math.max(0, Math.min(100, 50 + seSynergy(tm, id).bonus * 25))); }
+    var sty = SEASON_STYLES.map(function(s){ var e = seStyleEdge(s.id, th.style); return {s:s, e:e, f:fit(s.id), sc:K2 * e.edge + seSynergy(tm, s.id).bonus}; }).sort(function(a, b){ return b.sc - a.sc; });
+    var frm = FORMATIONS.map(function(f){
+      var e = seFormEdge(f.id, th.fid);
+      return {f:f, e:e, sc:K2 * e.edge + (seFormFit(cur, f.positions.map(function(p){ return p.pos; })) - 0.5) * SE_P.synF};
+    }).sort(function(a, b){ return b.sc - a.sc; });
+    return {mm:seMatchup(tm, th), sty:sty, frm:frm, cs:sty.filter(function(x){ return x.s.id === cur; })[0] || sty[0], cf:frm.filter(function(x){ return x.f.id === tm.fid; })[0] || frm[0]};
+  }
+  function seScoutHTML(tm, th, ctx, compact){
+    if(!tm || !th) return '';
+    var rec = seScoutRec(tm, th), mm = rec.mm, best = rec.sty[0], cs = rec.cs, cf = rec.cf, alt = rec.frm.filter(function(x){ return x.f.id !== tm.fid; })[0];
+    function cls(v){ return v > 0.025 ? 'g' : (v < -0.025 ? 'b' : 'n'); }
+    function why(w){ return w ? '<p class="sc-why ' + (w.v > 0 ? 'g' : 'b') + '">' + (w.v > 0 ? '✅ Ta lợi: ' : '⚠️ Họ lợi: ') + escHtml(w.vn) + '</p>' : ''; }
+    var h = '<div class="sc-box"><div class="sc-h"><span>⚔️ Đối kháng chiến thuật</span><b class="sc-tot ' + cls(mm.mu) + '">' + seMuTxt(mm.mu) + '</b><small>' + seMuLbl(mm.mu) + '</small></div>';
+    h += '<div class="sc-row"><span>🧩 Sơ đồ</span><b>' + escHtml(sFidName(tm.fid)) + ' ⚔ ' + escHtml(sFidName(th.fid)) + '</b><em class="' + cls(mm.f.edge) + '">' + seMuTxt(mm.f.edge) + '</em></div>' + (compact ? why(mm.f.why[0]) : mm.f.why.slice(0, 3).map(why).join('') || '<p class="sc-why">Hai sơ đồ không có bên nào khắc chế rõ rệt.</p>');
+    h += '<div class="sc-row"><span>🎯 Phong cách</span><b>' + escHtml(seShortStyle(tm.style)) + ' ⚔ ' + escHtml(seShortStyle(th.style)) + '</b><em class="' + cls(mm.s.edge) + '">' + seMuTxt(mm.s.edge) + '</em></div>' + (why(mm.s.why[0]) || '<p class="sc-why">' + (th.style === 'flex' || tm.style === 'flex' ? 'Phong cách linh hoạt không bị khắc chế đặc biệt, nhưng cũng không khắc chế ai.' : 'Hai phong cách không khắc chế nhau rõ rệt.') + '</p>');
+    function btn(id){ return ctx === 'lp' ? '<button type="button" class="sc-ap" data-lp-act="style" data-id="' + id + '">Áp dụng</button>' : '<button type="button" class="sc-ap" data-sty="' + id + '">Áp dụng</button>'; }
+    var rs = '';
+    if(best.s.id === cs.s.id) rs = '✅ <b>Phong cách hiện tại</b> ' + escHtml(seShortStyle(best.s.id)) + ' đã là lựa chọn tốt nhất trước đối thủ này (khắc chế ' + seMuTxt(best.e.edge) + ', hợp ' + best.f + '%).';
+    else rs = '💡 Scout khuyên đổi sang <b>' + escHtml(seShortStyle(best.s.id)) + '</b>: khắc chế ' + seMuTxt(best.e.edge) + ', hợp đội hình ' + best.f + '% (đang dùng: ' + seMuTxt(cs.e.edge) + ', hợp ' + cs.f + '%). ' + (best.e.why[0] ? '<span class="sc-why-i">' + escHtml(best.e.why[0].vn) + '.</span>' : (best.e.edge <= 0.02 ? 'Không có phong cách nào khắc chế rõ họ, nên chọn theo độ hợp đội hình.' : '')) + ' ' + btn(best.s.id);
+    h += '<div class="sc-rec">' + rs + '</div>';
+    var fs = '';
+    if(alt && alt.sc - cf.sc >= 0.6) fs = '💡 Có thể thử sơ đồ <b>' + escHtml(alt.f.name) + '</b>: ' + seMuTxt(alt.e.edge) + ' (hiện tại ' + escHtml(sFidName(tm.fid)) + ': ' + seMuTxt(cf.e.edge) + '). ' + (alt.e.why[0] ? '<span class="sc-why-i">' + escHtml(alt.e.why[0].vn) + '.</span> ' : '') + '<small>Đổi sơ đồ ở 🔧 Điều chỉnh, cần cầu thủ chơi được vị trí mới.</small>';
+    else fs = '✅ <b>Sơ đồ ' + escHtml(sFidName(tm.fid)) + '</b> đã ổn trước ' + escHtml(sFidName(th.fid)) + '.';
+    h += '<div class="sc-rec">' + fs + '</div>';
+    if(!compact){
+      var m = seSvMap(), by = [], vs = [];
+      Object.keys(m).forEach(function(k){ var p = k.split('|'); if(p[1] === th.style) by.push([p[0], m[k].v]); if(p[0] === th.style) vs.push([p[1], m[k].v]); });
+      function chips(l){ return l.sort(function(a, b){ return b[1] - a[1]; }).slice(0, 5).map(function(x){ return '<span class="sc-chip">' + escHtml(seShortStyle(x[0])) + '</span>'; }).join(''); }
+      h += '<div class="sc-vs"><p><small>' + escHtml(seShortStyle(th.style)) + ' bị khắc chế bởi:</small> ' + (by.length ? chips(by) : '<small>không phong cách nào (linh hoạt)</small>') + '</p><p><small>và họ khắc chế:</small> ' + (vs.length ? chips(vs) : '<small>không ai</small>') + '</p></div>';
+    }
+    return h + '</div>';
+  }
   function lpScout(se, st, r, lu, form, opp, rd, theirs, cur){
     var wx = rd.wx, w = SE_WEATHER[wx], row = SE_WX_FX[w.id] || {}, els = ['moc', 'thuy', 'hoa', 'tho', 'kim'];
     var mine = lu.starters.map(function(x){ var el = lpEl(x.p); return {x:x, el:el, v:sWxPctEl(wx, el), o:x.p.ovr || 0, g:SE_GROUP[x.slot]}; });
@@ -13179,7 +13281,7 @@
       + '<table class="lp-tb"><tr><th></th><th>Ta</th><th>Họ</th><th>Chênh</th></tr>' + cmp + '</table>'
       + '<p class="lp-p"><b>Cầu thủ cần chú ý</b></p><ul class="lp-ul">' + stars + '</ul>'
       + (pc.pro ? '<p class="lp-p g">＋ Họ mạnh: ' + escHtml(pc.pro) + '</p>' : '') + (pc.con ? '<p class="lp-p b">－ Họ dễ bị: ' + escHtml(pc.con) + '</p>' : '') + '</section>'
-      + '<section class="lp-sec"><h4>🧭 Cách khắc chế</h4><p class="lp-p">' + styleTip + '</p>'
+      + '<section class="lp-sec"><h4>⚔️ Cách khắc chế</h4>' + seScoutHTML(tm, theirs, 'lp')
       + '<p class="lp-p"><b>Phương án thay người theo thời tiết</b></p>' + (swh ? '<ul class="lp-ul">' + swh + '</ul><p class="lp-p lp-hint">Bấm Áp dụng để đổi ngay, hoặc chạm thẻ trên sân để tự thay người. 🔧 Điều chỉnh dùng khi muốn đổi sơ đồ, thoải mái không giới hạn lượt.</p>' : '<p class="lp-p">' + (w.id === 'fair' ? 'Trời đẹp nên chưa cần đổi người.' : 'Đội hình đã hợp thời tiết, chưa có phương án nào đáng đổi.') + '</p>') + '</section>';
   }
   document.addEventListener('click', function(e){
@@ -13264,6 +13366,9 @@
       lpPicking = true; openPosPicker(s0.type, s0.idx);
       var clr = document.getElementById('pp-clear'); if(clr) clr.style.display = 'none';   // không để trống ô khi đang chuẩn bị ra trận
     }
+    else if(act === 'style'){
+      var lu2 = sLineup(), st2 = sLoad(); if(!st2.styleBy) st2.styleBy = {}; st2.styleBy[lu2.f.id] = b.getAttribute('data-id'); sSave(st2); sOpenLineup(lpRound, true);
+    }
     else if(act === 'apply'){
       var d = lpData(), oi = d.sq.pitch.indexOf(b.getAttribute('data-out'));
       if(oi >= 0) lpMove('pitch', oi, b.getAttribute('data-in'));
@@ -13289,7 +13394,7 @@
     var theirs = sOppTeam(se, opp.team.id, lu.starters.concat(lu.bench).map(function(x){ return x.p.name; }), r);
     var pts = sRoundPts(se, r, true); sSave(st);
     var ids = lu.starters.map(function(x){ return x.id; }).concat(lu.bench.map(function(x){ return x.id; }));
-    var form = sPlayerForm(se, r, ids, pts), ar = sArrow(form.team);
+    var form = sPlayerForm(se, r, ids, pts), ar = sArrow(form.team, SE_FORM_MAX / 15);
     var cur = (st.styleBy && st.styleBy[lu.f.id]) || 'flex', wxo = {wx:rd.wx}, w0 = sWx(wxo);
     var h = '<div class="lp-head"><h3>Vòng ' + (r + 1) + ' · ' + escHtml(sMyName()) + ' VS ' + escHtml(opp.team.name) + '</h3>'
       + '<div class="lp-sub">' + (opp.home ? '🏠 Sân nhà' : '✈️ Sân khách') + ' · ' + w0.ic + ' ' + w0.name + ' · Sơ đồ <b>' + escHtml(lu.f.name) + '</b> · ' + sStyleInfo(cur).ic + ' ' + escHtml(sStyleInfo(cur).name) + ' <span class="lp-hint">(đổi ở tab Sơ đồ thi đấu)</span></div>'
@@ -13480,7 +13585,90 @@
     if(st.late && m.i >= m.N - 3) extra += st.late;
     return (SE_P.scale * p.o * p.fit + SE_P.fx * p.o * (p.f / 100 - (1 - seFat(p.stam)))) * (1 + sWxPct(m.wx, p) / 100) + syn + extra + seSubV(m, p) + seDis(m, t);   // thời tiết × Hệ: ±5%
   }
-  function seSynAll(m){ m._syn = [seSynergy(m.teams[0]).bonus, seSynergy(m.teams[1]).bonus]; }
+    var SE_MU_K = 4;   // mỗi 0,1 lợi thế chiến thuật ≈ ±1 điểm sức mạnh cho mỗi cầu thủ (đội có lợi +, đội kia −)
+  /* ===== ĐỐI KHÁNG SƠ ĐỒ (theo thực tế bóng đá) =====
+     Mỗi luật: sơ đồ A khai thác điểm yếu cấu trúc của sơ đồ B. edge = tổng lợi thế của A − tổng lợi thế của B (đối xứng, ≈ -0.3..0.3).
+     Mỗi luật có lời giải thích tiếng Việt (scout) và tiếng Anh đơn giản (bình luận). */
+  var SE_FE_CACHE = {}, SE_FEAT = {};
+  function seFeat(fid){
+    if(SE_FEAT[fid]) return SE_FEAT[fid];
+    var f = FORMATIONS.filter(function(x){ return x.id === fid; })[0] || FORMATIONS[0], n = {};
+    f.positions.forEach(function(p){ n[p.pos] = (n[p.pos] || 0) + 1; });
+    function c(l){ return l.reduce(function(s, k){ return s + (n[k] || 0); }, 0); }
+    var o = {cb:c(['CB']), fb:c(['LB', 'RB']), wb:c(['LWB', 'RWB']), cdm:c(['CDM']), cam:c(['CAM', 'SS']), cm:c(['CM']), wm:c(['LM', 'RM']), wg:c(['LW', 'RW']), st:c(['ST', 'CF'])};
+    o.mid = o.cdm + o.cm + o.cam; o.back = o.cb + o.fb + o.wb + (o.cb >= 3 ? o.wm : 0); o.wide = o.wg + o.wm + o.wb; o.wdef = o.fb + o.wb + (o.cb >= 3 ? o.wm : 0); o.fwd = o.st + o.wg;   // sơ đồ 3 trung vệ: hai tiền vệ biên lùi xuống làm hậu vệ biên khi phòng ngự
+    return (SE_FEAT[fid] = o);
+  }
+  function seFormRules(A, B){   // các lợi thế mà A khai thác được ở B
+    var out = [], d;
+    d = A.mid - B.mid; if(d > 0) out.push({k:'mid', v:0.05 * Math.min(d, 2), vn:'Giữa sân ' + A.mid + ' người đấu ' + B.mid + ': đông hơn nên giữ nhịp và đoạt bóng tốt hơn', en:'{T} have more players in midfield, so they control the game.'});
+    if(A.cam >= 1 && B.cdm === 0) out.push({k:'cam', v:0.05, vn:'Số 10 (CAM) có khoảng trống giữa hai tuyến vì đối thủ không có tiền vệ trụ', en:'The number 10 of {T} finds space between the lines.'});
+    d = A.wide - B.wdef; if(d >= 2) out.push({k:'wide', v:0.05 * Math.min(d - 1, 2), vn:'Hai cánh: ' + A.wide + ' người chạy biên đấu ' + B.wdef + ' hậu vệ biên, dễ đánh biên', en:'{T} have more players on the wings.'});
+    if(B.wide === 0 && A.wdef >= 2) out.push({k:'free', v:0.07, vn:'Đối thủ đá hẹp, không có người chạy biên: hậu vệ biên của ta thoải mái dâng cao đánh cánh', en:'The other team is narrow, so the full-backs of {T} get lots of space.'});
+    d = A.st - (B.cb - 1); if(d > 0) out.push({k:'front', v:0.05 * Math.min(d, 2), vn:A.st + ' tiền đạo cắm đấu ' + B.cb + ' trung vệ: ép được hàng thủ, khó cho đối thủ triển khai', en:'The strikers of {T} put the defenders under pressure.'});
+    if(B.back <= 3 && A.fwd >= 3) out.push({k:'thin', v:0.07, vn:'Hàng thủ chỉ ' + B.back + ' người, bị ' + A.fwd + ' tiền đạo dồn ép', en:'The other team has only ' + B.back + ' defenders, so {T} can attack them.'});
+    if(A.back >= 5 && B.wg >= 2) out.push({k:'wall', v:0.03, vn:A.back + ' người hàng thủ che kín khung thành, hai cánh đối thủ khó xoay xở', en:'The back line of {T} is like a strong wall.'});
+    return out;
+  }
+  /* trả về {edge, why:[{v (+: A lợi / −: B lợi), vn, en}]} */
+  function seFormEdge(fidA, fidB){
+    var key = fidA + '|' + fidB; if(SE_FE_CACHE[key]) return SE_FE_CACHE[key];
+    var A = seFeat(fidA), B = seFeat(fidB), ra = seFormRules(A, B), rb = seFormRules(B, A), e = 0, why = [];
+    ra.forEach(function(r){ e += r.v; why.push({k:r.k, v:r.v, vn:r.vn, en:r.en}); });
+    rb.forEach(function(r){ e -= r.v; why.push({k:r.k, v:-r.v, vn:r.vn, en:r.en}); });
+    why.sort(function(a, b){ return Math.abs(b.v) - Math.abs(a.v); });
+    return (SE_FE_CACHE[key] = {edge:Math.max(-0.35, Math.min(0.35, e)), why:why});
+  }
+  /* ===== ĐỐI KHÁNG PHONG CÁCH (18 phong cách): [bên thắng thế, bên bị khắc chế, mức độ, lý do] — dựa trên các nguyên lý bóng đá thực tế ===== */
+  var SE_SV_TXT = {
+    press:['Ép cao cắt đường chuyền của đội chuyền ngắn, bắt họ mất bóng ngay gần khung thành', 'The high press of {T} steals the ball from short passing.'],
+    space:['Hàng thủ đối thủ dâng cao để trống sau lưng: cướp bóng rồi phản công bằng một đường chuyền dài', '{T} win the ball and hit the space behind a high defence.'],
+    block:['Hai hàng thủ chặt, thu hẹp khoảng trống nên chuyền ngắn không xuyên nổi', 'The tight block of {T} is hard to pass through.'],
+    cross:['Tạt bóng và bóng bổng liên tục vào vòng cấm khiến khối thủ chặt mệt mỏi và dễ sai lầm', 'Crosses and long balls from {T} wear out a deep defence.'],
+    rotate:['Cầu thủ đổi chỗ liên tục, kéo lệch hàng thủ và làm rối cách kèm người', 'Players of {T} swap places and pull defenders out of shape.'],
+    onetouch:['Chuyền một chạm thoát khỏi áp lực, kéo đối thủ ra khỏi vị trí', 'Quick one-touch passes help {T} escape the press.'],
+    wing:['Ba trung vệ chắc cùng hai biên chạy dọc: khai thác khoảng trống hai cánh sau lưng đối thủ', 'Fast wing-backs of {T} attack the space on the wings.'],
+    keep:['Giữ bóng lâu nên đối thủ không có bóng để dồn ép hay tạt', '{T} keep the ball, so the other team cannot attack.'],
+    numbers:['Hơn người ở hàng công so với hàng thủ ít người của đối thủ', '{T} have more attackers than the other team has defenders.'],
+    falsenine:['Tiền đạo lùi sâu kéo trung vệ rời vị trí, mở khoảng trống cho hai cánh', 'The deep striker of {T} pulls a defender away and opens space.'],
+    compact:['Khối thủ kín trung lộ, hai biên của đối thủ không có chỗ chơi', 'The compact block of {T} closes the middle and the wings.'],
+    calm:['Giữ nhịp bình tĩnh, không mở khoảng trống nên đối thủ khó phản công', 'Calm passing from {T} gives no space to counter-attack.'],
+    solid:['Ba trung vệ cùng hai biên về kịp, hàng thủ không có kẽ hở để phản công', 'The strong back line of {T} leaves no space for counter-attacks.']
+  };
+  var SE_SV = [
+    ['press', 'tiki', .22, 'press'], ['sacchi', 'tiki', .20, 'press'], ['press', 'delbosque', .15, 'press'], ['bielsa', 'delbosque', .14, 'press'], ['sacchi', 'delbosque', .12, 'press'],
+    ['counter', 'press', .26, 'space'], ['counter', 'sacchi', .20, 'space'], ['counter', 'total', .20, 'space'], ['counter', 'guttmann', .18, 'space'], ['counter', 'bielsa', .20, 'space'], ['counter', 'sebes', .10, 'space'],
+    ['herrera', 'bielsa', .22, 'space'], ['herrera', 'guttmann', .22, 'space'], ['herrera', 'sacchi', .16, 'space'], ['herrera', 'press', .16, 'space'], ['herrera', 'tuchel', .10, 'space'], ['herrera', 'sebes', .12, 'block'],
+    ['choli', 'tiki', .22, 'block'], ['steel', 'tiki', .18, 'block'], ['herrera', 'tiki', .16, 'block'], ['counter', 'tiki', .18, 'block'],
+    ['choli', 'wenger', .16, 'block'], ['steel', 'wenger', .14, 'block'], ['herrera', 'wenger', .14, 'block'], ['counter', 'wenger', .12, 'block'],
+    ['choli', 'delbosque', .12, 'block'], ['steel', 'delbosque', .12, 'block'], ['herrera', 'delbosque', .10, 'block'],
+    ['never', 'steel', .14, 'cross'], ['never', 'choli', .12, 'cross'], ['never', 'herrera', .12, 'cross'],
+    ['total', 'choli', .14, 'rotate'], ['total', 'steel', .14, 'rotate'], ['tuchel', 'press', .14, 'rotate'], ['tuchel', 'sacchi', .12, 'rotate'], ['tuchel', 'bielsa', .14, 'rotate'],
+    ['wenger', 'press', .20, 'onetouch'], ['wenger', 'sacchi', .14, 'onetouch'], ['wenger', 'bielsa', .14, 'onetouch'],
+    ['conte', 'total', .18, 'wing'], ['conte', 'tiki', .14, 'wing'], ['conte', 'press', .12, 'wing'], ['conte', 'counter', .12, 'solid'], ['scolari', 'counter', .10, 'wing'], ['total', 'herrera', .12, 'rotate'], ['scolari', 'sacchi', .10, 'wing'],
+    ['tiki', 'never', .14, 'keep'], ['delbosque', 'never', .12, 'keep'], ['tiki', 'guttmann', .14, 'keep'], ['delbosque', 'guttmann', .12, 'keep'], ['delbosque', 'counter', .12, 'calm'],
+    ['guttmann', 'conte', .12, 'numbers'],
+    ['sebes', 'choli', .12, 'falsenine'], ['sebes', 'steel', .12, 'falsenine'], ['sebes', 'sacchi', .14, 'falsenine'],
+    ['choli', 'conte', .12, 'compact'], ['steel', 'conte', .12, 'compact'], ['choli', 'press', .10, 'compact'], ['choli', 'scolari', .10, 'compact'], ['choli', 'tuchel', .10, 'compact']
+  ];
+  var SE_SV_MAP = null;
+  function seSvMap(){ if(!SE_SV_MAP){ SE_SV_MAP = {}; SE_SV.forEach(function(x){ SE_SV_MAP[x[0] + '|' + x[1]] = {v:x[2], k:x[3]}; }); } return SE_SV_MAP; }
+  /* edge của phong cách a so với b: dương = a khắc chế b; âm = a bị b khắc chế; 0 = không đặc biệt (kể cả linh hoạt) */
+  function seStyleEdge(a, b){
+    var m = seSvMap(), x = m[a + '|' + b], y = m[b + '|' + a], r = x || y;
+    if(!r) return {edge:0, why:[]};
+    return {edge:x ? x.v : -y.v, why:[{k:r.k, v:x ? x.v : -y.v, vn:SE_SV_TXT[r.k][0], en:SE_SV_TXT[r.k][1]}]};
+  }
+  /* lợi thế chiến thuật của đội 0 so với đội 1 (sơ đồ + phong cách), ≈ -0.5..0.5. Cộng/trừ vào sức mạnh các cầu thủ ở seSynAll */
+  function seMatchup(t0, t1){
+    var F = seFormEdge(t0.fid, t1.fid), S = seStyleEdge(t0.style, t1.style);
+    return {mu:Math.max(-0.5, Math.min(0.5, F.edge + S.edge)), f:F, s:S};
+  }
+  function seSynAll(m){
+    m._syn = [seSynergy(m.teams[0]).bonus, seSynergy(m.teams[1]).bonus];
+    var mu = seMatchup(m.teams[0], m.teams[1]).mu; m._mu = mu;   // khắc chế sơ đồ + phong cách: đội có lợi mạnh lên, đội bị khắc chế yếu đi
+    m._syn[0] += SE_MU_K * mu; m._syn[1] -= SE_MU_K * mu;
+  }
   /* Thế trận theo tỷ số + thời điểm: đội bị dẫn cuối trận dồn ép (push), đội đang dẫn lùi về giữ kết quả (sit) */
   function seGS(m, side){
     var me = m.goals[side], th = m.goals[1 - side], late = m.i >= m.N - 4 ? 1 : (m.i >= m.N / 2 ? 0.5 : 0), r = {push:0, sit:0};
@@ -13500,7 +13688,7 @@
     return Math.min(1, (Math.abs(x.poss - y.poss) * 4 + Math.abs(x.attN - y.attN) * 0.25 + Math.abs(x.defN - y.defN) * 0.25 + Math.abs(x.cnt - y.cnt) * 2 + Math.abs((SE_RISK[a] || 0) - (SE_RISK[b] || 0)) * 0.3) / 1.6);
   }
   /* Rối nhịp của cả đội (âm): do đổi phong cách hoặc thay người sai chỗ — giảm dần trong 3 tình huống */
-  function seDis(m, t){ var s = 0; ['disSty', 'disSub'].forEach(function(k){ var d = t[k]; if(d && m.i >= d.at && m.i - d.at < 3) s += d.v * (1 - (m.i - d.at) / 3); }); return s; }
+  function seDis(m, t){ var s = 0; ['disSty', 'disSub', 'disFrm'].forEach(function(k){ var d = t[k]; if(d && m.i >= d.at && m.i - d.at < 3) s += d.v * (1 - (m.i - d.at) / 3); }); return s; }
   function seSubV(m, p){ var d = p.sub; if(!d || typeof d.v !== 'number' || m.i < d.at || m.i - d.at >= 3) return 0; return d.v * [1, 0.7, 0.35][m.i - d.at]; }
 
   /* ---------- chuẩn bị một tình huống: bên nào tấn công, ai tham gia ---------- */
@@ -13508,16 +13696,38 @@
     var rng = seRng(seHash(m.seed + ':p' + m.i)), t0 = m.teams[0], t1 = m.teams[1], s0 = SE_STYLE[t0.style], s1 = SE_STYLE[t1.style];
     var pm = s0.poss * (1 - s1.poss), pp = pm / (pm + (1 - s0.poss) * s1.poss), att, counter = false, L = m.last;
     if(!m.mom) m.mom = [0, 0];
-    pp = Math.max(0.15, Math.min(0.85, pp + 0.06 * (m.mom[0] - m.mom[1]) + 0.05 * (seDown(t1) - seDown(t0))));   // thiếu người thì ít cầm bóng hơn   // đà: trả lời đúng liên tiếp thì giữ bóng nhiều hơn
-    var kind = 'open', nx = m.next, fz = '', restart = false, xr = 0; m.next = null;   // nx: tình huống cố định từ kết quả trước (phạt góc / đá phạt / phạt đền)
+    pp = Math.max(0.15, Math.min(0.85, pp + 0.06 * (m.mom[0] - m.mom[1]) + 0.05 * (seDown(t1) - seDown(t0)) + 0.08 * seMatchup(t0, t1).mu));   // thiếu người thì ít cầm bóng hơn   // đà: trả lời đúng liên tiếp thì giữ bóng nhiều hơn
+    var kind = 'open', nx = m.next, fz = '', restart = false, xr = 0, from = null; m.next = null;   // nx: diễn biến nối tiếp từ kết quả pha trước (xem cuối seResolve)
     function byPoss(){ return rng() < pp ? 0 : 1; }
-    if(nx && (nx.type === 'corner' || nx.type === 'freekick' || nx.type === 'penalty')){ att = nx.att; kind = nx.type; if(kind === 'freekick'){ fz = nx.fz || 'direct'; if(fz === 'mid'){ kind = 'open'; restart = true; fz = ''; } } }   // đá phạt giữa sân: đá nhanh, quay lại pha mở
-    else if(!L) att = byPoss();
+    /* Đội vừa có bóng giữ được bóng hay bị đối thủ pressing đoạt lại ngay: đội thiên về cầm bóng (pp cao) giữ tốt hơn */
+    function keepP(s){ var p = s === 0 ? pp : 1 - pp; return Math.max(0.3, Math.min(0.85, 0.3 + 0.6 * p)); }
+    /* Đội vừa đoạt bóng có tung phản công không: theo phong cách đội đoạt bóng × độ hở sau lưng của đội vừa mất bóng */
+    function cntP(Y, mul){ var cp = SE_STYLE[m.teams[Y].style].cnt * (1 + SE_P.cntX * seExposure(m, 1 - Y)) * (mul || 1); return Math.max(0.05, Math.min(0.9, cp)); }
+    if(nx && (nx.type === 'corner' || nx.type === 'freekick' || nx.type === 'penalty')){ from = nx; att = nx.att; kind = nx.type; if(kind === 'freekick'){ fz = nx.fz || 'direct'; if(fz === 'mid'){ kind = 'open'; restart = true; fz = ''; } } }   // đá phạt giữa sân: đá nhanh, quay lại pha mở
+    else if(nx && nx.type){   // bóng sống / bóng chết khác: đội nào có bóng là do kết quả pha trước quyết định
+      from = {}; for(var nk in nx) from[nk] = nx[nk];
+      var Y = nx.att;
+      if(nx.type === 'kickoff'){ att = Y; restart = true; if(rng() > keepP(Y) + 0.15){ att = 1 - Y; from.flip = 'press'; } }                    // giao bóng xong bị đối thủ ép mất bóng
+      else if(nx.type === 'turnover'){                                                                                                          // vừa cướp / phá bóng: phản công, triển khai chậm, hoặc bị đoạt lại
+        if(L && rng() < cntP(Y, nx.how === 'tackle' ? 1.35 : 1.0)){ att = Y; counter = true; }
+        else if(rng() < keepP(Y)) att = Y; else { att = 1 - Y; from.flip = 'press'; }
+      }
+      else if(nx.type === 'gk'){                                                                                                                // thủ môn ôm bóng: lăn nhanh (dễ phản công) hoặc phát dài (tranh chấp bóng bổng)
+        if(L && nx.how === 'throw' && rng() < cntP(Y, 0.7)){ att = Y; counter = true; }
+        else if(nx.how === 'long' && rng() > keepP(Y)){ att = 1 - Y; from.flip = 'header'; } else att = Y;
+      }
+      else if(nx.type === 'goalkick'){ if(rng() > keepP(Y) + 0.05){ att = 1 - Y; from.flip = 'header'; } else att = Y; }                       // phát bóng lên: ai thắng bóng bổng giữa sân
+      else if(nx.type === 'throw'){ att = Y; if(rng() > keepP(Y) + 0.2){ att = 1 - Y; from.flip = 'intercept'; } }                               // ném biên
+      else if(nx.type === 'second'){ att = Y; var r2 = rng(); kind = r2 < 0.45 ? 'longshot' : (r2 < 0.7 && nx.how !== 'wood' ? 'cross' : 'open'); }                 // bóng bật ra ngoài vòng cấm: sút xa / tạt lại / làm lại
+      else att = Y;
+    }
+    else if(!L){ att = byPoss(); from = {type:'kickoff', att:att, first:true}; }
     else if(L.res === 'goal') att = rng() < 0.55 ? 1 - L.att : byPoss();
     else if(L.res === 'lost_early' || L.res === 'cleared'){ var Y = 1 - L.att, cp0 = SE_STYLE[m.teams[Y].style].cnt * (1 + SE_P.cntX * seExposure(m, L.att)); cp0 = Math.max(0.05, Math.min(0.9, cp0)); if(rng() < cp0){ att = Y; counter = true; } else att = byPoss(); }   // đội vừa dâng cao mất bóng càng dễ bị phản công
     else if(L.res === 'saved') att = rng() < 0.65 ? 1 - L.att : byPoss();   // thủ môn cản được → hay phát bóng lên
     else att = byPoss();
     if(counter) kind = 'counter';
+    if(m.i === 0 && m.ko == null) m.ko = att;   // đội giao bóng hiệp 1 → hiệp 2 đội kia giao bóng
     var def = 1 - att, tA = m.teams[att], tD = m.teams[def], sA = SE_STYLE[tA.style], sD = SE_STYLE[tD.style];
     var nA = sA.attN, nD = sD.defN;
     if(kind === 'open'){   // biến thể pha mở học từ tường thuật thật: sai lầm hàng thủ / sút xa / tạt-đánh đầu
@@ -13545,7 +13755,7 @@
       ia.forEach(function(i){ var p = tA.pitch[i]; if(tA.slots[i] === 'GK') return; var v = (p.st && p.st[(kind === 'corner' || kind === 'cross' || (kind === 'freekick' && fz === 'wide')) ? 2 : 1]) || p.o; if(v > bk){ bk = v; taker = i; } });
       if(taker < 0) taker = ia[0];
     }
-    m.cur = {i:m.i, min:seMinute(m, m.i), att:att, counter:counter, kind:kind, fz:fz, restart:restart, xr:xr, taker:taker, ia:ia, id:id, nA:nA, nD:nD, baseA:sA.attN, baseD:sD.defN};
+    m.cur = {i:m.i, min:seMinute(m, m.i), att:att, counter:counter, kind:kind, fz:fz, restart:restart, from:from, xr:xr, taker:taker, ia:ia, id:id, nA:nA, nD:nD, baseA:sA.attN, baseD:sD.defN};
     return m.cur;
   }
 
@@ -13657,11 +13867,32 @@
     });
     // diễn biến kế tiếp: kết quả pha này quyết định pha sau (phạt góc / đá phạt / phạt đền)
     var rn = rng(), nxt = null, wd = rng(), wsd = rng(), wood = (res === 'saved' && !voff && kind !== 'penalty' && wd < SE_P.pWood) ? (wsd < 0.5 ? 'post' : 'bar') : '';
-    if(foul) nxt = foul.next;                                                    // phạm lỗi → đối phương hưởng đá phạt / phạt đền
-    else if(afoul || offs) nxt = {type:'freekick', att:def, fz:'mid'};            // tấn công phạm lỗi / việt vị → đội phòng ngự đá phạt
-    else if(kind !== 'corner' && kind !== 'freekick' && kind !== 'penalty' && !voff){   // open / counter / longshot / cross / blunder
-      if(res === 'saved' && rn < (wood ? 0.55 : 0.40)) nxt = {type:'corner', att:att};
-      else if(res === 'cleared' && rn < 0.30) nxt = {type:'corner', att:att};
+    /* Mọi kết quả đều có hệ quả: bóng đi đâu, đội nào có bóng, bằng cách nào (bộ số ngẫu nhiên riêng → không lệch các kết quả cũ)
+         bàn thắng → giao bóng · thủ môn bắt → thủ môn phát (lăn nhanh / phát dài) · sút ra ngoài → phát bóng lên · cứu thua đẩy ra → phạt góc
+         chạm cột/xà → bóng bật ra · phá bóng → phạt góc / ném biên / bóng hai / đối phương có bóng · cướp bóng → đối phương có bóng (có thể phản công)
+         phạm lỗi → đá phạt / phạt đền · việt vị, tấn công phạm lỗi, VAR từ chối bàn thắng → đội phòng ngự đá phạt */
+    var nr = seRng(seHash(m.seed + ':n' + m.i)), miss = false, stopId = tD.pitch[stopper].id, gkId = tD.pitch[gkI].id, setK = (kind === 'corner' || kind === 'freekick' || kind === 'penalty');
+    if(foul){ nxt = foul.next; nxt.by = foul.id; nxt.bs = def; nxt.on = tA.pitch[c.ia[0]].id; nxt.sev = foul.sev; }   // phạm lỗi → đối phương hưởng đá phạt / phạt đền
+    else if(afoul) nxt = {type:'freekick', att:def, fz:'mid', why:'afoul', by:afoul.id, bs:att};                     // tấn công phạm lỗi → đội phòng ngự đá phạt
+    else if(offs) nxt = {type:'freekick', att:def, fz:'mid', why:'offside', by:offs.id, bs:att};                    // việt vị → đội phòng ngự đá phạt
+    else if(voff) nxt = {type:'freekick', att:def, fz:'mid', why:'var'};                                            // VAR từ chối bàn thắng
+    else if(res === 'goal') nxt = {type:'kickoff', att:def};                                                         // thủng lưới → giao bóng lại
+    else if(res === 'saved'){
+      if(rn < (setK ? (kind === 'penalty' ? 0.3 : 0.35) : (wood ? 0.55 : 0.40))) nxt = {type:'corner', att:att, how:wood ? 'wood' : 'parry', by:gkId, bs:def};
+      else if(wood && nr() < 0.6) nxt = nr() < 0.5 ? {type:'second', att:att, how:'wood'} : {type:'turnover', att:def, by:stopId, bs:def, how:'loose'};
+      else if(!wood && kind !== 'penalty' && nr() < 0.4){ miss = true; nxt = {type:'goalkick', att:def, by:gkId, bs:def}; }   // sút chệch khung thành
+      else nxt = {type:'gk', att:def, by:gkId, bs:def, how:nr() < 0.5 ? 'throw' : 'long'};
+    }
+    else if(res === 'cleared'){
+      var r3 = nr();
+      if(rn < (kind === 'corner' ? 0.22 : 0.30)) nxt = {type:'corner', att:att, how:'block', by:stopId, bs:def};   // bóng chạm hậu vệ ra biên ngang
+      else if(r3 < 0.2) nxt = {type:'throw', att:att, zone:'high', by:stopId, bs:def};                             // phá ra biên dọc → đội tấn công ném biên
+      else if(r3 < 0.5){ var pw = Math.max(0.25, Math.min(0.6, 0.42 + (sA.poss - sD.poss))); nxt = nr() < pw ? {type:'second', att:att, how:'loose'} : {type:'turnover', att:def, by:stopId, bs:def, how:'loose'}; }   // tranh bóng hai
+      else nxt = {type:'turnover', att:def, by:stopId, bs:def, how:'clear'};
+    }
+    else {   // lost_early: bị cướp bóng giữa sân
+      if(nr() < 0.15) nxt = {type:'throw', att:att, zone:'mid', by:stopId, bs:def};                                // hậu vệ cản bóng ra biên → đội tấn công ném biên
+      else nxt = {type:'turnover', att:def, by:stopId, bs:def, how:'tackle'};
     }
     m.next = nxt;
     // đà của câu trả lời: đúng → đội bé lên đà; sai → đội bạn lên đà
@@ -13669,7 +13900,7 @@
     else if(ok === false){ m.mom[1] = Math.min(3, m.mom[1] + 1); m.mom[0] = Math.max(0, m.mom[0] - 1); }
     rec.foul = foul; rec.afoul = afoul; rec.offside = offs; rec.fz = c.fz || ''; rec.restart = !!c.restart; rec.nextFz = (nxt && nxt.fz) || ''; rec.xr = c.xr || 0;
     rec.kind = kind; rec.wood = wood; rec.next = nxt ? nxt.type : ''; rec.taker = (c.taker >= 0 && tA.pitch[c.taker]) ? tA.pitch[c.taker].id : ''; rec.mom = [m.mom[0], m.mom[1]];
-    rec.varChk = varChk; rec.card = card; rec.sup = !!(supAct && res === 'goal');
+    rec.varChk = varChk; rec.card = card; rec.sup = !!(supAct && res === 'goal'); rec.miss = miss; rec.nx = nxt; rec.from = c.from || null;
     m.last = {att:att, res:res, partA:rec.pa, partD:rec.pd};
     m.log.push(rec); m.i++; m.cur = null;
     if(m.i === m.N && !m.xtDecided){ m.xtDecided = true; if(Math.abs(m.goals[0] - m.goals[1]) <= 1) m.xt = true; }   // phút bù giờ: chỉ khi hai đội chênh ≤ 1 bàn
@@ -13677,6 +13908,10 @@
     rec.inj = seInjury(m, ev, c);
     rec.oppSubs = (m.i < seTotal(m)) ? seAutoSubs(m, 1).concat(seTactic(m, 1)) : [];
     m.half = (m.i === Math.floor(m.N / 2));
+    if(m.half && !(m.next && m.next.type === 'penalty')){   // hết hiệp 1: bóng chết đang chờ bị huỷ (trừ phạt đền), hiệp 2 đội còn lại giao bóng
+      var ko = (m.ko != null) ? m.ko : (m.log[0] ? m.log[0].att : 0);
+      m.next = {type:'kickoff', att:1 - ko, half:true};
+    }
     return rec;
   }
 
@@ -13705,6 +13940,25 @@
     }
     t.pitch[pi] = inn; t.bench.splice(bi, 1); t.out.push(out); t.subs++;
     return {out:out.id, inn:inn.id, v:v, fit:fit, outStam:out.stam, batch:batch};
+  }
+  /* ---------- đổi sơ đồ giữa trận: xếp lại 11 cầu thủ vào vị trí mới (thủ môn giữ nguyên), ưu tiên đúng sở trường ---------- */
+  function seAssignForm(t, fid){
+    var f = FORMATIONS.filter(function(x){ return x.id === fid; })[0]; if(!f) return null;
+    var S = f.positions.map(function(p){ return p.pos; }), P = t.pitch, n = P.length;
+    if(S.length !== n || P.some(function(p){ return p.gone; })) return null;
+    function ft(pl, slot){ return SE_HOOK.fit(pl, slot) + (pl.pos === slot ? 0.02 : 0); }
+    var order = S.map(function(_, j){ return j; }).sort(function(a, b){ return (S[a] === 'GK' ? 0 : 1) - (S[b] === 'GK' ? 0 : 1) || a - b; }), used = {}, a = new Array(n);
+    order.forEach(function(j){ var best = -1, bv = -1; P.forEach(function(pl, k){ if(used[k]) return; var v = ft(pl, S[j]); if(v > bv){ bv = v; best = k; } }); used[best] = 1; a[j] = best; });
+    var imp = true, g = 0;   // cải thiện bằng hoán đổi từng cặp cho tới khi không còn tốt hơn
+    while(imp && g++ < 30){ imp = false; for(var x = 0; x < n; x++) for(var y = x + 1; y < n; y++){ if(S[x] === 'GK' || S[y] === 'GK') continue; if(ft(P[a[y]], S[x]) + ft(P[a[x]], S[y]) > ft(P[a[x]], S[x]) + ft(P[a[y]], S[y]) + 1e-9){ var tmp = a[x]; a[x] = a[y]; a[y] = tmp; imp = true; } } }
+    var np = a.map(function(k){ return P[k]; }), moves = np.map(function(pl, j){ return {p:pl, from:t.slots[P.indexOf(pl)], to:S[j], fit:SE_HOOK.fit(pl, S[j])}; });
+    return {f:f, slots:S, pitch:np, moves:moves};
+  }
+  function seSetFormation(m, side, fid, ctx){
+    var t = m.teams[side], r = seAssignForm(t, fid); if(!r) return false;
+    t.fid = fid; t.slots = r.slots; t.pitch = r.pitch; r.moves.forEach(function(x){ x.p.fit = x.fit; });
+    if(m.i > 0){ var f = ctx === 'half' ? 0.5 : (ctx === 'red' ? 0.8 : 1); t.disFrm = {at:m.i, v:-SE_P.styChg * 0.8 * f}; }   // mất nhịp vài tình huống sau khi đổi sơ đồ
+    return true;
   }
   function seAutoSubs(m, side){
     var t = m.teams[side], made = [];
@@ -13979,11 +14233,11 @@
     var sy = seSynergy(team, cur), fl = sy.form >= 0.75 ? 'rất hợp' : (sy.form >= 0.5 ? 'tạm ổn' : 'lệch'), sl = sy.stat > 0.25 ? 'hợp' : (sy.stat > -0.25 ? 'tạm ổn' : 'chưa hợp'), si = sStyleInfo(cur), dr = SE_STYLE[cur].drain;
     var nw = SE_NEWS[cur] || SE_NEWS.flex, pc = SEASON_STYLE_PC[cur] || {};
     function fitOf(id){ var bn = seSynergy(team, id).bonus, pc = Math.round(Math.max(0, Math.min(100, 50 + bn * 25))); return {pct:pc, cls:(pc >= 65 ? 'g' : (pc >= 45 ? 'm' : 'b'))}; }
-    var fc = fitOf(cur);
+    var fc = fitOf(cur), oc = (sMC && sMC.m) ? sMC.m.teams[1] : seOppNow;   // đối thủ: trong trận lấy từ trận, ngoài trận là đối thủ vòng sắp tới
     var ranked = SEASON_STYLES.map(function(s, i){ var f = fitOf(s.id); return {s:s, f:f, i:i}; }).sort(function(a, b){ return (b.f.pct - a.f.pct) || (a.i - b.i); });   // phù hợp đội hình nhất lên đầu
     var opts = ranked.map(function(r, k){
       var s = r.s, f = r.f, on = s.id === cur;
-      return '<button type="button" role="option" aria-selected="' + on + '" class="sd-opt' + (on ? ' on' : '') + '" data-sty="' + s.id + '"><span class="sd-n">' + (on ? '✓ ' : '') + s.ic + ' ' + escHtml(s.name) + (k === 0 ? ' <em class="sd-top">phù hợp nhất</em>' : '') + '</span><small class="' + f.cls + '">hợp ' + f.pct + '%</small></button>';
+      return '<button type="button" role="option" aria-selected="' + on + '" class="sd-opt' + (on ? ' on' : '') + '" data-sty="' + s.id + '"><span class="sd-n">' + (on ? '✓ ' : '') + s.ic + ' ' + escHtml(s.name) + (k === 0 ? ' <em class="sd-top">phù hợp nhất</em>' : '') + '</span><small class="' + f.cls + '">hợp ' + f.pct + '%</small>' + (oc ? (function(){ var mb = seStyleEdge(s.id, oc.style).edge; return Math.abs(mb) >= 0.03 ? '<em class="sd-mu ' + (mb > 0 ? 'g' : 'b') + '" title="Khắc chế phong cách đối thủ">⚔️ ' + seMuTxt(mb) + '</em>' : ''; })() : '') + '</button>';
     }).join('');
     var go = (mode === 'plan')
       ? '<button type="button" class="st-go" data-sty-go="pitch" title="Mở Sân đấu để xếp đội hình và đổi sơ đồ">🔧 Xếp đội hình</button>'
@@ -13996,11 +14250,13 @@
       + '<ul class="nw-hn">' + nw.hn.map(function(t){ return '<li>🏆 ' + escHtml(t) + '</li>'; }).join('') + '</ul>'
       + '<div class="nw-fx"><small>Sơ đồ: ' + fl + ' · Chỉ số cầu thủ: ' + sl + ' · Hao thể lực: ' + (dr >= 1.2 ? 'cao' : (dr <= 0.9 ? 'thấp' : 'vừa')) + '</small><small style="color:#34D399">＋ ' + escHtml(pc.pro || '') + '</small><small style="color:#F87171">－ ' + escHtml(pc.con || '') + '</small></div></div>'
       + '<figure class="nw-b"><div class="nw-pitch">' + sNewsSVG(nw) + '</div><figcaption>Sơ đồ mẫu ' + nw.fm.join('-') + ' · số trên sân khớp với các bước bên trái<br><span class="lg p">chuyền bóng</span> <span class="lg m">chạy vị trí</span> <span class="lg d">ép / thu hẹp</span></figcaption></figure></article></div>';
-    return '<div class="st-box"><div class="st-t">🧭 Phong cách HLV · sơ đồ <b>' + escHtml(team.fidName || team.fid) + '</b>' + (extra || '') + '</div>' + chips
+    return '<div class="st-box"><div class="st-t">🧭 Phong cách HLV · sơ đồ <b>' + escHtml(team.fidName || team.fid) + '</b>' + (extra || '') + '</div>' + chips + (oc ? '<div class="st-scout">' + seScoutHTML(Object.assign({}, team, {style:cur}), oc, 'sty', true) + '</div>' : '')
       + (sMC ? '<details class="nw-d"><summary>📰 Bản tin chiến thuật</summary>' + paper + '</details>' : paper) + '</div>';
   }
   function sStyleHTML(lu, st){
     var sid = (st.styleBy && st.styleBy[lu.f.id]) || 'flex', t = sTeamFromLineup(lu, null, sid); t.fidName = lu.f.name;
+    seOppNow = null;
+    try{ var se0 = sCurrent(st, sCfg()), r0 = se0 ? sNextRound(se0) : -1, op0 = r0 >= 0 ? sOpp(se0, r0) : null; if(op0) seOppNow = sOppTeam(se0, op0.team.id, lu.starters.concat(lu.bench).map(function(x){ return x.p.name; }), r0); }catch(e){ seOppNow = null; }
     return '<div id="st-wrap">' + sStyleBox(t, sid, '', 'plan') + '</div>';
   }
   function sFidName(fid){ var f = FORMATIONS.filter(function(x){ return x.id === fid; })[0]; return f ? f.name : fid; }
@@ -14019,6 +14275,7 @@
     var K = rec.failK, ok = function(k){ return K < 0 || k < K ? '✅' : (k === K ? '❌' : '·'); };
     lines.push('<div class="mt-stg"><span>🏃 Đẩy bóng ' + ok(0) + '</span><span>🎯 Tạo cơ hội ' + ok(1) + '</span><span>🥅 Dứt điểm ' + ok(2) + '</span></div>');
     if(rec.res === 'goal') lines.push('<div class="mt-line mt-goal">⚽ <b>' + sNm(A, rec.shooter) + '</b> ghi bàn cho ' + escHtml(A.name) + '!</div>');
+    else if(rec.res === 'saved' && rec.miss) lines.push('<div class="mt-line">😮 ' + sNm(A, rec.shooter) + ' dứt điểm chệch khung thành.</div>');
     else if(rec.res === 'saved') lines.push('<div class="mt-line">🧤 ' + sNm(A, rec.shooter) + ' dứt điểm nhưng <b>' + sNm(D, rec.keeper) + '</b> cản phá!</div>');
     else if(rec.res === 'cleared') lines.push('<div class="mt-line">🛡️ <b>' + sNm(D, rec.stopper) + '</b> phá bóng, nguy hiểm được hóa giải.</div>');
     else lines.push('<div class="mt-line">✂️ <b>' + sNm(D, rec.stopper) + '</b> cắt bóng ngay từ giữa sân.</div>');
@@ -14042,8 +14299,9 @@
     fulltime:['Full-time','Hết giờ'], longshot:['Long shot','Sút xa'], cross:['Cross','Tạt bóng'], header:['Header','Đánh đầu'], post:['Post','Cột dọc'], crossbar:['Crossbar','Xà ngang'], mistake:['Mistake','Sai lầm'], tackle:['Tackle','Cướp bóng'], clear:['Clear the ball','Phá bóng'], foul:['Foul','Phạm lỗi'],
     pass:['Pass','Chuyền bóng'], wall:['Wall','Hàng rào'], goal:['Goal','Bàn thắng'], shot:['Shot','Cú sút'],
     var:['VAR','Trọng tài video'], offside:['Offside','Việt vị'], handball:['Handball','Chạm tay'], yellow:['Yellow card','Thẻ vàng'], red:['Red card','Thẻ đỏ'],
-    injury:['Injury','Chấn thương'], substitute:['Substitute','Cầu thủ dự bị / thay người'], extratime:['Extra time','Bù giờ']};
-  var COM_ICON = {pre:'📋', play:'👟', key:'⚡', goal:'⚽', goalx:'😬', save:'🧤', set:'🚩', warn:'⚠️', ans:'🧠', info:'🗣️', next:'👀', ht:'⏸️', ft:'🏁', fire:'🔥', var:'📺', card:'🟨', red:'🟥', inj:'🚑', sub:'🔁', xt:'⏱️'};
+    injury:['Injury','Chấn thương'], substitute:['Substitute','Cầu thủ dự bị / thay người'], extratime:['Extra time','Bù giờ'],
+    throwin:['Throw-in','Ném biên'], secondball:['Second ball','Bóng bật ra / bóng hai'], wide:['Wide','Sút ra ngoài'], press:['Pressing','Áp sát đoạt bóng'], intercept:['Intercept','Cắt bóng'], keeper:['Goalkeeper','Thủ môn'], defendcounter:['Track back','Lùi về chống phản công']};
+  var COM_ICON = {rs:'🔄', miss:'😮', pre:'📋', play:'👟', key:'⚡', goal:'⚽', goalx:'😬', save:'🧤', set:'🚩', warn:'⚠️', ans:'🧠', info:'🗣️', next:'👀', ht:'⏸️', ft:'🏁', fire:'🔥', var:'📺', card:'🟨', red:'🟥', inj:'🚑', sub:'🔁', xt:'⏱️'};
   var comVoice = false; try{ comVoice = localStorage.getItem('se_com_voice') === '1'; }catch(e){}
 
   function comL(min, k, t, w){ var o = {min:min, k:k, t:t}; if(w) o.w = w; return o; }
@@ -14057,7 +14315,7 @@
   }
   function comNmId(t, id){ var p = sFindP(t, id); return p ? comShort(p) : 'A player'; }
   function comPick(arr, r){ return arr[Math.floor(r() * arr.length)]; }
-  function comFmt(s, o){ return s.replace(/\{(\w+)\}/g, function(_, k){ var v = o[k]; if(v == null) return ''; return /^(p\d|d\d|sh|gk|st|tk)$/.test(k) ? '**' + v + '**' : v; }); }
+  function comFmt(s, o){ return s.replace(/\{(\w+)\}/g, function(_, k){ var v = o[k]; if(v == null) return ''; return /^(p\d|d\d|sh|gk|st|tk|w1|fo|vi|kp)$/.test(k) ? '**' + v + '**' : v; }); }
   function comTxt(t){ return escHtml(String(t)).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>'); }
   function comPush(m, lines){ if(!Array.isArray(m.feed)) m.feed = []; lines.forEach(function(l){ m.feed.push(l); }); if(m.feed.length > 150) m.feed.splice(0, m.feed.length - 150); }
   function comEnsure(m){ if(!Array.isArray(m.feed)) m.feed = []; if(!m.mom) m.mom = [0, 0]; if(!m.feed.length && m.i === 0) comPush(m, comPre(m)); }
@@ -14068,6 +14326,9 @@
     out.push(comL(0, 'pre', 'Welcome to the match!'));
     out.push(comL(0, 'pre', (m.home ? t0.name + ' play ' + t1.name + '. ' + t0.name + ' are at home.' : t1.name + ' play ' + t0.name + '. ' + t0.name + ' are away from home.')));
     out.push(comL(0, 'pre', 'Plan for ' + t0.name + ': ' + (COM_STYLE_EN[t0.style] || 'a balanced game') + '. Plan for ' + t1.name + ': ' + (COM_STYLE_EN[t1.style] || 'a balanced game') + '.'));
+    var mx = seMatchup(t0, t1), ws = (mx.s.why[0] && (!mx.f.why[0] || Math.abs(mx.s.why[0].v) >= Math.abs(mx.f.why[0].v))) ? mx.s.why[0] : mx.f.why[0];
+    if(Math.abs(mx.mu) >= 0.05 && ws) out.push(comL(0, 'pre', 'Scout says: ' + ws.en.replace(/\{T\}/g, ws.v > 0 ? t0.name : t1.name)));
+    else out.push(comL(0, 'pre', 'The tactics look even. It will be a close game!'));
     out.push(comL(0, 'pre', 'Your team plays ' + sFidName(t0.fid) + '. Answer the questions at the key moments. A right and fast answer gives your team power!'));
     return out;
   }
@@ -14082,6 +14343,7 @@
     function add(dm, k, t, w){ if(w === 'pass' && !/pass/i.test(t)) w = null; out.push(comL(Math.max(1, mn - dm), k, comFmt(t, o), w)); }
     function extra(){
       var ex = [], tired = null;
+      if(m.i === 3){ var mx = seMatchup(m.teams[0], m.teams[1]), ws = (mx.s.why[0] && (!mx.f.why[0] || Math.abs(mx.s.why[0].v) >= Math.abs(mx.f.why[0].v))) ? mx.s.why[0] : mx.f.why[0]; if(Math.abs(mx.mu) >= 0.06 && ws) return ['info', ws.en.replace(/\{T\}/g, ws.v > 0 ? m.teams[0].name : m.teams[1].name)]; }
       if(cur.nA < cur.baseA) return ['warn', 'Only ' + cur.nA + ' players join the attack. Risky!'];
       if(cur.nD < cur.baseD) return ['warn', D.name + ' have only ' + cur.nD + ' defenders back. Lots of space!'];
       if(m.i >= m.N - 2) return ['info', 'Last minutes! Every chance counts.'];
@@ -14094,39 +14356,76 @@
       ex.push(['info', A.name + ' like ' + (COM_STYLE_EN[A.style] || 'a balanced game') + '.']);
       return r() < 0.55 ? comPick(ex, r) : null;
     }
+    /* ---- câu nối: tình huống này bắt đầu từ đâu (hệ quả trực tiếp của pha trước) ---- */
+    var F = cur.from || null, K = F && m.teams[F.att] ? m.teams[F.att].name : '';
+    function nmS(id, s){ return (id && m.teams[s]) ? comNmId(m.teams[s], id) : ''; }
+    if(F){ o.K = K; o.w1 = nmS(F.by, F.bs != null ? F.bs : F.att) || o.d1; o.fo = nmS(F.by, F.bs != null ? F.bs : 1 - F.att) || o.d1; o.vi = nmS(F.on, F.att) || o.p1; }
+    function link(){   // chuỗi câu nối cho pha mở / phản công / sút xa / tạt / sai lầm. Trả về true nếu đã nói rõ ai đang cầm bóng
+      if(!F) return false;
+      if(F.first){ add(2, 'play', 'Kick-off! {A} start the game.', 'kickoff'); return true; }
+      var t = F.type, fl = F.flip;
+      if(t === 'kickoff'){
+        add(2, 'play', F.half ? 'The second half begins! ' + K + ' kick off.' : K + ' kick off again.', 'kickoff');
+        if(fl) add(2, 'rs', '{A} press hard and win the ball straight away!', 'press');
+        return true;
+      }
+      if(t === 'turnover'){
+        if(fl){ add(2, 'rs', '{w1} wins the ball for ' + K + '...'); add(2, 'rs', '...but {A} press at once and take it back!', 'press'); return true; }
+        add(2, 'rs', F.how === 'tackle' ? '{w1} won the ball with a tackle. {A} have it now.' : (F.how === 'loose' ? '{w1} gets to the loose ball first for {A}.' : '{w1} cleared it to a teammate. {A} have the ball.'), F.how === 'tackle' ? 'tackle' : null);
+        return true;
+      }
+      if(t === 'gk'){
+        if(F.how === 'throw') add(2, 'rs', '{w1} holds the ball and rolls it out quickly to {p1}.', 'keeper');
+        else { add(2, 'rs', '{w1} kicks the ball long up the pitch.', 'keeper'); add(2, 'rs', fl ? '{p1} wins the header for {A}!' : '{p1} brings it down for {A}.', fl ? 'header' : null); }
+        return true;
+      }
+      if(t === 'goalkick'){ add(2, 'set', 'Goal kick for ' + K + '. {w1} kicks it long.', 'goalkick'); add(2, 'rs', fl ? '{p1} jumps highest and wins it for {A}!' : '{p1} controls it for {A}.', fl ? 'header' : null); return true; }
+      if(t === 'throw'){
+        if(fl){ add(2, 'set', 'Throw-in for ' + K + '...', 'throwin'); add(2, 'rs', '...but {p1} cuts it out for {A}!', 'intercept'); }
+        else add(2, 'set', 'Throw-in for {A}' + (F.zone === 'high' ? ' near the box' : '') + '. {p1} throws it to {p2}.', 'throwin');
+        return true;
+      }
+      if(t === 'second'){ add(2, 'rs', F.how === 'wood' ? '{tk} is first to the rebound for {A}!' : 'The ball drops outside the box. {tk} gets there first for {A}!', 'secondball'); return true; }
+      if(t === 'freekick' && cur.restart){   // đá phạt giữa sân: đá nhanh rồi quay lại pha mở
+        add(2, 'set', F.why === 'offside' ? 'Free kick to {A} for offside. {p1} takes it quickly.' : (F.why === 'afoul' ? 'Free kick to {A} for a push on the defender. {p1} takes it quickly.' : (F.why === 'var' ? 'No goal, so {A} restart with a free kick.' : 'Free kick for {A} after the foul by {fo}. {p1} plays it short.')), 'freekick');
+        return true;
+      }
+      return false;
+    }
     if(kind === 'open'){
-      if(i0) add(2, 'play', 'Kick-off! {A} start the game.', 'kickoff');
-      else if(L && L.res === 'goal') add(2, 'play', L.att === cur.att ? '{A} have the ball in midfield.' : '{A} kick off again.', L.att === cur.att ? null : 'kickoff');
-      else add(2, 'play', comPick(['{A} have the ball in midfield.', '{p1} gets the ball for {A}.', '{A} pass the ball around.'], r));
+      if(!link()) add(2, 'play', comPick(['{A} have the ball in midfield.', '{p1} gets the ball for {A}.', '{A} pass the ball around.'], r));
       add(1, 'play', comPick(['{p1} passes to {p2}.', '{p1} runs forward with the ball.', 'Nice pass from {p1} to {p2}!', '{p1} plays it to {p2}.'], r), 'pass');
       add(1, 'play', comPick(['{d1} comes to stop the move.', '{d1} and {d2} close the space.', '{d1} is watching {p2}.'], r));
     } else if(kind === 'counter'){
-      add(2, 'play', 'Turnover! {A} win the ball and run fast!', 'counter');
+      if(!link()) add(2, 'play', 'Turnover! {A} win the ball and run fast!', 'counter');
       add(1, 'play', 'Counter-attack! {p1} sprints forward.', 'counter');
+      add(1, 'rs', (cur.xr || 0) >= 1 ? '{D} pushed too many players forward. Now they must run back!' : '{d1} turns and races back to stop the counter!', 'defendcounter');
       add(1, 'play', '{p2} joins in. Only {d1} is back to defend!');
     } else if(kind === 'corner'){
-      add(2, 'set', 'Corner kick for {A}.', 'corner');
+      add(2, 'set', F && F.how === 'parry' ? 'Corner kick for {A} after that save.' : (F && F.how === 'block' ? 'Corner kick for {A}. The ball went out off {w1}.' : 'Corner kick for {A}.'), 'corner');
       add(1, 'play', '{tk} goes to the corner flag.');
       add(1, 'play', 'Everyone runs into the box. {p2} is close to {d1}.');
     } else if(kind === 'freekick'){
-      add(2, 'set', 'Foul by {d1}. Free kick for {A}!', 'foul');
-      add(1, 'play', '{tk} puts the ball down. {D} make a wall.', 'wall');
+      var fzz = cur.fz || (F && F.fz) || 'direct';
+      add(2, 'set', (F && F.by ? 'Free kick for {A}. {fo} fouled {vi}' : 'Free kick for {A}') + (fzz === 'wide' ? ' out on the wing.' : ' near the box!'), 'freekick');
+      add(1, 'play', fzz === 'wide' ? '{tk} puts the ball down. Tall players go into the box.' : '{tk} puts the ball down. {D} make a wall.', fzz === 'wide' ? null : 'wall');
       add(1, 'play', '{tk} takes a few steps back...');
     } else if(kind === 'longshot'){
-      add(2, 'play', '{A} are near the box. {tk} has the ball.');
+      if(!link()) add(2, 'play', '{A} are near the box. {tk} has the ball.');
       add(1, 'play', '{tk} sees some space. {d1} is too far away!');
       add(0, 'play', '{tk} pulls back his foot... a long shot!', 'longshot');
     } else if(kind === 'cross'){
-      add(2, 'play', '{tk} runs down the wing for {A}.');
+      add(2, 'play', link() ? '{A} move the ball out to the wing. {tk} has it.' : '{tk} runs down the wing for {A}.');
       add(1, 'play', '{tk} looks up. Players are waiting in the box.');
       add(0, 'play', '{tk} swings a cross into the box!', 'cross');
     } else if(kind === 'blunder'){
-      add(2, 'warn', 'Mistake! {d1} loses the ball in a bad place.', 'mistake');
+      add(2, 'warn', link() ? 'Mistake! {d1} slips while trying to stop {A}!' : 'Mistake! {d1} loses the ball in a bad place.', 'mistake');
       add(1, 'play', '{tk} runs onto the loose ball!');
       add(0, 'play', mine ? '{tk} is close to the goal. This is a big chance!' : 'Danger! {tk} is running at our goal!');
     } else {
       add(2, 'set', 'PENALTY! The referee points to the spot!', 'penalty');
-      add(1, 'play', '{d1} fouled {p1} in the box.', 'foul');
+      if(F && F.sev === 'hand') add(1, 'play', '{fo} touched the ball with his hand in the box.', 'handball');
+      else add(1, 'play', (F && F.by ? '{fo} fouled {vi}' : '{d1} fouled {p1}') + ' in the box.', 'foul');
       add(1, 'play', '{tk} puts the ball on the spot. Everyone goes quiet.');
     }
     if(kind === 'open' || kind === 'counter'){ var ex = extra(); if(ex) out.push(comL(Math.max(1, mn - 1), ex[0], ex[1])); }
@@ -14173,12 +14472,29 @@
     } else if(rec.res === 'saved'){
       if(kind === 'penalty') add('save', mine ? 'Penalty saved! {gk} dives the right way!' : 'Penalty saved! Our keeper {gk} is a hero!', 'save');
       else if(rec.wood){ var wn = rec.wood === 'bar' ? 'crossbar' : 'post'; add('save', mine ? 'So close! The ball hits the ' + wn + '!' : 'Phew! The ball hits the ' + wn + '. Lucky!', wn); }
+      else if(rec.miss) add('miss', mine ? 'Wide! {sh} shoots just past the post.' : 'Phew! {sh} shoots wide of our goal.', 'wide');
       else add('save', mine ? 'Great save by {gk}! {D} stay in the game.' : 'Great save by {gk}! Our keeper stops it!', 'save');
-    } else if(rec.res === 'cleared' && rec.card && rec.card.f){
-      add('play', 'Foul! {st} stops the attack the wrong way.', 'foul');
+    } else if(rec.offside){
+      add('warn', 'Offside! The flag goes up. ' + comNmId(A, rec.offside.id) + ' was too far forward.', 'offside');
+    } else if(rec.afoul){
+      add('warn', 'Foul by ' + comNmId(A, rec.afoul.id) + '! He pushes the defender.', 'foul');
+    } else if(rec.foul){
+      o.fo = comNmId(D, rec.foul.id);
+      add('play', rec.foul.zone === 'box' ? (rec.foul.sev === 'hand' ? 'Handball! The ball hits the arm of {fo} in the box!' : 'Foul! {fo} trips {p1} in the box!') : (rec.foul.sev === 'cynical' ? 'Foul! {fo} pulls {p1} back to stop the counter-attack.' : (rec.foul.sev === 'last' ? 'Foul! {fo} is the last defender and brings {p1} down!' : 'Foul! {fo} brings down {p1}.')), rec.foul.sev === 'hand' ? 'handball' : 'foul');
     } else if(rec.res === 'cleared'){
       add('play', kind === 'corner' ? 'Cleared! {st} heads the ball away.' : comPick(['Blocked! {st} clears the ball away.', '{st} stops it. The danger is over.'], r), 'clear');
-    } else add('play', (rec.card && rec.card.f) ? 'Foul! {st} brings down the attacker.' : '{st} wins the ball with a tackle!', (rec.card && rec.card.f) ? 'foul' : 'tackle');
+    } else add('play', (rec.nx && rec.nx.type === 'throw') ? '{st} slides in and knocks the ball away!' : '{st} wins the ball with a tackle!', 'tackle');
+    var NX = rec.nx || null;
+    if(NX && !voff && !rec.offside && !rec.afoul && !rec.foul){   // bóng đi đâu sau pha này
+      o.X = m.teams[NX.att] ? m.teams[NX.att].name : '';
+      if(rec.res === 'saved' && NX.type === 'corner') add('rs', NX.how === 'wood' ? 'The ball flies out for a corner.' : '{gk} pushes it out for a corner!');
+      else if(rec.res === 'saved' && NX.type === 'gk') add('rs', rec.wood ? 'The ball bounces down and {gk} grabs it.' : '{gk} holds on to the ball.', 'keeper');
+      else if(NX.type === 'second') add('rs', NX.how === 'wood' ? 'The ball bounces back into play!' : 'The ball bounces out of the box...', 'secondball');
+      else if(NX.type === 'throw') add('rs', 'The ball goes out over the side line.', 'throwin');
+      else if(rec.res === 'cleared' && NX.type === 'corner') add('rs', 'It hits {st} and goes out. Corner!');
+      else if(NX.type === 'turnover' && NX.how === 'loose' && rec.res === 'saved') add('rs', 'The ball bounces back, and {D} clear the danger.');
+      else if(NX.type === 'turnover' && NX.how === 'loose') add('rs', 'The ball is loose... {st} gets there first!');
+    }
     if(rec.card){
       var cd = rec.card, ct2 = m.teams[cd.side], cn = comNmId(ct2, cd.id);
       if(cd.t === 'y') add('card', 'Yellow card for ' + cn + '. Be careful now!', 'yellow');
@@ -14205,8 +14521,15 @@
     } else if(ht){
       out.push(comL(45, 'ht', 'Half-time! ' + sc + '. Time to change your plan.', 'halftime'));
     } else {
-      var nx = rec.next;
-      if(nx === 'corner') add('next', 'Next: corner kick for {A}!', 'corner');
+      var nx = rec.next, NN = rec.nx;
+      if(NN){ o.X = m.teams[NN.att] ? m.teams[NN.att].name : ''; o.kp = NN.by ? comNmId(m.teams[NN.bs != null ? NN.bs : NN.att], NN.by) : ''; }
+      if(NN && NN.type === 'freekick') add('next', NN.fz === 'mid' ? 'Next: free kick for {X} in midfield.' : (NN.fz === 'wide' ? 'Next: free kick for {X} out wide. Time for a cross!' : 'Next: free kick for {X} in a dangerous place!'), 'freekick');
+      else if(NN && NN.type === 'throw') add('next', 'Next: throw-in for {X}.', 'throwin');
+      else if(NN && NN.type === 'goalkick') add('next', 'Next: goal kick for {X}.', 'goalkick');
+      else if(NN && NN.type === 'gk') add('next', NN.how === 'throw' ? 'Next: {kp} rolls it out fast. {X} can go quickly!' : 'Next: {kp} kicks it long for {X}.', 'keeper');
+      else if(NN && NN.type === 'turnover') add('next', 'Next: {X} have the ball. Can they hit back fast?', 'counter');
+      else if(NN && NN.type === 'second') add('next', 'Next: {X} pick up the second ball!', 'secondball');
+      else if(nx === 'corner') add('next', 'Next: corner kick for {A}!', 'corner');
       else if(nx === 'freekick') add('next', 'Next: free kick for {A} in a dangerous place!', 'freekick');
       else if(nx === 'penalty') add('next', 'Next: PENALTY for {A}!', 'penalty');
       else if(rec.res === 'goal') add('next', 'Next: {D} kick off again.', 'kickoff');
@@ -14229,9 +14552,9 @@
       : '<div class="fe fe-info">' + comRowInner({k:'info', t:'The match goes on. Press the button for the next moment.'}) + '</div>') + '</div>'
       + (skip ? '<div class="mt-skiprow"><button type="button" class="mt-skip" data-mt="skip">⏩ Đọc nhanh</button></div>' : '') + '</div>';
   }
-  function comLogHTML(m){
+  function comLogHTML(m, limit){
     comEnsure(m);
-    return '<div class="mt-feedwrap"><div class="mt-feed full">' + m.feed.slice().reverse().map(function(l){ return '<div class="fe fe-' + l.k + '">' + comRowInner(l) + '</div>'; }).join('') + '</div></div>';
+    return '<div class="mt-feedwrap"><div class="mt-feed full">' + (limit != null ? m.feed.slice(0, limit) : m.feed.slice()).reverse().map(function(l){ return '<div class="fe fe-' + l.k + '">' + comRowInner(l) + '</div>'; }).join('') + '</div></div>';
   }
   function comHeadExtra(m){
     var mo = (m.mom && m.mom[0]) || 0, mo1 = (m.mom && m.mom[1]) || 0;
@@ -14260,7 +14583,7 @@
   }
   /* Ghi dòng vào nhật ký + lưu TRƯỚC, rồi mới hiện từng dòng (thoát giữa chừng không mất diễn biến). */
   async function comPlay(m, lines, tok, fast, hook){
-    var c = sMC; comPush(m, lines); if(c) sSave(c.st);
+    var c = sMC, base = (m.feed || []).length; comPush(m, lines); if(c){ sSave(c.st); c.shownN = base; }
     var box = sEl('mt-feed'); if(!box) return;
     for(var i = 0; i < lines.length; i++){
       if(!sAlive(tok)) return;
@@ -14269,10 +14592,12 @@
       if(hook){ try{ hook(lines[i], i, lines); }catch(e){} }
       await comWait(reducedMotion() || (sMC && sMC.skip) ? 0 : 450, tok);
       row.classList.remove('typing');
+      if(c){ c.shownN = base + i + 1; if(c.busy && c.tab === 'log') sTabBusy('log'); }
       if(lines[i].k === 'goal'){ try{ if(!reducedMotion()) spawnConfetti(40, 'perfect'); }catch(e){} }
       if(!(sMC && sMC.skip)) comSpeak(lines[i].t);
       await comWait(fast ? 500 : Math.min(4200, 900 + String(lines[i].t).length * 50), tok);
     }
+    if(c) c.shownN = null;
   }
 
   /* =====================================================================
@@ -14727,7 +15052,7 @@
     var m = D.c.m, att = cur.att, fwd = att === 0 ? -1 : 1, r = seRng(seHash(m.seed + ':mx' + cur.i)), tD = m.teams[1 - att], gk = 0;
     tD.slots.forEach(function(p, i){ if(p === 'GK') gk = i; });
     var X = {cur:cur, att:att, def:1 - att, fwd:fwd, ia:cur.ia.slice(), id:cur.id.slice(), gk:gk, side:r() < 0.5 ? -1 : 1, dirX:r() < 0.5 ? -1 : 1, kind:cur.kind || (cur.counter ? 'counter' : 'open'), tk:cur.taker, sh:null,
-      restart:(m.i === 0 || (m.last && m.last.res === 'goal'))};
+      restart:(m.i === 0 || (m.last && m.last.res === 'goal') || !!(cur.from && cur.from.type === 'kickoff'))};
     X.Y = function(dy){ return (att === 0 ? 0 : 100) - fwd * dy; };   // toạ độ y cách vạch cầu môn đang bị tấn công dy%
     X.a = function(k){ var v = X.ia[k]; return v != null ? v : X.ia[X.ia.length - 1]; };
     return X;
@@ -14881,7 +15206,8 @@
       if(l.k === 'goal' || l.k === 'goalx') mxGoal(D, rec);
       else if(l.k === 'save') mxSave(D, rec);
       else if(l.k === 'play' && l.w === 'clear') mxClear(D, rec);
-      else if(l.k === 'play' && l.w === 'tackle') mxTackle(D, rec);
+      else if(l.k === 'play' && (l.w === 'tackle' || l.w === 'foul' || l.w === 'handball')) mxTackle(D, rec);
+      else if(l.k === 'miss') mxMiss(D, rec);
       else if(l.k === 'play' && !l.w) mxWind(D, rec);
       else if(l.k === 'next') mxNext(D, rec);
       else if(l.k === 'ft' || l.k === 'ht') mxReset(D);
@@ -14956,8 +15282,13 @@
       }
     });
   }
+  function mxMiss(D, rec){   // SÚT RA NGOÀI: bóng bay sượt cột dọc ra biên ngang, thủ môn chỉ đứng nhìn
+    var X = mxPrep(D, rec), from = {x:D.bx, y:D.by}, tx = 50 + X.dirX * 16, ty = X.Y(-1.5);
+    D.el.classList.remove('key'); mxKick(D, X.att, X.sh, from.x, from.y, true); mxTrail(D, from.x, from.y, tx, ty, 'shot'); mxBall(D, tx, ty, 0.85, 0, 'shot');
+    mxLater(D, 820, function(){ D.pl[X.att][X.sh].classList.add('shk'); mxPop(D, tx, X.Y(6), '😮'); mxLabel(D, 50 + X.dirX * 10, X.Y(14), 'wide'); });
+  }
   function mxClear(D, rec){   // CẢN PHÁ: bóng đập vào hậu vệ → khiên + tia → bóng bật ra, bay bổng ra xa / ra biên
-    var X = mxPrep(D, rec), bp = {x:D.bx, y:D.by}, out = rec.next === 'corner' ? {x:(bp.x < 50 ? 5 : 95), y:X.Y(2)} : {x:50 + X.dirX * 30, y:X.Y(34)};
+    var X = mxPrep(D, rec), bp = {x:D.bx, y:D.by}, out = rec.next === 'corner' ? {x:(bp.x < 50 ? 5 : 95), y:X.Y(2)} : (rec.next === 'throw' ? {x:(bp.x < 50 ? 1.5 : 98.5), y:bp.y - X.fwd * 6} : {x:50 + X.dirX * 30, y:X.Y(34)});
     D.el.classList.remove('key'); mxPut(D, X.def, X.stI, bp.x, bp.y + X.fwd * D.ch * 0.3, 0.45); D.pl[X.def][X.stI].classList.add('hero');
     mxLater(D, 420, function(){
       mxPop(D, bp.x, bp.y - X.fwd * 8, '🛡️'); mxRing(D, bp.x, bp.y, 'c'); mxPart(D, bp.x, bp.y, 10, ['#67E8F9', '#fff', '#BAE6FD'], 7, 600); mxSquash(D); mxShake(D, 0.5); mxLabel(D, bp.x, bp.y - X.fwd * 15, 'clear'); mxLunge(D, X.def, X.stI);
@@ -14977,7 +15308,13 @@
     var X = D.X, nx = rec.next, def = X.def, pins = {}; mxClearT(D); mxClearFx(D); mxUnhi(D); D.el.classList.remove('act', 'key');
     if(rec.res === 'goal' && !nx){ mxReset(D); return; }
     if(nx === 'corner'){ var fl = {x:D.bx < 50 ? 4 : 96, y:X.Y(1.5)}; mxScene(D, {bx:fl.x, by:fl.y, att:X.att, dur:1.2}); mxBall(D, fl.x, fl.y, 1.1); return; }
-    if(nx === 'freekick'){ var sp = {x:50 + (D.bx < 50 ? -16 : 16), y:X.Y(25)}; mxScene(D, {bx:sp.x, by:sp.y, att:X.att, dur:1.2}); mxBall(D, sp.x, sp.y, 1.1); return; }
+    var NN = rec.nx || {}, na = NN.att != null ? NN.att : X.att;
+    if(nx === 'freekick' && NN.fz === 'mid'){ var mp = {x:Math.max(20, Math.min(80, D.bx)), y:50 + (D.by - 50) * 0.3}; mxScene(D, {bx:mp.x, by:mp.y, att:na, dur:1.2}); mxBall(D, mp.x, mp.y, 1.1); mxLabel(D, mp.x, mp.y, 'freekick'); return; }
+    if(nx === 'freekick'){ var sp = {x:50 + (D.bx < 50 ? -16 : 16) * (NN.fz === 'wide' ? 2 : 1), y:X.Y(NN.fz === 'wide' ? 20 : 25)}; mxScene(D, {bx:sp.x, by:sp.y, att:X.att, dur:1.2}); mxBall(D, sp.x, sp.y, 1.1); return; }
+    if(nx === 'throw'){ var tp = {x:D.bx < 50 ? 1.5 : 98.5, y:Math.max(8, Math.min(92, D.by))}; mxScene(D, {bx:tp.x, by:tp.y, att:na, dur:1.2}); mxBall(D, tp.x, tp.y, 1.1); mxLabel(D, tp.x, tp.y + 8, 'throwin'); return; }
+    if(nx === 'goalkick'){ var gp = {x:50 + X.dirX * 6, y:X.Y(5)}; mxScene(D, {bx:gp.x, by:gp.y, att:na, dur:1.2}); mxBall(D, gp.x, gp.y, 1.1); mxLabel(D, 50, X.Y(16), 'goalkick'); return; }
+    if(nx === 'kickoff'){ mxReset(D); return; }
+    if(nx === 'second'){ var sb = {x:50 + X.dirX * 10, y:X.Y(24)}; mxScene(D, {bx:sb.x, by:sb.y, att:na, dur:1.2}); mxBall(D, sb.x, sb.y, 1, 0.4, 'lob'); mxLabel(D, sb.x, sb.y - X.fwd * 9, 'secondball'); return; }
     if(nx === 'penalty'){ mxPin(pins, def, X.gk, 50, X.Y(2)); mxScene(D, {bx:50, by:X.Y(10.5), att:X.att, pins:pins, dur:1.2, excl:{att:X.att, d:20}}); mxBall(D, 50, X.Y(10.5), 1.1); return; }
     if(rec.res === 'saved'){ var g = D.pos[def][X.gk]; mxScene(D, {bx:g.x, by:g.y, att:def, dur:1.2}); var f = mxFeetAt(D, def, g.x, g.y); mxBall(D, f.x, f.y, 0.8); return; }
     var s = D.pos[def][X.stI != null ? X.stI : 0]; mxScene(D, {bx:s.x, by:s.y, att:def, dur:1.2}); var f2 = mxFeetAt(D, def, s.x, s.y); mxBall(D, f2.x, f2.y, 0.8);
@@ -15018,12 +15355,12 @@
     sWxApply(host);
     var fd = sEl('mt-feed'); if(fd) fd.scrollTop = fd.scrollHeight;
   }
-  function sStatsHTML(m){
+  function sStatsHTML(m, skipLast){
     var S = [0, 1].map(function(){ return {g:0, att:0, sh:0, on:0, sv:0, cnt:0, q:0, y:0, r:0}; });
-    m.log.forEach(function(x){
+    (skipLast ? m.log.slice(0, -1) : m.log).forEach(function(x){
       var a = S[x.att], d = S[1 - x.att]; a.att++; if(x.counter) a.cnt++;
       if(x.card){ var cs = S[x.card.side]; if(x.card.t !== 'r') cs.y++; if(x.card.t !== 'y') cs.r++; }
-      if(x.failK < 0 || x.failK === 2){ a.sh++; if(x.res === 'goal'){ a.on++; a.g++; } else { a.on++; d.sv++; } }
+      if(x.failK < 0 || x.failK === 2){ a.sh++; if(x.res === 'goal'){ a.on++; a.g++; } else if(!x.miss){ a.on++; d.sv++; } }
       if(x.att === 0 && x.q && x.q.ok) a.q++;
     });
     var tot = (S[0].att + S[1].att) || 1, t0 = m.teams[0], t1 = m.teams[1];
@@ -15031,28 +15368,139 @@
     return '<div class="ms-box">' + rows.map(function(r){ var a = +r[1] || 0, b = +r[2] || 0, tt = (a + b) || 1;
       return '<div class="ms-row"><div class="ms-v"><b>' + r[1] + '</b><span>' + r[0] + '</span><b>' + r[2] + '</b></div><div class="ms-bar"><i style="width:' + Math.round(a / tt * 50) + '%"></i><i class="o" style="width:' + Math.round(b / tt * 50) + '%"></i></div></div>'; }).join('') + '</div>';
   }
+  /* =====================================================================
+     TRẬN ĐẤU · tab luôn hiện + Sơ đồ (đổi sơ đồ, phong cách) + Thay người có XÁC NHẬN
+     - Các tab Live / Sơ đồ / Số liệu / Nhật ký có mặt suốt trận. Giữa một tình huống đang chạy, chuyển tab chỉ ẩn/hiện
+       (khung Live vẫn chạy ngầm, câu hỏi và vòng quay không bị mất); tab Sơ đồ lúc đó chỉ xem.
+     - Chọn thay người / đổi sơ đồ chỉ là CHỌN NHÁP: ai cũng vẫn nằm trong danh sách, đổi ý thoải mái. Bấm Xác nhận mới thực hiện.
+     ===================================================================== */
+  function sTabsHTML(tab){
+    return '<div class="mt-tabs">' + [['sit', '📣 Live'], ['xi', '🧩 Sơ đồ'], ['stats', '📊 Số liệu'], ['log', '📜 Nhật ký']].map(function(x){ return '<button type="button" class="' + (tab === x[0] ? 'on' : '') + '" data-mt="tab" data-t="' + x[0] + '">' + x[1] + '</button>'; }).join('') + '</div>';
+  }
+  function sTacOK(m){ return !!((m.half && !m.halfDone) || m.redPick); }   // cửa sổ đổi sơ đồ / phong cách: giờ nghỉ giữa hiệp hoặc khi đội thiếu người
+  function sIdxOf(arr, id){ for(var i = 0; i < arr.length; i++) if(arr[i].id === id) return i; return -1; }
+  function sFormBlock(c, tac){
+    var m = c.m, t = m.teams[0], t1 = m.teams[1], cur = FORMATIONS.filter(function(f){ return f.id === t.fid; })[0] || FORMATIONS[0], eC = seFormEdge(t.fid, t1.fid).edge;
+    var gone = t.pitch.some(function(p){ return p.gone; }), can = tac && !gone;
+    var h = '<div class="se-card sf-card"><h4>🧩 Sơ đồ <small>' + escHtml(cur.name) + ' · ⚔️ ' + seMuTxt(eC) + ' so với ' + escHtml(sFidName(t1.fid)) + '</small></h4>'
+      + '<p class="sf-note">' + (can ? 'Chạm một sơ đồ để xem trước. Chỉ khi bấm xác nhận mới đổi.' : (gone ? '🔒 Đội đang thiếu người nên chưa đổi sơ đồ được.' : '🔒 Chỉ đổi sơ đồ ở giờ nghỉ giữa hiệp.')) + '</p>'
+      + '<div class="sf-grid' + (can ? '' : ' off') + '">' + FORMATIONS.map(function(f){ return {f:f, e:seFormEdge(f.id, t1.fid).edge}; }).sort(function(a, b){ return b.e - a.e; }).map(function(x){
+        var on = x.f.id === t.fid, pk = c.pendForm === x.f.id;
+        return '<button type="button" class="sf-o' + (on ? ' cur' : '') + (pk ? ' pick' : '') + '" data-mt="form" data-id="' + x.f.id + '"' + (can && !on ? '' : ' disabled') + '><b>' + escHtml(x.f.name) + '</b><em class="' + (x.e > 0.025 ? 'g' : (x.e < -0.025 ? 'b' : '')) + '">⚔️ ' + seMuTxt(x.e) + '</em>' + (on ? '<small>đang dùng</small>' : '') + '</button>';
+      }).join('') + '</div>';
+    if(can && c.pendForm){
+      var r = seAssignForm(t, c.pendForm), eN = seFormEdge(c.pendForm, t1.fid).edge;
+      if(r){
+        var mv = r.moves.filter(function(x){ return x.from !== x.to; }), off = r.moves.filter(function(x){ return x.fit < 0.9; }).length;
+        h += '<div class="sf-prev"><b>Xem trước: ' + escHtml(r.f.name) + '</b> · ⚔️ ' + seMuTxt(eN) + ' (hiện tại ' + seMuTxt(eC) + ')<small>' + mv.length + ' cầu thủ đổi vị trí' + (off ? ', ' + off + ' người đứng lệch sở trường ⚠' : ', ai cũng đúng sở trường ✅') + '. Đổi sơ đồ giữa trận làm đội mất nhịp một chút.</small>'
+          + '<ul>' + mv.slice(0, 8).map(function(x){ return '<li><b>' + escHtml(x.p.n) + '</b> ' + escHtml(x.from) + ' ➜ ' + escHtml(x.to) + (x.fit < 0.9 ? ' <span class="w">⚠ lệch</span>' : '') + '</li>'; }).join('') + '</ul>'
+          + '<div class="se-btns"><button type="button" class="se-btn" data-mt="formok">✅ Xác nhận đổi sơ đồ</button><button type="button" class="se-btn ghost" data-mt="formno">↩ Hủy</button></div></div>';
+      }
+    }
+    return h + '</div>';
+  }
+  function sSubBlock(c, ro){
+    var m = c.m, t = m.teams[0], sel = c.sel, pend = c.pend || [], left = 7 - t.subs - pend.length;
+    function pairNo(kind, id){ for(var i = 0; i < pend.length; i++) if((kind === 'p' ? pend[i].o : pend[i].b) === id) return i + 1; return 0; }
+    var selP = sel ? (sel.k === 'p' ? t.pitch[sIdxOf(t.pitch, sel.id)] : t.bench[sIdxOf(t.bench, sel.id)]) : null;
+    function chip(p, slot, kind, i){
+      var n = pairNo(kind, p.id), isSel = !!(sel && sel.k === kind && sel.id === p.id), hint = '🔋 ' + Math.round(p.stam) + '%';
+      if(selP && sel.k !== kind && !n){ var ft = kind === 'b' ? SE_HOOK.fit(p, t.slots[sIdxOf(t.pitch, sel.id)]) : SE_HOOK.fit(selP, t.slots[i]); hint += ft >= 0.97 ? ' · ✅ hợp vị trí' : (ft >= 0.9 ? ' · gần vị trí' : ' · ⚠ lệch vị trí'); }
+      if(n) hint = kind === 'p' ? '⬇ sẽ ra sân' : '⬆ sẽ vào sân';
+      var cb = p.gone === 'red' ? ' 🟥' : (p.gone === 'inj' ? ' 🚑' : (p.yc === 1 ? ' 🟨' : ''));
+      return '<button type="button" class="sb-p' + (isSel ? ' sel' : '') + (n ? (kind === 'p' ? ' out' : ' in') : '') + '" data-mt="sel" data-k="' + kind + '" data-i="' + i + '"' + (ro || p.gone ? ' disabled' : '') + '>' + (n ? '<span class="sb-num">' + n + '</span>' : '')
+        + '<span class="sb-pos">' + escHtml(slot) + '</span><span class="sb-nm">' + escHtml(p.n) + cb + '</span><span class="sb-ov">' + sEffOvr(p) + '</span><span class="sb-bar"><i style="width:' + Math.round(p.stam) + '%;background:' + sStamCls(p.stam) + '"></i></span><span class="sb-tag">' + hint + '</span></button>';
+    }
+    var h = '<div class="se-card mt-sub"><h4>🔁 Thay người <small>(đã dùng ' + t.subs + '/7' + (pend.length ? ' · đang chọn ' + pend.length : '') + ')</small></h4>';
+    if(ro) h += '<p class="sf-note">🔒 Đang diễn ra tình huống. Thay người làm được khi tình huống kết thúc.</p>';
+    else h += '<p class="sf-note">Chạm một cầu thủ đá chính, rồi một cầu thủ dự bị. Chạm lại để đổi ý. <b>Chỉ khi bấm Xác nhận mới thay.</b></p>';
+    h += '<div class="mt-ct">Đang trên sân</div><div class="sb-grid">' + t.pitch.map(function(p, i){ return chip(p, t.slots[i], 'p', i); }).join('') + '</div>'
+      + '<div class="mt-ct">Dự bị</div>' + (t.bench.length ? '<div class="sb-grid">' + t.bench.map(function(p, i){ return chip(p, p.pos, 'b', i); }).join('') + '</div>' : '<div class="mt-line"><small>Đã dùng hết dự bị.</small></div>');
+    if(!ro && pend.length){
+      h += '<div class="sb-sum"><div class="mt-ct">Thay người dự kiến (chưa thực hiện)</div><ul>' + pend.map(function(q, k){
+        var pi = sIdxOf(t.pitch, q.o), bi = sIdxOf(t.bench, q.b); if(pi < 0 || bi < 0) return '';
+        var o = t.pitch[pi], b = t.bench[bi], ft = SE_HOOK.fit(b, t.slots[pi]), adv = [];
+        if(o.stam < 55) adv.push('✅ người ra đang mệt, thay hợp lý'); else if(o.stam > 65) adv.push('⚠ người ra còn sung sức, thay lúc này dễ mất nhịp');
+        if(ft < 0.9) adv.push('⚠ người vào lệch vị trí'); if(pend.length > 2) adv.push('⚠ thay trên 2 người một lượt dễ làm đội rối'); if(m.i >= m.N - 2) adv.push('⚠ gần hết giờ, người vào ít kịp làm quen');
+        return '<li><span class="sb-num sm">' + (k + 1) + '</span><div><b>' + escHtml(o.n) + '</b> (' + Math.round(o.stam) + '%) ➜ <b>' + escHtml(b.n) + '</b><small>' + (adv.join(' · ') || 'Hợp vị trí, thể lực ổn.') + '</small></div><button type="button" class="sb-x" data-mt="unpair" data-i="' + k + '" aria-label="Bỏ lượt thay này">✕</button></li>';
+      }).join('') + '</ul><div class="se-btns"><button type="button" class="se-btn" data-mt="subok">✅ Xác nhận thay người (' + pend.length + ')</button><button type="button" class="se-btn ghost" data-mt="subno">↩ Hủy chọn</button></div></div>';
+    }
+    if(t.out.length) h += '<div class="mt-ct">Đã rút khỏi sân <small>(không vào lại được)</small></div><div class="sb-outl">' + t.out.map(function(p){ return '<span class="sb-o">' + escHtml(p.pos) + ' · ' + escHtml(p.n) + '</span>'; }).join('') + '</div>';
+    return h + '</div>';
+  }
+  function sXIHTML(c, locked){
+    var m = c.m, t = m.teams[0], t1 = m.teams[1], ro = locked || seDone(m), tac = !ro && sTacOK(m);
+    t.fidName = sFidName(t.fid);
+    return (m.note && !locked ? '<div class="mt-line mt-warn">' + escHtml(m.note) + '</div>' : '')
+      + sFormBlock(c, tac)
+      + '<div class="se-card sy-card"><h4>🎯 Phong cách thi đấu' + (tac ? '' : ' <small>🔒 chỉ đổi ở giờ nghỉ giữa hiệp</small>') + '</h4><div id="st-wrap"' + (tac ? '' : ' class="mt-lock"') + '>' + sStyleBox(t, t.style) + '</div></div>'
+      + sSubBlock(c, ro)
+      + '<details class="se-card mt-opp"><summary>👥 Đội hình đối thủ · ' + escHtml(t1.name) + ' · ' + escHtml(sFidName(t1.fid)) + '</summary><div class="mt-cols"><div><div class="mt-ct">Đá chính</div>'
+      + t1.pitch.map(function(p, i){ return sPRow(p, t1.slots[i], 'p', i, false, true); }).join('') + '</div><div><div class="mt-ct">Dự bị</div>'
+      + t1.bench.map(function(p){ return sPRow(p, p.pos, 'b', 0, false, true); }).join('') + '</div></div></details>';
+  }
+  /* chuyển tab khi một tình huống đang chạy: chỉ ẩn/hiện, không vẽ lại khung Live */
+  function sTabBusy(tab){
+    var c = sMC; if(!c) return; c.tab = tab;
+    var live = sEl('mx-live'), alt = sEl('mx-alt'); if(!live || !alt){ sMatchRender(); return; }
+    Array.prototype.forEach.call(document.querySelectorAll('#season-match .mt-tabs button'), function(b){ b.classList.toggle('on', b.getAttribute('data-t') === tab); });
+    if(tab === 'sit'){ alt.hidden = true; live.hidden = false; mxScroll(); return; }
+    alt.innerHTML = tab === 'xi' ? sXIHTML(c, true) : (tab === 'stats' ? sStatsHTML(c.m, c.outPending) : comLogHTML(c.m, c.shownN));
+    live.hidden = true; alt.hidden = false;
+  }
+  function sSelPlayer(kind, i){
+    var c = sMC; if(!c || c.busy || c.m.phase !== 'break') return;
+    var m = c.m, t = m.teams[0], arr = kind === 'p' ? t.pitch : t.bench, X = arr[i]; if(!X) return; if(!c.pend) c.pend = [];
+    var pr = c.pend.filter(function(q){ return (kind === 'p' ? q.o : q.b) === X.id; })[0];
+    m.note = '';
+    if(!c.sel){
+      if(pr){ c.pend.splice(c.pend.indexOf(pr), 1); m.note = '↩ Đã bỏ lượt thay đó.'; } else c.sel = {k:kind, id:X.id};
+      sMatchRender(); return;
+    }
+    if(c.sel.k === kind){ c.sel = c.sel.id === X.id ? null : {k:kind, id:X.id}; sMatchRender(); return; }
+    var oId = kind === 'p' ? X.id : c.sel.id, bId = kind === 'b' ? X.id : c.sel.id, pi = sIdxOf(t.pitch, oId), bi = sIdxOf(t.bench, bId);
+    var rest = c.pend.filter(function(q){ return q.o !== oId && q.b !== bId; });
+    if(pi < 0 || bi < 0 || t.pitch[pi].gone === 'red' || (t.slots[pi] === 'GK') !== (t.bench[bi].pos === 'GK')){ m.note = 'Thủ môn chỉ thay bằng thủ môn.'; c.sel = null; sMatchRender(); return; }
+    if(t.subs + rest.length >= 7){ m.note = 'Đã dùng đủ số lượt thay còn lại.'; c.sel = null; sMatchRender(); return; }
+    rest.push({o:oId, b:bId}); c.pend = rest; c.sel = null; sMatchRender();
+  }
+  function sSubConfirm(){
+    var c = sMC; if(!c || c.busy || c.m.phase !== 'break' || !c.pend || !c.pend.length) return;
+    var m = c.m, t = m.teams[0], done = [];
+    c.pend.slice().forEach(function(q){
+      var pi = sIdxOf(t.pitch, q.o), bi = sIdxOf(t.bench, q.b); if(pi < 0 || bi < 0) return;
+      var o = t.pitch[pi], n = t.bench[bi], r = seSub(m, 0, pi, bi); if(r) done.push({o:o, n:n});
+    });
+    c.pend = []; c.sel = null;
+    if(done.length){
+      seSynAll(m); var mn = (m.half && !m.halfDone) ? 45 : seMinute(m, Math.max(0, m.i - 1));
+      comPush(m, done.map(function(d){ return comL(mn, 'sub', 'Substitution for ' + t.name + ': ' + comShort(d.n) + ' comes on for ' + comShort(d.o) + '.'); }));
+      m.note = '🔁 Đã thay: ' + done.map(function(d){ return d.o.n + ' ➜ ' + d.n.n; }).join(', ') + '.'; sSave(c.st);
+    } else m.note = 'Không thực hiện được lượt thay nào.';
+    sMatchRender();
+  }
+  function sFormConfirm(){
+    var c = sMC; if(!c || c.busy || !c.pendForm) return; var m = c.m, t = m.teams[0], fid = c.pendForm, nm = (FORMATIONS.filter(function(f){ return f.id === fid; })[0] || {}).name || fid;
+    c.pendForm = null; c.sel = null; c.pend = [];
+    if(sTacOK(m) && seSetFormation(m, 0, fid, m.redPick ? 'red' : 'half')){
+      seSynAll(m); comPush(m, [comL((m.half && !m.halfDone) ? 45 : seMinute(m, Math.max(0, m.i - 1)), 'info', 'Tactical change: ' + t.name + ' switch to ' + nm + '.')]);
+      m.note = '🧩 Đã đổi sang sơ đồ ' + nm + '.'; sSave(c.st);
+    } else m.note = 'Chưa đổi được sơ đồ lúc này.';
+    sMatchRender();
+  }
   function sMatchRender(){
-    var c = sMC; if(!c) return;
-    var m = c.m, t = m.teams[0], t1 = m.teams[1], last = m.log[m.log.length - 1], sel = c.sel, done = seDone(m), tab = c.tab || 'sit', ro = done, body = '', foot = '';
-    var h = sMHead(m) + '<div class="mt-tabs">' + [['sit', '📣 Live'], ['xi', '🧩 Sơ đồ'], ['stats', '📊 Số liệu'], ['log', '📜 Nhật ký']].map(function(x){ return '<button type="button" class="' + (tab === x[0] ? 'on' : '') + '" data-mt="tab" data-t="' + x[0] + '">' + x[1] + '</button>'; }).join('') + '</div>';
+    var c = sMC; if(!c) return; c.busy = false;
+    var m = c.m, done = seDone(m), tab = c.tab || 'sit', body = '', foot = '';
+    var h = sMHead(m) + sTabsHTML(tab);
     if(tab === 'log') body += comLogHTML(m);
     else if(tab === 'stats') body += sStatsHTML(m);
-    else if(tab === 'xi'){
-      if(m.note) body += '<div class="mt-line mt-warn">' + escHtml(m.note) + '</div>';
-      body += '<div class="se-card mt-sub"><h4>🔁 Thay người <small>(' + t.subs + '/7 lượt' + (ro ? '' : ' · chạm một đá chính rồi một dự bị') + ')</small></h4><div class="mt-cols"><div><div class="mt-ct">Đá chính</div>'
-        + t.pitch.map(function(p, i){ return sPRow(p, t.slots[i], 'p', i, sel && sel.k === 'p' && sel.i === i, ro); }).join('')
-        + '</div><div><div class="mt-ct">Dự bị</div>' + (t.bench.length ? t.bench.map(function(p, i){ return sPRow(p, p.pos, 'b', i, sel && sel.k === 'b' && sel.i === i, ro); }).join('') : '<div class="mt-line"><small>Đã dùng hết dự bị.</small></div>') + '</div></div></div>'
-        + '<details class="se-card mt-opp"><summary>👥 Đội hình đối thủ · ' + escHtml(t1.name) + ' · ' + escHtml(sFidName(t1.fid)) + '</summary><div class="mt-cols"><div><div class="mt-ct">Đá chính</div>'
-        + t1.pitch.map(function(p, i){ return sPRow(p, t1.slots[i], 'p', i, false, true); }).join('') + '</div><div><div class="mt-ct">Dự bị</div>'
-        + t1.bench.map(function(p){ return sPRow(p, p.pos, 'b', 0, false, true); }).join('') + '</div></div></details>';
-    } else {
+    else if(tab === 'xi') body += sXIHTML(c, false);
+    else {
       body += sFeedBox(m, 14) + (m.note ? '<div class="mt-line mt-warn">' + escHtml(m.note) + '</div>' : '');
-      if(!done){
-        if(m.half && !m.halfDone){ t.fidName = sFidName(t.fid); body += '<div class="mt-half">⏸ Giờ nghỉ giữa hiệp: đổi phong cách và thay người</div><div id="st-wrap">' + sStyleBox(t, t.style) + '</div>'; }
-        else if(m.redPick){ t.fidName = sFidName(t.fid); body += '<div class="mt-half">🟥 Đội mình thiếu người! Chọn lại phong cách chơi cho hợp nhé</div><div id="st-wrap">' + sStyleBox(t, t.style) + '</div>'; }
-        foot += '<div class="se-btns"><button type="button" class="se-btn" data-mt="next">' + (m.i === 0 ? '⚽ Bắt đầu trận' : (m.half && !m.halfDone ? '▶ Bắt đầu hiệp 2' : '▶ Tình huống tiếp theo')) + '</button></div>';
-      } else foot += '<div class="se-btns"><button type="button" class="se-btn" data-mt="end">🏁 Xem kết quả trận</button></div>';
+      if(!done && sTacOK(m)) body += '<div class="mt-half">' + (m.redPick ? '🟥 Đội mình thiếu người! Vào tab 🧩 Sơ đồ để chọn lại phong cách cho hợp nhé' : '⏸ Giờ nghỉ giữa hiệp: đổi sơ đồ, phong cách và thay người ở tab 🧩 Sơ đồ') + '</div><div class="se-btns"><button type="button" class="se-btn ghost" data-mt="tab" data-t="xi">🧩 Mở Sơ đồ và Thay người</button></div>';
     }
+    if(!done) foot = '<div class="se-btns"><button type="button" class="se-btn" data-mt="next">' + (m.i === 0 ? '⚽ Bắt đầu trận' : (m.half && !m.halfDone ? '▶ Bắt đầu hiệp 2' : '▶ Tình huống tiếp theo')) + '</button></div>';
+    else foot = '<div class="se-btns"><button type="button" class="se-btn" data-mt="end">🏁 Xem kết quả trận</button></div>';
     sMatchShow(h + '<div class="mx-body' + (tab === 'sit' ? ' sit' : '') + '">' + body + '</div>' + (foot ? '<div class="mx-foot">' + foot + '</div>' : ''));
   }
   function sMatchOpen(r){
@@ -15121,14 +15569,16 @@
     });
   }
   async function sMatchNext(){
-    var c = sMC; if(!c) return; var m = c.m, tok = c.tok;
+    var c = sMC; if(!c || c.busy) return; var m = c.m, tok = c.tok;
+    if((c.pend && c.pend.length) || c.pendForm){ if(!confirm('Bạn đã chọn thay người hoặc đổi sơ đồ nhưng chưa xác nhận. Bỏ những lựa chọn đó và tiếp tục?')) return; }
+    c.pend = []; c.pendForm = null; c.busy = true; c.outPending = false; c.shownN = null;
     comEnsure(m);
     if(m.half && !m.halfDone) m.halfDone = true;
     m.redPick = false;
     m.note = ''; c.sel = null; c.tab = 'sit'; c.skip = false;
     var cur = sePrepare(m); cur.asked = true; m.phase = 'q'; sSave(c.st);   // lưu TRƯỚC khi hiện câu hỏi
     seSynAll(m);
-    c.curNow = cur; sMatchShow(sMHead(m) + '<div class="mx-body sit">' + sSitHTML(m, cur) + '</div>'); mxDo('begin', cur);
+    c.curNow = cur; sMatchShow(sMHead(m) + sTabsHTML('sit') + '<div class="mx-body sit" id="mx-live">' + sSitHTML(m, cur) + '</div><div class="mx-body" id="mx-alt" hidden></div>'); mxDo('begin', cur);
     await comPlay(m, comBuild(m, cur), tok, false, function(l, i, all){   // thẻ cầu thủ di chuyển theo từng dòng dẫn dắt
       if(l.k !== 'play' && l.k !== 'set') return; var rank = 0, total = 0; all.forEach(function(x, j){ if(x.k === 'play' || x.k === 'set'){ total++; if(j < i) rank++; } }); mxDo('build', cur, rank, total); }); if(!sAlive(tok)) return;          // 1) dẫn dắt như livescore
     c.skip = false;
@@ -15140,19 +15590,12 @@
     if(qe) qe.style.display = 'none';
     if(fd){ fd.classList.remove('compact'); if(fd.scrollIntoView) fd.scrollIntoView({block:'nearest'}); }
     await sSpin(res.score, tok); if(!sAlive(tok)) return; mxScroll();
-    var rec = seResolve(m, res.score, !!res.ok); rec.q = {ok:!!res.ok, sec:res.secLeft || 0, timeout:!!res.timeout}; m.phase = 'break';
+    var rec = seResolve(m, res.score, !!res.ok); rec.q = {ok:!!res.ok, sec:res.secLeft || 0, timeout:!!res.timeout}; m.phase = 'break'; c.outPending = true;
     c.skip = false;
     var ivs = setInterval(mxScroll, 700); await comPlay(m, comOutcome(m, rec), tok, false, function(l){ mxDo('out', rec, l); }); clearInterval(ivs); if(!sAlive(tok)) return;          // 4) kết quả + "Next:"
-    sSave(c.st);
+    sSave(c.st); c.outPending = false;
+    if(sTacOK(m)) c.tab = 'xi';   // giờ nghỉ / thiếu người: mở sẵn tab Sơ đồ để đổi chiến thuật và thay người
     sMatchRender();
-  }
-  function sSelPlayer(kind, i){
-    var c = sMC; if(!c || c.m.phase !== 'break') return;
-    var m = c.m, t = m.teams[0];
-    if(!c.sel || c.sel.k === kind){ c.sel = (c.sel && c.sel.k === kind && c.sel.i === i) ? null : {k:kind, i:i}; sMatchRender(); return; }
-    var pi = kind === 'p' ? i : c.sel.i, bi = kind === 'b' ? i : c.sel.i;
-    if(!seCanSub(t, pi, bi)){ m.note = t.subs >= 7 ? 'Đã dùng đủ 7 lượt thay.' : 'Thủ môn chỉ thay bằng thủ môn.'; c.sel = null; sMatchRender(); return; }
-    var out = t.pitch[pi].n, inn = t.bench[bi].n; seSub(m, 0, pi, bi); c.sel = null; m.note = '🔁 Đã thay ' + out + ' bằng ' + inn + '.'; sSave(c.st); sMatchRender();
   }
   function sOthers(se, r, opp, mine, theirs){
     var fx = sFixtures(se.n)[r], scores = [];
@@ -15202,7 +15645,7 @@
   function sPickStyle(id){
     if(!SE_STYLE[id]) return;
     if(sMC){
-      var m = sMC.m; if(!(m.half && !m.halfDone) && m.i !== 0 && !m.redPick) return;   // chỉ đổi trước trận hoặc giờ nghỉ giữa hiệp
+      var m = sMC.m; if(sMC.busy || (!sTacOK(m) && m.i !== 0)) return;   // chỉ đổi trước trận hoặc giờ nghỉ giữa hiệp
       seSetStyle(m, 0, id); sSave(sMC.st); var t = m.teams[0]; t.fidName = sFidName(t.fid);
       var w = sEl('st-wrap'); if(w) w.innerHTML = sStyleBox(t, id); sMatchRender(); return;
     }
@@ -15219,7 +15662,13 @@
     if(b){
       var a = b.getAttribute('data-mt');
       if(a === 'sel') sSelPlayer(b.getAttribute('data-k'), parseInt(b.getAttribute('data-i'), 10));
-      else if(a === 'tab'){ if(sMC){ sMC.tab = b.getAttribute('data-t'); sMatchRender(); } }
+      else if(a === 'tab'){ if(sMC){ if(sMC.busy) sTabBusy(b.getAttribute('data-t')); else { sMC.tab = b.getAttribute('data-t'); sMatchRender(); } } }
+      else if(a === 'form'){ if(sMC && !sMC.busy){ sMC.pendForm = sMC.pendForm === b.getAttribute('data-id') ? null : b.getAttribute('data-id'); sMatchRender(); } }
+      else if(a === 'formok') sFormConfirm();
+      else if(a === 'formno'){ if(sMC){ sMC.pendForm = null; sMatchRender(); } }
+      else if(a === 'subok') sSubConfirm();
+      else if(a === 'subno'){ if(sMC){ sMC.pend = []; sMC.sel = null; sMatchRender(); } }
+      else if(a === 'unpair'){ if(sMC && sMC.pend){ sMC.pend.splice(parseInt(b.getAttribute('data-i'), 10), 1); sMatchRender(); } }
       else if(a === 'next') sMatchNext();
       else if(a === 'end') sMatchFinish();
       else if(a === 'exit') sMExit();
