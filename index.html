@@ -2646,6 +2646,12 @@
   .cp-board{ aspect-ratio:5/7; max-width:240px; margin:6px auto 0; border-radius:12px; background:linear-gradient(#1f8a4c,#166a3a); overflow:hidden; }
   .cp-board svg{ width:100%; height:100%; display:block; }
 
+  /* ===== Phòng Kỹ Năng: kỳ cũ chỉ xem, chỉ nhập điểm ở kỳ hiện tại ===== */
+  .skill-past-note{ display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; margin:0 0 12px; padding:10px 14px; border-radius:12px; background:rgba(251,191,36,.12); border:1px solid rgba(251,191,36,.5); color:#FDE68A; font-weight:700; font-size:14px; line-height:1.35; }
+  .skill-past-note[hidden]{ display:none; }
+  .skill-past-note button{ flex:none; border:0; border-radius:999px; padding:8px 14px; font:inherit; font-weight:800; cursor:pointer; background:#FBBF24; color:#422006; }
+  .skill-card.is-locked .skill-score-row{ display:none; }
+
   /* ===== Sân đấu: cỡ và bố cục như màn thi đấu Mùa giải (1 đội) ===== */
   .pitch-side{ display:grid; gap:10px; align-content:start; min-width:0; }
   .pitch-side .bench-row{ margin-top:0; }
@@ -3401,6 +3407,7 @@
         </div>
         <span class="skill-count" id="skill-count">0/3 đã mở</span>
       </div>
+      <div class="skill-past-note" id="skill-past-note" hidden></div>
       <div class="skill-grid" id="skill-grid"></div>
     </div>
 
@@ -8164,8 +8171,19 @@
       + '<div>🎁 Thắng lần đầu: +'+def.bonus+' ⚡ thưởng thêm</div>'
       + '<div style="color:var(--ink-soft)">Chọn cầu thủ ra sân bên dưới 👇</div></div></div>';
   }
+  /* "Hành trình" chỉ hiện cho các hồ sơ có tên: test, phan minh (không phân biệt hoa/thường, dấu). Người khác chỉ thấy Đấu nhanh + Mùa giải. */
+  var JOURNEY_USERS = ['test', 'phan minh'];
+  function journeyAllowed(){
+    var n = '';
+    try{ n = userNameOf(syncId); }catch(e){}
+    n = String(n || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/đ/g, 'd').replace(/\s+/g, ' ').trim();
+    return JOURNEY_USERS.indexOf(n) >= 0;
+  }
   function syncBattleModeButtons(){
     var a = document.getElementById('battle-mode-road'), b = document.getElementById('battle-mode-quick'), c = document.getElementById('battle-mode-season');
+    var jOk = journeyAllowed();
+    if(a) a.style.display = jOk ? '' : 'none';
+    if(!jOk && battleMode === 'road'){ battleMode = 'quick'; roadPickStage = 0; }
     if(a) a.classList.toggle('active', battleMode === 'road');
     if(b) b.classList.toggle('active', battleMode === 'quick');
     if(c) c.classList.toggle('active', battleMode === 'season');
@@ -8174,6 +8192,7 @@
     var t = e.target && e.target.closest ? e.target : null;
     if(!t) return;
     var m = t.closest('#battle-mode-road, #battle-mode-quick, #battle-mode-season');
+    if(m && m.id === 'battle-mode-road' && !journeyAllowed()) return;
     if(m){ battleMode = (m.id === 'battle-mode-road') ? 'road' : (m.id === 'battle-mode-season' ? 'season' : 'quick'); roadPickStage = 0; renderBattlePick(); return; }
     var nd = t.closest('.rm-node, .rm-pg');
     if(nd){ roadmapNodeTap(parseInt(nd.getAttribute('data-n'), 10)); return; }
@@ -10320,16 +10339,27 @@
     return h;
   }
 
+  /* Chỉ được nhập / nhập lại điểm thi ở KỲ HIỆN TẠI; kỳ cũ (đang xem bằng mũi tên đổi kỳ) chỉ để xem lại. */
+  function skillPeriodIsCurrent(){ return currentPeriod.key === getPeriodRange(new Date()).key; }
   function renderSkills(){
     var month = loadMonth(currentPeriod.key);
-    var opened = 0;
+    var opened = 0, past = !skillPeriodIsCurrent();
     var html = SKILL_DEFS.map(function(s){
       var st = month.skills[s.key] || {score:null, tier:null, activated:false};
       var has = (st.score !== null && st.score !== undefined);
       if(has && st.activated) opened++;
-      if(!has) return emptyCardHTML(s);
-      return st.activated ? openedCardHTML(s, st) : readyCardHTML(s, st);
+      var card = !has ? emptyCardHTML(s) : (st.activated ? openedCardHTML(s, st) : readyCardHTML(s, st));
+      if(past){
+        card = card.replace(/<button[^>]*data-act="reset"[^>]*>[^<]*<\/button>/g, '');   // bỏ nút "Nhập lại điểm"
+        if(!has) card = card.replace('skill-card is-empty', 'skill-card is-empty is-locked').replace('Nhập điểm thi để mở hộp bí mật! ✨', '🔒 Kỳ này đã qua — không nhập điểm được nữa');
+      }
+      return card;
     }).join('');
+    var note = document.getElementById('skill-past-note');
+    if(note){
+      note.hidden = !past;
+      if(past) note.innerHTML = '<span>🔒 Đang xem <b>' + escHtml(formatPeriodLabel(currentPeriod)) + '</b> — kỳ cũ chỉ để xem, chỉ nhập điểm được ở kỳ hiện tại.</span><button type="button" id="skill-back-now">↩ Về kỳ hiện tại</button>';
+    }
     document.getElementById('skill-grid').innerHTML = html;
     document.getElementById('skill-count').textContent = opened+'/'+SKILL_DEFS.length+' đã mở';
   }
@@ -12187,6 +12217,11 @@
     var act = btn.dataset.act;
     var s = skillDef(key);
     if(!s) return;
+    if((act === 'save' || act === 'reset') && !skillPeriodIsCurrent()){
+      triggerToast('low', '🔒 Kỳ cũ không nhập được điểm. Chỉ nhập ở kỳ hiện tại thôi nhé!');
+      renderSkills();
+      return;
+    }
     if(act === 'save'){
       var input = document.querySelector('[data-input="'+key+'"]');
       var v = parseFloat(input.value);
@@ -12233,6 +12268,11 @@
     }
   });
 
+  document.getElementById('skill-past-note').addEventListener('click', function(e){
+    if(!e.target.closest('#skill-back-now')) return;
+    currentPeriod = getPeriodRange(new Date());
+    renderMonthly();   // đã gọi renderSkills() bên trong
+  });
   document.getElementById('sm-later').addEventListener('click', ceLaterBtn);
   document.getElementById('skill-backdrop').addEventListener('click', ceBackdrop);
   document.getElementById('sm-activate').addEventListener('click', ceMainBtn);
@@ -12548,7 +12588,7 @@
     var W = FUSE_W, pc = function(x){ return Math.round(x * 100) + '%'; };
     return ''
     + '<section class="rules-sec" id="rules-sec-battle"><h4>⚔️ Đấu Trường</h4><ul>'
-    + '<li>Có 2 cách chơi: <b>Hành trình</b> (vượt lần lượt các trận từ rất dễ đến khó) hoặc <b>Đấu nhanh</b> với đối thủ ngẫu nhiên.</li>'
+    + (journeyAllowed() ? '<li>Có 2 cách chơi: <b>Hành trình</b> (vượt lần lượt các trận từ rất dễ đến khó) hoặc <b>Đấu nhanh</b> với đối thủ ngẫu nhiên.</li>' : '<li>Đấu nhanh với đối thủ ngẫu nhiên.</li>')
     + '<li>Đến lượt con đánh sẽ có <b>1 câu hỏi</b>: trả lời đúng càng nhanh, đòn càng mạnh (tối đa <b>10 điểm</b>). Mỗi câu có '+sec+' giây; trả lời sai hoặc hết giờ chỉ được 1 điểm.</li>'
     + '<li>Lượt đấu nhận theo <b>điểm nhiệm vụ trong ngày</b>: có điểm được <b>1</b> lượt · mốc 👟 <b>50, 60, 70</b> điểm mỗi mốc <b>+2</b> · mốc ⚽ <b>80, 90</b> điểm mỗi mốc <b>+3</b> · mốc 🏃 <b>100</b> điểm <b>+5</b> (tối đa 18 lượt/ngày). Hôm nay con đã nhận <b>'+perDay+'</b> lượt. Hành trình và Đấu nhanh dùng chung số lượt này.</li>'
     + '<li><b>Thắng</b> nhận ⚡ Năng Lượng như khi hiến chính đối thủ vừa hạ: đối thủ càng giống thẻ của con, ⚡ càng nhiều. Hành trình còn thưởng thêm ⚡ khi vượt trận lần đầu.</li>'
