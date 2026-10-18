@@ -3223,6 +3223,7 @@
   #season-match .sb-sum .se-btns .se-btn,#season-match .sf-prev .se-btns .se-btn{ min-height:52px; font-size:15px; }
   #season-match .sb-outl{ display:flex; flex-wrap:wrap; gap:6px; margin-bottom:4px; } #season-match .sb-o{ padding:5px 10px; border-radius:99px; background:rgba(148,163,184,.14); font-size:12.5px; color:var(--ink-soft); text-decoration:line-through; }
   @media (max-width:420px){ #season-match .sb-grid,#season-match .sf-grid{ grid-template-columns:1fr; } }
+  #season-match .sf-sd{ margin:2px 0 8px; } #season-match .sf-sd .sd-list{ max-height:320px; } #season-match .sf-sd .sd-opt[disabled]{ opacity:.7; cursor:default; }
 </style>
 
 </head>
@@ -14241,7 +14242,7 @@
     }).join('');
     var go = (mode === 'plan')
       ? '<button type="button" class="st-go" data-sty-go="pitch" title="Mở Sân đấu để xếp đội hình và đổi sơ đồ">🔧 Xếp đội hình</button>'
-      : '<button type="button" class="st-go" data-mt="tab" data-t="xi" title="Xem sơ đồ thi đấu và thay người">🧩 Sơ đồ</button>';
+      : (mode === 'xi' ? '' : '<button type="button" class="st-go" data-mt="tab" data-t="xi" title="Xem sơ đồ thi đấu và thay người">🧩 Sơ đồ</button>');
     var chips = '<div class="st-pick"><div class="sd"><button type="button" class="sd-btn" aria-haspopup="listbox" aria-expanded="false"><span class="sd-n">' + si.ic + ' ' + escHtml(si.name) + '</span><i class="sd-car" aria-hidden="true"></i></button><div class="sd-list" role="listbox" aria-label="Chọn phong cách HLV">' + opts + '</div></div>' + go + '</div>';
     var paper = '<div class="nw-wrap"><article class="nw"><div class="nw-i"><h5 class="nw-h">' + si.ic + ' ' + escHtml(si.name) + '</h5>'
       + '<p class="nw-lead">' + escHtml(SEASON_STYLE_DESC[cur] || '') + '</p>'
@@ -15379,20 +15380,23 @@
   }
   function sTacOK(m){ return !!((m.half && !m.halfDone) || m.redPick); }   // cửa sổ đổi sơ đồ / phong cách: giờ nghỉ giữa hiệp hoặc khi đội thiếu người
   function sIdxOf(arr, id){ for(var i = 0; i < arr.length; i++) if(arr[i].id === id) return i; return -1; }
-  function sFormBlock(c, tac){
+  function sFormBlock(c, can0){
     var m = c.m, t = m.teams[0], t1 = m.teams[1], cur = FORMATIONS.filter(function(f){ return f.id === t.fid; })[0] || FORMATIONS[0], eC = seFormEdge(t.fid, t1.fid).edge;
-    var gone = t.pitch.some(function(p){ return p.gone; }), can = tac && !gone;
+    var gone = t.pitch.some(function(p){ return p.gone; }), can = can0 && !gone;
+    var pk = c.pendForm ? FORMATIONS.filter(function(f){ return f.id === c.pendForm; })[0] : null;
+    function badge(e){ return '<em class="sd-mu ' + (e > 0.025 ? 'g' : (e < -0.025 ? 'b' : '')) + '">⚔️ ' + seMuTxt(e) + '</em>'; }
+    var opts = FORMATIONS.map(function(f){ return {f:f, e:seFormEdge(f.id, t1.fid).edge}; }).sort(function(a, b){ return b.e - a.e; }).map(function(x){
+      var on = x.f.id === t.fid;
+      return '<button type="button" role="option" aria-selected="' + (c.pendForm ? c.pendForm === x.f.id : on) + '" class="sd-opt' + (c.pendForm === x.f.id || (!c.pendForm && on) ? ' on' : '') + '" data-mt="form" data-id="' + x.f.id + '"' + (on ? ' disabled' : '') + '><span class="sd-n">' + (on ? '✓ ' : '') + escHtml(x.f.name) + (on ? ' (đang dùng)' : '') + '</span>' + badge(x.e) + '</button>';
+    }).join('');
     var h = '<div class="se-card sf-card"><h4>🧩 Sơ đồ <small>' + escHtml(cur.name) + ' · ⚔️ ' + seMuTxt(eC) + ' so với ' + escHtml(sFidName(t1.fid)) + '</small></h4>'
-      + '<p class="sf-note">' + (can ? 'Chạm một sơ đồ để xem trước. Chỉ khi bấm xác nhận mới đổi.' : (gone ? '🔒 Đội đang thiếu người nên chưa đổi sơ đồ được.' : '🔒 Chỉ đổi sơ đồ ở giờ nghỉ giữa hiệp.')) + '</p>'
-      + '<div class="sf-grid' + (can ? '' : ' off') + '">' + FORMATIONS.map(function(f){ return {f:f, e:seFormEdge(f.id, t1.fid).edge}; }).sort(function(a, b){ return b.e - a.e; }).map(function(x){
-        var on = x.f.id === t.fid, pk = c.pendForm === x.f.id;
-        return '<button type="button" class="sf-o' + (on ? ' cur' : '') + (pk ? ' pick' : '') + '" data-mt="form" data-id="' + x.f.id + '"' + (can && !on ? '' : ' disabled') + '><b>' + escHtml(x.f.name) + '</b><em class="' + (x.e > 0.025 ? 'g' : (x.e < -0.025 ? 'b' : '')) + '">⚔️ ' + seMuTxt(x.e) + '</em>' + (on ? '<small>đang dùng</small>' : '') + '</button>';
-      }).join('') + '</div>';
+      + '<p class="sf-note">' + (can ? 'Đổi được ngay sau mỗi tình huống. Chọn sơ đồ để xem trước, <b>bấm xác nhận mới đổi</b>. Đổi giữa trận làm đội mất nhịp nhiều hơn so với giờ nghỉ.' : (gone ? '🔒 Đội đang thiếu người nên chưa đổi sơ đồ được.' : '🔒 Đang diễn ra tình huống: đổi sơ đồ được khi tình huống kết thúc.')) + '</p>'
+      + '<div class="sd sf-sd' + (can ? '' : ' mt-lock') + '"><button type="button" class="sd-btn" aria-haspopup="listbox" aria-expanded="false"><span class="sd-n">' + (pk ? '➜ ' + escHtml(pk.name) + ' (xem trước)' : escHtml(cur.name) + ' (đang dùng)') + '</span><i class="sd-car" aria-hidden="true"></i></button><div class="sd-list" role="listbox" aria-label="Chọn sơ đồ mới">' + opts + '</div></div>';
     if(can && c.pendForm){
       var r = seAssignForm(t, c.pendForm), eN = seFormEdge(c.pendForm, t1.fid).edge;
       if(r){
         var mv = r.moves.filter(function(x){ return x.from !== x.to; }), off = r.moves.filter(function(x){ return x.fit < 0.9; }).length;
-        h += '<div class="sf-prev"><b>Xem trước: ' + escHtml(r.f.name) + '</b> · ⚔️ ' + seMuTxt(eN) + ' (hiện tại ' + seMuTxt(eC) + ')<small>' + mv.length + ' cầu thủ đổi vị trí' + (off ? ', ' + off + ' người đứng lệch sở trường ⚠' : ', ai cũng đúng sở trường ✅') + '. Đổi sơ đồ giữa trận làm đội mất nhịp một chút.</small>'
+        h += '<div class="sf-prev"><b>Xem trước: ' + escHtml(r.f.name) + '</b> · ⚔️ ' + seMuTxt(eN) + ' (hiện tại ' + seMuTxt(eC) + ')<small>' + mv.length + ' cầu thủ đổi vị trí' + (off ? ', ' + off + ' người đứng lệch sở trường ⚠' : ', ai cũng đúng sở trường ✅') + '.' + (sTacOK(m) ? '' : ' Đổi giữa trận nên đội sẽ mất nhịp nhiều hơn giờ nghỉ.') + '</small>'
           + '<ul>' + mv.slice(0, 8).map(function(x){ return '<li><b>' + escHtml(x.p.n) + '</b> ' + escHtml(x.from) + ' ➜ ' + escHtml(x.to) + (x.fit < 0.9 ? ' <span class="w">⚠ lệch</span>' : '') + '</li>'; }).join('') + '</ul>'
           + '<div class="se-btns"><button type="button" class="se-btn" data-mt="formok">✅ Xác nhận đổi sơ đồ</button><button type="button" class="se-btn ghost" data-mt="formno">↩ Hủy</button></div></div>';
       }
@@ -15432,8 +15436,8 @@
     var m = c.m, t = m.teams[0], t1 = m.teams[1], ro = locked || seDone(m), tac = !ro && sTacOK(m);
     t.fidName = sFidName(t.fid);
     return (m.note && !locked ? '<div class="mt-line mt-warn">' + escHtml(m.note) + '</div>' : '')
-      + sFormBlock(c, tac)
-      + '<div class="se-card sy-card"><h4>🎯 Phong cách thi đấu' + (tac ? '' : ' <small>🔒 chỉ đổi ở giờ nghỉ giữa hiệp</small>') + '</h4><div id="st-wrap"' + (tac ? '' : ' class="mt-lock"') + '>' + sStyleBox(t, t.style) + '</div></div>'
+      + sFormBlock(c, !ro)
+      + '<div class="se-card sy-card"><h4>🎯 Phong cách thi đấu' + (tac ? '' : ' <small>🔒 chỉ đổi ở giờ nghỉ giữa hiệp</small>') + '</h4><div id="st-wrap"' + (tac ? '' : ' class="mt-lock"') + '>' + sStyleBox(t, t.style, '', 'xi') + '</div></div>'
       + sSubBlock(c, ro)
       + '<details class="se-card mt-opp"><summary>👥 Đội hình đối thủ · ' + escHtml(t1.name) + ' · ' + escHtml(sFidName(t1.fid)) + '</summary><div class="mt-cols"><div><div class="mt-ct">Đá chính</div>'
       + t1.pitch.map(function(p, i){ return sPRow(p, t1.slots[i], 'p', i, false, true); }).join('') + '</div><div><div class="mt-ct">Dự bị</div>'
@@ -15482,7 +15486,7 @@
   function sFormConfirm(){
     var c = sMC; if(!c || c.busy || !c.pendForm) return; var m = c.m, t = m.teams[0], fid = c.pendForm, nm = (FORMATIONS.filter(function(f){ return f.id === fid; })[0] || {}).name || fid;
     c.pendForm = null; c.sel = null; c.pend = [];
-    if(sTacOK(m) && seSetFormation(m, 0, fid, m.redPick ? 'red' : 'half')){
+    if(m.phase === 'break' && !seDone(m) && seSetFormation(m, 0, fid, m.redPick ? 'red' : (sTacOK(m) ? 'half' : 'play'))){
       seSynAll(m); comPush(m, [comL((m.half && !m.halfDone) ? 45 : seMinute(m, Math.max(0, m.i - 1)), 'info', 'Tactical change: ' + t.name + ' switch to ' + nm + '.')]);
       m.note = '🧩 Đã đổi sang sơ đồ ' + nm + '.'; sSave(c.st);
     } else m.note = 'Chưa đổi được sơ đồ lúc này.';
