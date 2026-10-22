@@ -6928,7 +6928,7 @@
     var grid = document.getElementById('daily-box-grid');
     var lead = document.getElementById('daily-box-lead');
     grid.classList.add('locked');
-    if(cell) cell.classList.add('picked');
+    if(cell){ cell.classList.add('picked'); window.__sigCell = cell; }
 
     var p = ownedPlayerFromBase(base);
     var saved = false;
@@ -7023,12 +7023,128 @@
       + '<canvas class="dbx-fx"></canvas>';
   }
 
-  function playDailyBoxReveal(base, p, stageId, onDone, mystic, instant){
+  /* ===== HIỆU ỨNG MỞ THẺ RIÊNG CHO RARITY: SIG =====
+     Tối đen -> 5 đèn spotlight lần lượt chiếu vào ô vừa chọn -> trắng xóa -> nổ -> thẻ phóng to giữa màn hình,
+     thu nhỏ dần + lật mặt, thông tin trôi vào bên cạnh, nhạc vinh danh + pháo giấy -> trắng tan, về giao diện nhận thẻ. */
+  function sigCss(){
+    if(document.getElementById('sig-css')) return;
+    var s = document.createElement('style'); s.id = 'sig-css';
+    s.textContent = '#sig-ov{position:fixed;inset:0;z-index:100000;background:#000;opacity:0;transition:opacity .5s;overflow:hidden;font-family:var(--font-display)}'
+    +'#sig-ov.on{opacity:1}#sig-ov canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}#sig-ov .sg-f{z-index:6}'
+    +'.sg-white{position:absolute;inset:0;background:#fff;opacity:0;z-index:5;pointer-events:none;transition:opacity .35s}'
+    +'#sig-ov.white .sg-white{opacity:1}#sig-ov.boom .sg-white{opacity:0;transition:opacity 2.4s ease-out}#sig-ov.out .sg-white{opacity:1;transition:opacity .5s}'
+    +'#sig-ov.clear{background:transparent;transition:none}#sig-ov.clear>:not(.sg-white){visibility:hidden}#sig-ov.clear .sg-white{opacity:0;transition:opacity 1.3s ease-in}'
+    +'.sg-card{position:absolute;left:50%;top:50%;width:var(--cw);aspect-ratio:var(--fc-ar);perspective:1400px;z-index:2;opacity:0;transform:translate(-50%,-50%) scale(.2)}'
+    +'.sg-card:before{content:"";position:absolute;inset:-28%;z-index:-1;background:radial-gradient(circle,rgba(255,225,140,.8),rgba(232,121,249,.35) 45%,transparent 70%)}'
+    +'#sig-ov.boom .sg-card{opacity:1;transform:translate(-50%,-50%) scale(1.1);transition:transform .45s cubic-bezier(.1,1.1,.3,1),opacity .1s}'
+    +'#sig-ov.zo .sg-card{transform:translate(calc(-50% + var(--fx)),calc(-50% + var(--fy))) scale(var(--fs));transition:transform 6.5s cubic-bezier(.3,.1,.2,1)}'
+    +'.sg-flip{position:absolute;inset:0;transform-style:preserve-3d;transition:transform 1.5s cubic-bezier(.3,.1,.2,1)}#sig-ov.flip .sg-flip{transform:rotateY(180deg)}'
+    +'.sg-face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden}.sg-front{transform:rotateY(180deg)}.sg-face .fc-card{width:100%}'
+    +'.sg-back b{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:30vmin;color:#FFE083;text-shadow:0 0 30px #E879F9}'
+    +'.sg-info{position:absolute;z-index:3;color:#fff;display:flex;flex-direction:column;gap:12px;pointer-events:none;padding:20px 24px;border-radius:16px;background:rgba(8,5,20,.82);border:1px solid rgba(255,217,121,.5);box-shadow:0 0 40px rgba(0,0,0,.7);opacity:0;transition:opacity .5s}#sig-ov.info .sg-info{opacity:1}'
+    +'#sig-ov.ls .sg-info{left:56vw;right:4vw;top:50%;transform:translateY(-50%)}#sig-ov.pt .sg-info{left:6vw;right:6vw;bottom:5vh;align-items:center;text-align:center}'
+    +'.sg-info>*{opacity:0;transform:translateX(70px);transition:opacity .7s,transform .8s cubic-bezier(.2,.8,.2,1);transition-delay:calc(var(--i)*.22s)}#sig-ov.info .sg-info>*{opacity:1;transform:none}'
+    +'.sg-tag{align-self:flex-start;padding:4px 14px;border-radius:99px;background:linear-gradient(90deg,#E879F9,#FFB100);color:#2a0a33;font-weight:800;font-size:15px}#sig-ov.pt .sg-tag{align-self:center}'
+    +'.sg-nm{font-size:clamp(28px,5vw,56px);font-weight:800;line-height:1.05;color:#FFE083;text-shadow:0 0 24px rgba(255,177,0,.6)}'
+    +'.sg-ps{font-size:clamp(18px,2.4vw,28px);font-weight:700;color:#fff;text-shadow:0 1px 4px #000}'
+    +'.sg-row{display:flex;gap:12px;align-items:center;font-size:clamp(16px,2.1vw,24px);font-weight:700;color:#fff;text-shadow:0 1px 4px #000;border-left:3px solid #E879F9;padding:3px 0 3px 12px}#sig-ov.pt .sg-row{justify-content:center}'
+    +'.sg-row span{color:#FFD979;min-width:112px;font-weight:700}.sg-row img{height:20px;border-radius:3px}';
+    document.head.appendChild(s);
+  }
+
+  function sigRun(base, done){
+    sigCss(); window.__sigBusy = true;
+    var W = innerWidth, H = innerHeight, land = W > H, ox = W/2, oy = H/2;
+    var el = (window.__sigCell && document.body.contains(window.__sigCell)) ? window.__sigCell : document.querySelector('.daily-box-cell.picked');
+    if(el){ var r = el.getBoundingClientRect(); if(r.width){ ox = r.left + r.width/2; oy = r.top + r.height/2; } }
+    var cw = Math.round(Math.min(W*.9, H*.8*.72));
+    var bg = (cdnReady() && base.background) ? '<img class="fc-bg" src="'+cdnUrl(base.background)+'" alt="" onerror="this.remove()">' : '';
+    var flag = (cdnReady() && base.nationFlag) ? '<img src="'+cdnUrl(base.nationFlag)+'" alt="">' : '';
+    var rows = [['Quốc gia', base.nation, flag], ['CLB', base.club], ['Tuổi', base.age], ['Chiều cao', base.height ? base.height+' cm' : ''],
+      ['Kỹ thuật', base.skillMoves ? base.skillMoves+'★' : ''], ['Vị trí phụ', Array.isArray(base.altPositions) ? base.altPositions.join(', ') : base.altPositions]].filter(function(x){ return x[1]; });
+    var ovr = base.realOvr || base.ovr || 0, i = 0;
+    var ov = document.createElement('div'); ov.id = 'sig-ov'; ov.className = land ? 'ls' : 'pt';
+    ov.style.setProperty('--cw', cw+'px'); ov.style.setProperty('--fs', land ? .6 : .62);
+    ov.style.setProperty('--fx', land ? Math.round(-W*.2)+'px' : '0px'); ov.style.setProperty('--fy', land ? '0px' : Math.round(-H*.2)+'px');
+    ov.innerHTML = '<canvas class="sg-c"></canvas><div class="sg-white"></div>'
+      + '<div class="sg-card"><div class="sg-flip"><div class="sg-face sg-back"><div class="fc-card no-bg">'+bg+'</div><b>?</b></div><div class="sg-face sg-front">'+dbxCardHTML(base)+'</div></div></div>'
+      + '<div class="sg-info"><div class="sg-tag" style="--i:0">✨ '+escHtml(rarityLabel('SIG'))+'</div><div class="sg-nm" style="--i:1">'+escHtml(base.name || '')+'</div>'
+      + '<div class="sg-ps" style="--i:2">'+escHtml(base.pos || '')+(ovr ? ' · OVR '+ovr : '')+'</div>'
+      + rows.map(function(x, k){ return '<div class="sg-row" style="--i:'+(k+3)+'"><span>'+x[0]+'</span>'+(x[2] || '')+escHtml(String(x[1]))+'</div>'; }).join('')
+      + '</div><canvas class="sg-f"></canvas>';
+    document.body.appendChild(ov);
+    var ended = false, fin = false, raf = 0, run = false;
+    function T(fn, ms){ setTimeout(function(){ if(!ended) fn(); }, ms); }
+    function finish(){ if(fin) return; fin = true; try{ done(); }catch(e){ console.warn(e); } }
+    function end(){
+      if(ended) return; ended = true; cancelAnimationFrame(raf); run = false; ov.classList.add('out');
+      setTimeout(function(){ finish(); ov.classList.add('clear'); setTimeout(function(){ ov.remove(); window.__sigBusy = false; }, 1400); }, 560);
+    }
+    /* Spotlight */
+    var c = ov.querySelector('.sg-c'), x = c.getContext('2d'); c.width = W; c.height = H;
+    var src = [[0,0],[W,0],[0,H],[W,H],[W/2,0]], t0 = performance.now();
+    function spot(){
+      var t = performance.now() - t0, n = 0;
+      x.globalCompositeOperation = 'source-over'; x.clearRect(0, 0, W, H); x.globalCompositeOperation = 'lighter';
+      src.forEach(function(s, k){
+        var a = (t - 600 - k*480) / 500; if(a <= 0) return; a = Math.min(a, 1); n += a;
+        var tx = ox + Math.sin(t/260 + k*2)*(1-a)*W*.35, ty = oy + Math.cos(t/310 + k)*(1-a)*H*.2;
+        var ang = Math.atan2(ty - s[1], tx - s[0]), len = Math.hypot(tx - s[0], ty - s[1])*1.15;
+        x.save(); x.translate(s[0], s[1]); x.rotate(ang);
+        var g = x.createLinearGradient(0, 0, len, 0); g.addColorStop(0, 'rgba(255,255,255,.55)'); g.addColorStop(1, 'rgba(255,240,200,.08)');
+        x.fillStyle = g; x.beginPath(); x.moveTo(0, 0); x.lineTo(len, -len*.07); x.lineTo(len, len*.07); x.closePath(); x.fill(); x.restore();
+      });
+      var tg = Math.max(0, t - 3000), rad = 20 + n*n*14 + tg*2.6, gr = x.createRadialGradient(ox, oy, 0, ox, oy, rad);
+      gr.addColorStop(0, 'rgba(255,250,225,1)'); gr.addColorStop(.5, 'rgba(255,240,200,.55)'); gr.addColorStop(1, 'rgba(255,240,200,0)');
+      x.fillStyle = gr; x.beginPath(); x.arc(ox, oy, rad, 0, 6.3); x.fill();
+      if(t < 4200) raf = requestAnimationFrame(spot);
+    }
+    /* Pháo giấy */
+    var f = ov.querySelector('.sg-f'), fx = f.getContext('2d'), P = [], COL = ['#FFD979','#FFB100','#FFFFFF','#E879F9','#38BDF8','#E2001A','#22C55E'];
+    f.width = W; f.height = H;
+    function cannon(){
+      for(var k = 0; k < 70; k++){ var left = k % 2 === 0;
+        P.push({x: left ? 0 : W, y: H, vx: (left ? 1 : -1)*(3 + Math.random()*9), vy: -(12 + Math.random()*13), w: 6 + Math.random()*7, h: 10 + Math.random()*8, r: Math.random()*6, vr: (Math.random()-.5)*.4, c: COL[k % 7]}); }
+    }
+    function rain(){ for(var k = 0; k < 60; k++) P.push({x: Math.random()*W, y: -Math.random()*H*.4, vx: (Math.random()-.5)*2, vy: 2 + Math.random()*3, w: 6 + Math.random()*6, h: 10 + Math.random()*7, r: Math.random()*6, vr: (Math.random()-.5)*.3, c: COL[k % 7]}); }
+    function conf(){
+      if(!run) return; fx.clearRect(0, 0, W, H);
+      P = P.filter(function(q){ return q.y < H + 30; });
+      P.forEach(function(q){ q.vy += .28; q.vx *= .992; q.x += q.vx; q.y += q.vy; q.r += q.vr;
+        fx.save(); fx.translate(q.x, q.y); fx.rotate(q.r); fx.scale(1, Math.abs(Math.sin(q.r*1.7)) + .15); fx.fillStyle = q.c; fx.fillRect(-q.w/2, -q.h/2, q.w, q.h); fx.restore(); });
+      requestAnimationFrame(conf);
+    }
+    /* Âm thanh: trống dồn -> nổ -> kèn vinh danh */
+    function F(fr, at, d, v){ beep(fr, d, 'sawtooth', at, v); beep(fr/2, d, 'triangle', at, v*1.1); beep(fr*2, d, 'square', at, v*.25); }
+    function music(){
+      for(var k = 0; k < 28; k++) beep(180 + k*32, .07, 'square', .5 + k*.11, .035);
+      beep(55, 1.4, 'sawtooth', 3.7, .2);
+      [[392,0,.16],[392,.2,.16],[392,.4,.16],[523,.6,.5],[392,1.15,.2],[523,1.4,.5],[659,2,1.1],[784,3.2,1.8]].forEach(function(n){ F(n[0], 4 + n[1], n[2], .08); });
+      [523,659,784,1046].forEach(function(fr){ beep(fr, 2.6, 'triangle', 5.4, .08); });
+      for(var k = 0; k < 14; k++) beep(1500 + Math.random()*1800, .12, 'triangle', 7 + k*.35, .04);
+    }
+    ov.onclick = function(){ if(ov.classList.contains('flip')) end(); };
+    requestAnimationFrame(function(){ ov.classList.add('on'); });
+    try{ music(); }catch(e){}
+    spot();
+    T(function(){ ov.classList.add('white'); try{ playBoom(); }catch(e){} }, 3700);
+    T(function(){ ov.classList.add('boom'); run = true; conf(); cannon(); rain(); try{ if(navigator.vibrate) navigator.vibrate([60, 40, 120]); }catch(e){} }, 4000);
+    T(function(){ ov.classList.add('zo'); }, 4500);
+    T(cannon, 5200); T(function(){ ov.classList.add('flip'); }, 6000); T(cannon, 6400);
+    T(function(){ ov.classList.add('info'); }, 7600); T(cannon, 8200); T(cannon, 10000); T(end, 13500);
+  }
+
+  function playDailyBoxReveal(base, p, stageId, onDone, mystic, instant, skipSig){
     stageId = stageId || 'dbx-stage';
+    /* Thẻ rarity SIG: chiếu hiệu ứng riêng toàn màn hình, xong mới hiện giao diện nhận thẻ như thường. */
+    if(!skipSig && !reducedMotion() && !window.__sigBusy && base && base.battle && base.battle.rarity === 'SIG'){
+      try{ sigRun(base, function(){ playDailyBoxReveal(base, p, stageId, onDone, mystic, instant, true); }); return; }
+      catch(err){ console.warn('Hieu ung SIG loi', err); var o = document.getElementById('sig-ov'); if(o) o.remove(); window.__sigBusy = false; }
+    }
     var stage = document.getElementById(stageId);
     if(!stage) throw new Error('thieu #'+stageId);
     var finish = onDone || closeDailyBoxModal;
-    var rm = reducedMotion();
+    var rm = reducedMotion() || !!skipSig;
     dbxStop();
     stage.className = 'dbx-stage' + (mystic ? ' is-mystic' : '');
     stage.innerHTML = dbxStageHTML(base, p, mystic);
@@ -7444,7 +7560,7 @@
     if(!base) return;
     skpBusy = true;
     skpOpenedIdx.push(idx);
-    if(cell) cell.classList.add('picked');
+    if(cell){ cell.classList.add('picked'); window.__sigCell = cell; }
 
     var p = ownedPlayerFromBase(base);
     var saved = false;
