@@ -3446,17 +3446,17 @@
 #season-match .fr-gm{ font-style:normal; font-size:clamp(22px,7vw,34px); line-height:1; filter:drop-shadow(0 2px 3px rgba(0,0,0,.7)) }
 #season-match .fr-gleg{ margin:2px 0 6px; font-size:12.5px; opacity:.8 }
 /* 4.2 thống kê giao hữu */
-#season-modal .fr-st-sum{ display:grid; grid-template-columns:repeat(4,1fr); gap:6px; margin:8px 0; text-align:center }
-#season-modal .fr-st-sum div{ padding:8px 4px; border-radius:12px; background:rgba(255,255,255,.08) }
-#season-modal .fr-st-sum b{ display:block; font-size:20px } #season-modal .fr-st-sum small{ opacity:.7; font-size:11.5px }
-#season-modal .fr-st-h{ margin:10px 0 4px; font-size:14px; font-weight:900 }
-#season-modal .fr-st-list{ display:grid; gap:6px; max-height:30vh; overflow:auto; margin:4px 0 }
-#season-modal .fr-st-row{ display:flex; align-items:center; gap:8px; min-height:48px; padding:8px 10px; border-radius:12px; background:rgba(255,255,255,.07) }
-#season-modal .fr-st-row > div{ flex:1; min-width:0 } #season-modal .fr-st-row b{ display:block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap }
-#season-modal .fr-st-row small{ opacity:.75; font-size:12px }
-#season-modal .fr-st-rm{ flex:none; min-height:44px; padding:0 12px; border-radius:12px; border:1px solid var(--gold,#F59E0B); background:rgba(245,158,11,.14); color:inherit; font:inherit; font-size:13px; font-weight:800; cursor:pointer }
-#season-modal .fr-st-rm:focus-visible{ outline:2px solid var(--gold,#F59E0B); outline-offset:2px }
-@media (max-width:360px){ #season-modal .fr-st-sum{ grid-template-columns:repeat(2,1fr) } }
+.fr-st-sum{ display:grid; grid-template-columns:repeat(4,1fr); gap:6px; margin:8px 0; text-align:center }
+.fr-st-sum div{ padding:8px 4px; border-radius:12px; background:rgba(255,255,255,.08) }
+.fr-st-sum b{ display:block; font-size:20px } .fr-st-sum small{ opacity:.7; font-size:11.5px }
+.fr-st-h{ margin:10px 0 4px; font-size:14px; font-weight:900 }
+.fr-st-list{ display:grid; gap:6px; max-height:34vh; overflow:auto; margin:4px 0 }
+.fr-st-row{ display:flex; align-items:center; gap:8px; min-height:48px; padding:8px 10px; border-radius:12px; background:rgba(255,255,255,.07) }
+.fr-st-row > div{ flex:1; min-width:0 } .fr-st-row b{ display:block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap }
+.fr-st-row small{ opacity:.75; font-size:12px }
+.fr-st-rm{ flex:none; min-height:44px; padding:0 12px; border-radius:12px; border:1px solid var(--gold,#F59E0B); background:rgba(245,158,11,.14); color:inherit; font:inherit; font-size:13px; font-weight:800; cursor:pointer }
+.fr-st-rm:focus-visible{ outline:2px solid var(--gold,#F59E0B); outline-offset:2px }
+@media (max-width:360px){ .fr-st-sum{ grid-template-columns:repeat(2,1fr) } }
 /* 4.4 thay người bằng thẻ ảnh */
 #season-match .sb-tg{ display:grid; grid-template-columns:repeat(auto-fill,minmax(82px,1fr)); gap:12px 8px; margin:4px 0 10px }
 #season-match .sb-t{ position:relative; display:flex; flex-direction:column; gap:3px; min-width:0; padding:5px 5px 6px; border-radius:12px; border:2px solid var(--glass-line); background:rgba(148,163,184,.1); color:var(--ink); font:inherit; text-align:center; cursor:pointer; -webkit-tap-highlight-color:transparent }
@@ -3495,7 +3495,7 @@
 #season-match .sb-t.off{ opacity:.38; filter:grayscale(.65); cursor:default; border-style:dashed }
 #season-match .mx-d.sub-swap .mx-c{ filter:drop-shadow(0 0 3px #38BDF8) drop-shadow(0 0 9px #38BDF8) }
 #season-view .frn-btn.ghost, #season-modal .frn-btn.ghost{ background:transparent; border-color:var(--glass-line); color:inherit }
-#season-view .frn-add{ width:100%; margin:6px 0 }
+#season-view .frn-add{ width:100%; margin:2px 0 8px; font-size:15px }
 </style>
 </head>
 <body>
@@ -16904,8 +16904,8 @@
       + (f.live ? '<button type="button" class="se-go" id="fr-resume">▶ Tiếp tục giao hữu với ' + escHtml((f.live.fr && f.live.fr.name) || 'bạn') + '</button><div class="se-meta">Trận đang dở, vào lại để đá tiếp.</div>'
         : (left > 0 ? '<button type="button" class="se-go" id="fr-open">🤝 Đấu với đội của bạn</button><div class="se-meta">🎟️ Hôm nay còn ' + left + '/' + per + ' lượt đấu (dùng chung với Đấu Trường)</div>'
           : '<button type="button" class="se-go" disabled>Hết lượt đấu hôm nay</button><div class="se-meta">' + frNoTurnMsg() + '</div>'))
-      + (frHist().length ? '<div class="se-btns"><button type="button" class="se-btn ghost" data-fr="stats">📊 Thống kê giao hữu</button></div>' : '') + '</div>'
-      + frnCardHTML();
+      + '</div>'
+      + frnCardHTML() + frStatsHTML();
   }
   /* ===== GIAO HỮU · Giai đoạn 4 ===== */
   /* 4.1 khung thành: ảnh của Cú Sút Quyết Định (SHOOT_BALL) chia 3 ô Trái / Giữa / Phải */
@@ -16943,12 +16943,12 @@
   }
   function frEndBtns(code, live){
     return '<div class="se-btns">' + (code ? '<button type="button" class="se-btn" data-fr="rematch" data-code="' + escHtml(code) + '" data-live="' + (live ? 1 : 0) + '">🔁 Đá lại với bạn này</button>' : '')
-      + '<button type="button" class="se-btn ghost" data-fr="stats">📊 Thống kê</button><button type="button" class="se-btn ghost" data-se="close">Đóng</button></div>';
+      + '<button type="button" class="se-btn ghost" data-se="close">Đóng</button></div>';
   }
   function frDate(t){ var d = new Date(t || 0); return ('0' + d.getDate()).slice(-2) + '/' + ('0' + (d.getMonth() + 1)).slice(-2); }
-  function frStatsOpen(){
+  function frStatsHTML(){
     var h = frHist().filter(function(x){ return x && typeof x === 'object'; });
-    if(!h.length){ frMsg('📊 Thống kê giao hữu', 'Bé chưa đá trận giao hữu nào. Đá một trận rồi quay lại xem nhé!'); return; }
+    if(!h.length) return '';
     var by = {}, T = {n:h.length, w:0, d:0, l:0, gf:0, ga:0, et:0, pso:0, fr:0, dur:0, durN:0};
     h.forEach(function(x){
       var g = x.g || [0, 0], k = x.code || x.name || '?', o = by[k] || (by[k] = {code:x.code || '', name:'', n:0, w:0, d:0, l:0, gf:0, ga:0, t:0, live:0});
@@ -16959,13 +16959,14 @@
     var rows = Object.keys(by).map(function(k){ return by[k]; }).sort(function(a, b){ return b.t - a.t; });
     var rec = h.slice(-8).reverse().map(function(x){ var g = x.g || [0, 0];
       return '<div class="fr-st-row"><div><b>' + (x.w === 1 ? '🎉' : (x.w === 0 ? '💪' : '🤝')) + ' ' + escHtml((x.code && userNameOf(x.code)) || x.name || 'Bạn') + ' · ' + g[0] + '–' + g[1] + '</b><small>' + frDate(x.t) + (x.et ? ' · hiệp phụ' : '') + (x.pso ? ' · luân lưu ' + x.pso[0] + '–' + x.pso[1] : '') + (x.dur ? ' · ' + Math.max(1, Math.round(x.dur / 60)) + ' phút' : '') + (x.fr ? ' · 🧩+' + x.fr : '') + '</small></div></div>'; }).join('');
-    sModalOpen('<h3>📊 Thống kê giao hữu</h3><div class="fr-st-sum"><div><b>' + T.n + '</b><small>đã đá</small></div><div><b>' + T.w + '</b><small>thắng</small></div><div><b>' + T.d + '</b><small>hòa</small></div><div><b>' + T.l + '</b><small>thua</small></div></div>'
+    return ('<div class="se-card fr-card fr-stats"><h4>📊 Thống kê giao hữu</h4><div class="fr-st-sum"><div><b>' + T.n + '</b><small>đã đá</small></div><div><b>' + T.w + '</b><small>thắng</small></div><div><b>' + T.d + '</b><small>hòa</small></div><div><b>' + T.l + '</b><small>thua</small></div></div>'
       + '<p class="sl-intro"><small>Bàn thắng/thua: <b>' + T.gf + '–' + T.ga + '</b> · hiệp phụ ' + T.et + ' · luân lưu ' + T.pso + ' · 🧩 đã nhận ' + T.fr + (T.durN ? ' · trung bình ' + Math.max(1, Math.round(T.dur / T.durN / 60)) + ' phút/trận' : '') + '</small></p>'
       + '<div class="fr-st-h">Đối đầu từng bạn</div><div class="fr-st-list">' + rows.map(function(o){
         return '<div class="fr-st-row"><div><b>' + escHtml(o.name) + '</b><small>' + o.w + 'T-' + o.d + 'H-' + o.l + 'B · ' + o.n + ' trận · bàn ' + o.gf + '–' + o.ga + '</small></div>'
           + (o.code ? '<button type="button" class="fr-st-rm" data-fr="rematch" data-code="' + escHtml(o.code) + '" data-live="' + o.live + '">🔁 Đá lại</button>' : '') + '</div>'; }).join('') + '</div>'
-      + '<div class="fr-st-h">Gần đây</div><div class="fr-st-list">' + rec + '</div><div class="se-btns"><button type="button" class="se-btn ghost" data-se="close">Đóng</button></div>');
+      + '<div class="fr-st-h">Gần đây</div><div class="fr-st-list">' + rec + '</div></div>');
   }
+  function frStatsOpen(){ var el = document.querySelector('#season-view .fr-stats'); if(el && el.scrollIntoView) el.scrollIntoView({block:'start'}); }
   document.addEventListener('click', function(e){
     var t = e.target && e.target.closest ? e.target.closest('[data-fr="stats"], [data-fr="rematch"]') : null; if(!t) return;
     var a = t.getAttribute('data-fr');
@@ -17331,7 +17332,7 @@
     codes.sort(function(a, b){ return (on[b] ? 1 : 0) - (on[a] ? 1 : 0) || userNameOf(a).localeCompare(userNameOf(b)); });
     var nOn = codes.filter(function(c){ return on[c]; }).length, h = '';
     if(frnRoom){ var lvOn = !!(frnRoom.d && frnRoom.d.status === 'live'); h += '<div class="frn-row"><span class="frn-dot on"></span><div class="frn-nm"><b>' + (lvOn ? 'Đang đá giao hữu' : 'Đang có phòng giao hữu') + '</b><small>' + (lvOn ? 'Vào lại màn trận để tiếp tục' : 'Quay lại phòng chờ để tiếp tục') + '</small></div><button type="button" class="frn-btn" data-frn="back">' + (lvOn ? 'Vào lại trận' : 'Về phòng') + '</button></div>'; }
-    h += '<button type="button" class="frn-btn frn-add" data-frn="fr-add">➕ Kết bạn</button>' + frnReqHTML();
+    h += frnReqHTML();
     if(!codes.length) h += '<div class="se-meta">Chưa có bạn nào. Bấm ➕ Kết bạn để gửi lời mời, bạn ấy đồng ý là đá giao hữu được.</div>';
     else {
       h += '<div class="se-meta">' + (nOn ? '🟢 ' + nOn + ' bạn đang online' : 'Chưa có bạn nào online lúc này') + '</div>';
@@ -17344,8 +17345,14 @@
     if(box.__h !== h){ box.__h = h; box.innerHTML = h; }
   }
   function frnCardHTML(){
-    if(!frnEligible()) return '';
-    return '<div class="se-card fr-card" id="frn-card"><h4>👥 Bạn bè <small>(kết bạn · mời đá trực tiếp)</small></h4><div id="frn-list" class="frn-list"><div class="se-meta">Đang tải danh sách bạn…</div></div>'
+    if(!settings.friendly || !settings.friendly.enabled) return '';
+    if(!frnEligible()){
+      var a = readAuth(), why = (a && a.role === 'admin') ? 'Đang đăng nhập bằng tài khoản quản trị nên chưa kết bạn được. Hãy đăng xuất rồi vào bằng hồ sơ của bé.' : 'Hồ sơ này chưa có trong sổ người dùng nên chưa kết bạn được. Nhờ quản trị thêm hồ sơ vào sổ.';
+      return '<div class="se-card fr-card" id="frn-card"><h4>👥 Bạn bè <small>(kết bạn · mời đá trực tiếp)</small></h4><div class="se-meta">' + why + '</div></div>';
+    }
+    return '<div class="se-card fr-card" id="frn-card"><h4>👥 Bạn bè <small>(kết bạn · mời đá trực tiếp)</small></h4>'
+      + '<button type="button" class="frn-btn frn-add" data-frn="fr-add">➕ Kết bạn</button>'
+      + '<div id="frn-list" class="frn-list"><div class="se-meta">Đang tải danh sách bạn…</div></div>'
       + '<div class="se-meta">Chỉ mời được bạn đã kết bạn, và bạn ấy phải đang mở app.</div></div>';
   }
 
