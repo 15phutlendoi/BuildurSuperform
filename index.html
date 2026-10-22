@@ -3481,6 +3481,21 @@
 #season-match .mx-pitch.sub-on .mx-d.s0:not(.gone){ cursor:pointer }
 #season-match .mx-d.sub-sel .mx-c{ transform:scale(1.12); filter:drop-shadow(0 0 3px #FBBF24) drop-shadow(0 0 10px #FBBF24) }
 #season-match .mx-d.sub-out .mx-c{ filter:drop-shadow(0 0 3px #F87171) drop-shadow(0 0 9px #F87171) }
+/* 4.4b chip cầu thủ trên sân (chỉ chữ), người đã rút mờ đi, đổi chỗ */
+#season-match .sb-chips{ display:flex; flex-wrap:wrap; gap:6px; margin:4px 0 10px }
+#season-match .sb-chip{ min-height:44px; padding:0 12px; border-radius:12px; border:2px solid var(--glass-line); background:rgba(148,163,184,.1); color:var(--ink); font:inherit; font-size:13px; cursor:pointer; -webkit-tap-highlight-color:transparent }
+#season-match .sb-chip b{ margin-right:2px; color:var(--gold) }
+#season-match .sb-chip.sel{ border-color:var(--gold); background:rgba(245,158,11,.22) }
+#season-match .sb-chip.out{ border-color:#F87171; background:rgba(248,113,113,.15) }
+#season-match .sb-chip.swap{ border-color:#38BDF8; background:rgba(56,189,248,.16) }
+#season-match .sb-chip.inj{ border-color:#F59E0B }
+#season-match .sb-chip:disabled{ opacity:.45; cursor:default }
+#season-match .sb-chip:focus-visible{ outline:3px solid var(--gold); outline-offset:2px }
+#season-match .sb-selp{ margin:2px 0 8px; padding:8px 10px; border-radius:10px; background:rgba(245,158,11,.14); font-size:13px }
+#season-match .sb-t.off{ opacity:.38; filter:grayscale(.65); cursor:default; border-style:dashed }
+#season-match .mx-d.sub-swap .mx-c{ filter:drop-shadow(0 0 3px #38BDF8) drop-shadow(0 0 9px #38BDF8) }
+#season-view .frn-btn.ghost, #season-modal .frn-btn.ghost{ background:transparent; border-color:var(--glass-line); color:inherit }
+#season-view .frn-add{ width:100%; margin:6px 0 }
 </style>
 </head>
 <body>
@@ -14912,6 +14927,13 @@
     t.pitch[pi] = inn; t.bench.splice(bi, 1); t.out.push(out); t.subs++;
     return {out:out.id, inn:inn.id, v:v, fit:fit, outStam:out.stam, batch:batch};
   }
+  function seCanSwap(t, a, b){ var x = t.pitch[a], y = t.pitch[b]; return a !== b && !!x && !!y && !x.gone && !y.gone && t.slots[a] !== 'GK' && t.slots[b] !== 'GK'; }
+  function seSwap(m, side, a, b){   // đổi chỗ hai cầu thủ đang trên sân: không mất lượt thay, nhưng lệch sở trường thì bị trừ sức mạnh
+    var t = m.teams[side]; if(!seCanSwap(t, a, b)) return false;
+    var x = t.pitch[a], y = t.pitch[b]; t.pitch[a] = y; t.pitch[b] = x;
+    x.fit = SE_HOOK.fit(x, t.slots[b]); y.fit = SE_HOOK.fit(y, t.slots[a]);
+    return {a:x.id, b:y.id};
+  }
   /* ---------- đổi sơ đồ giữa trận: xếp lại 11 cầu thủ vào vị trí mới (thủ môn giữ nguyên), ưu tiên đúng sở trường ---------- */
   function seAssignForm(t, fid){
     var f = FORMATIONS.filter(function(x){ return x.id === fid; })[0]; if(!f) return null;
@@ -16482,34 +16504,49 @@
   }
   function sSubBlock(c, ro){
     var m = c.m, t = mT(m), sel = c.sel, pend = c.pend || [], by = mxMineBy(), need = ro ? [] : seNeedSub(m, mMe(m));
-    function pairNo(kind, id){ for(var i = 0; i < pend.length; i++) if((kind === 'p' ? pend[i].o : pend[i].b) === id) return i + 1; return 0; }
+    function pendNo(id){ for(var i = 0; i < pend.length; i++){ var q = pend[i]; if(!q.sw && q.b === id) return i + 1; } return 0; }
+    function outNo(id){ return pend.some(function(q){ return !q.sw && q.o === id; }); }
+    function inSwap(id){ return pend.some(function(q){ return q.sw && (q.o === id || q.b === id); }); }
     var selP = sel ? (sel.k === 'p' ? t.pitch[sIdxOf(t.pitch, sel.id)] : t.bench[sIdxOf(t.bench, sel.id)]) : null;
-    function tile(p, slot, kind, i){   // một thẻ ảnh: chạm là chọn (cả trên sân lẫn dự bị)
-      var n = pairNo(kind, p.id), isSel = !!(sel && sel.k === kind && sel.id === p.id), inj = p.gone === 'inj', dis = ro || !!(p.gone && !inj), hint = '🔋 ' + Math.round(p.stam) + '%';
-      if(selP && sel.k !== kind && !n && !dis){ var ft = kind === 'b' ? SE_HOOK.fit(p, t.slots[sIdxOf(t.pitch, sel.id)]) : SE_HOOK.fit(selP, t.slots[i]); hint = ft >= 0.97 ? '✅ hợp vị trí' : '⚠ lệch −' + Math.round((1 - ft) * 100) + '%'; }
-      if(n) hint = kind === 'p' ? '⬇ ra sân' : '⬆ vào sân'; else if(inj) hint = '🚑 chấn thương';
-      var cb = p.gone === 'red' ? ' 🟥' : (p.yc === 1 ? ' 🟨' : '');
-      return '<button type="button" class="sb-t' + (isSel ? ' sel' : '') + (n ? (kind === 'p' ? ' out' : ' in') : '') + (inj ? ' inj' : '') + '" data-mt="sel" data-k="' + kind + '" data-i="' + i + '" aria-pressed="' + isSel + '" aria-label="' + escHtml(p.n) + ', ' + escHtml(slot) + ', thể lực ' + Math.round(p.stam) + '%"' + (dis ? ' disabled' : '') + '>'
-        + (n ? '<span class="sb-num">' + n + '</span>' : '') + '<span class="sb-art">' + inArt(p, 0, by) + '</span>'
-        + '<span class="sb-meta"><b>' + escHtml(slot) + '</b><em>' + sEffOvr(p) + cb + '</em></span><span class="sb-bar"><i style="width:' + Math.round(p.stam) + '%;background:' + sStamCls(p.stam) + '"></i></span><span class="sb-tag">' + hint + '</span></button>';
+    function pct(ft){ return Math.round((1 - ft) * 100); }
+    function chip(p, i){   // cầu thủ trên sân: chỉ chữ, không hiện thẻ ảnh (thẻ đã có trên sân bóng)
+      var isSel = !!(sel && sel.k === 'p' && sel.id === p.id), inj = p.gone === 'inj', dis = ro || !!(p.gone && !inj);
+      return '<button type="button" class="sb-chip' + (isSel ? ' sel' : '') + (outNo(p.id) ? ' out' : '') + (inSwap(p.id) ? ' swap' : '') + (inj ? ' inj' : '') + '" data-mt="sel" data-k="p" data-i="' + i + '" aria-pressed="' + isSel + '"' + (dis ? ' disabled' : '') + '><b>' + escHtml(t.slots[i]) + '</b> ' + escHtml(p.n) + (inj ? ' 🚑' : '') + (p.gone === 'red' ? ' 🟥' : '') + '</button>';
     }
-    var h = '<div class="se-card mt-sub"><h4>🔁 Thay người <small>(đã dùng ' + t.subs + '/' + seMaxSubs(t) + (pend.length ? ' · đang chọn ' + pend.length : '') + ')</small></h4>';
-    if(ro) h += '<p class="sf-note">🔒 Đang diễn ra tình huống. Thay người làm được khi tình huống kết thúc.</p>';
-    else if(need.length) h += '<p class="sf-note mt-warn">🚑 Có cầu thủ bị chấn thương. Chạm thẻ cầu thủ đó, rồi chạm một thẻ dự bị. Không thay thì đội đá thiếu người.</p>';
-    else h += '<p class="sf-note">Chạm thẻ cầu thủ <b>trên sân</b> (ở đây hoặc ngay trên sân bóng), rồi chạm thẻ <b>dự bị</b>. Bấm <b>Thay luôn</b> là thay ngay. Hết giờ nghỉ, lượt thay đã chọn tự được thực hiện.</p>';
-    h += '<div class="mt-ct">Đang trên sân</div><div class="sb-tg">' + t.pitch.map(function(p, i){ return tile(p, t.slots[i], 'p', i); }).join('') + '</div>'
-      + '<div class="mt-ct">Dự bị</div>' + (t.bench.length ? '<div class="sb-tg">' + t.bench.map(function(p, i){ return tile(p, p.pos, 'b', i); }).join('') + '</div>' : '<div class="mt-line"><small>Đã dùng hết dự bị.</small></div>');
+    function btile(p, i){   // dự bị: thẻ ảnh
+      var n = pendNo(p.id), isSel = !!(sel && sel.k === 'b' && sel.id === p.id), hint = '🔋 ' + Math.round(p.stam) + '%';
+      if(sel && sel.k === 'p' && selP && !n){ var ft = SE_HOOK.fit(p, t.slots[sIdxOf(t.pitch, sel.id)]); hint = ft >= 0.97 ? '✅ hợp vị trí' : '⚠ lệch −' + pct(ft) + '%'; }
+      if(n) hint = '⬆ vào sân';
+      return '<button type="button" class="sb-t' + (isSel ? ' sel' : '') + (n ? ' in' : '') + '" data-mt="sel" data-k="b" data-i="' + i + '" aria-pressed="' + isSel + '" aria-label="' + escHtml(p.n) + ', dự bị ' + escHtml(p.pos) + ', thể lực ' + Math.round(p.stam) + '%"' + (ro ? ' disabled' : '') + '>'
+        + (n ? '<span class="sb-num">' + n + '</span>' : '') + '<span class="sb-art">' + inArt(p, 0, by) + '</span>'
+        + '<span class="sb-meta"><b>' + escHtml(p.pos) + '</b><em>' + sEffOvr(p) + '</em></span><span class="sb-bar"><i style="width:' + Math.round(p.stam) + '%;background:' + sStamCls(p.stam) + '"></i></span><span class="sb-tag">' + hint + '</span></button>';
+    }
+    function otile(p){   // người đã rút khỏi sân: vẫn nằm trên ghế dự bị nhưng mờ đi, không chọn được
+      return '<div class="sb-t off" aria-label="' + escHtml(p.n) + ', đã rút khỏi sân"><span class="sb-art">' + inArt(p, 0, by) + '</span><span class="sb-meta"><b>' + escHtml(p.pos) + '</b><em>' + sEffOvr(p) + '</em></span><span class="sb-tag">↩ đã rút khỏi sân</span></div>';
+    }
+    var h = '<div class="se-card mt-sub"><h4>🔁 Thay người &amp; đổi chỗ <small>(đã thay ' + t.subs + '/' + seMaxSubs(t) + (pend.length ? ' · đang chọn ' + pend.length : '') + ')</small></h4>';
+    if(ro) h += '<p class="sf-note">🔒 Đang diễn ra tình huống. Thay người và đổi chỗ làm được khi tình huống kết thúc.</p>';
+    else if(need.length) h += '<p class="sf-note mt-warn">🚑 Có cầu thủ bị chấn thương. Chạm cầu thủ đó, rồi chạm một thẻ dự bị. Không thay thì đội đá thiếu người.</p>';
+    else h += '<p class="sf-note">Chạm một cầu thủ <b>trên sân</b> (ngay trên sân bóng hoặc ở danh sách dưới đây), rồi chạm <b>thẻ dự bị</b> để <b>thay người</b>, hoặc chạm một cầu thủ khác trên sân để <b>đổi chỗ</b> (đổi chỗ không mất lượt thay). Bấm <b>Xác nhận</b> là làm luôn. Hết giờ nghỉ, các lựa chọn tự được xác nhận.</p>';
+    if(!ro && selP) h += '<div class="sb-selp">' + (sel.k === 'p' ? 'Đã chọn <b>' + escHtml(selP.n) + '</b> (' + escHtml(t.slots[sIdxOf(t.pitch, sel.id)]) + '). Chạm thẻ dự bị để thay, hoặc cầu thủ khác trên sân để đổi chỗ.' : 'Đã chọn dự bị <b>' + escHtml(selP.n) + '</b>. Chạm cầu thủ trên sân sẽ bị thay ra.') + '</div>';
+    h += '<div class="mt-ct">Trên sân</div><div class="sb-chips">' + t.pitch.map(function(p, i){ return chip(p, i); }).join('') + '</div>'
+      + '<div class="mt-ct">Ghế dự bị</div>' + ((t.bench.length || t.out.length) ? '<div class="sb-tg">' + t.bench.map(function(p, i){ return btile(p, i); }).join('') + t.out.map(otile).join('') + '</div>' : '<div class="mt-line"><small>Không có dự bị.</small></div>');
     if(!ro && pend.length){
       h += '<div class="sb-sum sb-fix"><ul>' + pend.map(function(q, k){
+        if(q.sw){
+          var a = sIdxOf(t.pitch, q.o), b = sIdxOf(t.pitch, q.b); if(a < 0 || b < 0) return '';
+          var x = t.pitch[a], y = t.pitch[b], f1 = SE_HOOK.fit(x, t.slots[b]), f2 = SE_HOOK.fit(y, t.slots[a]), ad = [];
+          if(f1 < 0.97) ad.push('⚠ ' + x.n + ' lệch vị trí (−' + pct(f1) + '%)'); if(f2 < 0.97) ad.push('⚠ ' + y.n + ' lệch vị trí (−' + pct(f2) + '%)');
+          return '<li><span class="sb-num sm">⇄</span><div><b>' + escHtml(x.n) + '</b> (' + escHtml(t.slots[a]) + ') ⇄ <b>' + escHtml(y.n) + '</b> (' + escHtml(t.slots[b]) + ')<small>' + (ad.join(' · ') || 'Cả hai đều hợp vị trí mới.') + ' Không mất lượt thay.</small></div><button type="button" class="sb-x" data-mt="unpair" data-i="' + k + '" aria-label="Bỏ lượt đổi chỗ này">✕</button></li>';
+        }
         var pi = sIdxOf(t.pitch, q.o), bi = sIdxOf(t.bench, q.b); if(pi < 0 || bi < 0) return '';
-        var o = t.pitch[pi], b = t.bench[bi], ft = SE_HOOK.fit(b, t.slots[pi]), adv = [];
+        var o = t.pitch[pi], b2 = t.bench[bi], ft = SE_HOOK.fit(b2, t.slots[pi]), adv = [];
         if(o.stam < 55) adv.push('✅ người ra đang mệt, thay hợp lý'); else if(o.stam > 65) adv.push('⚠ người ra còn sung sức, thay lúc này dễ mất nhịp');
-        if(ft < 0.97) adv.push('⚠ người vào lệch vị trí (−' + Math.round((1 - ft) * 100) + '% sức mạnh)'); if(pend.length > 2) adv.push('⚠ thay trên 2 người một lượt dễ làm đội rối'); if(m.i >= m.N - 2) adv.push('⚠ gần hết giờ, người vào ít kịp làm quen');
-        return '<li><span class="sb-num sm">' + (k + 1) + '</span><div><b>' + escHtml(o.n) + '</b> (' + Math.round(o.stam) + '%) ➜ <b>' + escHtml(b.n) + '</b><small>' + (adv.join(' · ') || 'Hợp vị trí, thể lực ổn.') + '</small></div><button type="button" class="sb-x" data-mt="unpair" data-i="' + k + '" aria-label="Bỏ lượt thay này">✕</button></li>';
-      }).join('') + '</ul><div class="se-btns"><button type="button" class="se-btn" data-mt="subok">✅ Thay luôn (' + pend.length + ')</button><button type="button" class="se-btn ghost" data-mt="subno">↩ Hủy chọn</button></div>'
-        + (c.brk ? '<p class="fr-hint">⏳ Hết giờ nghỉ, lượt thay đã chọn sẽ tự được thực hiện.</p>' : '') + '</div>';
+        if(ft < 0.97) adv.push('⚠ người vào lệch vị trí (−' + pct(ft) + '% sức mạnh)'); if(pend.filter(function(z){ return !z.sw; }).length > 2) adv.push('⚠ thay trên 2 người một lượt dễ làm đội rối'); if(m.i >= m.N - 2) adv.push('⚠ gần hết giờ, người vào ít kịp làm quen');
+        return '<li><span class="sb-num sm">' + (k + 1) + '</span><div><b>' + escHtml(o.n) + '</b> (' + Math.round(o.stam) + '%) ➜ <b>' + escHtml(b2.n) + '</b><small>' + (adv.join(' · ') || 'Hợp vị trí, thể lực ổn.') + '</small></div><button type="button" class="sb-x" data-mt="unpair" data-i="' + k + '" aria-label="Bỏ lượt thay này">✕</button></li>';
+      }).join('') + '</ul><div class="se-btns"><button type="button" class="se-btn" data-mt="subok">✅ Xác nhận (' + pend.length + ')</button><button type="button" class="se-btn ghost" data-mt="subno">↩ Hủy chọn</button></div>'
+        + (c.brk ? '<p class="fr-hint">⏳ Hết giờ nghỉ, các lựa chọn trên sẽ tự được xác nhận.</p>' : '') + '</div>';
     }
-    if(t.out.length) h += '<div class="mt-ct">Đã rút khỏi sân <small>(không vào lại được)</small></div><div class="sb-outl">' + t.out.map(function(p){ return '<span class="sb-o">' + escHtml(p.pos) + ' · ' + escHtml(p.n) + '</span>'; }).join('') + '</div>';
     return h + '</div>';
   }
   function sXIHTML(c, locked){
@@ -16539,8 +16576,8 @@
     el.classList.toggle('sub-on', on);
     Array.prototype.forEach.call(el.querySelectorAll('.mx-d.s0'), function(e){
       var p = t.pitch[parseInt(e.getAttribute('data-i'), 10)];
-      var isSel = !!(on && p && c.sel && c.sel.k === 'p' && c.sel.id === p.id), isOut = !!(on && p && (c.pend || []).some(function(q){ return q.o === p.id; }));
-      e.classList.toggle('sub-sel', isSel); e.classList.toggle('sub-out', isOut && !isSel);
+      var isSel = !!(on && p && c.sel && c.sel.k === 'p' && c.sel.id === p.id), isOut = !!(on && p && (c.pend || []).some(function(q){ return !q.sw && q.o === p.id; })), isSw = !!(on && p && (c.pend || []).some(function(q){ return q.sw && (q.o === p.id || q.b === p.id); }));
+      e.classList.toggle('sub-sel', isSel); e.classList.toggle('sub-out', isOut && !isSel); e.classList.toggle('sub-swap', isSw && !isSel);
     });
   }
   document.addEventListener('click', function(e){
@@ -16553,33 +16590,50 @@
   function sSelPlayer(kind, i){
     var c = sMC; if(!c || c.busy || c.m.phase !== 'break') return; c.keepScroll = true;
     var m = c.m, t = mT(m), arr = kind === 'p' ? t.pitch : t.bench, X = arr[i]; if(!X) return; if(!c.pend) c.pend = [];
-    var pr = c.pend.filter(function(q){ return (kind === 'p' ? q.o : q.b) === X.id; })[0];
+    function pendOf(k, id){ return c.pend.filter(function(q){ return k === 'p' ? (q.o === id || (q.sw && q.b === id)) : (!q.sw && q.b === id); })[0]; }
+    var pr = pendOf(kind, X.id);
     m.note = '';
     if(!c.sel){
-      if(pr){ c.pend.splice(c.pend.indexOf(pr), 1); m.note = '↩ Đã bỏ lượt thay đó.'; } else c.sel = {k:kind, id:X.id};
+      if(pr){ c.pend.splice(c.pend.indexOf(pr), 1); m.note = '↩ Đã bỏ lựa chọn đó.'; } else c.sel = {k:kind, id:X.id};
       sMatchRender(); return;
     }
-    if(c.sel.k === kind){ c.sel = c.sel.id === X.id ? null : {k:kind, id:X.id}; sMatchRender(); return; }
+    if(c.sel.id === X.id){ c.sel = null; sMatchRender(); return; }
+    if(c.sel.k === kind){
+      if(kind === 'b'){ c.sel = {k:'b', id:X.id}; sMatchRender(); return; }
+      /* hai cầu thủ cùng trên sân: đổi chỗ cho nhau (không mất lượt thay) */
+      var ai = sIdxOf(t.pitch, c.sel.id), A = t.pitch[ai];
+      if(ai < 0 || !A || A.gone || X.gone){ m.note = 'Cầu thủ bị chấn thương hoặc bị đuổi thì không đổi chỗ được. Hãy thay người.'; c.sel = null; sMatchRender(); return; }
+      if(t.slots[ai] === 'GK' || t.slots[i] === 'GK'){ m.note = 'Thủ môn giữ nguyên khung thành. Chỉ thay được bằng thủ môn dự bị.'; c.sel = null; sMatchRender(); return; }
+      c.pend = c.pend.filter(function(q){ return !(q.o === A.id || q.o === X.id || (q.sw && (q.b === A.id || q.b === X.id))); });
+      c.pend.push({sw:1, o:A.id, b:X.id}); c.sel = null; sMatchRender(); return;
+    }
     var oId = kind === 'p' ? X.id : c.sel.id, bId = kind === 'b' ? X.id : c.sel.id, pi = sIdxOf(t.pitch, oId), bi = sIdxOf(t.bench, bId);
-    var rest = c.pend.filter(function(q){ return q.o !== oId && q.b !== bId; });
+    var rest = c.pend.filter(function(q){ return !(q.o === oId || (q.sw && q.b === oId) || (!q.sw && q.b === bId)); });
     if(pi < 0 || bi < 0 || t.pitch[pi].gone === 'red' || (t.slots[pi] === 'GK') !== (t.bench[bi].pos === 'GK')){ m.note = 'Thủ môn chỉ thay bằng thủ môn.'; c.sel = null; sMatchRender(); return; }
-    if(t.subs + rest.length >= seMaxSubs(t)){ m.note = 'Đã dùng đủ số lượt thay còn lại.'; c.sel = null; sMatchRender(); return; }
+    if(t.subs + rest.filter(function(q){ return !q.sw; }).length >= seMaxSubs(t)){ m.note = 'Đã dùng đủ số lượt thay còn lại.'; c.sel = null; sMatchRender(); return; }
     rest.push({o:oId, b:bId}); c.pend = rest; c.sel = null; sMatchRender();
   }
-  function sSubApply(c){   // thực hiện ngay các lượt thay đã chọn (bấm Thay luôn, bấm tình huống kế, hoặc hết giờ nghỉ)
+  function sSubApply(c){   // thực hiện ngay các lượt thay / đổi chỗ đã chọn (bấm Xác nhận, bấm tình huống kế, hoặc hết giờ nghỉ)
     if(!c || c.m.phase !== 'break' || !c.pend || !c.pend.length) return;
-    var m = c.m, t = mT(m), done = [];
+    var m = c.m, t = mT(m), done = [], swaps = [];
     c.pend.slice().forEach(function(q){
+      if(q.sw){
+        var a = sIdxOf(t.pitch, q.o), b = sIdxOf(t.pitch, q.b); if(a < 0 || b < 0) return;
+        var x = t.pitch[a], y = t.pitch[b];
+        if(seSwap(m, mMe(m), a, b)){ swaps.push({x:x, y:y}); if(c.lv) frlEmit(c, {k:'swap', a:q.o, b:q.b}); }
+        return;
+      }
       var pi = sIdxOf(t.pitch, q.o), bi = sIdxOf(t.bench, q.b); if(pi < 0 || bi < 0) return;
-      var o = t.pitch[pi], n = t.bench[bi], r = seSub(m, mMe(m), pi, bi); if(r) done.push({o:o, n:n});
+      var o = t.pitch[pi], n = t.bench[bi], r = seSub(m, mMe(m), pi, bi); if(r){ done.push({o:o, n:n}); if(c.lv) frlEmit(c, {k:'sub', o:o.id, b:n.id}); }
     });
     c.pend = []; c.sel = null;
-    if(c.lv) done.forEach(function(d){ frlEmit(c, {k:'sub', o:d.o.id, b:d.n.id}); });
-    if(done.length){
+    if(done.length || swaps.length){
       seSynAll(m); var mn = (m.half && !m.halfDone) ? 45 : seMinute(m, Math.max(0, m.i - 1));
-      comPush(m, done.map(function(d){ return comL(mn, 'sub', 'Substitution for ' + t.name + ': ' + comShort(d.n) + ' comes on for ' + comShort(d.o) + '.'); }));
-      m.note = '🔁 Đã thay: ' + done.map(function(d){ return d.o.n + ' ➜ ' + d.n.n; }).join(', ') + '.'; sSave(c.st);
-    } else m.note = 'Không thực hiện được lượt thay nào.';
+      comPush(m, done.map(function(d){ return comL(mn, 'sub', 'Substitution for ' + t.name + ': ' + comShort(d.n) + ' comes on for ' + comShort(d.o) + '.'); })
+        .concat(swaps.map(function(s){ return comL(mn, 'info', 'Positional change: ' + t.name + ': ' + comShort(s.x) + ' and ' + comShort(s.y) + ' swap positions.'); })));
+      m.note = (done.length ? '🔁 Đã thay: ' + done.map(function(d){ return d.o.n + ' ➜ ' + d.n.n; }).join(', ') + '. ' : '') + (swaps.length ? '🔀 Đã đổi chỗ: ' + swaps.map(function(s){ return s.x.n + ' ⇄ ' + s.y.n; }).join(', ') + '.' : '');
+      sSave(c.st);
+    } else m.note = 'Không thực hiện được thay đổi nào.';
   }
   function sSubConfirm(){ var c = sMC; if(!c || c.busy || c.m.phase !== 'break') return; c.keepScroll = true; sSubApply(c); sMatchRender(); }
   function sFormConfirm(){
@@ -16927,8 +16981,9 @@
     sModalOpen('<h3>🤝 Chọn bạn để đấu giao hữu</h3><p class="sl-intro">Đang tải danh sách bạn…</p>');
     await fetchUserDirectory();
     var rec = {}; frHist().forEach(function(h){ var r = rec[h.code] || (rec[h.code] = {w:0, d:0, l:0}); if(h.w === 1) r.w++; else if(h.w === 0) r.l++; else r.d++; });
-    var codes = Object.keys(userDirectory).filter(function(c){ return c !== syncId; });
-    if(!codes.length){ frMsg('🤝 Giao hữu', 'Chưa có bạn nào trong danh sách.'); return; }
+    var frd = null; try{ frd = await frnReq('GET', frnFrPath(syncId)); }catch(e){}
+    var codes = Object.keys(frd && typeof frd === 'object' ? frd : {}).filter(function(c){ return c !== syncId && frd[c] && frd[c].st === 'ok'; });
+    if(!codes.length){ frMsg('🤝 Giao hữu', 'Bé chưa có bạn nào. Vào mục <b>👥 Bạn bè</b> trong tab Giao hữu, bấm <b>➕ Kết bạn</b> rồi chờ bạn ấy đồng ý nhé!'); return; }
     codes.sort(function(a, b){ return userNameOf(a).localeCompare(userNameOf(b)); });
     sModalOpen('<h3>🤝 Chọn bạn để đấu giao hữu</h3><p class="sl-intro">Đội của bạn do máy điều khiển, dùng đúng sơ đồ và cầu thủ bạn ấy đã xếp. Còn ' + frLeft(st) + ' lượt đấu hôm nay (dùng chung với Đấu Trường).</p>'
       + '<input type="search" id="fr-q" class="fr-q" placeholder="Tìm tên hoặc mã…" autocomplete="off"><div class="fr-list">'
@@ -16964,6 +17019,7 @@
     var st = sLoad(), f = frState(st); if(!settings.friendly.enabled) return;
     if(f.live){ sFrOpen(); return; }
     if(frLeft(st) <= 0){ frMsg('🤝 Giao hữu', frNoTurnMsg()); return; }
+    if(!(await frnIsFriend(code))){ frnFrNoFriendMsg(); return; }
     var lu = sLineup(); if(!lu.ready){ frMsg('🤝 Giao hữu', 'Đội hình của bé chưa đủ cầu thủ.'); return; }
     var name = userNameOf(code); sModalOpen('<h3>🤝 ' + escHtml(name) + '</h3><p class="sl-intro">Đang đọc đội hình của bạn…</p>');
     var fl; try{ fl = await sFrLoadFriend(code); }catch(e){ frMsg('🤝 Giao hữu', 'Không tải được đội hình của bạn (mạng có vấn đề?). Thử lại sau nhé.'); return; }
@@ -17171,15 +17227,16 @@
   function frnInboxPath(id){ return 'inbox/' + encodeURIComponent(syncId) + '/' + id; }
   function frnInboxDrop(id){ frnInvDel[id] = 1; return frnReq('DELETE', frnInboxPath(id)).catch(function(){}); }
   function frnInboxStart(){
-    if(frnInbox) return;
+    if(frnInbox) return; frnFrStart();
     frnInbox = frnStream('inbox/' + encodeURIComponent(syncId), function(d){ frnInv = (d && typeof d === 'object') ? d : {}; frnInvPaint(); });
   }
-  function frnInboxStop(){ if(frnInbox){ frnInbox.close(); frnInbox = null; } frnInv = {}; frnInvPaint(); }
+  function frnInboxStop(){ if(frnInbox){ frnInbox.close(); frnInbox = null; } frnFrStop(); frnInv = {}; frnInvPaint(); }
   function frnInvTop(){   // lời mời còn hạn, mới nhất; mỗi người mời chỉ giữ 1 lời mời; dọn lời mời hết hạn
     var now = frnNow(), bySender = {}, top = null;
     Object.keys(frnInv).forEach(function(id){
       var v = frnInv[id]; if(frnInvDel[id]) return;
       if(!v || typeof v !== 'object' || !v.from || !(v.exp > now)){ frnInboxDrop(id); return; }
+      if(frnFrS && frnFrSt(v.from) !== 'ok') return;   // chỉ nhận lời mời đá từ bạn bè (không xóa, để kết bạn xong vẫn nhận được)
       var cur = bySender[v.from];
       if(cur && (cur.v.t || 0) >= (v.t || 0)){ frnInboxDrop(id); return; }
       if(cur) frnInboxDrop(cur.id);
@@ -17220,16 +17277,62 @@
     }
     if(want) frnPaintList();
   }
+  /* ---- Kết bạn: friends/<mã tôi>/<mã bạn> = {st:'out' (tôi đã mời) | 'in' (bạn ấy mời tôi) | 'ok' (đã là bạn), name, t} ---- */
+  var frnFr = {}, frnFrS = null;
+  function frnFrPath(a, b){ return 'friends/' + encodeURIComponent(a) + (b ? '/' + encodeURIComponent(b) : ''); }
+  function frnFrStart(){ if(frnFrS || !syncId) return; frnFrS = frnStream(frnFrPath(syncId), function(d){ frnFr = (d && typeof d === 'object') ? d : {}; frnPaintList(); frnInvPaint(); }); }
+  function frnFrStop(){ if(frnFrS){ frnFrS.close(); frnFrS = null; } frnFr = {}; }
+  function frnFrSt(code){ var x = frnFr[code]; return (x && typeof x === 'object') ? x.st : ''; }
+  function frnFriendCodes(){ return Object.keys(frnFr).filter(function(c){ return frnFrSt(c) === 'ok'; }); }
+  async function frnIsFriend(code){
+    if(frnFr[code]) return frnFrSt(code) === 'ok';
+    try{ var x = await frnReq('GET', frnFrPath(syncId, code)); return !!(x && x.st === 'ok'); }catch(e){ return false; }
+  }
+  async function frnFrPair(code, stMe, stThem){   // ghi hai chiều; lỗi giữa chừng thì hoàn tác
+    var ts = {'.sv':'timestamp'};
+    await frnReq('PUT', frnFrPath(syncId, code), {st:stMe, name:userNameOf(code), t:ts});
+    try{ await frnReq('PUT', frnFrPath(code, syncId), {st:stThem, name:userNameOf(syncId), t:ts}); }
+    catch(e){ frnReq('DELETE', frnFrPath(syncId, code)).catch(function(){}); throw e; }
+    frnFr[code] = {st:stMe, name:userNameOf(code)}; frnPaintList();
+  }
+  async function frnFrSend(code){ var s = frnFrSt(code); if(s === 'ok') return 'ok'; if(s === 'in'){ await frnFrPair(code, 'ok', 'ok'); return 'ok'; } await frnFrPair(code, 'out', 'in'); return 'sent'; }
+  async function frnFrRemove(code){
+    await frnReq('DELETE', frnFrPath(syncId, code)); await frnReq('DELETE', frnFrPath(code, syncId)).catch(function(){});
+    delete frnFr[code]; frnPaintList();
+  }
+  function frnFrNoFriendMsg(){ frMsg('🤝 Giao hữu', 'Hai bạn chưa là bạn bè. Vào mục <b>👥 Bạn bè</b> trong tab Giao hữu, bấm <b>➕ Kết bạn</b> rồi chờ bạn ấy đồng ý nhé!'); }
+  async function frnFrAddOpen(){
+    sModalOpen('<h3>➕ Kết bạn</h3><p class="sl-intro">Đang tải danh sách…</p>');
+    await fetchUserDirectory();
+    var codes = Object.keys(userDirectory).filter(function(c){ return c !== syncId && !frnFr[c]; });
+    if(!codes.length){ frMsg('➕ Kết bạn', 'Không còn bạn nào để mời: bạn đã kết bạn hoặc đã gửi lời mời hết rồi.'); return; }
+    codes.sort(function(a, b){ return userNameOf(a).localeCompare(userNameOf(b)); });
+    sModalOpen('<h3>➕ Kết bạn</h3><p class="sl-intro">Chọn bạn muốn kết bạn. Bạn ấy đồng ý thì hai bạn đá giao hữu được với nhau.</p>'
+      + '<input type="search" id="fr-q" class="fr-q" placeholder="Tìm tên hoặc mã…" autocomplete="off"><div class="fr-list">'
+      + codes.map(function(c){ return '<button type="button" class="fr-it" data-frn="fr-send" data-code="' + escHtml(c) + '" data-k="' + escHtml((userNameOf(c) + ' ' + c).toLowerCase()) + '"><b>' + escHtml(userNameOf(c)) + '</b><small>Gửi lời mời kết bạn</small></button>'; }).join('')
+      + '</div><div class="se-btns"><button type="button" class="se-btn ghost" data-se="close">Đóng</button></div>');
+  }
+  function frnReqHTML(){
+    var h = '', ks = Object.keys(frnFr).filter(function(c){ return frnFr[c] && typeof frnFr[c] === 'object'; });
+    ks.filter(function(c){ return frnFrSt(c) === 'in'; }).forEach(function(c){
+      h += '<div class="frn-row"><span class="frn-dot on" aria-hidden="true"></span><div class="frn-nm"><b>' + escHtml(userNameOf(c)) + '</b><small>muốn kết bạn với bạn</small></div>'
+        + '<button type="button" class="frn-btn" data-frn="fr-yes" data-code="' + escHtml(c) + '">Đồng ý</button><button type="button" class="frn-btn ghost" data-frn="fr-no" data-code="' + escHtml(c) + '">Từ chối</button></div>'; });
+    ks.filter(function(c){ return frnFrSt(c) === 'out'; }).forEach(function(c){
+      h += '<div class="frn-row"><span class="frn-dot" aria-hidden="true"></span><div class="frn-nm"><b>' + escHtml(userNameOf(c)) + '</b><small>đã gửi lời mời, chờ bạn ấy đồng ý</small></div>'
+        + '<button type="button" class="frn-btn ghost" data-frn="fr-no" data-code="' + escHtml(c) + '">Hủy</button></div>'; });
+    return h;
+  }
   function frnPaintList(){
     var box = sEl('frn-list'); if(!box) return;
     if(!frnPanelWanted()){ frnPanelSync(); return; }
     var rec = {}; frHist().forEach(function(h){ var r = rec[h.code] || (rec[h.code] = {w:0, d:0, l:0}); if(h.w === 1) r.w++; else if(h.w === 0) r.l++; else r.d++; });
-    var codes = Object.keys(userDirectory).filter(function(c){ return c !== syncId; }), on = {};
+    var codes = frnFriendCodes(), on = {};
     codes.forEach(function(c){ on[c] = frnOnline(frnPresData[c]); });
     codes.sort(function(a, b){ return (on[b] ? 1 : 0) - (on[a] ? 1 : 0) || userNameOf(a).localeCompare(userNameOf(b)); });
     var nOn = codes.filter(function(c){ return on[c]; }).length, h = '';
     if(frnRoom){ var lvOn = !!(frnRoom.d && frnRoom.d.status === 'live'); h += '<div class="frn-row"><span class="frn-dot on"></span><div class="frn-nm"><b>' + (lvOn ? 'Đang đá giao hữu' : 'Đang có phòng giao hữu') + '</b><small>' + (lvOn ? 'Vào lại màn trận để tiếp tục' : 'Quay lại phòng chờ để tiếp tục') + '</small></div><button type="button" class="frn-btn" data-frn="back">' + (lvOn ? 'Vào lại trận' : 'Về phòng') + '</button></div>'; }
-    if(!codes.length) h += '<div class="se-meta">Chưa có bạn nào trong danh sách.</div>';
+    h += '<button type="button" class="frn-btn frn-add" data-frn="fr-add">➕ Kết bạn</button>' + frnReqHTML();
+    if(!codes.length) h += '<div class="se-meta">Chưa có bạn nào. Bấm ➕ Kết bạn để gửi lời mời, bạn ấy đồng ý là đá giao hữu được.</div>';
     else {
       h += '<div class="se-meta">' + (nOn ? '🟢 ' + nOn + ' bạn đang online' : 'Chưa có bạn nào online lúc này') + '</div>';
       h += codes.map(function(c){
@@ -17242,8 +17345,8 @@
   }
   function frnCardHTML(){
     if(!frnEligible()) return '';
-    return '<div class="se-card fr-card" id="frn-card"><h4>👥 Bạn bè online <small>(mời đá trực tiếp)</small></h4><div id="frn-list" class="frn-list"><div class="se-meta">Đang tải danh sách bạn…</div></div>'
-      + '<div class="se-meta">Chỉ mời được bạn trong danh sách, và bạn ấy phải đang mở app.</div></div>';
+    return '<div class="se-card fr-card" id="frn-card"><h4>👥 Bạn bè <small>(kết bạn · mời đá trực tiếp)</small></h4><div id="frn-list" class="frn-list"><div class="se-meta">Đang tải danh sách bạn…</div></div>'
+      + '<div class="se-meta">Chỉ mời được bạn đã kết bạn, và bạn ấy phải đang mở app.</div></div>';
   }
 
   /* ---- mời bạn (2.3, 2.4) ---- */
@@ -17272,6 +17375,7 @@
     var lu = sLineup(); if(!lu.ready){ frMsg('🤝 Giao hữu', frnNotReadyMsg(lu)); return; }
     if(frLeft(sLoad()) <= 0){ frMsg('🤝 Giao hữu', frNoTurnMsg()); return; }
     var wait = frnLimitWait(); if(wait){ frMsg('🤝 Giao hữu', 'Bé mời hơi nhiều rồi, đợi ' + wait + ' giây rồi mời tiếp nhé!'); return; }
+    if(!(await frnIsFriend(code))){ frnFrNoFriendMsg(); return; }
     var name = userNameOf(code);
     sModalOpen('<h3>🤝 ' + escHtml(name) + '</h3><p class="sl-intro">Đang gửi lời mời…</p>');
     try{
@@ -17498,6 +17602,11 @@
     if(b.id === 'frn-adm-list'){ frnAdmList(); return; }
     if(b.id === 'frn-adm-clean'){ frnAdmClean(); return; }
     var a = b.getAttribute('data-frn'), bx = sEl('frn-invite'), rid = bx ? bx.getAttribute('data-room') : '';
+    var fcode = b.getAttribute('data-code') || '';
+    if(a === 'fr-add'){ frnFrAddOpen(); return; }
+    if(a === 'fr-send'){ frnFrSend(fcode).then(function(r){ frMsg('➕ Kết bạn', r === 'ok' ? 'Hai bạn đã là bạn bè rồi! 🎉' : 'Đã gửi lời mời kết bạn tới <b>' + escHtml(userNameOf(fcode)) + '</b>. Chờ bạn ấy đồng ý nhé!'); }).catch(function(){ frMsg('➕ Kết bạn', 'Chưa gửi được lời mời (mạng có vấn đề?). Thử lại sau nhé.'); }); return; }
+    if(a === 'fr-yes'){ frnFrPair(fcode, 'ok', 'ok').catch(function(){ frMsg('➕ Kết bạn', 'Chưa đồng ý được (mạng có vấn đề?). Thử lại nhé.'); }); return; }
+    if(a === 'fr-no'){ frnFrRemove(fcode).catch(function(){}); return; }
     if(a === 'invite') frnInvite(b.getAttribute('data-code'));
     else if(a === 'inv-yes' && rid) frnAccept(rid);
     else if(a === 'inv-no' && rid) frnDecline(rid);
@@ -17601,6 +17710,10 @@
       var pi = sIdxOf(t.pitch, ev.o), bi = sIdxOf(t.bench, ev.b); if(pi < 0 || bi < 0) return;
       var o = t.pitch[pi], n = t.bench[bi], r = seSub(m, side, pi, bi);
       if(r){ seSynAll(m); comPush(m, [comL(mn, 'sub', 'Substitution for ' + t.name + ': ' + comShort(n) + ' comes on for ' + comShort(o) + '.')]); }
+    } else if(ev.k === 'swap'){
+      var sa = sIdxOf(t.pitch, ev.a), sb = sIdxOf(t.pitch, ev.b); if(sa < 0 || sb < 0) return;
+      var xa = t.pitch[sa], xb = t.pitch[sb];
+      if(seSwap(m, side, sa, sb)){ seSynAll(m); comPush(m, [comL(mn, 'info', 'Positional change: ' + t.name + ': ' + comShort(xa) + ' and ' + comShort(xb) + ' swap positions.')]); }
     } else if(ev.k === 'form'){
       var nm = (FORMATIONS.filter(function(f){ return f.id === ev.fid; })[0] || {}).name || ev.fid;
       if(seSetFormation(m, side, ev.fid, ev.ctx || 'play')){ seSynAll(m); comPush(m, [comL(mn, 'info', 'Tactical change: ' + t.name + ' switch to ' + nm + '.')]); }
