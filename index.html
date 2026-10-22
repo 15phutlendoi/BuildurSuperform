@@ -875,6 +875,8 @@
     -webkit-mask-image:linear-gradient(to bottom,#000 78%,transparent 100%);
             mask-image:linear-gradient(to bottom,#000 78%,transparent 100%);
   }
+  /* Ảnh chính là nguyên tấm thẻ (tên tệp bắt đầu bằng bg_): hiển thị đúng kích thước như ảnh nền, không thu/phóng, không mờ chân. */
+  .fc-card .fc-render.fc-full{ left:0; top:0; width:100%; height:100%; object-fit:cover; object-position:50% 50%; transform:none; -webkit-mask-image:none; mask-image:none; }
   .fc-card .fc-initials{ display:none !important; }
   .fc-card .fc-initials-old{
     position:absolute; z-index:1; left:50%; top:24%; transform:translateX(-50%); width:38cqw; height:38cqw; border-radius:50%;
@@ -7704,7 +7706,7 @@
     return '<div class="fc-card'+(p.background ? '' : ' no-bg')+upCls+(extraCls ? ' '+extraCls : '')+'">'
       + bg
       + (p.image
-          ? '<img class="fc-render" src="'+cdnUrl(p.image)+'" alt="'+name+'" data-ini="'+escHtml(initialsOf(p.name || '?'))+'" loading="lazy" onerror="window.fcRenderFail(this)">'
+          ? '<img class="fc-render'+(/^bg_/.test(p.image) ? ' fc-full' : '')+'" src="'+cdnUrl(p.image)+'" alt="'+name+'" data-ini="'+escHtml(initialsOf(p.name || '?'))+'" loading="lazy" onerror="window.fcRenderFail(this)">'
           : '')
       + '<div class="fc-ovr"><b>'+ovr+'</b><span>'+escHtml(p.pos || '')+'</span></div>'
       + upChip
