@@ -875,7 +875,8 @@
     -webkit-mask-image:linear-gradient(to bottom,#000 78%,transparent 100%);
             mask-image:linear-gradient(to bottom,#000 78%,transparent 100%);
   }
-  .fc-card .fc-initials{
+  .fc-card .fc-initials{ display:none !important; }
+  .fc-card .fc-initials-old{
     position:absolute; z-index:1; left:50%; top:24%; transform:translateX(-50%); width:38cqw; height:38cqw; border-radius:50%;
     display:flex; align-items:center; justify-content:center; background:rgba(255,255,255,.16); color:#fff;
     font-family:var(--font-display); font-weight:800; font-size:16cqw;
@@ -3458,7 +3459,7 @@
 .fr-st-rm:focus-visible{ outline:2px solid var(--gold,#F59E0B); outline-offset:2px }
 @media (max-width:360px){ .fr-st-sum{ grid-template-columns:repeat(2,1fr) } }
 /* 4.4 thay người bằng thẻ ảnh */
-#season-match .sb-tg{ display:grid; grid-template-columns:repeat(auto-fill,minmax(82px,1fr)); gap:12px 8px; margin:4px 0 10px }
+#season-match .sb-tg{ display:grid; grid-template-columns:repeat(auto-fill,calc(var(--sbw,60px) + 14px)); justify-content:start; gap:12px 8px; margin:4px 0 10px }
 #season-match .sb-t{ position:relative; display:flex; flex-direction:column; gap:3px; min-width:0; padding:5px 5px 6px; border-radius:12px; border:2px solid var(--glass-line); background:rgba(148,163,184,.1); color:var(--ink); font:inherit; text-align:center; cursor:pointer; -webkit-tap-highlight-color:transparent }
 #season-match .sb-t .sb-art{ display:block; width:100%; pointer-events:none }
 #season-match .sb-t .sb-art .fc-card{ display:block }
@@ -6077,10 +6078,8 @@
 
   window.fcRenderFail = function(img){
     var par = img.parentNode; if(!par) return;
-    var d = document.createElement('div');
-    d.className = 'fc-initials';
-    d.textContent = img.getAttribute('data-ini') || '?';
-    par.replaceChild(d, img);
+    /* Không hiển thị chữ cái dự phòng trên thẻ cầu thủ: chỉ gỡ ảnh lỗi */
+    par.removeChild(img);
   };
 
   /* ===== Cơ sở dữ liệu cầu thủ: CHỈ đọc từ Firebase (ảnh lấy từ Cloudinary qua cdnUrl) =====
@@ -6903,7 +6902,6 @@
     var html = fcCardHTML(base);
     if(html) return html;
     return '<div class="fc-card no-bg">'
-      + '<div class="fc-initials">'+escHtml(initialsOf(base.name || '?'))+'</div>'
       + '<div class="fc-ovr"><b>'+(base.realOvr || base.ovr || '')+'</b><span>'+escHtml(base.pos || '')+'</span></div>'
       + fcNameHTML(base.name || '')
       + '</div>';
@@ -16527,10 +16525,9 @@
     var h = '<div class="se-card mt-sub"><h4>🔁 Thay người &amp; đổi chỗ <small>(đã thay ' + t.subs + '/' + seMaxSubs(t) + (pend.length ? ' · đang chọn ' + pend.length : '') + ')</small></h4>';
     if(ro) h += '<p class="sf-note">🔒 Đang diễn ra tình huống. Thay người và đổi chỗ làm được khi tình huống kết thúc.</p>';
     else if(need.length) h += '<p class="sf-note mt-warn">🚑 Có cầu thủ bị chấn thương. Chạm cầu thủ đó, rồi chạm một thẻ dự bị. Không thay thì đội đá thiếu người.</p>';
-    else h += '<p class="sf-note">Chạm một cầu thủ <b>trên sân</b> (ngay trên sân bóng hoặc ở danh sách dưới đây), rồi chạm <b>thẻ dự bị</b> để <b>thay người</b>, hoặc chạm một cầu thủ khác trên sân để <b>đổi chỗ</b> (đổi chỗ không mất lượt thay). Bấm <b>Xác nhận</b> là làm luôn. Hết giờ nghỉ, các lựa chọn tự được xác nhận.</p>';
+    else h += '<p class="sf-note">Chạm một cầu thủ <b>trên sân</b> (ngay trên sân bóng), rồi chạm <b>thẻ dự bị</b> để <b>thay người</b>, hoặc chạm một cầu thủ khác trên sân để <b>đổi chỗ</b> (đổi chỗ không mất lượt thay). Bấm <b>Xác nhận</b> là làm luôn. Hết giờ nghỉ, các lựa chọn tự được xác nhận.</p>';
     if(!ro && selP) h += '<div class="sb-selp">' + (sel.k === 'p' ? 'Đã chọn <b>' + escHtml(selP.n) + '</b> (' + escHtml(t.slots[sIdxOf(t.pitch, sel.id)]) + '). Chạm thẻ dự bị để thay, hoặc cầu thủ khác trên sân để đổi chỗ.' : 'Đã chọn dự bị <b>' + escHtml(selP.n) + '</b>. Chạm cầu thủ trên sân sẽ bị thay ra.') + '</div>';
-    h += '<div class="mt-ct">Trên sân</div><div class="sb-chips">' + t.pitch.map(function(p, i){ return chip(p, i); }).join('') + '</div>'
-      + '<div class="mt-ct">Ghế dự bị</div>' + ((t.bench.length || t.out.length) ? '<div class="sb-tg">' + t.bench.map(function(p, i){ return btile(p, i); }).join('') + t.out.map(otile).join('') + '</div>' : '<div class="mt-line"><small>Không có dự bị.</small></div>');
+    h += '<div class="mt-ct">Ghế dự bị</div>' + ((t.bench.length || t.out.length) ? '<div class="sb-tg">' + t.bench.map(function(p, i){ return btile(p, i); }).join('') + t.out.map(otile).join('') + '</div>' : '<div class="mt-line"><small>Không có dự bị.</small></div>');
     if(!ro && pend.length){
       h += '<div class="sb-sum sb-fix"><ul>' + pend.map(function(q, k){
         if(q.sw){
@@ -16666,8 +16663,19 @@
     if(c.lv) foot = frlFoot(c, done);
     sMatchShow(h + '<div class="mx-body' + (tab === 'sit' ? ' sit' : '') + '">' + body + '</div>' + (foot ? '<div class="mx-foot">' + foot + '</div>' : ''));
     try{ sSubPitchMark(c); }catch(e){}
+    try{ sSubBenchSize(); }catch(e){}
     if(c.focusSub){ c.focusSub = false; var fs = document.querySelector('#season-match .mt-sub'); if(fs && window.innerWidth <= 640 && fs.scrollIntoView) fs.scrollIntoView({block:'start', behavior:'smooth'}); }   // điện thoại: sân ở trên, đưa khối Thay người vào tầm nhìn
   }
+  /* Thẻ dự bị có kích thước bằng thẻ cầu thủ trên sân: đo thẻ thật trên sân rồi gán vào --sbw */
+  function sSubBenchSize(){
+    var root = document.getElementById('season-match'); if(!root) return;
+    var c0 = root.querySelector('.mx-pitch .mx-d.s0 .mx-c'), g = root.querySelectorAll('.sb-tg');
+    if(!c0 || !g.length) return;
+    var w = Math.round(c0.getBoundingClientRect().width / ((c0.closest('.mx-d.on,.mx-d.sub-sel') && 1.1) || 1));
+    w = c0.offsetWidth || w; if(!(w > 8)) return;
+    Array.prototype.forEach.call(g, function(e){ e.style.setProperty('--sbw', w + 'px'); });
+  }
+  window.addEventListener('resize', function(){ try{ sSubBenchSize(); }catch(e){} });
   function sMatchOpen(r){
     var cfg = sCfg(), st = sLoad(), se = sCurrent(st, cfg); if(!se) return;
     var rd = se.rounds[r]; if(!rd || !rd.live){ seasonRender(); return; }
