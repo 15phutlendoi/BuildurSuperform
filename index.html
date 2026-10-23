@@ -1445,7 +1445,7 @@
   #skp-grid.daily-box-grid:not(.locked) .daily-box-cell:not(.picked){ animation:skpInvite 2.4s ease-in-out infinite; }
   @keyframes skpInvite{
     0%,100%{ box-shadow:0 0 0 0 rgba(139,92,246,0); border-color:var(--line); }
-    50%{ box-shadow:0 0 16px 4px rgba(139,92,246,.55); border-color:#C4B5FD; }
+    50%{ box-shadow:0 0 9px 2px rgba(139,92,246,.45); border-color:#C4B5FD; }
   }
   /* Màn "đã nhận đủ thẻ": thay lưới ô úp bằng lưới ảnh các thẻ cầu thủ vừa nhận */
   #skp-grid.gallery{ position:static; display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin:14px 0; }
@@ -2125,7 +2125,7 @@
     .skill-room-ico, .month-ball-scene::before, .cab-glass{ animation:none !important; }
   }
 
-  /* CẦU THỦ BÍ ẨN TỪ PLAY STYLE — 5 thẻ nằm ngang 1 hàng, tỉ lệ hình chữ nhật giống thẻ cầu thủ
+  /* CẦU THỦ BÍ ẨN TỪ PLAY STYLE — lưới 5x5 (25 thẻ úp); trước đây là 5 thẻ nằm ngang 1 hàng, tỉ lệ hình chữ nhật giống thẻ cầu thủ
      thật (kể cả lúc còn úp). Khung popup mở rộng tối đa (ưu tiên hiển thị đẹp trên iPad) để
      LUÔN hiện đủ cả 5 thẻ trong 1 hàng, không cắt/ẩn thẻ nào. Dùng minmax(0,1fr) thay vì 1fr
      trần — 1fr trần khiến cột co theo kích thước NỘI DUNG thẻ (rỗng lúc chưa tải ảnh) và có
@@ -2133,12 +2133,18 @@
      cột bất kể nội dung bên trong, nên thẻ luôn to vừa khít khung, không co rúm lại nữa. Vẫn
      dùng chung hiệu ứng thẻ (hover/chạm/picked) với toàn trang. */
   #skill-player-modal{ padding:8px; }
-  .skp-box{ width:min(920px,100%); padding:18px 10px 20px; overflow:hidden; }
+  .skp-box{ width:min(920px,100%); padding:16px 10px 16px; overflow-x:hidden; overflow-y:auto; max-height:96vh; max-height:96dvh; }
   #skp-grid{
-    grid-template-columns:repeat(5,minmax(0,1fr));
+    grid-template-columns:repeat(5,minmax(0,1fr));   /* lưới 5x5 = 25 thẻ úp */
     gap:6px;
-    margin:18px auto 10px;
+    margin:12px auto 8px;
     align-items:start;
+  }
+  /* 5 hàng thẻ phải nằm gọn trong màn hình: bề rộng lưới = (chiều cao còn lại) x tỉ lệ thẻ; hết chỗ thì hộp tự cuộn */
+  #skp-grid:not(.gallery){
+    width:min(100%, calc((100vh - 250px) * var(--fc-ar,.74)));
+    width:min(100%, calc((100dvh - 250px) * var(--fc-ar,.74)));
+    min-width:min(100%, 280px);
   }
   #skp-grid .daily-box-cell{ aspect-ratio:var(--fc-ar,.74); width:100%; min-width:0; }
   @media (max-width:460px){
@@ -2150,6 +2156,14 @@
     animation:skpCardPop .45s cubic-bezier(.34,1.56,.64,1) backwards;
   }
   @keyframes skpCardPop{ 0%{ opacity:0; transform:scale(.7) translateY(8px); } 100%{ opacity:1; transform:none; } }
+  /* Mở màn: 25 thẻ được "chia" xuống lưới lần lượt (một lần duy nhất), sau đó sáng nhẹ lan thành làn sóng thay vì nhấp nháy đồng loạt */
+  #skp-grid:not(.locked) .daily-box-cell:not(.picked){ animation-delay:calc(var(--i,0) * .06s); }
+  #skp-grid.deal:not(.locked) .daily-box-cell:not(.picked){
+    animation:skpDeal .5s cubic-bezier(.34,1.56,.64,1) backwards, skpInvite 2.4s ease-in-out infinite;
+    animation-delay:calc(var(--i,0) * .035s), calc(var(--i,0) * .06s + .9s);
+  }
+  @keyframes skpDeal{ 0%{ opacity:0; transform:translateY(-16px) scale(.6) rotate(-6deg); } 100%{ opacity:1; transform:none; } }
+  @media (prefers-reduced-motion:reduce){ #skp-grid .daily-box-cell{ animation:none !important; } }
 
 
 /* ==== Nâng cấp thẻ bằng thẻ khác (Hiến thẻ lấy Năng Lượng) ==== */
@@ -7409,47 +7423,39 @@
   var skpOpenedIdx = [];
   var skpReceived = [];   /* các thẻ (base) vừa nhận trong lượt này, để hiện ảnh khi mở hết */
   var skpBusy = false;
+  var SKP_GRID_N = 25;   /* số thẻ úp hiện ra: lưới 5x5 (số thẻ được lật vẫn theo hạng skill: Vàng 3, Bạc 1) */
+  var skpDeal = false;   /* true ở lần vẽ đầu: thẻ "chia" lần lượt xuống lưới, các lần vẽ lại sau mỗi lượt lật không chia lại */
   var SKP_CTX = null; /* {monthKey,key} của skill đang gắn với minigame lật thẻ, để lưu tiến độ nhận thẻ */
 
+  /* Bốc ngẫu nhiên `max` cầu thủ từ toàn bộ CSDL, mỗi cầu thủ có xác suất xuất hiện NHƯ NHAU
+     (không còn ưu tiên cầu thủ khớp Play Style; tham số `code` giữ lại để không đổi nơi gọi). */
   function pickPlayersWithPlaystyle(code, max){
     max = max || 5;
-    var wanted = 'PLAYSTYLE_' + code;
-    var matches = PLAYER_DB.filter(function(p){ return (p.playstyles || []).indexOf(wanted) >= 0; });
-    for(var i = matches.length - 1; i > 0; i--){
-      var j = Math.floor(Math.random() * (i + 1));
-      var tmp = matches[i]; matches[i] = matches[j]; matches[j] = tmp;
+    var seen = {}, pool = PLAYER_DB.filter(function(p){ var k = p.dbId || p.name; if(seen[k]) return false; seen[k] = true; return true; });
+    var n = Math.min(max, pool.length);
+    for(var i = 0; i < n; i++){   // Fisher–Yates từng phần: n phần tử đầu là mẫu ngẫu nhiên đồng đều, không trùng
+      var j = i + Math.floor(Math.random() * (pool.length - i));
+      var tmp = pool[i]; pool[i] = pool[j]; pool[j] = tmp;
     }
-    var picks = matches.slice(0, max);
-    var matched = picks.length;
-    // Chưa đủ số ô mong muốn -> bốc thêm cầu thủ khác (bất kỳ) trong CSDL để lấp đầy, không trùng người đã chọn.
-    if(picks.length < max){
-      var pickedIds = {};
-      picks.forEach(function(p){ pickedIds[p.dbId || p.name] = true; });
-      var rest = PLAYER_DB.filter(function(p){ return !pickedIds[p.dbId || p.name]; });
-      for(var k = rest.length - 1; k > 0; k--){
-        var m = Math.floor(Math.random() * (k + 1));
-        var tmp2 = rest[k]; rest[k] = rest[m]; rest[m] = tmp2;
-      }
-      while(picks.length < max && rest.length){ picks.push(rest.pop()); }
-    }
-    return { picks: picks, matched: matched };
+    return { picks: pool.slice(0, n), matched: 0 };
   }
 
   function renderSkpGrid(){
     var grid = document.getElementById('skp-grid');
     var done = skpFlipped >= skpNeeded;
-    grid.className = 'daily-box-grid' + (done ? ' locked' : '');
+    grid.className = 'daily-box-grid' + (done ? ' locked' : '') + (skpDeal ? ' deal' : '');
+    skpDeal = false;
     grid.innerHTML = skpPicks.map(function(p, i){
       var opened = skpOpenedIdx.indexOf(i) >= 0;
       if(opened){
         // Thẻ đã mở: hiện đầy đủ chân dung + chỉ số + playstyle như thẻ cầu thủ chuẩn của toàn trang,
         // thay vì chỉ giữ ảnh nền nhỏ của ô úp.
-        return '<button type="button" class="daily-box-cell picked" data-skp-index="'+i+'" disabled aria-label="Đã nhận '+escHtml(p.name || '')+'">'+dbxCardHTML(p)+'</button>';
+        return '<button type="button" class="daily-box-cell picked" style="--i:'+i+'" data-skp-index="'+i+'" disabled aria-label="Đã nhận '+escHtml(p.name || '')+'">'+dbxCardHTML(p)+'</button>';
       }
       var art = (cdnReady() && p.background)
         ? '<img src="'+cdnUrl(p.background)+'" alt="" loading="lazy" draggable="false" onerror="this.remove()">'
         : '';
-      return '<button type="button" class="daily-box-cell" data-skp-index="'+i+'" aria-label="Ô bí ẩn số '+(i+1)+'">'+art+'</button>';
+      return '<button type="button" class="daily-box-cell" style="--i:'+i+'" data-skp-index="'+i+'" aria-label="Thẻ bí ẩn số '+(i+1)+' trên '+skpPicks.length+'">'+art+'</button>';
     }).join('');
   }
 
@@ -7476,7 +7482,7 @@
       return false;
     }
     if(!PLAYER_DB.length) return false; // chưa tải được dữ liệu cầu thủ: không đánh dấu đã nhận, để lần sau còn nhận được
-    var result = pickPlayersWithPlaystyle(code, 5);
+    var result = pickPlayersWithPlaystyle(code, SKP_GRID_N);
     var picks = result.picks;
     if(!picks.length){
       if(st){ st.cardsDone = true; setSkillState(monthKey, key, st); }
@@ -7490,16 +7496,15 @@
     skpOpenedIdx = [];
     skpReceived = [];
     skpBusy = false;
+    skpDeal = true;
     dbxStop();
     dbxResetStage('skp-stage');
     var ps = psByCode(code);
     var psName = ps ? ps.name : playstyleLabel(code);
     document.getElementById('skp-title').textContent = need >= 3 ? '🥇 3 Cầu Thủ Bí Ẩn Đang Chờ!' : (need > 1 ? '🥇 '+need+' Cầu Thủ Bí Ẩn Đang Chờ!' : '🥈 1 Cầu Thủ Bí Ẩn Đang Chờ!');
-    var introText = result.matched > 0
-      ? 'Những cầu thủ sở hữu Play Style <b>'+escHtml(psName)+'</b> đang ẩn mình trong '+picks.length+' thẻ bí ẩn.'
-      : 'Không có cầu thủ nào sở hữu Play Style <b>'+escHtml(psName)+'</b> lúc này, nhưng '+picks.length+' cầu thủ đặc biệt khác đang ẩn mình trong thẻ bí ẩn!';
+    var introText = picks.length + ' cầu thủ bất kỳ đang ẩn mình trong lưới ' + picks.length + ' thẻ bí ẩn.';
     document.getElementById('skp-lead').innerHTML = introText + ' '
-      + (need > 1 ? 'Lật mở <b>'+need+' thẻ bất kỳ</b> để chiêu mộ họ nhé!' : 'Lật mở <b>1 thẻ bất kỳ</b> để chiêu mộ cầu thủ đó nhé!');
+      + (need > 1 ? 'Chọn lật <b>'+need+' thẻ bất kỳ</b> trong '+picks.length+' thẻ để chiêu mộ họ nhé!' : 'Chọn lật <b>1 thẻ bất kỳ</b> trong '+picks.length+' thẻ để chiêu mộ cầu thủ đó nhé!');
     renderSkpGrid();
     openModalTop('skill-player-modal');
     return true;
