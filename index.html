@@ -16111,14 +16111,14 @@
   function mxHi(D, X){ mxUnhi(D); X.ia.forEach(function(i){ var e = D.pl[X.att][i]; if(e) e.classList.add('on'); }); X.id.forEach(function(i){ var e = D.pl[X.def][i]; if(e) e.classList.add('on'); }); }
 
   /* ---- chuyển động cơ bản ---- */
-  function mxPut(D, s, i, x, y, dur, dl){
+  function mxPut(D, s, i, x, y, dur, dl, soft){
     var e = D.pl[s][i]; if(!e) return;
     x = Math.max(D.cw / 2 + 0.5, Math.min(100 - D.cw / 2 - 0.5, x)); y = Math.max(D.ch / 2 + 0.5, Math.min(100 - D.ch / 2 - 0.5, y));
     var o = D.pos[s][i], d = Math.sqrt(Math.pow((x - o.x) * 0.68, 2) + Math.pow((y - o.y) * 1.05, 2)), rm = reducedMotion();
     var du = rm ? 0 : (dur != null ? dur : Math.max(0.55, Math.min(1.7, d / 26 + 0.4)));
     o.x = x; o.y = y;
     e.style.setProperty('--d', du + 's'); e.style.setProperty('--dl', (rm ? 0 : (dl || 0)) + 's'); e.style.transform = mxPx(D, x, y); e.style.zIndex = 10 + Math.round(y / 5);
-    if(d > 1 && !rm){ e.classList.add('mv'); clearTimeout(e._mt); e._mt = setTimeout(function(){ e.classList.remove('mv'); }, (du + (dl || 0)) * 1000 + 80); }
+    if(d > 1 && !rm && !soft){ e.classList.add('mv'); clearTimeout(e._mt); e._mt = setTimeout(function(){ e.classList.remove('mv'); }, (du + (dl || 0)) * 1000 + 80); }
   }
   var MX_EASE = {pass:'cubic-bezier(.2,.65,.35,1)', shot:'cubic-bezier(.04,.8,.2,1)', goal:'cubic-bezier(.05,.75,.25,1)', lob:'cubic-bezier(.4,0,.3,1)', roll:'cubic-bezier(.3,.1,.3,1)'};
   /* Bóng: fx = pass (lăn mặt cỏ, vệt trắng) · lob (bay bổng, bóng đổ nhỏ lại) · shot (sút mạnh, vệt lửa) · goal (vào lưới, vệt vàng) · roll (lăn nhẹ). */
@@ -16232,24 +16232,235 @@
   }
   function mxSeparate(D, pts){
     var w = D.cw * 0.86, h = D.ch * 0.86, x0 = D.cw / 2 + 0.5, x1 = 100 - x0, y0 = D.ch / 2 + 0.5, y1 = 100 - y0;
-    for(var it = 0; it < 14; it++){
+    for(var it = 0; it < 40; it++){
+      var hit = false;
       for(var a = 0; a < pts.length; a++) for(var b = a + 1; b < pts.length; b++){
-        var A = pts[a], B = pts[b], dx = B.x - A.x, dy = B.y - A.y, ox = w - Math.abs(dx), oy = h - Math.abs(dy);
-        if(ox <= 0 || oy <= 0) continue;
+        var A = pts[a], B = pts[b], dx = B.x - A.x, dy = B.y - A.y, ox = (w - Math.abs(dx)) * 1.1, oy = (h - Math.abs(dy)) * 1.1;
+        if(ox <= 0.1 || oy <= 0.1) continue; hit = true;
         var wa = A.fx ? 0 : 1, wb = B.fx ? 0 : 1, ws = wa + wb; if(!ws) continue;
         if(oy * 1.544 <= ox){ var sy = dy > 0 ? 1 : (dy < 0 ? -1 : (a % 2 ? 1 : -1)); A.y -= sy * oy * wa / ws; B.y += sy * oy * wb / ws; }
         else { var sx = dx > 0 ? 1 : (dx < 0 ? -1 : (a % 2 ? 1 : -1)); A.x -= sx * ox * wa / ws; B.x += sx * ox * wb / ws; }
       }
       pts.forEach(function(q){ q.x = Math.max(x0, Math.min(x1, q.x)); q.y = Math.max(y0, Math.min(y1, q.y)); });
+      if(!hit) break;
     }
   }
   function mxPin(pins, s, i, x, y){ if(i != null && i >= 0) pins[s + ':' + i] = [x, y]; }
-  function mxScene(D, o){   // o: {bx,by,att,cnt,pins,dur,excl:{att,d}}
+  /* =====================================================================
+     CHẠY CHỖ KHÔNG BÓNG (mxOffBall): thẻ KHÔNG tham gia pha bóng vẫn di chuyển theo vai trò, nhẹ nhàng và có lý do.
+       Đội có bóng : 2 điểm hỗ trợ quanh người cầm bóng · 1–2 người băng lên vai hậu vệ cuối (không việt vị) · hậu vệ biên đá chồng biên
+                     · tiền vệ giữ cầm nhịp phía sau bóng · trung vệ giữ cự ly bọc lót · tiền đạo biên giữ chiều rộng · thủ môn dâng lên làm điểm tựa
+       Đội mất bóng: 1 người ép/giữ khoảng cách · 1 người chặn đường chuyền · kèm người theo kiểu "phía cầu môn" · hàng thủ giữ đường thẳng
+                     · 1 tiền đạo ở lại làm điểm phản công · thủ môn trượt theo đường bóng – cầu môn
+       Pha kế tiếp: người sắp tham gia (X.ia / X.id của các chặng sau) được ưu tiên đúng vai sẽ nhận; số còn lại nghiêng theo vị trí bóng DỰ KIẾN
+                    (mxNextBall); phạt góc / đá phạt → dàn quân sẵn trong và ngoài vòng cấm; phát bóng / thủ môn bắt bóng → mở rộng ra đá từ sân nhà; ép cao đối ứng.
+     Giữ kín đáo: kéo từng phần về phía vai trò (không dịch chuyển hết), chạy chậm hơn, trễ nhịp so với người cầm bóng, giới hạn quãng chạy mỗi nhịp,
+     không vệt chạy, không bóng đổ nâng thẻ (soft). Giữa lúc chờ trả lời câu hỏi, các thẻ rảnh chỉ nhích rất nhẹ (mxIdle).
+     ===================================================================== */
+  function mxDist(ax, ay, bx, by){ return Math.sqrt(Math.pow((ax - bx) * 0.68, 2) + Math.pow((ay - by) * 1.05, 2)); }
+  function mxClamp(v, a, b){ return Math.max(a, Math.min(b, v)); }
+  function mxNextBall(D, o){   // vị trí bóng dự kiến ở chặng kế tiếp (để các thẻ rảnh nghiêng trước về đó)
+    var X = D.X; if(!X || o.att < 0 || o.att !== X.att || (o.ph && o.ph !== 'corner' && o.ph !== 'freekick')) return {x:o.bx, y:o.by};
+    var fa = o.att === MX_ME ? -1 : 1, k = o.ph || X.kind;
+    if(k === 'corner' || k === 'freekick') return {x:50 - X.side * 2, y:X.Y(10)};
+    var rem = Math.max(0, (X.Y(27) - o.by) * fa);   // còn bao nhiêu % chiều cao để tới ranh giới chặng cuối
+    return {x:o.bx + (50 + X.side * 14 - o.bx) * 0.4, y:o.by + fa * Math.min(14, rem)};
+  }
+  function mxFree(x, y, foes){   // nhích điểm đến ra khỏi cầu thủ đối phương đứng quá sát (< 5,5 m) = tìm khoảng trống
+    var best = null, bd = 1e9; foes.forEach(function(f){ var d = mxDist(x, y, f.x, f.y); if(d < bd){ bd = d; best = f; } });
+    if(best && bd < 5.5){ var dx = (x - best.x) * 0.68, dy = (y - best.y) * 1.05, l = Math.sqrt(dx * dx + dy * dy) || 1, k = (5.5 - bd) / l; x += dx * k / 0.68; y += dy * k / 1.05; }
+    return [x, y];
+  }
+  function mxRole(q, x, y, w, dl){   // kéo thẻ q một phần w về điểm (x, y) — không dịch hết để vẫn giữ dáng đội hình
+    if(q.fx) return; q.x += (x - q.x) * w; q.y += (y - q.y) * w; q.dl = dl; q.soft = true; q.done = true;
+  }
+  function mxOffBall(D, o, pts){
+    var X = D.X || {side:1, ia:[], id:[], gk:-1, kind:'open', att:o.att, def:1 - o.att}, kind = o.ph || X.kind;
+    if(kind === 'penalty') return;   // phạt đền: kỷ luật đứng ngoài vòng cấm, không chạy
+    var S = [[], []], nb = mxNextBall(D, o), E = {x:o.bx + (nb.x - o.bx) * 0.4, y:o.by + (nb.y - o.by) * 0.4}, pe = mxShape(D, {bx:E.x, by:E.y, att:o.att, cnt:o.cnt});
+    pts.forEach(function(q, k){ q.e = pe[k]; q.x0 = q.x; q.y0 = q.y; S[q.s].push(q); });
+    var big = (kind === 'corner' || kind === 'freekick' || kind === 'goalkick' || kind === 'gkhold'), cap = big ? 8.5 : 6;   // mỗi thẻ chỉ lệch tối đa vài mét so với thế trận gốc → kín đáo
+    D.step = (D.step || 0) + 1;
+    if(o.att >= 0) mxRoles(D, o, X, S, E, kind);
+    pts.forEach(function(q, k){
+      if(q.fx) return; q.soft = true;
+      if(!q.done && q.g !== 'GK'){   // không có vai riêng: nghiêng nhẹ về nơi bóng sắp tới + thở nhẹ cho đỡ cứng
+        q.x += (q.e.x - q.x) * 0.5 + Math.sin(D.step * 1.7 + k * 2.3) * 0.8; q.y += (q.e.y - q.y) * 0.5 + Math.sin(D.step * 1.3 + k * 1.9) * 0.55; q.dl = 0.12 + fxR() * 0.3;
+      }
+      if(q.dl == null) q.dl = 0.1 + fxR() * 0.2;
+      var dv = mxDist(q.x, q.y, q.x0, q.y0); if(dv > cap){ var fk = cap / dv; q.x = q.x0 + (q.x - q.x0) * fk; q.y = q.y0 + (q.y - q.y0) * fk; }
+      var c = D.pos[q.s][q.i], d = mxDist(q.x, q.y, c.x, c.y), mxm = 12;   // mỗi nhịp chạy tối đa ~12 m: không phóng vọt gây chú ý
+      if(d > mxm){ var f = mxm / d; q.x = c.x + (q.x - c.x) * f; q.y = c.y + (q.y - c.y) * f; d = mxm; }
+      q.du = mxClamp(0.85 + d / 22, 0.9, 1.7);   // chạy từ tốn: càng xa càng lâu
+    });
+  }
+  function mxRoles(D, o, X, S, E, kind){
+    var r = mxRoles2(D, o, X, S, E, kind); return r;
+  }
+  function mxRoles2(D, o, X, S, E, kind){
+    var A = o.att, B = 1 - A, fa = A === MX_ME ? -1 : 1, goalY = A === MX_ME ? 0 : 100, ownY = 100 - goalY, att = S[A], def = S[B];
+    function gD(y){ return Math.abs(y - goalY); }   // % cao cách vạch cầu môn mà đội có bóng đang tấn công (= cách cầu môn nhà của đội kia)
+    function gO(y){ return Math.abs(y - ownY); }    // % cao cách cầu môn nhà của đội có bóng
+    function yD(g){ return goalY - fa * g; }        // đổi "cách cầu môn đối phương g%" → toạ độ y
+    function yO(g){ return ownY + fa * g; }         // đổi "cách cầu môn nhà g%" → toạ độ y
+    var p = mxClamp(gO(o.by) / 100, 0, 1), nowX = (A === X.att && !o.ph), later = nowX ? X.ia.slice(1) : [], idDef = (B === X.def && !o.ph) ? X.id : [];
+    var rl = D.rl || {}, nrl = {};   // vai của nhịp trước → ưu tiên giữ nguyên người, tránh đổi vai qua lại gây giật
+    function K(q){ return q.s + ':' + q.i; }
+    function stick(q, r){ return rl[K(q)] === r ? 7 : 0; }
+    function tag(q, r){ nrl[K(q)] = r; }
+    var cand = att.filter(function(q){ return !q.fx && q.g !== 'GK'; }), dc = def.filter(function(q){ return !q.fx && q.g !== 'GK'; }), used = {}, dused = {};
+    function bd(q){ return mxDist(q.x, q.y, o.bx, o.by); }
+    function bAt(q){ return D.base[q.s][q.i]; }
+    var foes = def.map(function(f){ return {x:f.x, y:f.y}; });
+    var carrier = att.slice().sort(function(a, b){ return bd(a) - bd(b); })[0];
+    /* GK: đội có bóng dâng nhẹ làm điểm tựa, đội mất bóng trượt theo đường bóng – cầu môn */
+    att.concat(def).forEach(function(q){
+      if(q.g !== 'GK' || q.fx) return; var mine = q.s === A;
+      if(mine) mxRole(q, 50 + (E.x - 50) * 0.12, yO(4 + gO(E.y) / 100 * 9), 0.8, 0.1);
+      else mxRole(q, 50 + mxClamp((E.x - 50) * 0.2, -7, 7), yD(mxClamp(2.4 + Math.max(0, gD(E.y) - 45) * 0.14, 2.4, 9.5)), 1, 0.05);
+    });
+
+    /* ---- phạt góc / đá phạt gần cầu môn: dàn quân sẵn quanh vòng cấm ---- */
+    if((kind === 'corner' || kind === 'freekick') && gD(o.by) < 40){
+      var sg = o.bx < 50 ? -1 : 1, ca = cand.slice().sort(function(a, b){ return gO(bAt(a).y) - gO(bAt(b).y); });   // người đá sâu nhất trước
+      ca.forEach(function(q, k){
+        if(k < 3) mxRole(q, 50 + [-14, 0, 14][k], yO(46 + k * 1.5), 0.75, 0.15 + fxR() * 0.12);   // 3 người ở lại vạch giữa sân phòng phản công
+        else { var j = k - 3; mxRole(q, 50 - sg * [8, 22, -6, 32][j % 4], yD([27, 30, 26, 29][j % 4]), 0.7, 0.1 + fxR() * 0.15); }   // còn lại chờ bóng hai ở rìa vòng cấm
+      });
+      var dd = dc.slice().sort(function(a, b){ return gD(bAt(a).y) - gD(bAt(b).y); }), kD = 0, kO = 0;
+      dd.forEach(function(q){
+        if(q.g === 'D'){ var pos = (kD === 0 && kind === 'corner') ? [50 + 6.5, 3] : (kD === 1 && kind === 'corner') ? [50 - 6.5, 3] : [50 + [-10, 3, 14, -20, 22][kD % 5], 8 + (kD % 3) * 2]; mxRole(q, pos[0], yD(pos[1]), 0.72, 0.1 + fxR() * 0.15); kD++; }
+        else { if(kO === 0) mxRole(q, bAt(q).x, yD(46), 0.55, 0.2 + fxR() * 0.1); else mxRole(q, 50 + [-16, 6, 22][(kO - 1) % 3], yD(22), 0.65, 0.15 + fxR() * 0.15); kO++; }   // 1 người ở lại làm điểm phản công
+      });
+      D.rl = nrl; return;
+    }
+
+    /* ---- phát bóng / thủ môn cầm bóng / bóng ở sân nhà: mở rộng ra đá từ phía sau, đội kia ép cao nhẹ ---- */
+    if(kind === 'goalkick' || kind === 'gkhold' || p < 0.14){
+      var mids = cand.filter(function(q){ return q.g === 'M'; }).sort(function(a, b){ return gO(bAt(a).y) - gO(bAt(b).y); }), cb = 0, mi = 0;
+      cand.forEach(function(q){
+        var b = bAt(q), wide = Math.abs(b.x - 50) > 25;
+        if(q.g === 'D'){ if(wide) mxRole(q, b.x + (b.x < 50 ? -3 : 3), yO(30), 0.7, 0.2 + fxR() * 0.1); else { mxRole(q, 50 + (cb++ % 2 ? 16 : -16), yO(9), 0.8, 0.12); } }
+        else if(q.g === 'M'){ if(q === mids[0]) mxRole(q, 50 + (E.x - 50) * 0.3, yO(24), 0.75, 0.2); else mxRole(q, 50 + (mi++ % 2 ? 22 : -22), yO(40), 0.7, 0.25 + fxR() * 0.1); }
+        else mxRole(q, b.x, yO(55 + (Math.abs(b.x - 50) > 20 ? 0 : 3)), 0.6, 0.3 + fxR() * 0.1);
+      });
+      dc.forEach(function(q){   // đội kia dâng lên áp sát nhưng chừa khoảng cách, không dồn hết
+        var b = bAt(q), gy = q.g === 'F' ? 33 : (q.g === 'M' ? 46 : 60);
+        mxRole(q, 50 + (b.x - 50) * 0.8 + (E.x - 50) * 0.15, yO(gy), 0.6, 0.2 + fxR() * 0.15);
+      });
+      D.rl = nrl; return;
+    }
+
+    /* ---- đội có bóng ---- */
+    var rank = function(q){ return bd(q) - (later.indexOf(q.i) >= 0 ? 14 : 0) - stick(q, 'sup'); }, edge = Math.abs(o.bx - 50) > 44;
+    var sup = cand.slice().sort(function(a, b){ return rank(a) - rank(b); }).slice(0, 2);
+    var ahead = sup.filter(function(q){ return later.indexOf(q.i) >= 0; })[0] || sup[1], back = sup.filter(function(q){ return q !== ahead; })[0];   // người sắp nhận bóng ở chặng sau đi trước
+    var d0 = back ? (Math.abs(back.x - o.bx) < 5 ? (o.bx < 50 ? 1 : -1) : (back.x > o.bx ? 1 : -1)) : 1;
+    if(edge) d0 = o.bx < 50 ? 1 : -1;   // sát biên: chỉ có thể chạy vào phía trong
+    if(back){ var t0 = mxFree(mxClamp(o.bx + d0 * (edge ? 8 : 10) / 0.68, 8, 92), o.by - fa * 3.8, foes); mxRole(back, t0[0], t0[1], 0.65, 0.08 + fxR() * 0.08); used[back.i] = 1; tag(back, 'sup'); }   // lối thoát: ngang/hơi lùi
+    if(ahead){ var t1 = mxFree(mxClamp(o.bx - (edge ? -d0 : d0) * (edge ? 17 : 13) / 0.68, 8, 92), o.by + fa * 8.6, foes); mxRole(ahead, t1[0], t1[1], 0.65, 0.04 + fxR() * 0.06); used[ahead.i] = 1; tag(ahead, 'sup'); }   // đường chuyền chéo lên phía trước
+    var rest = cand.filter(function(q){ return !used[q.i]; });
+    // băng lên vai hậu vệ cuối (giữ nguyên tắc không việt vị)
+    var opp = foes.slice().sort(function(a, b){ return gD(a.y) - gD(b.y); }), olg = opp.length > 1 ? gD(opp[1].y) : 30;
+    var nRun = o.cnt ? 2 : ((p >= 0.2 && p < 0.86) ? 1 : 0);
+    if(nRun){
+      var pool = rest.filter(function(q){ return q.g === 'F'; }); if(pool.length < nRun) pool = pool.concat(rest.filter(function(q){ return q.g === 'M'; }));
+      pool.sort(function(a, b){ return (gD(a.y) - (later.indexOf(a.i) >= 0 ? 10 : 0) - stick(a, 'run')) - (gD(b.y) - (later.indexOf(b.i) >= 0 ? 10 : 0) - stick(b, 'run')); });
+      var xs = opp.slice(1, 5).map(function(f){ return f.x; }).sort(function(a, b){ return a - b; }), edges = [6].concat(xs, [94]), gaps = [];
+      for(var gi = 0; gi < edges.length - 1; gi++) gaps.push({c:(edges[gi] + edges[gi + 1]) / 2, w:edges[gi + 1] - edges[gi]});   // khe hở giữa các hậu vệ
+      gaps.sort(function(a, b){ return (b.w + Math.abs(b.c - o.bx) * 0.15) - (a.w + Math.abs(a.c - o.bx) * 0.15); });
+      pool.slice(0, nRun).forEach(function(q, k){
+        var gp = gaps[k % Math.max(1, gaps.length)] || {c:50}, gt = Math.max(olg + 1.4, 5);
+        mxRole(q, mxClamp(gp.c, 8, 92), yD(gt), 0.6, 0.02 + fxR() * 0.06); used[q.i] = 1; tag(q, 'run');
+      });
+      rest = rest.filter(function(q){ return !used[q.i]; });
+    }
+    // hậu vệ biên cùng cánh đá chồng biên; hậu vệ biên cánh kia thu vào giữa
+    var fbs = rest.filter(function(q){ return q.g === 'D' && Math.abs(bAt(q).x - 50) > 25; });
+    if(Math.abs(o.bx - 50) > 22 && p >= 0.22 && p < 0.8){
+      var ov = fbs.filter(function(q){ return (bAt(q).x - 50) * (o.bx - 50) > 0; })[0];
+      if(ov){ mxRole(ov, mxClamp(o.bx + (o.bx < 50 ? -1 : 1) * 7 / 0.68, 6, 94), o.by + fa * 4.8, 0.6, 0.1 + fxR() * 0.08); used[ov.i] = 1; }
+    }
+    rest = rest.filter(function(q){ return !used[q.i]; });
+    // tiền vệ giữ cầm nhịp: đứng sau bóng làm điểm tựa và chắn phản công
+    if(p >= 0.3){
+      var pv = rest.filter(function(q){ return q.g === 'M'; }).sort(function(a, b){ return (gO(bAt(a).y) - stick(a, 'piv')) - (gO(bAt(b).y) - stick(b, 'piv')); })[0];
+      if(pv){ mxRole(pv, 50 + (o.bx - 50) * 0.45, yO(mxClamp(gO(o.by) - 11.5, 24, 58)), 0.7, 0.14 + fxR() * 0.08); used[pv.i] = 1; tag(pv, 'piv'); }
+    }
+    // trung vệ / hậu vệ còn lại giữ cự ly bọc lót phía sau bóng (không tụt sâu hơn vị trí gốc)
+    if(p >= 0.4) rest.forEach(function(q){
+      if(used[q.i] || q.g !== 'D') return; var b = bAt(q), wide = Math.abs(b.x - 50) > 25, tx = wide ? b.x + (50 - b.x) * 0.3 : q.x;
+      mxRole(q, tx, yO(mxClamp(gO(E.y) - 27, gO(b.y) - 2, 52)), 0.6, 0.14 + fxR() * 0.14); used[q.i] = 1;
+    });
+    // tiền đạo / tiền vệ biên giữ chiều rộng, kéo giãn hàng thủ
+    rest.forEach(function(q){
+      if(used[q.i] || q.g === 'D') return; var b = bAt(q); if(Math.abs(b.x - 50) < 26) return;
+      mxRole(q, b.x + (b.x < 50 ? -4 : 4), p >= 0.7 ? yD(mxClamp(olg + 4, 12, 30)) : q.y, 0.75, 0.1 + fxR() * 0.12); used[q.i] = 1;
+    });
+
+    /* ---- đội mất bóng ---- */
+    var pr = idDef.map(function(i){ return dc.filter(function(q){ return q.i === i; })[0]; }).filter(Boolean)[0] || dc.slice().sort(function(a, b){ return (bd(a) - stick(a, 'press')) - (bd(b) - stick(b, 'press')); })[0], cut = null;
+    if(pr && bd(pr) < 30){   // 1 người ép / giữ khoảng cách (jockey) từ phía cầu môn nhà
+      var vx = (50 - o.bx) * 0.68, vy = (goalY - o.by) * 1.05, vl = Math.sqrt(vx * vx + vy * vy) || 1, ds = p > 0.5 ? 3.0 : 5.0;
+      mxRole(pr, o.bx + vx / vl * ds / 0.68, o.by + vy / vl * ds / 1.05, 0.55, 0.08 + fxR() * 0.06); dused[pr.i] = 1; tag(pr, 'press');
+      var cs = dc.filter(function(q){ return !dused[q.i]; }).sort(function(a, b){ return (bd(a) - stick(a, 'cut')) - (bd(b) - stick(b, 'cut')); })[0], ln = att.filter(function(q){ return q !== carrier && q.g !== 'GK'; }).sort(function(a, b){ return mxDist(a.x, a.y, o.bx, o.by) - mxDist(b.x, b.y, o.bx, o.by); })[0];
+      if(cs && ln && bd(cs) < 28){ cut = cs; mxRole(cs, o.bx + (ln.x - o.bx) * 0.5, o.by + (ln.y - o.by) * 0.5 + (goalY - o.by) * 0.02, 0.45, 0.16 + fxR() * 0.08); dused[cs.i] = 1; tag(cs, 'cut'); }   // chặn đường chuyền gần nhất
+    }
+    att.filter(function(q){ return q !== carrier && q.g !== 'GK'; }).sort(function(a, b){ return gD(a.y) - gD(b.y); }).forEach(function(T){   // kèm người: đứng phía cầu môn của đối thủ nguy hiểm nhất
+      if(gD(T.y) > 66) return;
+      var best = null, bdm = 1e9; dc.forEach(function(d){ if(dused[d.i]) return; var m = mxDist(d.x, d.y, T.x, T.y) - (rl[K(d)] === 'mk' + T.i ? 6 : 0); if(m < bdm){ bdm = m; best = d; } });
+      if(!best || bdm > 24) return; dused[best.i] = 1; tag(best, 'mk' + T.i);
+      var ux = (50 - T.x) * 0.68, uy = (goalY - T.y) * 1.05, ul = Math.sqrt(ux * ux + uy * uy) || 1, gap = 2.6 + gD(T.y) / 100 * 3.2;   // càng gần cầu môn càng kèm sát
+      var mty = T.y + uy / ul * gap / 1.05; if(gD(mty) < 11) mty = yD(11);   // không chui vào vùng thủ môn
+      mxRole(best, T.x + ux / ul * gap / 0.68, mty, 0.7, 0.16 + fxR() * 0.14);
+    });
+    var lineG = mxClamp(gD(E.y) - 19, 13, 40);   // hàng thủ giữ một đường thẳng, lùi / dâng theo bóng
+    dc.forEach(function(q){ if(dused[q.i] || q.g !== 'D') return; mxRole(q, q.x, yD(Math.min(lineG, gD(bAt(q).y) + 6)), 0.65, 0.1 + fxR() * 0.15); dused[q.i] = 1; });
+    if(p < 0.9){   // 1 tiền đạo ở lại cao làm điểm phản công
+      var ot = dc.filter(function(q){ return !dused[q.i] && q.g === 'F'; }).sort(function(a, b){ return gD(bAt(b).y) - gD(bAt(a).y); })[0];
+      if(ot){ mxRole(ot, bAt(ot).x, yD(mxClamp(gD(E.y) + 18, 40, 66)), 0.5, 0.2 + fxR() * 0.1); dused[ot.i] = 1; }
+    }
+    D.rl = nrl;
+  }
+  function mxUnstick(D, pts){   // thẻ rảnh còn bị kẹt chồng lên thẻ khác (kẹt giữa thẻ ghim cố định): thử vài điểm lân cận, chọn chỗ thoáng nhất
+    var w = D.cw * 0.86, h = D.ch * 0.86, x0 = D.cw / 2 + 0.5, x1 = 100 - x0, y0 = D.ch / 2 + 0.5, y1 = 100 - y0;
+    function ov(ax, ay, b){ var ox = w - Math.abs(ax - b.x), oy = h - Math.abs(ay - b.y); return (ox > 0 && oy > 0) ? ox * oy : 0; }
+    function tot(q, x, y){ var t = 0; pts.forEach(function(b){ if(b !== q) t += ov(x, y, b); }); return t; }
+    for(var pass = 0; pass < 2; pass++) pts.forEach(function(q){
+      if(q.fx || q.g === 'GK') return; var cur = tot(q, q.x, q.y); if(cur < w * h * 0.04) return;
+      var best = null, bs = cur;
+      [[-1, 0], [1, 0], [-1.6, 0], [1.6, 0], [0, -0.9], [0, 0.9], [-1, -0.9], [1, -0.9], [-1, 0.9], [1, 0.9]].forEach(function(c){
+        var nx = Math.max(x0, Math.min(x1, q.x + c[0] * w)), ny = Math.max(y0, Math.min(y1, q.y + c[1] * h)), s = tot(q, nx, ny) + 0.02 * w * h * (Math.abs(c[0]) + Math.abs(c[1]));
+        if(s < bs){ bs = s; best = [nx, ny]; }
+      });
+      if(best && bs < cur * 0.6){ q.x = best[0]; q.y = best[1]; }
+    });
+  }
+  function mxKeep(pts, after){   // tách thẻ không được xô một thẻ rảnh đi quá ~14 m so với điểm đã chọn (tránh dây chuyền đẩy xa)
+    pts.forEach(function(q){
+      if(q.fx) return;
+      if(!after){ q.px = q.x; q.py = q.y; return; }
+      var d = mxDist(q.x, q.y, q.px, q.py); if(d > 14){ var f = 14 / d; q.x = q.px + (q.x - q.px) * f; q.y = q.py + (q.y - q.py) * f; }
+    });
+  }
+  function mxIdle(D){   // chờ trả lời câu hỏi: vài thẻ rảnh nhích rất nhẹ quanh vị trí đã chọn (±1%)
+    if(!D.idle || !D.X || reducedMotion()) return;
+    var X = D.X, pool = [];
+    [0, 1].forEach(function(s){ D.pl[s].forEach(function(e, i){ if(!e || D.grp[s][i] === 'GK') return; if((s === X.att && X.ia.indexOf(i) >= 0) || (s === X.def && X.id.indexOf(i) >= 0)) return; pool.push([s, i]); }); });
+    for(var k = 0; k < 4 && pool.length; k++){
+      var pk = pool.splice(Math.floor(fxR() * pool.length), 1)[0], a = (D.anc && D.anc[pk[0]][pk[1]]) || D.pos[pk[0]][pk[1]];
+      mxPut(D, pk[0], pk[1], a.x + (fxR() - 0.5) * 2.2, a.y + (fxR() - 0.5) * 1.6, 1.6 + fxR() * 0.8, fxR() * 0.4, true);
+    }
+    mxLater(D, 1700 + fxR() * 900, function(){ mxIdle(D); });
+  }
+  function mxScene(D, o){   // o: {bx,by,att,cnt,pins,dur,excl:{att,d},ph}  ph = gợi ý pha kế tiếp (corner/freekick/throw/goalkick/second/penalty/gkhold/trans)
     var pts = mxShape(D, o), pins = o.pins || {};
     pts.forEach(function(q){ var p = pins[q.s + ':' + q.i]; if(p){ q.x = p[0]; q.y = p[1]; q.fx = true; } });
+    mxOffBall(D, o, pts);   // thẻ không tham gia pha bóng: chạy chỗ theo vai trò (nhẹ, trễ nhịp, hướng tới pha kế tiếp)
     if(o.excl) pts.forEach(function(q){ if(q.fx || q.g === 'GK') return; var dg = o.excl.att === MX_ME ? q.y : 100 - q.y; if(dg < o.excl.d) q.y += (o.excl.att === MX_ME ? 1 : -1) * (o.excl.d - dg); });
-    mxSeparate(D, pts);
-    pts.forEach(function(q){ mxPut(D, q.s, q.i, q.x, q.y, o.dur, q.fx ? 0 : fxR() * 0.18); });
+    mxKeep(pts, 0); mxSeparate(D, pts); mxKeep(pts, 1); mxUnstick(D, pts); mxKeep(pts, 1);
+    if(!D.anc) D.anc = [[], []];
+    pts.forEach(function(q){ mxPut(D, q.s, q.i, q.x, q.y, q.du != null ? q.du : o.dur, q.dl != null ? q.dl : (q.fx ? 0 : fxR() * 0.18), q.soft); D.anc[q.s][q.i] = {x:D.pos[q.s][q.i].x, y:D.pos[q.s][q.i].y}; });
   }
   function mxIdx(t, id){ for(var i = 0; i < t.pitch.length; i++) if(t.pitch[i].id === id) return i; return 0; }
   function mxCtx(D, cur){
@@ -16393,7 +16604,7 @@
   /* ---- hook: dòng bình luận → chuyển động ---- */
   var MXD = {
     begin:function(D, cur){
-      mxClearT(D); mxClearFx(D); var X = D.X = mxCtx(D, cur); D.stIdx = -1; D.el.classList.add('act'); D.el.classList.remove('key'); mxHi(D, X);
+      mxClearT(D); mxClearFx(D); D.idle = false; D.step = 0; D.rl = {}; var X = D.X = mxCtx(D, cur); D.stIdx = -1; D.el.classList.add('act'); D.el.classList.remove('key'); mxHi(D, X);
       if(!D.W) mxRelayout(D);
     },
     build:function(D, cur, rank, total){
@@ -16404,9 +16615,10 @@
       var X = D.X; if(!X) return; var arr = MX_ST[X.kind] || MX_ST.open;
       if(D.stIdx < arr.length - 1){ arr[arr.length - 1](D, X); D.stIdx = arr.length - 1; }
       D.el.classList.add('key');
+      if(!D.idle){ D.idle = true; mxLater(D, 1400, function(){ mxIdle(D); }); }   // chờ trả lời: thẻ rảnh nhích nhẹ cho sân không đứng hình
     },
     out:function(D, rec, l){
-      var X = D.X; if(!X) return;
+      D.idle = false; var X = D.X; if(!X) return;
       if(l.k === 'goal' || l.k === 'goalx') mxGoal(D, rec);
       else if(l.k === 'save') mxSave(D, rec);
       else if(l.k === 'play' && l.w === 'clear') mxClear(D, rec);
@@ -16511,20 +16723,20 @@
   function mxNext(D, rec){   // "Next: ..." — đưa hai đội về thế trận của tình huống kế tiếp
     var X = D.X, nx = rec.next, def = X.def, pins = {}; mxClearT(D); mxClearFx(D); mxUnhi(D); D.el.classList.remove('act', 'key');
     if(rec.res === 'goal' && !nx){ mxReset(D); return; }
-    if(nx === 'corner'){ var fl = {x:D.bx < 50 ? 4 : 96, y:X.Y(1.5)}; mxScene(D, {bx:fl.x, by:fl.y, att:X.att, dur:1.2}); mxBall(D, fl.x, fl.y, 1.1); return; }
+    if(nx === 'corner'){ var fl = {x:D.bx < 50 ? 4 : 96, y:X.Y(1.5)}; mxScene(D, {bx:fl.x, by:fl.y, att:X.att, dur:1.2, ph:'corner'}); mxBall(D, fl.x, fl.y, 1.1); return; }
     var NN = rec.nx || {}, na = NN.att != null ? NN.att : X.att;
-    if(nx === 'freekick' && NN.fz === 'mid'){ var mp = {x:Math.max(20, Math.min(80, D.bx)), y:50 + (D.by - 50) * 0.3}; mxScene(D, {bx:mp.x, by:mp.y, att:na, dur:1.2}); mxBall(D, mp.x, mp.y, 1.1); mxLabel(D, mp.x, mp.y, 'freekick'); return; }
-    if(nx === 'freekick'){ var sp = {x:50 + (D.bx < 50 ? -16 : 16) * (NN.fz === 'wide' ? 2 : 1), y:X.Y(NN.fz === 'wide' ? 20 : 25)}; mxScene(D, {bx:sp.x, by:sp.y, att:X.att, dur:1.2}); mxBall(D, sp.x, sp.y, 1.1); return; }
-    if(nx === 'throw'){ var tp = {x:D.bx < 50 ? 1.5 : 98.5, y:Math.max(8, Math.min(92, D.by))}; mxScene(D, {bx:tp.x, by:tp.y, att:na, dur:1.2}); mxBall(D, tp.x, tp.y, 1.1); mxLabel(D, tp.x, tp.y + 8, 'throwin'); return; }
-    if(nx === 'goalkick'){ var gp = {x:50 + X.dirX * 6, y:X.Y(5)}; mxScene(D, {bx:gp.x, by:gp.y, att:na, dur:1.2}); mxBall(D, gp.x, gp.y, 1.1); mxLabel(D, 50, X.Y(16), 'goalkick'); return; }
+    if(nx === 'freekick' && NN.fz === 'mid'){ var mp = {x:Math.max(20, Math.min(80, D.bx)), y:50 + (D.by - 50) * 0.3}; mxScene(D, {bx:mp.x, by:mp.y, att:na, dur:1.2, ph:'freekick'}); mxBall(D, mp.x, mp.y, 1.1); mxLabel(D, mp.x, mp.y, 'freekick'); return; }
+    if(nx === 'freekick'){ var sp = {x:50 + (D.bx < 50 ? -16 : 16) * (NN.fz === 'wide' ? 2 : 1), y:X.Y(NN.fz === 'wide' ? 20 : 25)}; mxScene(D, {bx:sp.x, by:sp.y, att:X.att, dur:1.2, ph:'freekick'}); mxBall(D, sp.x, sp.y, 1.1); return; }
+    if(nx === 'throw'){ var tp = {x:D.bx < 50 ? 1.5 : 98.5, y:Math.max(8, Math.min(92, D.by))}; mxScene(D, {bx:tp.x, by:tp.y, att:na, dur:1.2, ph:'throw'}); mxBall(D, tp.x, tp.y, 1.1); mxLabel(D, tp.x, tp.y + 8, 'throwin'); return; }
+    if(nx === 'goalkick'){ var gp = {x:50 + X.dirX * 6, y:X.Y(5)}; mxScene(D, {bx:gp.x, by:gp.y, att:na, dur:1.2, ph:'goalkick'}); mxBall(D, gp.x, gp.y, 1.1); mxLabel(D, 50, X.Y(16), 'goalkick'); return; }
     if(nx === 'kickoff'){ mxReset(D); return; }
-    if(nx === 'second'){ var sb = {x:50 + X.dirX * 10, y:X.Y(24)}; mxScene(D, {bx:sb.x, by:sb.y, att:na, dur:1.2}); mxBall(D, sb.x, sb.y, 1, 0.4, 'lob'); mxLabel(D, sb.x, sb.y - X.fwd * 9, 'secondball'); return; }
-    if(nx === 'penalty'){ mxPin(pins, def, X.gk, 50, X.Y(2)); mxScene(D, {bx:50, by:X.Y(10.5), att:X.att, pins:pins, dur:1.2, excl:{att:X.att, d:20}}); mxBall(D, 50, X.Y(10.5), 1.1); return; }
-    if(rec.res === 'saved'){ var g = D.pos[def][X.gk]; mxScene(D, {bx:g.x, by:g.y, att:def, dur:1.2}); var f = mxFeetAt(D, def, g.x, g.y); mxBall(D, f.x, f.y, 0.8); return; }
-    var s = D.pos[def][X.stI != null ? X.stI : 0]; mxScene(D, {bx:s.x, by:s.y, att:def, dur:1.2}); var f2 = mxFeetAt(D, def, s.x, s.y); mxBall(D, f2.x, f2.y, 0.8);
+    if(nx === 'second'){ var sb = {x:50 + X.dirX * 10, y:X.Y(24)}; mxScene(D, {bx:sb.x, by:sb.y, att:na, dur:1.2, ph:'second'}); mxBall(D, sb.x, sb.y, 1, 0.4, 'lob'); mxLabel(D, sb.x, sb.y - X.fwd * 9, 'secondball'); return; }
+    if(nx === 'penalty'){ mxPin(pins, def, X.gk, 50, X.Y(2)); mxScene(D, {bx:50, by:X.Y(10.5), att:X.att, pins:pins, dur:1.2, excl:{att:X.att, d:20}, ph:'penalty'}); mxBall(D, 50, X.Y(10.5), 1.1); return; }
+    if(rec.res === 'saved'){ var g = D.pos[def][X.gk]; mxScene(D, {bx:g.x, by:g.y, att:def, dur:1.2, ph:'gkhold'}); var f = mxFeetAt(D, def, g.x, g.y); mxBall(D, f.x, f.y, 0.8); return; }
+    var s = D.pos[def][X.stI != null ? X.stI : 0]; mxScene(D, {bx:s.x, by:s.y, att:def, dur:1.2, ph:'trans'}); var f2 = mxFeetAt(D, def, s.x, s.y); mxBall(D, f2.x, f2.y, 0.8);
   }
   function mxReset(D){   // giao bóng / nghỉ giữa hiệp / hết giờ: cả hai đội về vị trí xuất phát
-    mxClearT(D); mxClearFx(D); mxUnhi(D); D.el.classList.remove('act', 'key');
+    mxClearT(D); mxClearFx(D); mxUnhi(D); D.el.classList.remove('act', 'key'); D.idle = false; D.anc = [[], []]; D.rl = {};
     [0, 1].forEach(function(s){ D.pl[s].forEach(function(e, i){ mxPut(D, s, i, D.base[s][i].x, D.base[s][i].y, 1.6, fxR() * 0.25); }); });
     mxBall(D, 50, 50, 1.4);
   }
