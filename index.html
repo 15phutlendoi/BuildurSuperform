@@ -1318,6 +1318,114 @@
   .collection-grid{ grid-template-columns:repeat(auto-fill,minmax(120px,1fr)); }
   .picker-grid{ grid-template-columns:repeat(auto-fill,minmax(116px,1fr)); }
 
+
+  /* ===== World Tour: sổ hộ chiếu · vé máy bay · bản đồ bay ===== */
+  .wt-view{ --wt-sea:#0C2340; --wt-deep:#081A30; --wt-lagoon:#17506E; --wt-sand:#EBDDBA; --wt-ink:#2A2216; --wt-red:#D2453D; --wt-gold:#E3B341; padding:0; overflow:hidden; background:var(--wt-deep); }
+  .wt-map{ position:relative; background:radial-gradient(120% 90% at 50% 0,#14406A,var(--wt-sea) 70%); border-bottom:3px double var(--wt-gold); }
+  .wt-map svg{ display:block; width:100%; height:auto; }
+  .wt-grat{ stroke:#6FB4D6; stroke-opacity:.16; stroke-width:1; fill:none; }
+  .wt-land{ fill:var(--wt-sand); fill-opacity:.88; stroke:#B9A56E; stroke-width:2; }
+  .wt-route{ fill:none; stroke:var(--wt-gold); stroke-width:3; stroke-dasharray:4 9; stroke-linecap:round; opacity:.85; }
+  .wt-route.done{ stroke-dasharray:none; opacity:1; }
+  .wt-stamp circle{ fill:none; stroke:var(--wt-red); stroke-width:4; }
+  .wt-stamp text, .wt-pin text{ font:700 24px Georgia,serif; text-anchor:middle; dominant-baseline:central; }
+  .wt-stamp text{ fill:var(--wt-red); }
+  .wt-pin circle{ fill:var(--wt-sea); stroke:#7C98B3; stroke-width:3; }
+  .wt-pin text{ fill:#9DB4C9; }
+  .wt-now circle.core{ fill:var(--wt-red); stroke:#fff; stroke-width:4; }
+  .wt-now circle.ring{ fill:none; stroke:var(--wt-red); stroke-width:3; animation:wtPing 2.2s ease-out infinite; transform-box:fill-box; transform-origin:center; }
+  .wt-now text{ font:900 34px Georgia,serif; fill:#fff; paint-order:stroke; stroke:var(--wt-sea); stroke-width:7px; text-anchor:middle; }
+  @keyframes wtPing{ from{ transform:scale(.6); opacity:.9; } to{ transform:scale(2.2); opacity:0; } }
+  .wt-note{ margin:0; padding:6px 12px; font-size:11.5px; color:#9DB4C9; }
+  .wt-ticket{ margin:14px; display:grid; grid-template-columns:1fr; background:var(--wt-sand); color:var(--wt-ink); border-radius:14px; position:relative; }
+  @media (min-width:700px){ .wt-ticket{ grid-template-columns:1.25fr 1fr; } .wt-stub{ border-top:0 !important; border-left:2px dashed #A8935A; } }
+  .wt-main, .wt-stub{ padding:16px 18px; display:flex; flex-direction:column; gap:10px; min-width:0; }
+  .wt-stub{ border-top:2px dashed #A8935A; background:rgba(255,255,255,.35); border-radius:0 0 14px 14px; }
+  .wt-kick{ margin:0; font-size:13px; color:#6B5A31; }
+  .wt-nation{ margin:0; font:900 34px/1.05 Georgia,'Times New Roman',serif; letter-spacing:.01em; color:var(--wt-ink); }
+  .wt-dates{ margin:0; font-size:14px; font-weight:700; color:var(--wt-red); }
+  .wt-story{ margin:0; font:15px/1.55 Georgia,serif; max-width:60ch; }
+  .wt-boss{ margin:0; font-size:13.5px; font-weight:700; }
+  .wt-seat{ display:flex; align-items:center; gap:10px; padding:8px 10px; border:2px solid #A8935A; border-radius:10px; background:#FFF8E4; min-height:50px; }
+  .wt-seat.empty{ border-style:dashed; background:transparent; color:#7A6A40; }
+  .wt-seat b{ display:block; font-size:14px; }
+  .wt-seat small{ font-size:12px; color:#6B5A31; }
+  .wt-seat .wt-ovr{ margin-left:auto; font:900 22px Georgia,serif; color:var(--wt-red); }
+  .wt-code{ font:900 30px/1 Georgia,serif; letter-spacing:.28em; text-align:center; padding:8px 0; border:2px solid var(--wt-ink); border-radius:8px; background:#FFF8E4; }
+  .wt-btn{ min-height:44px; padding:0 16px; border-radius:10px; border:2px solid var(--wt-ink); background:var(--wt-ink); color:var(--wt-sand); font-weight:800; font-size:15px; cursor:pointer; }
+  .wt-btn.alt{ background:transparent; color:var(--wt-ink); }
+  .wt-btn:disabled{ opacity:.45; cursor:not-allowed; }
+  .wt-row{ display:flex; gap:8px; flex-wrap:wrap; }
+  .wt-in{ flex:1; min-width:110px; min-height:44px; border:2px solid var(--wt-ink); border-radius:10px; padding:0 12px; font:900 20px Georgia,serif; letter-spacing:.2em; text-transform:uppercase; background:#FFF8E4; color:var(--wt-ink); }
+  .wt-err{ margin:0; font-size:13px; font-weight:700; color:#A3201A; }
+  .wt-picks{ display:grid; grid-template-columns:repeat(auto-fill,minmax(92px,1fr)); gap:8px; max-height:300px; overflow-y:auto; padding:2px; }
+  .wt-pick{ border:3px solid transparent; border-radius:10px; background:rgba(0,0,0,.06); padding:2px; cursor:pointer; }
+  .wt-pick.on{ border-color:var(--wt-red); }
+  .wt-empty{ padding:22px 18px; color:#C9D8E6; font-size:15px; line-height:1.55; }
+
+  .wt-qwrap{ padding:16px 14px 20px; display:flex; flex-direction:column; gap:12px; max-width:760px; margin:0 auto; color:var(--wt-sand); }
+  .wt-qhead{ display:flex; justify-content:space-between; align-items:center; gap:10px; font-weight:800; font-size:14px; }
+  .wt-ticks{ display:flex; gap:4px; }
+  .wt-ticks i{ width:18px; height:8px; border-radius:4px; background:#35516E; }
+  .wt-ticks i.ok{ background:#4ADE80; } .wt-ticks i.bad{ background:var(--wt-red); } .wt-ticks i.now{ background:var(--wt-gold); }
+  .wt-qbar{ height:8px; border-radius:4px; background:#1B3550; overflow:hidden; }
+  .wt-qbar i{ display:block; height:100%; width:100%; background:var(--wt-gold); }
+  .wt-q{ margin:4px 0; font:700 22px/1.4 Georgia,serif; text-align:center; }
+  .wt-qo{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  @media (max-width:520px){ .wt-qo{ grid-template-columns:1fr; } }
+  .wt-opt{ min-height:58px; padding:8px 12px; border-radius:12px; border:3px solid #A8935A; background:var(--wt-sand); color:var(--wt-ink); font:800 17px/1.25 inherit; cursor:pointer; }
+  .wt-opt.ok{ border-color:#16A34A; background:#BBF7D0; } .wt-opt.bad{ border-color:var(--wt-red); background:#FECACA; } .wt-opt:disabled{ cursor:default; }
+  .wt-fb{ min-height:44px; text-align:center; font-weight:700; line-height:1.5; }
+  .wt-rev{ padding:18px 14px 22px; display:flex; flex-direction:column; gap:14px; align-items:center; color:var(--wt-sand); text-align:center; }
+  .wt-bcards{ display:grid; grid-template-columns:repeat(3,minmax(0,150px)); gap:10px; justify-content:center; width:100%; }
+  .wt-bcard{ transition:filter 1.1s ease; }
+  .wt-hid .wt-bcard{ filter:brightness(0) contrast(1.3); }
+  .wt-bov{ font:900 22px Georgia,serif; color:var(--wt-gold); margin-top:4px; }
+  .wt-facts{ display:none; flex-direction:column; gap:8px; width:100%; max-width:560px; text-align:left; }
+  .wt-rev:not(.wt-hid) .wt-facts{ display:flex; }
+  .wt-fact{ padding:10px 12px; border-radius:10px; background:#102C49; border:1px solid #2C4C6C; font-size:15px; line-height:1.5; }
+  .wt-fact b{ color:var(--wt-gold); }
+  /* ===== World Tour · trận Boss + hộ chiếu ===== */
+  .wt-stamp.won circle{ stroke:var(--wt-gold); fill:rgba(227,179,65,.28); } .wt-stamp.won text{ fill:var(--wt-gold); }
+  .wt-stamp.miss circle{ stroke:#7C98B3; stroke-dasharray:5 4; } .wt-stamp.miss text{ fill:#7C98B3; }
+  .wtb{ padding:8px 8px 12px; display:flex; flex-direction:column; gap:6px; color:var(--wt-sand); max-width:820px; margin:0 auto; }
+  .wtb-top{ display:flex; justify-content:space-between; align-items:center; gap:8px; font-size:14px; padding:2px 4px; }
+  .wtb-top span{ font-weight:800; color:var(--wt-gold); }
+  .wtb-row{ display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; justify-items:center; }
+  .wtb-u{ position:relative; width:100%; max-width:90px; display:flex; flex-direction:column; align-items:stretch; gap:3px; padding:5px; border-radius:12px; border:2px solid #2C4C6C; background:#0F2A46; color:inherit; font:inherit; cursor:default; transition:transform .2s, border-color .2s, filter .3s; }
+  .wtb-u.boss{ border-color:#6B2C3A; background:#2A1220; }
+  .wtb-u.turn{ border-color:var(--wt-gold); box-shadow:0 0 0 2px rgba(227,179,65,.35); }
+  .wtb-u.act{ transform:translateY(-4px) scale(1.04); z-index:2; }
+  .wtb-u.boss.act{ transform:translateY(4px) scale(1.04); }
+  .wtb-u.hit{ animation:wtbShake .45s; }
+  .wtb-u.ko{ filter:grayscale(1) brightness(.55); }
+  .wtb-u.tg{ cursor:pointer; border-color:var(--wt-red); animation:wtbPulse 1s ease-in-out infinite; }
+  .wtb-card{ display:block; width:100%; } .wtb-ini{ display:block; padding:30px 0; text-align:center; font:900 22px Georgia,serif; }
+  .wtb-nm{ font-size:12px; font-weight:800; text-align:center; line-height:1.2; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .wtb-tag{ min-height:16px; display:flex; flex-wrap:wrap; gap:3px; justify-content:center; font-size:11px; }
+  .wtb-tag em{ font-style:normal; font-weight:800; padding:1px 5px; border-radius:6px; background:#1B3550; } .wtb-tag em.g{ color:#4ADE80; } .wtb-tag em.r{ color:#FCA5A5; } .wtb-tag em.k{ color:#FDE047; }
+  .wtb-hp{ position:relative; height:16px; border-radius:8px; background:#07131F; border:1px solid #35516E; overflow:hidden; }
+  .wtb-hp i{ position:absolute; inset:0 auto 0 0; width:100%; background:linear-gradient(90deg,#16A34A,#4ADE80); transition:width .6s ease; }
+  .wtb-hp i.md{ background:linear-gradient(90deg,#CA8A04,#FACC15); } .wtb-hp i.lo{ background:linear-gradient(90deg,#B91C1C,#F87171); }
+  .wtb-hp b{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:10.5px; color:#fff; text-shadow:0 1px 2px #000; }
+  .wtb-fl{ position:absolute; left:50%; top:35%; transform:translateX(-50%); font:900 22px Georgia,serif; color:#FCA5A5; text-shadow:0 2px 4px #000; pointer-events:none; animation:wtbFloat 1.2s ease-out forwards; z-index:5; white-space:nowrap; }
+  .wtb-fl.crit{ color:#FDE047; font-size:28px; } .wtb-fl.heal{ color:#4ADE80; }
+  .wtb-mid{ text-align:center; min-height:46px; display:flex; flex-direction:column; justify-content:center; gap:2px; padding:2px 6px; }
+  .wtb-l1{ margin:0; font-size:14px; } .wtb-l2{ margin:0; font-size:13px; color:#C9D8E6; }
+  .wtb-panel{ min-height:80px; scroll-margin-bottom:90px; }
+  .wtb-wait{ margin:8px 0; text-align:center; font-weight:800; font-size:16px; } .wtb-wait.pick{ color:var(--wt-gold); }
+  .wtb-lobby, .wtb-res{ display:flex; flex-direction:column; gap:10px; align-items:center; text-align:center; padding:8px 4px; }
+  .wtb-ppl{ display:flex; flex-wrap:wrap; gap:6px; justify-content:center; } .wtb-pp{ padding:5px 10px; border-radius:99px; background:#102C49; border:1px solid #2C4C6C; font-weight:700; font-size:14px; } .wtb-pp.on{ border-color:#4ADE80; }
+  .wtb-res h3{ margin:0; font:900 24px Georgia,serif; } .wtb-res.win h3{ color:var(--wt-gold); } .wtb-res p{ margin:0; font-size:15px; line-height:1.5; } .wtb-got{ font-weight:800; color:#4ADE80; }
+  .wtb .wt-qwrap{ padding:4px 6px 6px; gap:7px; } .wtb .wt-q{ font-size:19px; margin:2px 0; } .wtb .wt-opt{ min-height:50px; font-size:16px; } .wtb .wt-fb{ min-height:34px; margin:0; font-size:14px; }
+  .wtb.q .wtb-card, .wtb.q .wtb-tag{ display:none; } .wtb.q .wtb-u{ max-width:none; }
+  @keyframes wtbShake{ 0%,100%{ transform:translateX(0); } 20%{ transform:translateX(-7px); } 40%{ transform:translateX(7px); } 60%{ transform:translateX(-5px); } 80%{ transform:translateX(4px); } }
+  @keyframes wtbPulse{ 0%,100%{ box-shadow:0 0 0 0 rgba(210,69,61,.6); } 50%{ box-shadow:0 0 0 7px rgba(210,69,61,0); } }
+  @keyframes wtbFloat{ 0%{ opacity:0; transform:translate(-50%,10px); } 15%{ opacity:1; } 100%{ opacity:0; transform:translate(-50%,-46px); } }
+  @media (prefers-reduced-motion:reduce){ .wtb-u, .wtb-hp i{ transition:none; } .wtb-u.hit, .wtb-u.tg, .wtb-fl{ animation:none; } }
+
+  @media (prefers-reduced-motion:reduce){ .wt-now circle.ring{ animation:none; opacity:.6; } .wt-bcard{ transition:none; } }
+
   /* Popup chi tiết + thẻ vừa bốc từ hộp quà 9 ô */
   .pd-art-wrap{ width:150px; }
   .pd-art-wrap .fc-card{ filter:drop-shadow(0 6px 12px rgba(0,0,0,.4)); }
@@ -3725,13 +3833,14 @@
         <h2>⚔️ Đấu Trường</h2>
         <button type="button" class="rules-btn" data-rules="battle">❓ Luật chơi</button>
       </div>
-      <div class="rm-modes"><button type="button" class="rm-mode active" id="battle-mode-road">🗺️ Hành trình</button><button type="button" class="rm-mode" id="battle-mode-quick">🎲 Đấu nhanh</button><button type="button" class="rm-mode" id="battle-mode-season">🏆 Mùa giải</button></div>
+      <div class="rm-modes"><button type="button" class="rm-mode active" id="battle-mode-road">🗺️ Hành trình</button><button type="button" class="rm-mode" id="battle-mode-quick">🎲 Đấu nhanh</button><button type="button" class="rm-mode" id="battle-mode-season">🏆 Mùa giải</button><button type="button" class="rm-mode" id="battle-mode-wtour">🌍 World Tour</button></div>
       <div class="rm-modes size-modes"><button type="button" class="rm-mode active" id="battle-size-1">⚔️ 1v1</button><button type="button" class="rm-mode" id="battle-size-3">🛡️ 3v3 · Đội 3 thẻ</button></div>
       <div class="rm-modes size-modes" id="season-subtabs" style="display:none"></div>
       <p class="battle-quota" id="battle-quota"></p>
     </div>
     <div class="panel" id="battle-road-view"></div>
     <div class="panel" id="season-view" style="display:none"></div>
+    <div class="panel wt-view" id="wtour-view" style="display:none"></div>
     <div class="panel" id="battle-pick-view">
       <div id="battle-pick-head"></div>
       <div id="battle-pick-hint" class="empty-collection" style="display:none"></div>
@@ -3870,6 +3979,7 @@
       <button type="button" class="ap-tab" role="tab" id="aptab-battle" data-ap="battle" aria-controls="appane-battle" aria-selected="false" tabindex="-1"><span class="ap-tab-ico" aria-hidden="true">⚔️</span><span>Đấu Trường</span></button>
       <button type="button" class="ap-tab" role="tab" id="aptab-data" data-ap="data" aria-controls="appane-data" aria-selected="false" tabindex="-1"><span class="ap-tab-ico" aria-hidden="true">🗂️</span><span>Dữ liệu</span></button>
       <button type="button" class="ap-tab" role="tab" id="aptab-notice" data-ap="notice" aria-controls="appane-notice" aria-selected="false" tabindex="-1"><span class="ap-tab-ico" aria-hidden="true">📣</span><span>Thông báo</span></button>
+      <button type="button" class="ap-tab" role="tab" id="aptab-wtour" data-ap="wtour" aria-controls="appane-wtour" aria-selected="false" tabindex="-1"><span class="ap-tab-ico" aria-hidden="true">🌍</span><span>World Tour</span></button>
     </nav>
     <div class="ap-body" id="ap-body">
     <section class="ap-pane" id="appane-system" role="tabpanel" aria-labelledby="aptab-system">
@@ -4133,6 +4243,41 @@
           <button type="button" id="wn-off" class="btn-secondary">⏹️ Tắt thông báo</button>
         </div>
         <p class="hint-text" style="margin:0">Mỗi lần bấm <b>Phát hành</b>, những hồ sơ đã xem bản cũ sẽ được xem lại bản mới. Tab này không dùng nút «Lưu cài đặt» ở dưới. Quản trị viên không bị popup làm phiền khi đăng nhập — dùng «Xem thử» để kiểm tra.</p>
+      </div>
+    </section>
+    <section class="ap-pane" id="appane-wtour" role="tabpanel" aria-labelledby="aptab-wtour" hidden>
+      <div><h3 class="ap-pane-title">🌍 World Tour</h3><p class="ap-pane-desc">Chiến dịch «Hành Trình Chinh Phục Thế Giới»: công thức sức mạnh Boss, quốc gia theo tuần, thẻ thưởng. Dùng chung cho mọi hồ sơ. Tuần chạy Chủ nhật → hết Thứ bảy; điểm chốt cuối Thứ bảy và dùng cho tuần chơi kế tiếp.</p></div>
+      <div class="ap-card">
+        <h4>⚙️ Công thức Boss</h4>
+        <label>Mốc điểm tuần mỗi người (tối đa 700)<input type="number" id="wt-goal" min="100" max="700" step="10"></label>
+        <label>Hệ số K: Overall cộng thêm = K × (1 − tỷ lệ hoàn thành)<input type="number" id="wt-k" min="0" max="40" step="1"></label>
+        <label>Hệ số Thể lực: Thể lực Boss × (1 + tỷ lệ sai × hệ số)<input type="number" id="wt-sta" min="0" max="3" step="0.1"></label>
+        <label>Số lần thử đấu Boss mỗi tuần (mỗi phòng; thắng rồi thì không đánh lại)<input type="number" id="wt-tries" min="1" max="10" step="1"></label>
+      </div>
+      <div class="ap-card">
+        <h4>🗺️ Hành trình theo tuần <span class="ap-count" id="wt-count"></span></h4>
+        <div id="wt-weeks" style="display:flex;flex-direction:column;gap:12px"></div>
+        <button type="button" id="wt-add" class="btn-secondary">➕ Thêm tuần</button>
+      </div>
+      <div class="ap-card">
+        <h4>🧮 Thử công thức</h4>
+        <label>Chọn 2–3 hồ sơ (giữ Ctrl/Cmd để chọn nhiều)<select id="wt-test-user" multiple size="4"></select></label>
+        <label>Tỷ lệ trả lời sai của team (%)<input type="number" id="wt-test-wrong" min="0" max="100" step="5" value="30"></label>
+        <button type="button" id="wt-test-btn" class="btn-secondary">🧮 Tính từ điểm tuần vừa kết thúc</button>
+        <div class="hint-text" id="wt-test-out" style="margin:0;white-space:pre-line"></div>
+      </div>
+      <div class="ap-card">
+        <h4>🧹 Dọn phòng cũ</h4>
+        <label>Xóa phòng tạo cách đây hơn (ngày)<input type="number" id="wt-clean-days" min="1" max="365" step="1" value="14"></label>
+        <button type="button" id="wt-clean" class="btn-secondary">🧹 Dọn phòng cũ</button>
+        <div class="hint-text" id="wt-clean-out" style="margin:0"></div>
+        <p class="hint-text" style="margin:0">Máy của bé cũng tự dọn ngầm phòng quá 14 ngày, tối đa 1 lần mỗi ngày.</p>
+      </div>
+      <div class="ap-card">
+        <h4>🚀 Lưu &amp; phát hành</h4>
+        <p class="hint-text" id="wt-status" style="margin:0">Đang tải…</p>
+        <button type="button" id="wt-publish" class="btn-primary">🚀 Lưu &amp; phát hành</button>
+        <p class="hint-text" style="margin:0">Tab này không dùng nút «Lưu cài đặt» ở dưới.</p>
       </div>
     </section>
     </div>
@@ -5053,6 +5198,12 @@
     {n:15, icon:'🪄', name:'Phù Thủy Kỹ Năng'},
     {n:25, icon:'👑', name:'Vua Kỹ Năng'}
   ];
+  var LADDER_WT = [
+    {n:1,  icon:'🛂', name:'Hộ Chiếu Đầu Tiên'},
+    {n:3,  icon:'🧳', name:'Du Khách Nhí'},
+    {n:5,  icon:'✈️', name:'Phi Công Nhí'},
+    {n:10, icon:'🌍', name:'Công Dân Thế Giới'}
+  ];
   var LADDER_CARDS = [
     {n:1,   icon:'🎴', name:'Thẻ Đầu Tiên'},
     {n:5,   icon:'🃏', name:'Đội Hình Nhí'},
@@ -5079,8 +5230,9 @@
     var S = {
       goalDays:0, tasks:0, dayPoints:0, streak:0, monthsWon:0, tier:{okay:0, great:0, excellent:0, perfect:0},
       skillTotal:0, skillGold:0, skillSilver:0, skillPts:0, ps:{}, psOwned:0,
-      cards:0, squadCount:0, uniqueCards:0, maxOvr:0, cardsThisPeriod:0, periodLabel:'', top:[]
+      cards:0, squadCount:0, uniqueCards:0, maxOvr:0, cardsThisPeriod:0, periodLabel:'', top:[], wtNations:0, wtCards:0
     };
+    try{ var wcl = wtClaims(); Object.keys(wcl).forEach(function(k){ S.wtNations++; if(wcl[k] && wcl[k].got === 'card') S.wtCards++; }); }catch(e){}
     var target = settings.dailyGoal * 10;
     var monthKeys = {};
     allLocalMonthKeys().forEach(function(k){ monthKeys[k.replace('kidchart_month_','')] = 1; });
@@ -5258,6 +5410,17 @@
     });
   }
 
+  function wtourCabinetHTML(S){
+    var lad = cabLadderHTML(LADDER_WT, S.wtNations, 'nước');
+    return cabinetHTML({
+      id:'wtour', icon:'🛂', title:'Hộ chiếu World Tour', sub:'Các nước con đã chinh phục',
+      total:S.wtNations, totalLabel:'nước đã chinh phục',
+      tiles:[ cabTile(S.wtNations, 'Con dấu vàng', 'mỗi nước hạ Boss 1 lần'), cabTile(S.wtCards, 'Thẻ thưởng đã nhận', 'từ các chặng World Tour') ],
+      groups:[ {title:'Chặng hộ chiếu', body:cabShelfHTML(lad.html, 'lad')} ],
+      base: cabBaseHTML(S.wtNations, lad.next, 'nước')
+    });
+  }
+
   function cardCabinetHTML(S){
     var lad = cabLadderHTML(LADDER_CARDS, S.cards, 'thẻ');
     var slots = '';
@@ -5293,7 +5456,7 @@
     badgesDirty = false;
     try{
       var S = computeStats();
-      host.innerHTML = goalCabinetHTML(S) + skillCabinetHTML(S) + cardCabinetHTML(S);
+      host.innerHTML = goalCabinetHTML(S) + skillCabinetHTML(S) + cardCabinetHTML(S) + wtourCabinetHTML(S);
       wirePlayerDetailClicks(host, function(id){
         return hydratePlayer(loadPlayers().find(function(x){ return x && x.id === id; }));
       });
@@ -9107,13 +9270,14 @@
     if(a) a.classList.toggle('active', battleMode === 'road');
     if(b) b.classList.toggle('active', battleMode === 'quick');
     if(c) c.classList.toggle('active', battleMode === 'season');
+    var wb = document.getElementById('battle-mode-wtour'); if(wb) wb.classList.toggle('active', battleMode === 'wtour');
   }
   document.addEventListener('click', function(e){
     var t = e.target && e.target.closest ? e.target : null;
     if(!t) return;
-    var m = t.closest('#battle-mode-road, #battle-mode-quick, #battle-mode-season');
+    var m = t.closest('#battle-mode-road, #battle-mode-quick, #battle-mode-season, #battle-mode-wtour');
     if(m && m.id === 'battle-mode-road' && !journeyAllowed()) return;
-    if(m){ battleMode = (m.id === 'battle-mode-road') ? 'road' : (m.id === 'battle-mode-season' ? 'season' : 'quick'); roadPickStage = 0; renderBattlePick(); return; }
+    if(m){ battleMode = (m.id === 'battle-mode-road') ? 'road' : (m.id === 'battle-mode-season' ? 'season' : (m.id === 'battle-mode-wtour' ? 'wtour' : 'quick')); roadPickStage = 0; renderBattlePick(); return; }
     var nd = t.closest('.rm-node, .rm-pg, .cm-node');
     if(nd){ roadmapNodeTap(parseInt(nd.getAttribute('data-n'), 10)); return; }
     if(t.closest('#rm-back')){ roadPickStage = 0; renderBattlePick(); }
@@ -9201,6 +9365,8 @@
     document.getElementById('battle-arena-view').style.display = 'none';
     syncBattleModeButtons();
     roadApplySize();
+    wtHide();
+    if(battleMode === 'wtour'){ seasonHide(); wtRender(); return; }
     if(battleMode === 'season'){ seasonRender(); return; }
     seasonHide();
     renderBattleQuota();
@@ -12459,7 +12625,7 @@
      - Mọi cấu hình nằm ở đây, chia tab theo nhóm chức năng. Chỉ phiên đăng nhập Quản trị viên mới mở được.
      - Quản trị viên đăng nhập xong vào thẳng trang này (cờ phiên 'dbcd_admin_landing'); nút 🛡️ trên đầu trang để quay lại.
      - Thẻ có data-save="1" cần bấm "Lưu cài đặt"; các thẻ "Có tác dụng ngay" (dữ liệu, hồ sơ, mật khẩu) thực hiện tức thì. */
-  var AP_TABS = ['system','tasks','points','rewards','battle','data','notice'];
+  var AP_TABS = ['system','tasks','points','rewards','battle','data','notice','wtour'];
   var apTab = 'system', apDirty = false, apRewardsBackup = null, apOpener = null;
 
   function fillAdminFields(){
@@ -12510,6 +12676,7 @@
     refreshQuestionBankStatus();
     refreshPlayerDbStatus();
     wnInit();
+    wtInit();
     apOpener = document.activeElement;
     page.hidden = false;
     document.body.classList.add('ap-open');
@@ -13786,6 +13953,895 @@
       playerIds: wnPicked.slice()
     };
   }
+  /* ===== WORLD TOUR · Giai đoạn 1: bản đồ chuyến bay theo tuần + lập team bằng mã phòng =====
+     Phòng: <FIREBASE_BASE>/kidchart_wtour_rooms/<MÃ>.json  { ws, nation, host, state:'lobby'|'locked', slots:{0..2:{id,name,card:{id,name,ovr,pos}}} }
+     Tối thiểu 2, tối đa 3 người. Chủ phòng bấm «Chốt team» → state='locked' (Giai đoạn 2 đọc team từ đây). */
+  var WTR = FIREBASE_BASE + '/kidchart_wtour_rooms/', WT_ROOM_KEY = 'dbcd_wt_room';
+  var wtLive = null, wtCode = '', wtRoom = null, wtPoll = 0, wtMy = '', wtErr = '';
+  var WT_LAND = ['M60 80L130 60L250 50L330 70L300 120L270 160L250 200L215 215L190 180L140 150L90 120Z','M330 40L400 30L390 80L350 85Z','M250 235L300 230L340 270L330 330L300 390L280 410L265 340L245 280Z',
+    'M460 100L540 85L560 120L520 150L470 145Z','M470 165L540 160L580 200L570 270L540 330L510 330L490 260L465 200Z','M540 80L700 60L860 75L880 130L820 190L760 230L700 200L650 160L590 160L560 125Z',
+    'M760 245L840 250L830 275L765 270Z','M820 300L900 295L925 340L870 365L825 345Z'];
+  function wtHide(){
+    if(typeof wtbStop === 'function') wtbStop();
+    if(wtPoll){ clearInterval(wtPoll); wtPoll = 0; }
+    var v = document.getElementById('wtour-view'); if(v) v.style.display = 'none';
+    var q = document.getElementById('battle-quota'); if(q) q.style.display = '';
+  }
+  function wtXY(w){ return [Math.round((w.lon + 180) / 360 * 1000), Math.round((90 - w.lat) / 180 * 500)]; }
+  function wtCurWeek(cfg){ var td = wtY(new Date()); return (cfg.weeks || []).filter(function(w){ return w.ws && w.ws <= td && td <= wtAdd(w.ws, 6); })[0] || null; }
+  function wtMapSVG(cfg, cur){
+    var ws = cfg.weeks.filter(function(w){ return w.ws; }), td = wtY(new Date()), cl = wtClaims(), s = '<svg viewBox="0 0 1000 500" role="img" aria-label="Bản đồ hành trình các chặng World Tour">';
+    for(var x = 100; x < 1000; x += 100) s += '<path class="wt-grat" d="M' + x + ' 0V500"/>';
+    for(var y = 100; y < 500; y += 100) s += '<path class="wt-grat" d="M0 ' + y + 'H1000"/>';
+    WT_LAND.forEach(function(d){ s += '<path class="wt-land" d="' + d + '"/>'; });
+    for(var i = 1; i < ws.length; i++){
+      var a = wtXY(ws[i - 1]), b = wtXY(ws[i]), mx = (a[0] + b[0]) / 2, my = Math.min(a[1], b[1]) - 40 - Math.abs(a[0] - b[0]) * .12;
+      s += '<path class="wt-route' + (ws[i].ws <= td ? ' done' : '') + '" d="M' + a[0] + ' ' + a[1] + 'Q' + mx + ' ' + my + ' ' + b[0] + ' ' + b[1] + '"/>';
+    }
+    ws.forEach(function(w, i){
+      var p = wtXY(w), past = wtAdd(w.ws, 6) < td, won = !!cl[w.ws], now = cur && cur.ws === w.ws && !won, tt = '<title>' + uEsc(w.nation) + (won ? ' · đã chinh phục' : (past ? ' · bỏ lỡ' : '')) + '</title>';
+      if(now) s += '<g class="wt-now" transform="translate(' + p[0] + ' ' + p[1] + ')">' + tt + '<circle class="ring" r="22"/><circle class="core" r="15"/><text y="-30">' + uEsc(w.nation) + '</text></g>';
+      else if(past || won) s += '<g class="wt-stamp ' + (won ? 'won' : 'miss') + '" transform="translate(' + p[0] + ' ' + p[1] + ') rotate(-8)">' + tt + '<circle r="22"/><text>' + (won ? '★' : (i + 1)) + '</text></g>';
+      else s += '<g class="wt-pin" transform="translate(' + p[0] + ' ' + p[1] + ')">' + tt + '<circle r="18"/><text>' + (i + 1) + '</text></g>';
+    });
+    return s + '</svg>';
+  }
+  function wtPassportLine(cfg){
+    var cl = wtClaims(), td = wtY(new Date()), open = cfg.weeks.filter(function(w){ return w.ws && w.ws <= td; }), n = open.filter(function(w){ return cl[w.ws]; }).length;
+    return '🛂 Hộ chiếu: ' + n + '/' + open.length + ' nước đã chinh phục.';
+  }
+  function wtFmt(ds){ var d = wtD(ds); return d.getDate() + '/' + (d.getMonth() + 1); }
+  function wtMe(){
+    var c = battleOwnedCards().filter(function(p){ return String(p.dbId) === wtMy; })[0]; if(!c) return null;
+    var bt = null; try{ bt = wtbSnap(c); }catch(e){}   // chỉ số chiến đấu thực (đã nâng cấp): để máy khác dựng đúng thẻ này trong trận Boss
+    return { id: syncId, name: userNameOf(syncId), card: { id: String(c.dbId), name: c.name, ovr: c.ovr || c.realOvr || 0, pos: c.pos || c.position || '', bt: bt } };
+  }
+  function wtMembers(room){ var o = []; for(var i = 0; i < 3; i++){ var m = room && room.slots && room.slots[i]; if(m && m.id) o.push(i); } return o; }
+  function wtSeatHTML(room, i){
+    var m = room && room.slots && room.slots[i];
+    if(!m || !m.id) return '<div class="wt-seat empty">Ghế ' + (i + 1) + ' · đang chờ bạn vào</div>';
+    return '<div class="wt-seat"><div><b>' + uEsc(m.name) + (room.host === m.id ? ' (chủ phòng)' : '') + '</b><small>' + uEsc(m.card.name) + (m.card.pos ? ' · ' + uEsc(m.card.pos) : '') + '</small>' + wtStat(room, i) + '</div><span class="wt-ovr">' + (m.card.ovr | 0) + '</span></div>';
+  }
+  function wtStubHTML(cur){
+    if(wtCode && wtRoom){
+      var n = wtMembers(wtRoom).length, host = wtRoom.host === syncId, locked = wtRoom.state === 'locked';
+      return '<p class="wt-kick">Mã phòng · gửi cho bạn bè</p><div class="wt-code" aria-label="Mã phòng">' + uEsc(wtCode) + '</div>'
+        + [0, 1, 2].map(function(i){ return wtSeatHTML(wtRoom, i); }).join('')
+        + (locked ? wtLockedHTML(n)
+          : '<p class="wt-boss">' + (n < 2 ? 'Cần ít nhất 2 người để chốt team.' : (host ? 'Đủ người rồi, chốt team nhé!' : 'Đợi chủ phòng chốt team…')) + '</p>')
+        + '<div class="wt-row">' + (host && !locked ? '<button type="button" class="wt-btn" data-wt-act="lock"' + (n < 2 ? ' disabled' : '') + '>Chốt team</button>' : '')
+        + '<button type="button" class="wt-btn alt" data-wt-act="leave">' + (host ? 'Đóng phòng' : 'Rời phòng') + '</button></div>';
+    }
+    var cards = battleOwnedCards().slice().sort(function(a, b){ return (b.ovr || 0) - (a.ovr || 0); }).slice(0, 60);
+    return '<p class="wt-kick">1. Chọn cầu thủ mang đi thi đấu</p>'
+      + (cards.length ? '<div class="wt-picks">' + cards.map(function(p){ return '<button type="button" class="wt-pick' + (String(p.dbId) === wtMy ? ' on' : '') + '" data-wt-act="pick" data-id="' + uEsc(String(p.dbId)) + '" aria-pressed="' + (String(p.dbId) === wtMy) + '" aria-label="' + uEsc(p.name) + '">' + (fcCardHTML(p) || uEsc(p.name)) + '</button>'; }).join('') + '</div>' : '<p class="wt-boss">Con chưa có cầu thủ nào. Hãy nhận thẻ ở Kho cầu thủ trước nhé!</p>')
+      + '<p class="wt-kick">2. Mở phòng mới hoặc nhập mã của bạn</p><div class="wt-row"><button type="button" class="wt-btn" data-wt-act="create"' + (wtMy ? '' : ' disabled') + '>Mở phòng</button></div>'
+      + '<div class="wt-row"><input class="wt-in" id="wt-code" maxlength="4" placeholder="MÃ" aria-label="Mã phòng của bạn bè" autocomplete="off"><button type="button" class="wt-btn alt" data-wt-act="join"' + (wtMy ? '' : ' disabled') + '>Vào phòng</button></div>'
+      + (wtErr ? '<p class="wt-err" role="alert">' + uEsc(wtErr) + '</p>' : '');
+  }
+  function wtPaintStub(){ var el = document.getElementById('wt-stub'); if(el) el.innerHTML = wtStubHTML(wtLive && wtCurWeek(wtLive)); }
+  async function wtRender(){
+    wtbStop();
+    var v = document.getElementById('wtour-view'); if(!v) return;
+    ['battle-road-view', 'battle-pick-view', 'season-view', 'season-subtabs'].forEach(function(id){ var e = document.getElementById(id); if(e) e.style.display = 'none'; });
+    var q = document.getElementById('battle-quota'); if(q) q.style.display = 'none';
+    var r1 = document.getElementById('battle-size-1'); if(r1 && r1.parentNode) r1.parentNode.style.display = 'none';
+    v.style.display = ''; v.innerHTML = '<p class="wt-empty">Đang mở bản đồ…</p>';
+    try{ var r = await fetch(WT_URL), d = r.ok ? await r.json() : null; wtLive = wtNorm(d); }catch(e){ wtLive = wtNorm(null); }
+    if(battleMode !== 'wtour') return;
+    var cur = wtCurWeek(wtLive), upcoming = wtLive.weeks.filter(function(w){ return w.ws > wtY(new Date()); })[0];
+    if(!wtLive.weeks.length){ v.innerHTML = '<p class="wt-empty">Chuyến du lịch vòng quanh thế giới sắp khởi hành. Quay lại sau nhé! ✈️</p>'; return; }
+    if(!wtCode){ try{ wtCode = localStorage.getItem(WT_ROOM_KEY) || ''; }catch(e){} }
+    if(wtCode){ wtRoom = await wtGetRoom(wtCode); if(!wtRoom || !cur || wtRoom.ws !== cur.ws){ wtCode = ''; wtRoom = null; try{ localStorage.removeItem(WT_ROOM_KEY); }catch(e){} } }
+    v.innerHTML = '<div class="wt-map">' + wtMapSVG(wtLive, cur) + '</div><p class="wt-note">Bản đồ minh họa. Chạm vào ghim để xem tên nước. ' + wtPassportLine(wtLive) + '</p>'
+      + (cur ? '<div class="wt-ticket"><div class="wt-main"><p class="wt-kick">Chuyến bay tuần này</p><h3 class="wt-nation">' + uEsc(cur.nation) + '</h3><p class="wt-dates">Mở cửa ' + wtFmt(cur.ws) + ' – ' + wtFmt(wtAdd(cur.ws, 6)) + '</p>'
+        + (cur.story ? '<p class="wt-story">' + uEsc(cur.story) + '</p>' : '') + '<p class="wt-boss">Đội chủ nhà: ' + cur.bossIds.filter(Boolean).map(function(id){ var p = PLAYER_DB_BY_ID[id]; return uEsc(p ? p.name : '?'); }).join(', ') + '</p></div><div class="wt-stub" id="wt-stub"></div></div>'
+        : '<div class="wt-empty">Tuần này chưa có chuyến bay mới.' + (upcoming ? ' Chặng kế tiếp: <b>' + uEsc(upcoming.nation) + '</b>, khởi hành ' + wtFmt(upcoming.ws) + '.' : '') + '</div>');
+    if(cur){ wtPaintStub(); if(wtCode && !wtPoll) wtPoll = setInterval(wtTick, 2500); }
+  }
+  async function wtGetRoom(c){ try{ var r = await fetch(WTR + c + '.json'); return r.ok ? await r.json() : null; }catch(e){ return null; } }
+  async function wtPut(path, val){ var r = await fetch(WTR + path + '.json', { method: val === null ? 'DELETE' : 'PUT', headers:{'Content-Type':'application/json'}, body: val === null ? undefined : JSON.stringify(val) }); if(!r.ok) throw new Error('HTTP ' + r.status); }
+  async function wtTick(){
+    var v = document.getElementById('wtour-view');
+    if(!wtCode || battleMode !== 'wtour' || !v || !v.offsetParent){ if(wtPoll){ clearInterval(wtPoll); wtPoll = 0; } return; }
+    var room = await wtGetRoom(wtCode);
+    if(!room){ wtCode = ''; wtRoom = null; wtErr = 'Phòng đã đóng.'; try{ localStorage.removeItem(WT_ROOM_KEY); }catch(e){} clearInterval(wtPoll); wtPoll = 0; }
+    else if(wtMembers(room).every(function(i){ return room.slots[i].id !== syncId; })){ wtCode = ''; wtRoom = null; wtErr = 'Con không còn trong phòng này.'; clearInterval(wtPoll); wtPoll = 0; }
+    else {
+      wtRoom = room;
+      if(room.state === 'locked' && !room.boss && room.host === syncId && wtAllDone(room) && wtLive){
+        var cw = wtCurWeek(wtLive); if(cw) wtPut(wtCode + '/boss', wtBossCalc(room, wtLive, cw)).catch(function(){});
+      }
+    }
+    wtPaintStub();
+  }
+  function wtEnter(code, room){ wtCode = code; wtRoom = room; wtErr = ''; try{ localStorage.setItem(WT_ROOM_KEY, code); }catch(e){} wtPaintStub(); if(!wtPoll) wtPoll = setInterval(wtTick, 2500); }
+  async function wtAct(act, el){
+    var cur = wtLive && wtCurWeek(wtLive); wtErr = '';
+    try{
+      if(act === 'pick'){ wtMy = el.getAttribute('data-id'); wtPaintStub(); return; }
+      if(act === 'quiz'){ await wtQuiz(); return; }
+      if(act === 'reveal'){ await wtReveal(); return; }
+      if(act === 'home'){ await wtRender(); return; }
+      if(act === 'fight'){ await wtbOpen(); return; }
+      if(act === 'wtb-start'){ await wtbStart(); return; }
+      if(act === 'retry'){ await wtbRetry(); return; }
+      if(act === 'claim'){ await wtbClaimAct(); wtPaintStub(); return; }
+      if(!cur) return;
+      if(act === 'create'){
+        wtAutoClean();
+        var me = wtMe(); if(!me){ wtErr = 'Hãy chọn một cầu thủ trước.'; return wtPaintStub(); }
+        for(var n = 0; n < 6; n++){
+          var code = ''; for(var k = 0; k < 4; k++) code += 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'.charAt(Math.floor(Math.random() * 32));
+          if(await wtGetRoom(code)) continue;
+          var room = { ws: cur.ws, nation: cur.nation, host: syncId, state: 'lobby', created: Date.now(), slots: { 0: me } };
+          await wtPut(code, room); return wtEnter(code, room);
+        }
+        wtErr = 'Chưa tạo được phòng, thử lại nhé.';
+      } else if(act === 'join'){
+        var me2 = wtMe(), c = (document.getElementById('wt-code').value || '').trim().toUpperCase();
+        if(!me2){ wtErr = 'Hãy chọn một cầu thủ trước.'; return wtPaintStub(); }
+        if(c.length !== 4){ wtErr = 'Mã phòng gồm 4 ký tự.'; return wtPaintStub(); }
+        var rm = await wtGetRoom(c);
+        if(!rm) wtErr = 'Không tìm thấy phòng ' + c + '. Kiểm tra lại mã nhé.';
+        else if(rm.ws !== cur.ws) wtErr = 'Phòng này thuộc chuyến bay khác.';
+        else if(rm.state !== 'lobby') wtErr = 'Phòng đã chốt team.';
+        else if(wtMembers(rm).some(function(i){ return rm.slots[i].id === syncId; })) return wtEnter(c, rm);
+        else {
+          for(var t2 = 0; t2 < 3; t2++){
+            var free = [0, 1, 2].filter(function(i){ return !(rm.slots && rm.slots[i] && rm.slots[i].id); })[0];
+            if(free === undefined){ wtErr = 'Phòng đã đủ 3 người.'; break; }
+            await wtPut(c + '/slots/' + free, me2);
+            rm = await wtGetRoom(c);
+            if(rm && rm.slots && rm.slots[free] && rm.slots[free].id === syncId) return wtEnter(c, rm);
+          }
+          if(!wtErr) wtErr = 'Chưa vào được phòng, thử lại nhé.';
+        }
+      } else if(act === 'leave' && wtCode){
+        var rr = await wtGetRoom(wtCode);
+        if(rr && rr.host === syncId) await wtPut(wtCode, null);
+        else if(rr){ var mine = wtMembers(rr).filter(function(i){ return rr.slots[i].id === syncId; })[0]; if(mine !== undefined) await wtPut(wtCode + '/slots/' + mine, null); }
+        wtCode = ''; wtRoom = null; try{ localStorage.removeItem(WT_ROOM_KEY); }catch(e){} if(wtPoll){ clearInterval(wtPoll); wtPoll = 0; }
+      } else if(act === 'lock' && wtRoom && wtMembers(wtRoom).length >= 2){
+        await wtPut(wtCode + '/state', 'locked'); wtRoom.state = 'locked';
+      }
+    }catch(e){ wtErr = 'Mất kết nối, thử lại nhé.'; }
+    wtPaintStub();
+  }
+  document.addEventListener('click', function(e){
+    var b = e.target && e.target.closest ? e.target.closest('#wtour-view [data-wt-act]') : null;
+    if(b) wtAct(b.getAttribute('data-wt-act'), b);
+  });
+
+  /* ===== WORLD TOUR · Giai đoạn 2: 10 câu riêng từng bé → tỷ lệ sai → tiết lộ sức mạnh Boss =====
+     Phòng đã chốt: res/<ghế> = { id, a:{0..9: 0|1}, pts, done }. Mỗi câu GHI 0 (sai) NGAY khi hiện ra, đúng mới sửa thành 1,
+     nên tải lại trang để đổi câu không có tác dụng; nộp xong thì khóa. Khi cả team nộp, chủ phòng ghi boss = công thức Giai đoạn 0. */
+  var WT_PLAN = ['toan', 'toan', 'toan', 'anh', 'anh', 'anh', 'tviet', 'tnxh', 'bongda', 'khac'], WT_Q_SECS = 20;
+  function wtSlotOf(room){ return wtMembers(room).filter(function(i){ return room.slots[i].id === syncId; })[0]; }
+  function wtRight(r){ return wtList(r && r.a).filter(function(x){ return x === 1; }).length; }
+  function wtAllDone(room){ var m = wtMembers(room); return m.length >= 2 && m.every(function(i){ return room.res && room.res[i] && room.res[i].done; }); }
+  function wtStat(room, i){
+    if(room.state !== 'locked') return '';
+    var r = room.res && room.res[i];
+    return '<small style="display:block">' + (r && r.done ? '✅ Đã nộp bài' : (r && r.a ? '✏️ Đang làm' : '⏳ Chưa làm')) + '</small>';
+  }
+  function wtLockedHTML(n){
+    var me = wtSlotOf(wtRoom), r = me !== undefined && wtRoom.res && wtRoom.res[me], done = !!(r && r.done), all = wtAllDone(wtRoom);
+    return '<p class="wt-boss">✅ Team đã chốt (' + n + ' người). Mỗi bé làm 10 câu riêng trên máy của mình.</p>'
+      + (done ? '<p class="wt-boss">Con đã nộp bài: ' + wtRight(r) + '/10 câu đúng. Kết quả không làm lại được.</p>' : '')
+      + '<div class="wt-row">' + (done ? '' : '<button type="button" class="wt-btn" data-wt-act="quiz">' + (r && r.a ? 'Làm tiếp 10 câu' : 'Làm 10 câu') + '</button>')
+      + (all ? (wtRoom.boss ? '<button type="button" class="wt-btn alt" data-wt-act="reveal">Hồ sơ Boss</button>' + wtFightBtns() : '<span class="wt-boss">Đang tính sức mạnh Boss…</span>') : (done ? '<span class="wt-boss">Đợi đồng đội nộp bài…</span>' : '')) + '</div>';
+  }
+  function wtBossCalc(room, cfg, cur){
+    var idx = wtMembers(room), pts = idx.map(function(i){ return room.res[i].pts | 0; }), right = 0;
+    idx.forEach(function(i){ right += wtRight(room.res[i]); });
+    var total = idx.length * 10, w = (total - right) / total, ratio = wtRatio(pts, cfg.goal), bonus = wtOvrBonus(ratio, cfg);
+    return { pts: pts, right: right, total: total, w: w, ratio: ratio, bonus: bonus, mult: wtStaMult(w, cfg), tries: cfg.tries || 3, at: Date.now(),
+      boss: cur.bossIds.filter(Boolean).map(function(id){ var q = PLAYER_DB_BY_ID[id], b = q ? (q.ovr || q.overall || 0) : 0; return { id: id, base: b, ovr: b + bonus }; }) };
+  }
+  /* chọn 1 câu theo lĩnh vực (mức 2 ≈ lớp 3); lĩnh vực chưa có câu trong kho thì rơi về Toán máy tự tạo */
+  function wtPickQ(sub, used){
+    var pool = quizCuratedPool(), q = null;
+    for(var n = 0; n < 8; n++){
+      if(sub === 'toan' || !pool.some(function(p){ return p.subject === sub; })){
+        var cm = pool.filter(function(p){ return p.subject === 'toan' && p.level === 2; });
+        q = (sub === 'toan' && cm.length && Math.random() < 0.45) ? qzPickOne(cm) : genMathQuestion(2);
+      } else {
+        var c = pool.filter(function(p){ return p.subject === sub && p.level === 2; });
+        if(!c.length) c = pool.filter(function(p){ return p.subject === sub; });
+        q = qzPickOne(c);
+      }
+      if(!used[qzKey(q)]) break;
+    }
+    used[qzKey(q)] = 1;
+    var ok = q.answers[0], opts = qzShuffle(q.answers.slice());
+    return { subject: q.subject, question: q.question, options: opts, correct: opts.indexOf(ok), explain: q.explain || '' };
+  }
+  async function wtQuiz(){
+    var v = document.getElementById('wtour-view'), cur = wtLive && wtCurWeek(wtLive), room = await wtGetRoom(wtCode);
+    if(!v || !cur || !room || room.state !== 'locked') return;
+    var me = wtSlotOf(room); if(me === undefined) return;
+    var r0 = (room.res && room.res[me]) || {}; if(r0.done) return wtRender();
+    var res = wtList(r0.a).map(function(x){ return x === 1 ? 1 : 0; }), plan = qzShuffle(WT_PLAN.slice()), used = {}, base = wtCode + '/res/' + me;
+    try{
+      for(var k = res.length; k < 10; k++){
+        var q = wtPickQ(plan[k], used), sj = QUIZ_SUBJECTS[q.subject] || QUIZ_SUBJECTS.khac;
+        await wtPut(base + '/a/' + k, 0);   // ghi "sai" trước: hiện câu hỏi là đã tính một lượt
+        if(k === res.length) await wtPut(base + '/id', syncId);
+        v.innerHTML = '<div class="wt-qwrap"><div class="wt-qhead"><span>' + sj.ic + ' ' + uEsc(sj.name) + ' · câu ' + (k + 1) + '/10</span><span id="wt-qt">' + WT_Q_SECS + '</span></div>'
+          + '<div class="wt-ticks" aria-hidden="true">' + [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map(function(j){ return '<i class="' + (j < k ? (res[j] ? 'ok' : 'bad') : (j === k ? 'now' : '')) + '"></i>'; }).join('') + '</div>'
+          + '<div class="wt-qbar"><i id="wt-qb"></i></div><p class="wt-q">' + uEsc(q.question) + '</p><div class="wt-qo" id="wt-qo">'
+          + q.options.map(function(o, j){ return '<button type="button" class="wt-opt" data-i="' + j + '">' + uEsc(o) + '</button>'; }).join('') + '</div><p class="wt-fb" id="wt-fb" aria-live="polite"></p></div>';
+        var pick = await new Promise(function(resolve){
+          var t0 = performance.now(), iv = 0, qo = document.getElementById('wt-qo');
+          function end(i){ clearInterval(iv); qo.onclick = null; resolve(i); }
+          iv = setInterval(function(){
+            var rem = WT_Q_SECS - (performance.now() - t0) / 1000, te = document.getElementById('wt-qt'), be = document.getElementById('wt-qb');
+            if(!te){ clearInterval(iv); return; }
+            if(rem <= 0){ end(-1); return; }
+            te.textContent = Math.ceil(rem); be.style.width = (rem / WT_Q_SECS * 100) + '%';
+          }, 100);
+          qo.onclick = function(e){ var b = e.target.closest('.wt-opt'); if(b) end(+b.getAttribute('data-i')); };
+        });
+        var good = pick === q.correct; res.push(good ? 1 : 0);
+        if(good) await wtPut(base + '/a/' + k, 1);
+        var btns = v.querySelectorAll('.wt-opt'); btns.forEach(function(b, j){ b.disabled = true; if(j === q.correct) b.classList.add('ok'); else if(j === pick) b.classList.add('bad'); });
+        document.getElementById('wt-fb').textContent = (good ? '🎉 Chính xác! ' : (pick < 0 ? '⏰ Hết giờ. ' : '💡 Chưa đúng. ')) + (q.explain || '');
+        await new Promise(function(r){ setTimeout(r, good ? 1300 : 2400); });
+      }
+      wtMonths = {}; var wp = await wtWeekPoints(syncId, wtAdd(cur.ws, -7));
+      await wtPut(base + '/pts', wp.total); await wtPut(base + '/done', true);
+    }catch(e){ wtErr = 'Mất kết nối khi làm bài. Vào lại để làm tiếp từ câu đang dở.'; }
+    await wtRender();
+  }
+  async function wtReveal(){
+    var v = document.getElementById('wtour-view'), room = await wtGetRoom(wtCode), b = room && room.boss;
+    if(!b){ wtErr = 'Boss đang được tính, đợi vài giây rồi bấm lại.'; return wtPaintStub(); }
+    var idx = wtMembers(room), nat = uEsc(room.nation || '');
+    v.innerHTML = '<div class="wt-rev wt-hid" id="wt-rev"><h3 class="wt-nation" style="color:var(--wt-sand)">Đội chủ nhà ' + nat + '</h3><div class="wt-bcards">'
+      + wtList(b.boss).map(function(o){ var q = PLAYER_DB_BY_ID[o.id], art = q ? fcCardHTML(Object.assign({}, q, { ovr: o.ovr, realOvr: o.ovr })) : '';
+          return '<div><div class="wt-bcard">' + (art || '<p class="wt-fact">' + uEsc(q ? q.name : '?') + '</p>') + '</div><div class="wt-bov wt-facts" style="display:block;visibility:hidden">' + o.base + ' → ' + o.ovr + '</div></div>'; }).join('')
+      + '</div><button type="button" class="wt-btn" id="wt-open" style="background:var(--wt-gold);border-color:var(--wt-gold);color:var(--wt-ink)">Mở hồ sơ Boss</button>'
+      + '<div class="wt-facts"><div class="wt-fact">Team hoàn thành <b>' + Math.round(b.ratio * 100) + '%</b> mốc ' + wtLive.goal + ' điểm tuần → Overall Boss <b>+' + b.bonus + '</b>.</div>'
+      + '<div class="wt-fact">Trả lời sai <b>' + (b.total - b.right) + '/' + b.total + '</b> câu (' + Math.round(b.w * 100) + '%) → Thể lực Boss <b>×' + b.mult.toFixed(2) + '</b>.</div>'
+      + idx.map(function(i, j){ var m = room.slots[i]; return '<div class="wt-fact">' + uEsc(m.name) + ' · ' + (b.pts[j] | 0) + '/' + wtLive.goal + ' điểm · ' + wtRight(room.res[i]) + '/10 đúng</div>'; }).join('')
+      + '<div class="wt-row" style="justify-content:center">' + wtFightBtns() + '<button type="button" class="wt-btn" data-wt-act="home" style="background:var(--wt-sand);color:var(--wt-ink)">Về chuyến bay</button></div></div></div>';
+    document.getElementById('wt-open').onclick = function(){
+      var rv = document.getElementById('wt-rev'); rv.classList.remove('wt-hid'); this.style.display = 'none';
+      rv.querySelectorAll('.wt-bov').forEach(function(e){ e.style.visibility = 'visible'; });
+    };
+  }
+
+  /* ===== WORLD TOUR · Giai đoạn 3: trận đấu với Boss (cả nhóm online cùng lúc) =====
+     Mô hình "phát lại sự kiện": mọi máy dựng CÙNG một trận từ fight/a<lần>/init rồi phát lại danh sách đòn ev/e0, e1, e2…
+     (engine 3v3 chạy thuần khi điểm đòn được ép sẵn → mọi máy ra đúng cùng kết quả). Mỗi đòn chỉ được ghi MỘT LẦN (ETag):
+       • lượt của bé  → chính máy bé đó ghi {s:0, k:ghế, t:mục tiêu, r:điểm, o:đúng?, l:giây còn lại}
+       • lượt của Boss → "máy dẫn" (ghế nhỏ nhất đang online) ghi {s:1, t, r}  (r = random 1–10, ra 8–10 tối đa 15%)
+       • bé hết giờ / mất kết nối → máy dẫn ghi thay (hết giờ = 1 điểm; offline = máy đánh thay) nên trận không bao giờ treo,
+         và chủ phòng thoát giữa chừng cũng không sao (không ai là "chủ" của trận).
+     Thứ tự: ghế 1 → 2 → 3 → Boss, lặp lại. Phòng: att = lần thử hiện tại; fight/a<n>/{init, ev/e<k>, seen/s<ghế>, res}; claimed/<mã hồ sơ>.
+     Trận World Tour KHÔNG trừ lượt Đấu Trường mỗi ngày; số lần thử do ADMIN đặt (boss.tries), thắng rồi thì không đánh lại. */
+  var WTB_STALE = 12000, WTB_TURN_MS = 55000, WTB_BEAT_MS = 4000, WTB_PICK_MS = 20000;
+  var wtb = null, wtbIv = 0, wtbBeatIv = 0, wtbSkew = 0;
+  function wtbNow(){ return Date.now() + wtbSkew; }
+  function wtbSleep(ms){ return new Promise(function(r){ setTimeout(r, ms); }); }
+  function wtbUrl(p){ return WTR + p + '.json'; }
+  function wtbEvPath(W, k){ return W.code + '/fight/a' + W.att + '/ev/e' + k; }
+  /* ghi giá trị CHỈ KHI nút còn đúng giá trị mong đợi (mặc định: chưa có gì). true = ghi được · false = đã có người ghi trước · null = lỗi mạng */
+  async function wtbCas(path, val, expect){
+    if(expect === undefined) expect = null;
+    var et = null, cur;
+    try{
+      var r = await fetch(wtbUrl(path), { headers: { 'X-Firebase-ETag': 'true' } });
+      if(!r.ok) return null;
+      et = r.headers.get('ETag'); cur = await r.json();
+    }catch(e){ return null; }
+    if(JSON.stringify(cur === undefined ? null : cur) !== JSON.stringify(expect)) return false;
+    var h = { 'Content-Type': 'application/json' }; if(et) h['if-match'] = et;
+    try{ var w = await fetch(wtbUrl(path), { method: 'PUT', headers: h, body: JSON.stringify(val) }); return w.ok ? true : (w.status === 412 ? false : null); }catch(e){ return null; }
+  }
+  function wtbStop(){
+    if(wtbIv){ clearInterval(wtbIv); wtbIv = 0; }
+    if(wtbBeatIv){ clearInterval(wtbBeatIv); wtbBeatIv = 0; }
+    if(wtb){ wtb.dead = true; if(wtb.tmr) clearInterval(wtb.tmr); }
+    wtb = null;
+  }
+  function wtbAttOf(room){ return Math.max(1, parseInt(room && room.att, 10) || 1); }
+  function wtbFight(room, att){ var f = room && room.fight && room.fight['a' + att]; return f && typeof f === 'object' ? f : {}; }
+  function wtbWon(room){ var f = (room && room.fight) || {}; return Object.keys(f).some(function(k){ return f[k] && f[k].res && f[k].res.win; }); }
+  function wtbTries(room){ return Math.max(1, parseInt(room && room.boss && room.boss.tries, 10) || 3); }
+
+  /* ---- dựng thẻ cho engine từ ảnh chụp trong phòng: máy nào cũng ra cùng chỉ số ---- */
+  function wtbCard(m){
+    var q = PLAYER_DB_BY_ID[m.id] || { name: m.name || '?', pos: m.pos || '' }, bt = m.bt || {};
+    var K = (BATTLE_CONFIG.formula && BATTLE_CONFIG.formula.armorK) || 400, ar = +bt.ar || 0;
+    var battle = Object.assign({}, q.battle || {}, { element: bt.el || (q.battle && q.battle.element) || '', rarity: bt.ra || (q.battle && q.battle.rarity) || '',
+      cp: +bt.cp || 0, hp: +bt.hp || 1, armor: ar, armorPct: Math.round(ar / (ar + K) * 1000) / 10 });
+    return Object.assign({}, q, { ovr: m.ovr | 0, realOvr: m.ovr | 0, battle: battle });
+  }
+  function wtbSnap(c){   // chỉ số chiến đấu THỰC (đã nâng cấp) của thẻ đang sở hữu → ảnh chụp gọn để lưu vào phòng
+    var b = effectiveBattleStats(c) || c.battle || {};
+    return { el: b.element || '', ra: b.rarity || '', cp: +b.cp || 0, hp: Math.round(+b.hp) || 1, ar: +b.armor || 0 };
+  }
+  function wtbBossSnap(o, mult){   // Boss: OVR mới = OVR gốc + bonus → tính lại chỉ số theo OVR mới, rồi Thể lực × mult (mult đã lưu trong phòng)
+    var q = PLAYER_DB_BY_ID[o.id]; if(!q) return null;
+    var lv = Math.max(0, (o.ovr | 0) - (o.base | 0));
+    var b = effectiveBattleStats(Object.assign({}, q, { ovrBase: q.realOvr, ovrBonus: lv, statsBase: q.realStats })) || q.battle || {};
+    return { el: b.element || '', ra: b.rarity || '', cp: +b.cp || 0, hp: Math.max(1, Math.round((+b.hp || 1) * (+mult || 1))), ar: +b.armor || 0 };
+  }
+  function wtbSlotSnap(m){   // phòng cũ chưa có ảnh chụp chỉ số → lấy chỉ số gốc trong CSDL
+    var c = m.card || {}; if(c.bt) return c.bt;
+    var q = PLAYER_DB_BY_ID[c.id], b = (q && q.battle) || {};
+    return { el: b.element || '', ra: b.rarity || '', cp: +b.cp || 0, hp: Math.round(+b.hp) || 1, ar: +b.armor || 0 };
+  }
+  function wtbMakeInit(room){
+    var boss = room.boss, weeks = (wtLive && wtLive.weeks) || [], wi = 0;
+    weeks.forEach(function(w, i){ if(w.ws === room.ws) wi = i; });
+    var qt = Math.min(1, 0.4 + 0.6 * (weeks.length > 1 ? wi / (weeks.length - 1) : 0.5));
+    var init = { v: 1, at: { '.sv': 'timestamp' }, qt: qt, hi: quizMachineHighChance(qt), sk: qt, mine: {}, boss: {} };
+    wtMembers(room).forEach(function(i){ var m = room.slots[i], c = m.card; init.mine['m' + i] = { id: c.id, ovr: c.ovr | 0, bt: wtbSlotSnap(m) }; });
+    wtList(boss.boss).forEach(function(o, i){ if(i > 2) return; var bt = wtbBossSnap(o, boss.mult); if(bt) init.boss['b' + i] = { id: o.id, ovr: o.ovr | 0, bt: bt }; });
+    return init;
+  }
+  function wtbBuild(W, init){
+    var mine = [0, 1, 2].map(function(i){ var m = init.mine && init.mine['m' + i]; return m ? wtbCard(m) : null; });
+    var boss = [0, 1, 2].map(function(i){ var m = init.boss && init.boss['b' + i]; return m ? wtbCard(m) : null; });
+    var b = createBattle3(mine, boss, 0);
+    b.quizMode = true; b.quizT = init.qt || 0.5; b.machineHigh = init.hi || 0.1;
+    b.wt = { ph: 'h', q: alive3(b, 0) };
+    W.b = b; W.init = init; W.applied = 0; W.queue = []; W.hp = b.sides.map(function(s){ return s.hp; });
+    W.lastAt = (typeof init.at === 'number') ? init.at : wtbNow();
+    W.cards = b.sides.map(function(s){ return s.card; });
+  }
+  /* lượt kế tiếp: {k:'h', seat} (bé đánh) hoặc {k:'b'} (Boss đánh) */
+  function wtbNext(b){
+    if(b.finished) return null;
+    var W = b.wt;
+    if(W.ph === 'h'){
+      while(W.q.length && b.sides[W.q[0]].hp <= 0) W.q.shift();
+      if(W.q.length) return { k: 'h', seat: W.q[0] };
+      W.ph = 'b';
+    }
+    return { k: 'b' };
+  }
+  function wtbApply(b, ev){
+    b.side = ev.s ? 1 : 0;
+    if(!ev.s) b.rot[0] = ev.k | 0;
+    var evt = battleStep3(b, ev.t | 0, Math.max(1, Math.min(10, ev.r | 0)));
+    if(ev.s){ b.wt.ph = 'h'; b.wt.q = alive3(b, 0); }
+    else { b.wt.q = b.wt.q.filter(function(x){ return x !== (ev.k | 0); }); }
+    if(evt) evt.ev = ev;
+    return evt;
+  }
+  function wtbWho(W, i){ var s = W.room && W.room.slots && W.room.slots[i]; return s && s.name ? s.name : ('Ghế ' + (i + 1)); }
+  function wtbFresh(W, seat){
+    if(seat === W.seat) return true;
+    var s = W.f && W.f.seen && W.f.seen['s' + seat];
+    return typeof s === 'number' && wtbNow() - s < WTB_STALE;
+  }
+  function wtbPresent(W){ return wtMembers(W.room).filter(function(i){ return wtbFresh(W, i); }); }
+  function wtbDriver(W){ var p = wtbPresent(W); return p.length ? p[0] : W.seat; }
+
+  /* ---- vào / thoát trận ---- */
+  async function wtbOpen(){
+    var v = document.getElementById('wtour-view'); if(!v) return;
+    if(!battleReady()){ wtErr = 'Dữ liệu trận đấu chưa tải xong, thử lại sau ít giây nhé.'; return wtPaintStub(); }
+    var room = await wtGetRoom(wtCode);
+    if(!room || room.state !== 'locked' || !room.boss){ wtErr = 'Boss chưa sẵn sàng. Đợi cả đội nộp bài nhé.'; return wtPaintStub(); }
+    var seat = wtSlotOf(room); if(seat === undefined){ wtErr = 'Con không còn trong phòng này.'; return wtPaintStub(); }
+    if(wtbWon(room)){ wtErr = 'Đội đã hạ Boss tuần này rồi! 🏆'; return wtPaintStub(); }
+    if(wtPoll){ clearInterval(wtPoll); wtPoll = 0; }
+    wtbStop();
+    var W = wtb = { code: wtCode, seat: seat, att: wtbAttOf(room), room: room, f: {}, b: null, applied: 0, queue: [], playing: false, flowing: false, hold: false, since: Date.now(), panelKey: '', hp: [], cards: [] };
+    v.innerHTML = '<div class="wtb" id="wtb"><div class="wtb-top"><b>⚔️ Đội chủ nhà ' + uEsc(room.nation || '') + '</b><span id="wtb-att"></span></div>'
+      + '<div class="wtb-row" id="wtb-boss"></div><div class="wtb-mid" id="wtb-mid"><p class="wtb-l1" id="wtb-l1" aria-live="polite"></p><p class="wtb-l2" id="wtb-l2"></p></div>'
+      + '<div class="wtb-row" id="wtb-mine"></div><div class="wtb-panel" id="wtb-panel"></div></div>';
+    document.getElementById('wtb-boss').onclick = function(e){ var u = e.target.closest ? e.target.closest('.wtb-u.tg') : null; if(u && W.pickCb) W.pickCb(+u.getAttribute('data-i')); };
+    wtbBeat(W); wtbBeatIv = setInterval(function(){ wtbBeat(wtb); }, WTB_BEAT_MS); wtbIv = setInterval(wtbTick, 1000);
+    wtbTick();
+  }
+  function wtbBeat(W){
+    if(!W || W.dead) return;
+    var t0 = Date.now();
+    fetch(wtbUrl(W.code + '/fight/a' + W.att + '/seen/s' + W.seat), { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ '.sv': 'timestamp' }) })
+      .then(function(r){ return r.ok ? r.json() : null; })
+      .then(function(v){ var t1 = Date.now(); if(typeof v === 'number' && t1 - t0 < 3000) wtbSkew = Math.round(v - (t0 + t1) / 2); })
+      .catch(function(){});
+  }
+  async function wtbTick(){
+    var W = wtb; if(!W || W.busy) return; W.busy = true;
+    try{
+      if(!document.getElementById('wtb')){ wtbStop(); return; }
+      var room = await wtGetRoom(W.code); if(wtb !== W) return;
+      if(!room){ wtbStop(); wtCode = ''; wtRoom = null; wtErr = 'Phòng đã đóng.'; try{ localStorage.removeItem(WT_ROOM_KEY); }catch(e){} await wtRender(); return; }
+      W.room = room; wtRoom = room;
+      var att = wtbAttOf(room);
+      if(att !== W.att){   // có người bấm «Thử lại» → sang lần mới
+        W.att = att; W.b = null; W.init = null; W.applied = 0; W.queue = []; W.flow = -1; W.autoSeq = -1; W.panelKey = ''; W.finished = 0; W.claimed = 0; W.flowing = false; W.hold = false; W.since = Date.now();
+        ['wtb-boss', 'wtb-mine'].forEach(function(id){ var e = document.getElementById(id); if(e) e.innerHTML = ''; });
+        wtbBeat(W);
+      }
+      var f = W.f = wtbFight(room, att);
+      if(f.init && !W.b){ wtbBuild(W, f.init); wtbUnits(W); }
+      if(W.b){
+        for(;;){
+          var ev = f.ev && f.ev['e' + W.applied]; if(!ev) break;
+          var evt = wtbApply(W.b, ev); W.applied++;
+          if(typeof ev.at === 'number') W.lastAt = ev.at;
+          if(evt) W.queue.push(evt);
+        }
+        wtbPump(W);
+      }
+      wtbPaint(W);
+      wtbDecide(W);
+    }catch(e){ /* mất mạng thoáng qua: vòng sau thử lại */ }
+    finally{ W.busy = false; }
+  }
+  function wtbU(i){ return document.querySelector('#wtb .wtb-u[data-i="' + i + '"]'); }
+  function wtbUnitHTML(W, i){
+    var s = W.b.sides[i]; if(!s.hpMax) return '';
+    var c = W.cards[i], art = fcCardHTML(c) || '<span class="wtb-ini">' + uEsc(sn3(c)) + '</span>', mine = i < 3;
+    return '<button type="button" class="wtb-u' + (mine ? ' me' : ' boss') + '" data-i="' + i + '" disabled><span class="wtb-card">' + art + '</span>'
+      + '<span class="wtb-nm">' + (mine ? uEsc(wtbWho(W, i)) + ' <small id="wtb-dot' + i + '"></small>' : '👹 ' + uEsc(sn3(c))) + '</span>'
+      + '<span class="wtb-tag" id="wtb-tag' + i + '"></span>'
+      + '<span class="wtb-hp"><i id="wtb-hpb' + i + '"></i><b id="wtb-hpt' + i + '">' + s.hp + '/' + s.hpMax + '</b></span></button>';
+  }
+  function wtbUnits(W){
+    document.getElementById('wtb-boss').innerHTML = [3, 4, 5].map(function(i){ return wtbUnitHTML(W, i); }).join('');
+    document.getElementById('wtb-mine').innerHTML = [0, 1, 2].map(function(i){ return wtbUnitHTML(W, i); }).join('');
+    for(var i = 0; i < 6; i++) wtbSetHp(W, i, W.hp[i]);
+  }
+  function wtbSetHp(W, i, hp){
+    W.hp[i] = hp;
+    var s = W.b && W.b.sides[i], bar = document.getElementById('wtb-hpb' + i), tx = document.getElementById('wtb-hpt' + i), u = wtbU(i);
+    if(!s || !bar) return;
+    var pct = Math.max(0, Math.min(100, hp / s.hpMax * 100));
+    bar.style.width = pct + '%'; bar.className = pct <= 25 ? 'lo' : (pct <= 55 ? 'md' : '');
+    tx.textContent = Math.max(0, Math.round(hp)) + '/' + s.hpMax;
+    if(u) u.classList.toggle('ko', hp <= 0);
+  }
+  function wtbSay(l1, l2){ var a = document.getElementById('wtb-l1'), b = document.getElementById('wtb-l2'); if(a) a.innerHTML = l1 || ''; if(b) b.innerHTML = l2 || ''; }
+  function wtbFloat(i, html, cls){
+    var u = wtbU(i); if(!u) return;
+    var e = document.createElement('span'); e.className = 'wtb-fl ' + (cls || ''); e.innerHTML = html; u.appendChild(e);
+    setTimeout(function(){ if(e.parentNode) e.remove(); }, 1300);
+  }
+  function wtbPanel(W, key, html){
+    if(W.panelKey === key) return false;
+    var p = document.getElementById('wtb-panel'); if(!p) return false;
+    W.panelKey = key; p.innerHTML = html; return true;
+  }
+
+  /* ---- phát lại từng đòn (hoạt cảnh) ---- */
+  async function wtbPump(W){
+    if(W.playing) return; W.playing = true;
+    try{
+      while(W.queue.length && wtb === W){
+        while(W.hold && wtb === W) await wtbSleep(100);
+        if(wtb !== W) return;
+        await wtbPlay(W, W.queue.shift());
+      }
+    }finally{ if(wtb === W) W.playing = false; }
+  }
+  async function wtbPlay(W, e){
+    var k = W.queue.length > 2 ? 0.3 : 1, ev = e.ev || {}, ai = e.atk, di = e.def, ua = wtbU(ai), ud = wtbU(di), A = W.cards[ai], D = W.cards[di];
+    var an = ai < 3 ? wtbWho(W, ai) + ' (' + sn3(A) + ')' : 'Boss ' + sn3(A), dn = di < 3 ? wtbWho(W, di) + ' (' + sn3(D) + ')' : 'Boss ' + sn3(D);
+    var roll;
+    if(ai < 3) roll = (ev.to ? (ev.a ? '🤖 Máy đánh thay' : '⏰ Hết giờ') : (ev.o ? '✅ Đúng! Còn ' + (ev.l | 0) + ' giây' : '❌ Chưa đúng')) + ' → <b>' + e.roll + ' điểm</b>';
+    else roll = '🎲 Boss ra <b>' + e.roll + ' điểm</b>';
+    if(e.crit) roll += ' · 🎯 <b>CHÍ MẠNG!</b>';
+    var c = e.calc || {}, chips = (c.elemM > 1 ? ' · ▲ Khắc Hệ' : (c.elemM < 1 ? ' · ▼ Bị khắc Hệ' : '')) + (c.special ? ' · 💥 Đòn tuyệt kỹ' : '');
+    wtbSay((ai < 3 ? '🟦 ' : '🟪 ') + '<b>' + uEsc(an) + '</b> ➜ <b>' + uEsc(dn) + '</b>', roll + chips);
+    document.querySelectorAll('#wtb .wtb-u.act').forEach(function(x){ x.classList.remove('act'); });
+    if(ua) ua.classList.add('act');
+    await wtbSleep(850 * k); if(wtb !== W) return;
+    if(ud){ ud.classList.add('hit'); setTimeout(function(){ ud.classList.remove('hit'); }, 450); }
+    wtbSetHp(W, di, e.hpAfter); wtbFloat(di, '−' + e.dmg, e.crit ? 'crit' : '');
+    if(e.guard){ wtbSetHp(W, e.guard.i, e.guard.hpAfter); wtbFloat(e.guard.i, '🛡️−' + e.guard.dmg, ''); }
+    (e.splash || []).forEach(function(s){ wtbSetHp(W, s.i, s.hpAfter); wtbFloat(s.i, '−' + s.dmg, ''); });
+    if(e.heal){ wtbSetHp(W, e.heal.i, e.heal.hpAfter); wtbFloat(e.heal.i, '+' + e.heal.amt, 'heal'); }
+    (e.ticks || []).forEach(function(s){ wtbSetHp(W, s.i, s.hpAfter); wtbFloat(s.i, '🔥−' + s.dmg, ''); });
+    await wtbSleep(1050 * k);
+    if(ua) ua.classList.remove('act');
+  }
+
+  /* ---- vẽ trạng thái chờ / sảnh / kết quả ---- */
+  function wtbPaint(W){
+    var room = W.room, mem = wtMembers(room), at = document.getElementById('wtb-att');
+    if(at) at.textContent = 'Lần ' + W.att + '/' + wtbTries(room);
+    mem.forEach(function(i){ var d = document.getElementById('wtb-dot' + i); if(d) d.textContent = wtbFresh(W, i) ? '🟢' : '⚪'; });
+    if(W.flowing) return;
+    if(!W.b){   // sảnh chờ: ai bấm «Bắt đầu» thì cả phòng vào trận
+      var pr = wtbPresent(W), all = pr.length >= mem.length, waited = (Date.now() - W.since) / 1000, can = all || (pr.length >= 2 && waited >= 25);
+      wtbPanel(W, 'lobby:' + pr.join('') + ':' + (can ? 1 : 0) + ':' + W.att, '<div class="wtb-lobby"><p class="wt-boss" style="color:var(--wt-sand)">Cả đội chuẩn bị vào trận! Ghế 1 → 2 → 3 ra đòn trước, rồi đến Boss.</p><div class="wtb-ppl">'
+        + mem.map(function(i){ return '<span class="wtb-pp' + (wtbFresh(W, i) ? ' on' : '') + '">' + (wtbFresh(W, i) ? '🟢 ' : '⚪ ') + uEsc(wtbWho(W, i)) + '</span>'; }).join('') + '</div>'
+        + '<div class="wt-row" style="justify-content:center"><button type="button" class="wt-btn" style="background:var(--wt-gold);border-color:var(--wt-gold);color:var(--wt-ink)" data-wt-act="wtb-start"' + (can ? '' : ' disabled') + '>⚔️ Bắt đầu trận</button>'
+        + '<button type="button" class="wt-btn alt" data-wt-act="home" style="color:var(--wt-sand);border-color:var(--wt-sand)">Về chuyến bay</button></div>'
+        + (can ? '' : '<p class="wt-note">Đợi đủ ' + mem.length + ' bạn vào phòng (hoặc đợi vài giây nếu có bạn chưa vào được).</p>') + '</div>');
+      wtbSay('', '');
+      return;
+    }
+    var b = W.b;
+    if(b.finished && !W.queue.length && !W.playing){ wtbResult(W); return; }
+    var nx = wtbNext(b), txt, key;
+    if(!nx){ return; }
+    document.querySelectorAll('#wtb .wtb-u.turn').forEach(function(x){ x.classList.remove('turn'); });
+    if(nx.k === 'h'){ var us = wtbU(nx.seat); if(us) us.classList.add('turn'); txt = nx.seat === W.seat ? '⏳ Sắp đến lượt con…' : '⏳ Đợi <b>' + uEsc(wtbWho(W, nx.seat)) + '</b> trả lời câu hỏi…'; key = 'w:h' + nx.seat + ':' + W.applied; }
+    else { var bi = peekAttacker3(b, 1), ub = wtbU(bi); if(ub) ub.classList.add('turn'); txt = '🟪 Boss đang chuẩn bị ra đòn…'; key = 'w:b:' + W.applied; }
+    wtbPanel(W, key, '<p class="wtb-wait">' + txt + '</p>');
+  }
+  function wtbResult(W){
+    var b = W.b, win = b.winner === 0, room = W.room, f = W.f, tries = wtbTries(room), left = tries - W.att, cl = wtClaims(), got = cl[room.ws];
+    var week = wtLive && wtLive.weeks.filter(function(w){ return w.ws === room.ws; })[0];
+    var key = 'res:' + W.att + ':' + (win ? 1 : 0) + ':' + (got ? 1 : 0) + ':' + (left > 0 ? 1 : 0);
+    if(win){
+      wtbPanel(W, key, '<div class="wtb-res win"><h3>🏆 Cả đội đã hạ gục Boss!</h3><p>Hoàn thành sau <b>' + b.turn + '</b> lượt đánh' + (W.att > 1 ? ' (lần thử thứ ' + W.att + ')' : '') + '.</p>'
+        + (got ? '<p class="wtb-got">' + (got.got === 'frags' ? '🧩 Đã đổi thẻ thưởng thành ' + (got.n | 0) + ' mảnh ghép' : (got.got === 'card' ? '🎁 Đã nhận thẻ thưởng ' + uEsc(got.name || '') : '✅ Đã ghi con dấu vào hộ chiếu')) + '</p>'
+          : (week && week.rewardId ? '<div class="wt-row" style="justify-content:center"><button type="button" class="wt-btn" style="background:var(--wt-gold);border-color:var(--wt-gold);color:var(--wt-ink)" data-wt-act="claim">🎁 Nhận thẻ thưởng</button></div>' : '<div class="wt-row" style="justify-content:center"><button type="button" class="wt-btn" data-wt-act="claim">🛂 Đóng dấu hộ chiếu</button></div>'))
+        + '<div class="wt-row" style="justify-content:center"><button type="button" class="wt-btn alt" data-wt-act="home" style="color:var(--wt-sand);border-color:var(--wt-sand)">Về chuyến bay</button></div></div>');
+      if(!got && !W.claimed){ W.claimed = 1; setTimeout(function(){ if(wtb === W) wtbClaimAct(); }, 900); }
+    } else {
+      wtbPanel(W, key, '<div class="wtb-res lose"><h3>💪 Chưa hạ được Boss lần này</h3><p>Boss giữ nguyên sức mạnh đã tiết lộ. ' + (left > 0 ? 'Cả đội còn <b>' + left + '</b> lần thử trong tuần này.' : 'Cả đội đã dùng hết lượt thử của tuần này — chặng sau gặp lại nhé!') + '</p>'
+        + '<div class="wt-row" style="justify-content:center">' + (left > 0 ? '<button type="button" class="wt-btn" style="background:var(--wt-gold);border-color:var(--wt-gold);color:var(--wt-ink)" data-wt-act="retry">🔁 Thử lại</button>' : '')
+        + '<button type="button" class="wt-btn alt" data-wt-act="home" style="color:var(--wt-sand);border-color:var(--wt-sand)">Về chuyến bay</button></div></div>');
+    }
+    if(!f.res && !W.finished){   // ghi kết quả một lần (ai thấy trước ghi)
+      W.finished = 1;
+      wtbCas(W.code + '/fight/a' + W.att + '/res', { win: win, turns: b.turn, at: { '.sv': 'timestamp' } }).catch(function(){});
+    }
+  }
+
+  /* ---- quyết định ai ghi đòn kế tiếp ---- */
+  function wtbDecide(W){
+    if(!W.b || W.b.finished || W.queue.length || W.playing) return;
+    var nx = wtbNext(W.b); if(!nx) return;
+    var idle = wtbNow() - W.lastAt, drv = wtbDriver(W) === W.seat;
+    if(nx.k === 'h' && nx.seat === W.seat){
+      if(!W.flowing && idle > 900 && W.flow !== W.applied){ W.flow = W.applied; wtbMyTurn(W, W.applied, nx.seat); }
+      return;
+    }
+    if(!drv) return;
+    var kind = null;
+    if(nx.k === 'b'){ if(idle > 1400) kind = 'boss'; }
+    else if(!wtbFresh(W, nx.seat)){ if(idle > 3000) kind = 'machine'; }
+    else if(idle > WTB_TURN_MS) kind = 'timeout';
+    if(kind && !(W.autoSeq === W.applied && Date.now() - W.autoAt < 4000)){ W.autoSeq = W.applied; W.autoAt = Date.now(); wtbAuto(W, kind, nx); }
+  }
+  async function wtbAuto(W, kind, nx){
+    var b = W.b, seq = W.applied, ev;
+    try{
+      if(kind === 'boss'){ ev = { s: 1, k: 0, t: aiPickTarget3(b, 1, W.init.sk || 0.5), r: battleMachineRoll(W.init.hi || 0.1), o: 0 }; }
+      else {
+        b.rot[0] = nx.seat;
+        ev = { s: 0, k: nx.seat, t: aiPickTarget3(b, 0, W.init.sk || 0.5), r: kind === 'machine' ? battleMachineRoll(W.init.hi || 0.1) : 1, o: 0, to: 1, a: kind === 'machine' ? 1 : 0 };
+      }
+      if(!(ev.t >= 0)) return;
+      ev.at = { '.sv': 'timestamp' };
+      await wtbCas(wtbEvPath(W, seq), ev);
+    }catch(e){}
+  }
+
+  /* ---- lượt của chính bé: chọn mục tiêu → câu hỏi → ghi đòn ---- */
+  async function wtbMyTurn(W, seq, seat){
+    var gone = function(){ return wtb !== W || W.applied !== seq; };
+    W.flowing = true;
+    try{
+      var b = W.b, foes = alive3(b, 1), target = foes[0], secs = settings.quizSeconds || 15;
+      if(foes.length > 1){ target = await wtbPickTarget(W, seat, gone); if(gone() || target < 0) return; }
+      var q = quizPick(W.init.qt || 0.5), res = await wtbAsk(W, q, secs, gone);
+      if(res.gone) return;
+      var ev = { s: 0, k: seat, t: target, r: res.ok ? Math.min(10, Math.max(1, res.secLeft | 0)) : 1, o: res.ok ? 1 : 0, l: res.secLeft | 0, at: { '.sv': 'timestamp' } };
+      if(res.timeout) ev.to = 1;
+      W.hold = true;
+      var wrote = null; for(var n = 0; n < 4 && wrote === null; n++){ wrote = await wtbCas(wtbEvPath(W, seq), ev); if(wrote === null) await wtbSleep(600); }
+      await wtbSleep(res.ok ? 900 : 2300);
+    }finally{ W.hold = false; W.flowing = false; W.panelKey = ''; wtbClearTargets(); }
+  }
+  function wtbClearTargets(){
+    document.querySelectorAll('#wtb .wtb-u.tg').forEach(function(u){ u.classList.remove('tg'); u.disabled = true; });
+    document.querySelectorAll('#wtb .wtb-tag').forEach(function(t){ t.innerHTML = ''; });
+    if(wtb) wtb.pickCb = null;
+  }
+  function wtbPickTarget(W, seat, gone){
+    return new Promise(function(resolve){
+      var b = W.b, foes = alive3(b, 1), avg = avgD10(b.cfg), t0 = Date.now(), iv = 0, done = false;
+      b.rot[0] = seat;
+      foes.forEach(function(di){
+        var c = calcHit3(b, seat, di, avg), D = b.sides[di], u = wtbU(di), tg = document.getElementById('wtb-tag' + di);
+        if(u){ u.classList.add('tg'); u.disabled = false; }
+        if(tg) tg.innerHTML = (c.elemM > 1 ? '<em class="g">▲ khắc</em>' : (c.elemM < 1 ? '<em class="r">▼ bị khắc</em>' : '')) + (c.main >= D.hp ? '<em class="k">💀 hạ gục</em>' : '<em>≈' + Math.round(c.main) + '</em>');
+      });
+      var us = wtbU(seat); document.querySelectorAll('#wtb .wtb-u.turn').forEach(function(x){ x.classList.remove('turn'); }); if(us) us.classList.add('turn');
+      W.panelKey = ''; try{ document.getElementById('wtb').scrollIntoView({block:'center'}); }catch(e){} wtbPanel(W, 'pick:' + W.applied, '<p class="wtb-wait pick">🎯 Đến lượt con! <b>Chạm vào một thẻ Boss</b> để chọn mục tiêu.</p><div class="wt-qbar"><i id="wtb-pb"></i></div>');
+      wtbSay('🟦 <b>' + uEsc(wtbWho(W, seat)) + '</b> chuẩn bị ra đòn', 'Sau đó con sẽ trả lời 1 câu hỏi — đúng và nhanh thì đòn càng mạnh!');
+      function end(i){ if(done) return; done = true; clearInterval(iv); W.pickCb = null; wtbClearTargets(); resolve(i); }
+      W.pickCb = function(i){ if(foes.indexOf(i) >= 0) end(i); };
+      iv = setInterval(function(){
+        if(gone()){ end(-1); return; }
+        var rem = WTB_PICK_MS - (Date.now() - t0), bar = document.getElementById('wtb-pb');
+        if(bar) bar.style.width = Math.max(0, rem / WTB_PICK_MS * 100) + '%';
+        if(rem <= 0){ b.rot[0] = seat; end(aiPickTarget3(b, 0, W.init.sk || 0.5)); }
+      }, 100);
+    });
+  }
+  function wtbAsk(W, q, secs, gone){
+    return new Promise(function(resolve){
+      var sj = QUIZ_SUBJECTS[q.subject] || QUIZ_SUBJECTS.khac, t0 = performance.now(), done = false;
+      W.panelKey = '';
+      wtbPanel(W, 'q:' + W.applied, '<div class="wt-qwrap wtb-q"><div class="wt-qhead"><span>' + sj.ic + ' ' + uEsc(sj.name) + ' · lượt của con</span><span id="wtb-qt">' + secs + '</span></div><div class="wt-qbar"><i id="wtb-qb"></i></div>'
+        + '<p class="wt-q">' + uEsc(q.question) + '</p><div class="wt-qo" id="wtb-qo">' + q.options.map(function(o, j){ return '<button type="button" class="wt-opt" data-i="' + j + '">' + uEsc(o) + '</button>'; }).join('') + '</div><p class="wt-fb" id="wtb-fb" aria-live="polite"></p></div>');
+      var qo = document.getElementById('wtb-qo'), box = document.getElementById('wtb'); if(box) box.classList.add('q');
+      function fin(r){
+        if(done) return; done = true; clearInterval(W.tmr); W.tmr = 0; if(box) box.classList.remove('q');
+        if(qo) qo.onclick = null;
+        if(!r.gone){
+          var btns = document.querySelectorAll('#wtb-qo .wt-opt'); btns.forEach(function(b2, j){ b2.disabled = true; if(j === q.correct) b2.classList.add('ok'); else if(j === r.pick) b2.classList.add('bad'); });
+          var fb = document.getElementById('wtb-fb');
+          if(fb) fb.innerHTML = r.ok ? '🎉 Chính xác! Còn ' + r.secLeft + ' giây → <b>' + Math.min(10, Math.max(1, r.secLeft)) + ' điểm</b>'
+            : ((r.timeout ? '⏰ Hết giờ. ' : '💡 Chưa đúng. ') + 'Đáp án: <b>' + uEsc(q.options[q.correct]) + '</b>' + (q.explain ? '<br><small>' + uEsc(q.explain) + '</small>' : ''));
+        }
+        resolve(r);
+      }
+      function remaining(){ return secs - (performance.now() - t0) / 1000; }
+      W.tmr = setInterval(function(){
+        if(gone()){ fin({ gone: true }); return; }
+        var rem = remaining(), te = document.getElementById('wtb-qt'), be = document.getElementById('wtb-qb');
+        if(rem <= 0){ if(te) te.textContent = '0'; fin({ ok: false, timeout: true, pick: -1, secLeft: 0 }); return; }
+        if(te) te.textContent = Math.ceil(rem); if(be) be.style.width = (rem / secs * 100) + '%';
+      }, 100);
+      if(qo) qo.onclick = function(e){
+        var bt = e.target.closest ? e.target.closest('.wt-opt') : null; if(!bt || done) return;
+        var rem = remaining(); if(rem <= 0) return;
+        var i = +bt.getAttribute('data-i'); fin({ ok: i === q.correct, pick: i, secLeft: Math.ceil(rem) });
+      };
+    });
+  }
+
+  /* nút vào trận / nhận thưởng ở màn chuyến bay và màn hồ sơ Boss */
+  function wtFightBtns(){
+    var room = wtRoom; if(!room || !room.boss) return '';
+    var gold = 'background:var(--wt-gold);border-color:var(--wt-gold);color:var(--wt-ink)', ws = room.ws, att = wtbAttOf(room), f = wtbFight(room, att), tries = wtbTries(room);
+    if(wtbWon(room)){
+      var got = wtClaims()[ws];
+      return got ? '<span class="wt-boss">🏆 Đã hạ Boss · ' + (got.got === 'frags' ? '🧩 đã đổi thành mảnh ghép' : (got.got === 'card' ? '🎁 đã nhận ' + uEsc(got.name || 'thẻ thưởng') : '✅ đã đóng dấu')) + '</span>'
+        : '<button type="button" class="wt-btn" style="' + gold + '" data-wt-act="claim">🎁 Nhận thẻ thưởng</button>';
+    }
+    if(f.res && !f.res.win && att >= tries) return '<span class="wt-boss">💪 Đã dùng hết ' + tries + ' lần thử tuần này</span>';
+    return '<button type="button" class="wt-btn" style="' + gold + '" data-wt-act="fight">⚔️ Vào trận (lần ' + att + '/' + tries + ')</button>';
+  }
+
+  /* ---- bắt đầu trận / thử lại ---- */
+  async function wtbStart(){
+    var W = wtb; if(!W) return;
+    var room = await wtGetRoom(W.code); if(!room || wtb !== W) return;
+    if(wtbAttOf(room) !== W.att) return;
+    var init = wtbMakeInit(room);
+    var ok = await wtbCas(W.code + '/fight/a' + W.att + '/init', init);
+    if(ok === null){ wtErr = 'Mất kết nối, thử lại nhé.'; }
+    await wtbTick();
+  }
+  async function wtbRetry(){
+    var W = wtb; if(!W) return;
+    var room = await wtGetRoom(W.code); if(!room) return;
+    var att = wtbAttOf(room);
+    if(att !== W.att || att >= wtbTries(room) || wtbWon(room)) return;   // chỉ tăng khi còn đang xem đúng lần vừa thua (tránh 3 bé bấm cùng lúc làm nhảy lần)
+    await wtbCas(W.code + '/att', att + 1, room.att === undefined ? null : room.att);
+    await wtbTick();
+  }
+
+  /* ===== WORLD TOUR · Giai đoạn 4: thẻ thưởng · hộ chiếu · huy hiệu · dọn phòng =====
+     kidchart_wtour_claims = { <ws>: { at, room, got:'card'|'frags'|'none', id, name, n } } — khóa bắt đầu bằng "kidchart_" nên tự đồng bộ giữa các thiết bị cùng hồ sơ.
+     Chống nhận 2 lần: (1) claims theo tuần ở hồ sơ; (2) phòng ghi claimed/<mã hồ sơ> bằng ETag (máy ghi sau thấy đã có thì không nhận nữa). */
+  var WT_CLAIM_KEY = 'kidchart_wtour_claims';
+  function wtClaims(){ var c = safeGet(WT_CLAIM_KEY); return c && typeof c === 'object' && !Array.isArray(c) ? c : {}; }
+  function wtDev(){ var d = ''; try{ d = localStorage.getItem('dbcd_dev') || ''; if(!d){ d = Math.random().toString(36).slice(2, 10); localStorage.setItem('dbcd_dev', d); } }catch(e){ d = 'x'; } return d; }
+  async function wtbClaimAct(){
+    var W = wtb, room = (W && W.room) || wtRoom; if(!room || !wtLive) return;
+    var week = wtLive.weeks.filter(function(w){ return w.ws === room.ws; })[0], ws = room.ws, code = W ? W.code : wtCode;
+    var cl = wtClaims(); if(cl[ws]){ if(W) W.panelKey = ''; return; }
+    var won = wtbWon(room) || (W && W.b && W.b.finished && W.b.winner === 0); if(!won) return;
+    var mark = await wtbCas(code + '/claimed/' + encodeURIComponent(syncId), { dev: wtDev(), at: { '.sv': 'timestamp' } });
+    if(mark === null){ wtErr = 'Mất kết nối, bấm «Nhận thẻ thưởng» lại nhé.'; if(W) W.claimed = 0; return; }
+    if(mark === false){   // đã có dấu nhận: của máy khác → thôi; của chính máy này (lần trước chưa kịp lưu) → nhận nốt
+      var ex = null; try{ var r = await fetch(wtbUrl(code + '/claimed/' + encodeURIComponent(syncId))); ex = r.ok ? await r.json() : null; }catch(e){}
+      if(ex && ex.dev !== wtDev()){ cl[ws] = { at: Date.now(), room: code, got: 'none', other: 1 }; safeSet(WT_CLAIM_KEY, cl); if(W) W.panelKey = ''; return; }
+    }
+    var shown = null, rec = { at: Date.now(), room: code, got: 'none' }, base = week && week.rewardId ? PLAYER_DB_BY_ID[week.rewardId] : null;
+    if(base){
+      var players = loadPlayers(), np = ownedPlayerFromBase(base);
+      np.ovrBonus = 1;   // thẻ thưởng World Tour tự động +1 Overall; trùng thẻ đã có cũng được (bé tự chọn thẻ này)
+      players.push(np);
+      if(savePlayers(players) === false){ alert('Chưa lưu được thẻ vào máy. Con bấm «Nhận thẻ thưởng» lại nhé!'); if(W) W.claimed = 0; return; }
+      rec.got = 'card'; rec.id = base.dbId; rec.name = base.name; shown = hydratePlayer(np);
+    }
+    cl[ws] = rec; safeSet(WT_CLAIM_KEY, cl);
+    try{ renderBadges(); }catch(e){}
+    if(W) W.panelKey = '';
+    if(wtb === W && W) wtbResult(W);
+    wtRewardReveal(shown || base, rec);
+  }
+  function wtRewardReveal(base, rec){
+    var o = document.createElement('div'); o.className = 'cm-reveal';
+    var card = base ? '<div class="cm-rv-card">' + playerCardHTML(base, false) + '</div>' : '';
+    o.innerHTML = '<div class="cm-rv-box"><div class="cm-rv-t">' + (base ? '🎁 Thẻ thưởng World Tour!' : '🛂 Con dấu hộ chiếu!') + '</div>' + card
+      + '<div class="cm-rv-n">' + (rec.got === 'card' ? uEsc(base.name || '') + ' đã về Kho cầu thủ của con, tự động +1 Overall!' : (rec.got === 'frags' ? 'Con đã có ' + uEsc(base.name || 'cầu thủ này') + ' rồi nên thẻ được đổi thành <b>' + (rec.n | 0) + ' 🧩 mảnh ghép</b> cho Hành trình!' : 'Chặng này đã được đóng dấu vàng trên hộ chiếu của con.')) + '</div>'
+      + '<button type="button" class="btn-primary" data-cm="rv-ok">Tuyệt vời!</button></div>';
+    document.body.appendChild(o);
+  }
+  /* ---- 4.5 dọn phòng cũ: phòng có `created` quá `days` ngày; phòng thiếu `created` thì bỏ qua (không xóa nhầm) ---- */
+  async function wtCleanOld(days, max){
+    var cutoff = Date.now() - days * 86400000, n = 0, keys = [];
+    try{ var r = await fetch(FIREBASE_BASE + '/kidchart_wtour_rooms.json?shallow=true'); if(!r.ok) throw new Error('HTTP ' + r.status); var d = await r.json(); keys = d ? Object.keys(d) : []; }
+    catch(e){ return { n: 0, total: 0, err: e.message }; }
+    var total = keys.length; keys = keys.slice(0, max || 200);
+    for(var i = 0; i < keys.length; i++){
+      try{
+        var cr = await fetch(WTR + keys[i] + '/created.json'), c = cr.ok ? await cr.json() : null;
+        if(typeof c === 'number' && c < cutoff){ var dr = await fetch(WTR + keys[i] + '.json', { method: 'DELETE' }); if(dr.ok) n++; }
+      }catch(e){}
+    }
+    return { n: n, total: total };
+  }
+  function wtAutoClean(){   // chạy ngầm tối đa 1 lần/ngày/máy khi có bé mở phòng mới
+    try{ var td = wtY(new Date()); if(localStorage.getItem('dbcd_wt_clean') === td) return; localStorage.setItem('dbcd_wt_clean', td); }catch(e){ return; }
+    wtCleanOld(14, 60).catch(function(){});
+  }
+
+  /* ===== WORLD TOUR · Giai đoạn 0: cấu hình ADMIN + điểm tuần + công thức Boss =====
+     Dùng chung: <FIREBASE_BASE>/kidchart_worldtour.json
+       { goal, k, staminaCoef, weeks:[{ws, nation, lat, lon, bossIds:[3 dbId], rewardId, story}], updatedAt }
+     Tuần chạy Chủ nhật → Thứ bảy. weeks[].ws = Chủ nhật mở tuần chơi; điểm tính từ tuần liền trước (ws-7 → ws-1). */
+  var WT_URL = FIREBASE_BASE + '/kidchart_worldtour.json';
+  var wtCfg = { goal:700, k:15, staminaCoef:1, tries:3, weeks:[] }, wtMonths = {}, wtBound = false;
+  function wtD(s){ return new Date(s + 'T00:00:00'); }
+  function wtY(d){ return d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2); }
+  function wtAdd(s, n){ var d = wtD(s); d.setDate(d.getDate() + n); return wtY(d); }
+  function wtSunday(s){ var d = wtD(s); d.setDate(d.getDate() - d.getDay()); return wtY(d); }
+  function wtNum(v, def, lo, hi){ v = parseFloat(v); return (isNaN(v) || v < lo || v > hi) ? def : v; }
+  function wtList(x){ return Array.isArray(x) ? x : (x && typeof x === 'object' ? Object.keys(x).map(function(k){ return x[k]; }) : []); }
+  function wtNorm(c){
+    c = c || {};
+    return {
+      goal: wtNum(c.goal, 700, 100, 700), k: wtNum(c.k, 15, 0, 40), staminaCoef: wtNum(c.staminaCoef, 1, 0, 3), tries: Math.round(wtNum(c.tries, 3, 1, 10)),
+      weeks: wtList(c.weeks).filter(function(w){ return w && typeof w === 'object'; }).map(function(w){
+        var b = wtList(w.bossIds).map(String).slice(0, 3); while(b.length < 3) b.push('');
+        return { ws: /^\d{4}-\d{2}-\d{2}$/.test(w.ws || '') ? w.ws : '', nation: String(w.nation || ''), lat: wtNum(w.lat, 0, -90, 90), lon: wtNum(w.lon, 0, -180, 180),
+                 bossIds: b, rewardId: String(w.rewardId || ''), story: String(w.story || '') };
+      }).sort(function(a, b){ return a.ws < b.ws ? -1 : (a.ws > b.ws ? 1 : 0); })
+    };
+  }
+  /* ---- Điểm tuần: tổng điểm ngày (mỗi ngày ≤ 100) của 7 ngày từ Chủ nhật `start`; hồ sơ khác đọc từ Firebase ---- */
+  async function wtMonth(code, ym){
+    if(code === syncId) return loadMonth(ym);
+    var key = code + '|' + ym;
+    if(wtMonths[key]) return wtMonths[key];
+    try{
+      var r = await fetch(FIREBASE_BASE + '/kidchart/' + encodeURIComponent(code) + '/kidchart_month_' + ym + '.json');
+      var d = r.ok ? await r.json() : null;
+      wtMonths[key] = (d && typeof d === 'object') ? d : {};
+    }catch(e){ return null; }
+    return wtMonths[key];
+  }
+  async function wtWeekPoints(code, start){
+    var days = [], ok = true;
+    for(var i = 0; i < 7; i++){
+      var ds = wtAdd(start, i), mo = await wtMonth(code, ds.slice(0, 7));
+      if(mo === null){ ok = false; days.push(0); continue; }
+      var o = mo.days && mo.days[ds.slice(8)];
+      days.push(o ? computeDayTotal(o) : 0);
+    }
+    return { total: days.reduce(function(a, b){ return a + b; }, 0), days: days, ok: ok };
+  }
+  /* ---- Công thức Boss (dùng lại ở các giai đoạn sau) ---- */
+  function wtRatio(pts, goal){ if(!pts.length) return 0; var s = 0; pts.forEach(function(p){ s += Math.min(1, Math.max(0, p / goal)); }); return s / pts.length; }
+  function wtOvrBonus(r, cfg){ return Math.round(cfg.k * (1 - r)); }
+  function wtStaMult(w, cfg){ return 1 + Math.min(1, Math.max(0, w)) * cfg.staminaCoef; }
+  function wtPlayerLine(id){
+    if(!id) return '— chưa chọn —';
+    var p = PLAYER_DB_BY_ID[id];
+    return p ? ((p.name || p.fullName || id) + ' · OVR ' + (p.ovr || p.overall || '?')) : '⚠️ không tìm thấy mã ' + id;
+  }
+  function wtReadGlobals(){
+    wtCfg.goal = wtNum(document.getElementById('wt-goal').value, 700, 100, 700);
+    wtCfg.k = wtNum(document.getElementById('wt-k').value, 15, 0, 40);
+    wtCfg.staminaCoef = wtNum(document.getElementById('wt-sta').value, 1, 0, 3);
+    wtCfg.tries = Math.round(wtNum(document.getElementById('wt-tries').value, 3, 1, 10));
+    return wtCfg;
+  }
+  function wtPaint(){
+    var el = document.getElementById('wt-weeks'); if(!el) return;
+    var box = 'border:1px solid var(--line);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:8px';
+    function pl(f, label, val, name){ return '<label>' + label + '<input type="text" data-f="' + f + '" value="' + uEsc(val) + '"><span class="hint-text" data-wt-name="' + f + '" style="margin:0">' + uEsc(wtPlayerLine(val)) + '</span></label>'; }
+    el.innerHTML = wtCfg.weeks.length ? wtCfg.weeks.map(function(w, i){
+      var warn = (w.ws && wtD(w.ws).getDay() !== 0) ? '<p class="hint-text" style="margin:0;color:#FCA5A5">⚠️ Ngày này không phải Chủ nhật.</p>' : '';
+      return '<div data-wt="' + i + '" style="' + box + '"><h4 style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin:0">🌍 Tuần ' + (i + 1) + ' <button type="button" class="btn-secondary" data-wt-del="' + i + '">🗑️ Xóa</button></h4>'
+        + '<label>Chủ nhật mở tuần chơi<input type="date" data-f="ws" value="' + uEsc(w.ws) + '"></label>' + warn
+        + '<label>Quốc gia (chủ đề)<input type="text" data-f="nation" maxlength="40" value="' + uEsc(w.nation) + '"></label>'
+        + '<label>Vị trí trên bản đồ · vĩ độ<input type="number" data-f="lat" step="0.1" value="' + w.lat + '"></label>'
+        + '<label>Kinh độ<input type="number" data-f="lon" step="0.1" value="' + w.lon + '"></label>'
+        + pl('boss0', 'Mã cầu thủ Boss 1 (thủ lĩnh)', w.bossIds[0]) + pl('boss1', 'Mã cầu thủ Boss 2 (hộ vệ)', w.bossIds[1]) + pl('boss2', 'Mã cầu thủ Boss 3 (hộ vệ)', w.bossIds[2])
+        + pl('rewardId', 'Mã cầu thủ thẻ thưởng', w.rewardId)
+        + '<label>Nội dung về cầu thủ thưởng &amp; quốc gia (hiện trên bản đồ)<textarea data-f="story" maxlength="600" rows="3">' + uEsc(w.story) + '</textarea></label></div>';
+    }).join('') : '<p class="hint-text" style="margin:0">Chưa có tuần nào. Bấm «Thêm tuần».</p>';
+    document.getElementById('wt-count').textContent = wtCfg.weeks.length ? '(' + wtCfg.weeks.length + ')' : '';
+  }
+  async function wtTest(){
+    var out = document.getElementById('wt-test-out'), cfg = wtReadGlobals();
+    var codes = Array.prototype.slice.call(document.getElementById('wt-test-user').selectedOptions).map(function(o){ return o.value; });
+    if(codes.length < 2 || codes.length > 3){ out.textContent = 'Hãy chọn 2–3 hồ sơ.'; return; }
+    out.textContent = 'Đang tính…'; wtMonths = {};
+    var start = wtAdd(wtSunday(wtY(new Date())), -7), pts = [], lines = [], bad = false;
+    for(var i = 0; i < codes.length; i++){
+      var r = await wtWeekPoints(codes[i], start); pts.push(r.total); if(!r.ok) bad = true;
+      lines.push('• ' + userNameOf(codes[i]) + ': ' + r.total + '/700');
+    }
+    var ratio = wtRatio(pts, cfg.goal), w = wtNum(document.getElementById('wt-test-wrong').value, 30, 0, 100) / 100;
+    out.textContent = 'Tuần ' + start + ' → ' + wtAdd(start, 6) + '\n' + lines.join('\n')
+      + '\nTỷ lệ hoàn thành team: ' + Math.round(ratio * 100) + '%  →  Overall Boss +' + wtOvrBonus(ratio, cfg)
+      + '\nSai ' + Math.round(w * 100) + '%  →  Thể lực Boss ×' + wtStaMult(w, cfg).toFixed(2)
+      + (bad ? '\n⚠️ Không tải được dữ liệu của một số hồ sơ — kết quả có thể thấp hơn thực tế.' : '');
+  }
+  async function wtPublish(){
+    var st = document.getElementById('wt-status'); wtReadGlobals();
+    var cfg = wtNorm(wtCfg), seen = {}, err = '';
+    cfg.weeks.forEach(function(w, i){
+      if(err) return;
+      if(!w.ws || wtD(w.ws).getDay() !== 0) err = 'Tuần ' + (i + 1) + ': ngày mở phải là một ngày Chủ nhật.';
+      else if(seen[w.ws]) err = 'Hai tuần trùng ngày ' + w.ws + '.';
+      else if(!w.nation.trim()) err = 'Tuần ' + (i + 1) + ': chưa nhập quốc gia.';
+      seen[w.ws] = 1;
+    });
+    if(err){ st.textContent = '⚠️ ' + err; return; }
+    cfg.updatedAt = Date.now(); st.textContent = 'Đang lưu…';
+    try{
+      var r = await fetch(WT_URL, { method:'PUT', headers:{'Content-Type':'application/json'}, body: JSON.stringify(cfg) });
+      if(!r.ok) throw new Error('HTTP ' + r.status);
+      wtCfg = cfg; wtPaint(); st.textContent = '✓ Đã lưu & phát hành lúc ' + new Date().toLocaleTimeString('vi-VN') + ' · ' + cfg.weeks.length + ' tuần.';
+    }catch(e){ st.textContent = '⚠️ Không lưu được (' + e.message + '). Kiểm tra mạng rồi thử lại.'; }
+  }
+  async function wtInit(){
+    var st = document.getElementById('wt-status'); if(!st) return;
+    if(!wtBound){
+      wtBound = true;
+      document.getElementById('wt-weeks').addEventListener('input', function(e){
+        var f = e.target.getAttribute('data-f'), card = e.target.closest('[data-wt]'); if(!f || !card) return;
+        var w = wtCfg.weeks[+card.getAttribute('data-wt')]; if(!w) return;
+        var v = e.target.value;
+        if(f.indexOf('boss') === 0){ w.bossIds[+f.slice(4)] = v.trim(); }
+        else if(f === 'lat' || f === 'lon'){ w[f] = wtNum(v, 0, f === 'lat' ? -90 : -180, f === 'lat' ? 90 : 180); }
+        else { w[f] = (f === 'rewardId') ? v.trim() : v; }
+        var tag = card.querySelector('[data-wt-name="' + f + '"]');
+        if(tag) tag.textContent = wtPlayerLine(f.indexOf('boss') === 0 ? w.bossIds[+f.slice(4)] : w[f]);
+      });
+      document.getElementById('wt-weeks').addEventListener('click', function(e){
+        var b = e.target.closest('[data-wt-del]'); if(!b) return;
+        wtCfg.weeks.splice(+b.getAttribute('data-wt-del'), 1); wtPaint();
+      });
+      document.getElementById('wt-add').addEventListener('click', function(){
+        var last = wtCfg.weeks.length ? wtCfg.weeks[wtCfg.weeks.length - 1].ws : '';
+        wtCfg.weeks.push({ ws: last ? wtAdd(last, 7) : wtAdd(wtSunday(wtY(new Date())), 7), nation:'', lat:0, lon:0, bossIds:['', '', ''], rewardId:'', story:'' });
+        wtPaint();
+      });
+      document.getElementById('wt-test-btn').addEventListener('click', wtTest);
+      document.getElementById('wt-publish').addEventListener('click', wtPublish);
+      document.getElementById('wt-clean').addEventListener('click', async function(){
+        var out = document.getElementById('wt-clean-out'), days = Math.round(wtNum(document.getElementById('wt-clean-days').value, 14, 1, 365));
+        if(!confirm('Xóa các phòng World Tour tạo cách đây hơn ' + days + ' ngày?')) return;
+        out.textContent = 'Đang dọn…'; this.disabled = true;
+        var r = await wtCleanOld(days, 300); this.disabled = false;
+        out.textContent = r.err ? '⚠️ Không dọn được (' + r.err + ').' : '✓ Đã xóa ' + r.n + ' phòng cũ (đang có ' + (r.total - r.n) + ' phòng).';
+      });
+    }
+    document.getElementById('wt-test-user').innerHTML = Object.keys(userDirectory).map(function(c){ return '<option value="' + uEsc(c) + '">' + uEsc(userLabel(c)) + '</option>'; }).join('');
+    try{
+      var r = await fetch(WT_URL), d = r.ok ? await r.json() : null;
+      wtCfg = wtNorm(d);
+      st.textContent = d ? ('Đang dùng bản phát hành lúc ' + (d.updatedAt ? new Date(d.updatedAt).toLocaleString('vi-VN') : '—') + '.') : 'Chưa có cấu hình trên Firebase — đang dùng mặc định.';
+    }catch(e){ wtCfg = wtNorm(null); st.textContent = '⚠️ Không tải được cấu hình (mất mạng?).'; }
+    document.getElementById('wt-goal').value = wtCfg.goal; document.getElementById('wt-k').value = wtCfg.k; document.getElementById('wt-sta').value = wtCfg.staminaCoef; document.getElementById('wt-tries').value = wtCfg.tries;
+    wtPaint();
+  }
+
   async function wnInit(){
     wnPaintPicked(); wnPaintList();
     wnRemote = await wnFetch();
