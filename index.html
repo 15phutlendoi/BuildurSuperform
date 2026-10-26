@@ -4246,7 +4246,7 @@
       </div>
     </section>
     <section class="ap-pane" id="appane-wtour" role="tabpanel" aria-labelledby="aptab-wtour" hidden>
-      <div><h3 class="ap-pane-title">🌍 World Tour</h3><p class="ap-pane-desc">Chiến dịch «Hành Trình Chinh Phục Thế Giới»: công thức sức mạnh Boss, quốc gia theo tuần, thẻ thưởng. Dùng chung cho mọi hồ sơ. Tuần chạy Chủ nhật → hết Thứ bảy; điểm chốt cuối Thứ bảy và dùng cho tuần chơi kế tiếp.</p></div>
+      <div><h3 class="ap-pane-title">🌍 World Tour</h3><p class="ap-pane-desc">Chiến dịch «Hành Trình Chinh Phục Thế Giới»: công thức sức mạnh Boss, quốc gia theo tuần, thẻ thưởng. Dùng chung cho mọi hồ sơ. Mỗi tuần mở 7 ngày liên tiếp từ ngày admin chọn (không cần Chủ nhật); điểm của mỗi bé tính từ 7 ngày liền trước ngày mở. Chủ đề là quốc gia hoặc CLB có trong dữ liệu cầu thủ; Boss và thẻ thưởng chọn trong danh sách của chủ đề đó.</p></div>
       <div class="ap-card">
         <h4>⚙️ Công thức Boss</h4>
         <label>Mốc điểm tuần mỗi người (tối đa 700)<input type="number" id="wt-goal" min="100" max="700" step="10"></label>
@@ -14690,7 +14690,7 @@
   /* ===== WORLD TOUR · Giai đoạn 0: cấu hình ADMIN + điểm tuần + công thức Boss =====
      Dùng chung: <FIREBASE_BASE>/kidchart_worldtour.json
        { goal, k, staminaCoef, weeks:[{ws, nation, lat, lon, bossIds:[3 dbId], rewardId, story}], updatedAt }
-     Tuần chạy Chủ nhật → Thứ bảy. weeks[].ws = Chủ nhật mở tuần chơi; điểm tính từ tuần liền trước (ws-7 → ws-1). */
+     Tuần chạy Chủ nhật → Thứ bảy. weeks[].ws = ngày mở tuần chơi (bất kỳ thứ nào); điểm tính từ tuần liền trước (ws-7 → ws-1). */
   var WT_URL = FIREBASE_BASE + '/kidchart_worldtour.json';
   var wtCfg = { goal:700, k:15, staminaCoef:1, tries:3, weeks:[] }, wtMonths = {}, wtBound = false;
   function wtD(s){ return new Date(s + 'T00:00:00'); }
@@ -14706,7 +14706,8 @@
       weeks: wtList(c.weeks).filter(function(w){ return w && typeof w === 'object'; }).map(function(w){
         var b = wtList(w.bossIds).map(String).slice(0, 3); while(b.length < 3) b.push('');
         return { ws: /^\d{4}-\d{2}-\d{2}$/.test(w.ws || '') ? w.ws : '', nation: String(w.nation || ''), lat: wtNum(w.lat, 0, -90, 90), lon: wtNum(w.lon, 0, -180, 180),
-                 bossIds: b, rewardId: String(w.rewardId || ''), story: String(w.story || '') };
+                 bossIds: b, rewardId: String(w.rewardId || ''), story: String(w.story || ''),
+                 themeType: (w.themeType === 'club' || w.themeType === 'nation') ? w.themeType : '', themeKey: String(w.themeKey || '') };
       }).sort(function(a, b){ return a.ws < b.ws ? -1 : (a.ws > b.ws ? 1 : 0); })
     };
   }
@@ -14736,6 +14737,30 @@
   function wtRatio(pts, goal){ if(!pts.length) return 0; var s = 0; pts.forEach(function(p){ s += Math.min(1, Math.max(0, p / goal)); }); return s / pts.length; }
   function wtOvrBonus(r, cfg){ return Math.round(cfg.k * (1 - r)); }
   function wtStaMult(w, cfg){ return 1 + Math.min(1, Math.max(0, w)) * cfg.staminaCoef; }
+  /* Chủ đề tuần = một quốc gia (cờ) hoặc một CLB (logo) có trong dữ liệu cầu thủ trên Firebase; cần ≥ 4 cầu thủ khác nhau để chọn 3 Boss + 1 thẻ thưởng */
+  var _wtTh = null, _wtThN = -1;
+  function wtThemes(){
+    if(_wtTh && _wtThN === PLAYER_DB.length) return _wtTh;
+    var by = { nation: {}, club: {} };
+    PLAYER_DB.forEach(function(p){
+      if(!p || !p.dbId) return;
+      if(p.nationFlag) (by.nation[p.nationFlag] = by.nation[p.nationFlag] || []).push(p);
+      if(p.clubLogo) (by.club[p.clubLogo] = by.club[p.clubLogo] || []).push(p);
+    });
+    var out = [];
+    ['nation', 'club'].forEach(function(type){
+      Object.keys(by[type]).forEach(function(key){
+        var list = by[type][key].slice().sort(function(a, b){ return (b.realOvr || 0) - (a.realOvr || 0) || (a.dbId < b.dbId ? -1 : 1); }), seen = {};
+        if(list.filter(function(p){ var k = playerIdentityKey(p) || p.dbId; if(seen[k]) return false; seen[k] = 1; return true; }).length < 4) return;
+        var nm = roadmapThemeName({ type: type, key: key });
+        if(/^(Đội tuyển quốc gia|Câu lạc bộ)$/.test(nm)) nm += ' · ' + String(key).split('/').pop();
+        out.push({ type: type, key: key, list: list, label: nm });
+      });
+    });
+    out.sort(function(a, b){ return a.type === b.type ? String(a.label).localeCompare(String(b.label), 'vi') : (a.type === 'nation' ? -1 : 1); });
+    _wtTh = out; _wtThN = PLAYER_DB.length; return out;
+  }
+  function wtThemeOf(w){ return wtThemes().filter(function(t){ return t.type === w.themeType && t.key === w.themeKey; })[0] || null; }
   function wtPlayerLine(id){
     if(!id) return '— chưa chọn —';
     var p = PLAYER_DB_BY_ID[id];
@@ -14751,16 +14776,26 @@
   function wtPaint(){
     var el = document.getElementById('wt-weeks'); if(!el) return;
     var box = 'border:1px solid var(--line);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:8px';
-    function pl(f, label, val, name){ return '<label>' + label + '<input type="text" data-f="' + f + '" value="' + uEsc(val) + '"><span class="hint-text" data-wt-name="' + f + '" style="margin:0">' + uEsc(wtPlayerLine(val)) + '</span></label>'; }
+    function pl(f, label, val, th){
+      var opts = '<option value="">— chưa chọn —</option>', found = !val;
+      (th ? th.list : []).forEach(function(p){ var on = p.dbId === val; if(on) found = true; opts += '<option value="' + uEsc(p.dbId) + '"' + (on ? ' selected' : '') + '>' + uEsc(p.name) + ' · OVR ' + (p.realOvr || 0) + (p.pos ? ' · ' + uEsc(p.pos) : '') + '</option>'; });
+      if(!found) opts += '<option value="' + uEsc(val) + '" selected>' + uEsc(wtPlayerLine(val)) + ' (ngoài chủ đề)</option>';
+      return '<label>' + label + '<select data-f="' + f + '"' + (th ? '' : ' disabled') + '>' + opts + '</select><span class="hint-text" data-wt-name="' + f + '" style="margin:0">' + uEsc(th ? wtPlayerLine(val) : 'Chọn chủ đề trước.') + '</span></label>';
+    }
+    var THS = wtThemes();
     el.innerHTML = wtCfg.weeks.length ? wtCfg.weeks.map(function(w, i){
-      var warn = (w.ws && wtD(w.ws).getDay() !== 0) ? '<p class="hint-text" style="margin:0;color:#FCA5A5">⚠️ Ngày này không phải Chủ nhật.</p>' : '';
+      var th = wtThemeOf(w), warn = (w.themeKey && !th) ? '<p class="hint-text" style="margin:0;color:#FCA5A5">⚠️ Chủ đề này không còn đủ cầu thủ trong dữ liệu — hãy chọn lại.</p>' : '';
+      var tOpts = '<option value="">— chọn quốc gia / CLB —</option>' + ['nation', 'club'].map(function(ty){
+        return '<optgroup label="' + (ty === 'nation' ? '🌍 Quốc gia' : '🛡️ Câu lạc bộ') + '">' + THS.filter(function(t){ return t.type === ty; }).map(function(t){
+          return '<option value="' + ty + '|' + uEsc(t.key) + '"' + (th && th === t ? ' selected' : '') + '>' + uEsc(t.label) + ' (' + t.list.length + ' thẻ)</option>'; }).join('') + '</optgroup>'; }).join('');
       return '<div data-wt="' + i + '" style="' + box + '"><h4 style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin:0">🌍 Tuần ' + (i + 1) + ' <button type="button" class="btn-secondary" data-wt-del="' + i + '">🗑️ Xóa</button></h4>'
-        + '<label>Chủ nhật mở tuần chơi<input type="date" data-f="ws" value="' + uEsc(w.ws) + '"></label>' + warn
-        + '<label>Quốc gia (chủ đề)<input type="text" data-f="nation" maxlength="40" value="' + uEsc(w.nation) + '"></label>'
+        + '<label>Ngày mở tuần chơi (mở 7 ngày liên tiếp, không cần là Chủ nhật; điểm tính từ 7 ngày liền trước)<input type="date" data-f="ws" value="' + uEsc(w.ws) + '"></label>'
+        + '<label>Chủ đề (quốc gia hoặc CLB có trong dữ liệu cầu thủ)<select data-f="theme">' + tOpts + '</select></label>' + warn
+        + '<label>Tên hiển thị trên bản đồ<input type="text" data-f="nation" maxlength="40" value="' + uEsc(w.nation) + '"></label>'
         + '<label>Vị trí trên bản đồ · vĩ độ<input type="number" data-f="lat" step="0.1" value="' + w.lat + '"></label>'
         + '<label>Kinh độ<input type="number" data-f="lon" step="0.1" value="' + w.lon + '"></label>'
-        + pl('boss0', 'Mã cầu thủ Boss 1 (thủ lĩnh)', w.bossIds[0]) + pl('boss1', 'Mã cầu thủ Boss 2 (hộ vệ)', w.bossIds[1]) + pl('boss2', 'Mã cầu thủ Boss 3 (hộ vệ)', w.bossIds[2])
-        + pl('rewardId', 'Mã cầu thủ thẻ thưởng', w.rewardId)
+        + pl('boss0', 'Boss 1 (thủ lĩnh)', w.bossIds[0], th) + pl('boss1', 'Boss 2 (hộ vệ)', w.bossIds[1], th) + pl('boss2', 'Boss 3 (hộ vệ)', w.bossIds[2], th)
+        + pl('rewardId', 'Thẻ thưởng (tự động +1 Overall)', w.rewardId, th)
         + '<label>Nội dung về cầu thủ thưởng &amp; quốc gia (hiện trên bản đồ)<textarea data-f="story" maxlength="600" rows="3">' + uEsc(w.story) + '</textarea></label></div>';
     }).join('') : '<p class="hint-text" style="margin:0">Chưa có tuần nào. Bấm «Thêm tuần».</p>';
     document.getElementById('wt-count').textContent = wtCfg.weeks.length ? '(' + wtCfg.weeks.length + ')' : '';
@@ -14770,7 +14805,7 @@
     var codes = Array.prototype.slice.call(document.getElementById('wt-test-user').selectedOptions).map(function(o){ return o.value; });
     if(codes.length < 2 || codes.length > 3){ out.textContent = 'Hãy chọn 2–3 hồ sơ.'; return; }
     out.textContent = 'Đang tính…'; wtMonths = {};
-    var start = wtAdd(wtSunday(wtY(new Date())), -7), pts = [], lines = [], bad = false;
+    var start = wtAdd(wtY(new Date()), -7), pts = [], lines = [], bad = false;
     for(var i = 0; i < codes.length; i++){
       var r = await wtWeekPoints(codes[i], start); pts.push(r.total); if(!r.ok) bad = true;
       lines.push('• ' + userNameOf(codes[i]) + ': ' + r.total + '/700');
@@ -14786,9 +14821,13 @@
     var cfg = wtNorm(wtCfg), seen = {}, err = '';
     cfg.weeks.forEach(function(w, i){
       if(err) return;
-      if(!w.ws || wtD(w.ws).getDay() !== 0) err = 'Tuần ' + (i + 1) + ': ngày mở phải là một ngày Chủ nhật.';
+      if(!w.ws) err = 'Tuần ' + (i + 1) + ': chưa chọn ngày mở.';
       else if(seen[w.ws]) err = 'Hai tuần trùng ngày ' + w.ws + '.';
-      else if(!w.nation.trim()) err = 'Tuần ' + (i + 1) + ': chưa nhập quốc gia.';
+      else if(i > 0 && w.ws < wtAdd(cfg.weeks[i - 1].ws, 7)) err = 'Tuần ' + (i + 1) + ' mở quá sớm: hai tuần chơi phải cách nhau ít nhất 7 ngày (' + cfg.weeks[i - 1].ws + ' → ' + w.ws + ').';
+      else if(!w.themeKey) err = 'Tuần ' + (i + 1) + ': chưa chọn chủ đề quốc gia / CLB.';
+      else if(!w.nation.trim()) err = 'Tuần ' + (i + 1) + ': chưa có tên hiển thị.';
+      else if(!w.bossIds[0]) err = 'Tuần ' + (i + 1) + ': cần chọn ít nhất Boss 1.';
+      else if(w.bossIds.filter(Boolean).some(function(id, j, a){ return a.indexOf(id) !== j; })) err = 'Tuần ' + (i + 1) + ': hai Boss trùng nhau.';
       seen[w.ws] = 1;
     });
     if(err){ st.textContent = '⚠️ ' + err; return; }
@@ -14807,6 +14846,12 @@
         var f = e.target.getAttribute('data-f'), card = e.target.closest('[data-wt]'); if(!f || !card) return;
         var w = wtCfg.weeks[+card.getAttribute('data-wt')]; if(!w) return;
         var v = e.target.value;
+        if(f === 'theme'){
+          var pr = v.split('|'); w.themeType = pr[0] === 'club' || pr[0] === 'nation' ? pr[0] : ''; w.themeKey = pr.slice(1).join('|');
+          var t = wtThemeOf(w);
+          if(t){ w.nation = t.label; var ids = {}; t.list.forEach(function(p){ ids[p.dbId] = 1; }); w.bossIds = w.bossIds.map(function(id){ return ids[id] ? id : ''; }); if(!ids[w.rewardId]) w.rewardId = ''; }
+          wtPaint(); return;
+        }
         if(f.indexOf('boss') === 0){ w.bossIds[+f.slice(4)] = v.trim(); }
         else if(f === 'lat' || f === 'lon'){ w[f] = wtNum(v, 0, f === 'lat' ? -90 : -180, f === 'lat' ? 90 : 180); }
         else { w[f] = (f === 'rewardId') ? v.trim() : v; }
@@ -14819,7 +14864,7 @@
       });
       document.getElementById('wt-add').addEventListener('click', function(){
         var last = wtCfg.weeks.length ? wtCfg.weeks[wtCfg.weeks.length - 1].ws : '';
-        wtCfg.weeks.push({ ws: last ? wtAdd(last, 7) : wtAdd(wtSunday(wtY(new Date())), 7), nation:'', lat:0, lon:0, bossIds:['', '', ''], rewardId:'', story:'' });
+        wtCfg.weeks.push({ ws: last ? wtAdd(last, 7) : wtAdd(wtY(new Date()), 1), nation:'', lat:0, lon:0, bossIds:['', '', ''], rewardId:'', story:'', themeType:'', themeKey:'' });
         wtPaint();
       });
       document.getElementById('wt-test-btn').addEventListener('click', wtTest);
