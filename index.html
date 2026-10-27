@@ -1363,22 +1363,60 @@
   @keyframes wtWave{ 0%,60%,100%{ transform:rotate(0); } 10%{ transform:rotate(16deg); } 20%{ transform:rotate(-10deg); } 30%{ transform:rotate(16deg); } 40%{ transform:rotate(-6deg); } 50%{ transform:rotate(10deg); } }
   @keyframes wtRip{ 0%{ transform:scale(.3,.1); opacity:.95; } 100%{ transform:scale(1.9,.65); opacity:0; } }
   @keyframes wtTwk{ 0%,100%{ opacity:0; transform:scale(.4) rotate(0); } 50%{ opacity:1; transform:scale(1.1) rotate(25deg); } }
-  .wt-info{ margin:10px 12px 0; padding:12px 14px 14px; border-radius:14px; background:var(--wt-sand); color:var(--wt-ink); position:relative; box-shadow:0 4px 14px rgba(0,0,0,.35); animation:wtInfoIn .25s ease-out; }
-  .wt-info[hidden]{ display:none; }
-  .wt-if-x{ position:absolute; right:8px; top:8px; width:32px; height:32px; border-radius:50%; border:2px solid var(--wt-ink); background:transparent; color:var(--wt-ink); font:900 15px/1 inherit; cursor:pointer; }
-  .wt-if-h{ display:flex; align-items:center; gap:10px; padding-right:38px; }
-  .wt-if-f{ width:46px; height:46px; flex:none; border-radius:50%; border:3px solid var(--wt-gold); background:#fff; overflow:hidden; display:flex; align-items:center; justify-content:center; font-size:24px; }
-  .wt-if-f img{ width:100%; height:100%; } .wt-if-f img.nat{ object-fit:cover; } .wt-if-f img.club{ object-fit:contain; padding:10%; box-sizing:border-box; }
-  .wt-if-n{ margin:0; font:900 21px/1.1 Georgia,serif; } .wt-if-s{ margin:2px 0 0; font-size:12.5px; font-weight:700; color:var(--wt-red); }
-  .wt-if-st{ margin:8px 0 0; font-size:13.5px; line-height:1.45; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; }
-  .wt-if-g{ display:grid; grid-template-columns:1fr; gap:8px; margin-top:10px; } @media (min-width:560px){ .wt-if-g{ grid-template-columns:1.6fr 1fr; } }
-  .wt-if-b{ padding:8px 10px; border-radius:10px; background:rgba(255,255,255,.5); border:1px solid #C9B782; min-width:0; }
-  .wt-if-b h5{ margin:0 0 6px; font-size:12px; letter-spacing:.04em; text-transform:uppercase; color:#6B5A31; }
-  .wt-if-b.rw{ background:#FFF3CC; border-color:var(--wt-gold); }
-  .wt-chips{ display:flex; flex-wrap:wrap; gap:6px; }
-  .wt-chip{ display:flex; flex-direction:column; padding:4px 9px; border-radius:9px; background:#fff; border:1.5px solid #A8935A; font-size:13px; line-height:1.25; min-width:0; }
-  .wt-chip b{ font-weight:800; } .wt-chip small{ font-size:11px; color:#6B5A31; } .wt-chip.lead{ border-color:var(--wt-red); } .wt-chip.gold{ border-color:var(--wt-gold); }
-  @keyframes wtInfoIn{ from{ opacity:0; transform:translateY(-8px); } to{ opacity:1; transform:none; } }
+  /* ===== World Tour v3: bản đồ vừa khít màn hình, popover thẻ tại ghim, phòng chơi dạng tờ vé ===== */
+  .wt-stage{ position:relative; display:flex; flex-direction:column; align-items:center; gap:8px; padding:8px 10px 10px; background:radial-gradient(120% 80% at 50% 0,#10375E,var(--wt-deep) 78%); }
+  .wt-map{ --ar:2; --pin:clamp(26px,3.9vw,46px); min-height:0; aspect-ratio:var(--ar); width:min(100%, calc(var(--wt-h,58dvh) * var(--ar))); border:2px solid var(--wt-gold); border-radius:14px; box-shadow:0 0 0 3px var(--wt-sea), 0 12px 30px rgba(0,0,0,.5); }
+  .wt-atlas{ width:100%; height:100%; border-radius:12px; }
+  .wt-stage.popping .wt-pin2:not(.show){ opacity:.5; transition:opacity .2s; }
+  .wt-pin2.show .wt-pb{ box-shadow:0 0 0 3px #fff, 0 0 0 6px var(--wt-gold), 0 6px 14px rgba(0,0,0,.5); }
+  .wt-pin2.show .wt-lab, .wt-pin2.show .wt-hi{ opacity:0; }
+  .wt-dock{ width:100%; display:flex; align-items:center; gap:10px; min-height:44px; }
+  .wt-pass{ flex:none; padding:9px 13px; border-radius:22px; background:var(--wt-sand); color:var(--wt-ink); font-weight:800; font-size:13.5px; line-height:1; white-space:nowrap; }
+  .wt-dk-list{ flex:1; min-width:0; display:flex; gap:6px; overflow-x:auto; padding:2px; scrollbar-width:none; scroll-snap-type:x proximity; }
+  .wt-dk-list::-webkit-scrollbar{ display:none; }
+  .wt-dk{ flex:none; display:flex; align-items:center; gap:7px; min-height:40px; padding:3px 13px 3px 4px; border-radius:22px; border:2px solid rgba(235,221,186,.32); background:rgba(8,26,48,.72); color:#EBDDBA; font:700 13px/1 inherit; cursor:pointer; scroll-snap-align:start; }
+  .wt-dk.now{ border-color:var(--wt-red); } .wt-dk.won{ border-color:var(--wt-gold); }
+  .wt-dk.on{ background:var(--wt-sand); color:var(--wt-ink); }
+  .wt-dk em{ font-style:normal; color:var(--wt-gold); } .wt-dk.on em{ color:#9A6B00; }
+  .wt-dk:focus-visible, .wt-pass:focus-visible, .wt-room-chip:focus-visible{ outline:3px solid #fff; outline-offset:2px; }
+  .wt-f{ position:relative; width:30px; height:30px; flex:none; border-radius:50%; overflow:hidden; background:#EBDDBA; display:inline-flex; align-items:center; justify-content:center; font-size:16px; }
+  .wt-f img{ position:absolute; inset:0; width:100%; height:100%; background:#fff; } .wt-f img.nat{ object-fit:cover; } .wt-f img.club{ object-fit:contain; padding:10%; box-sizing:border-box; }
+  .wt-chip-host{ flex:none; } .wt-chip-host:empty{ display:none; }
+  .wt-room-chip{ min-height:40px; padding:0 15px; border-radius:22px; border:2px solid var(--wt-red); background:var(--wt-red); color:#fff; font-weight:800; font-size:13.5px; cursor:pointer; white-space:nowrap; }
+  /* popover tại ghim */
+  .wt-pop{ position:absolute; z-index:6000; width:min(410px, calc(100% - 12px)); }
+  .wt-pop.in{ animation:wtPopIn .3s cubic-bezier(.2,1.25,.4,1) both; }
+  .wt-pop-in{ overflow:auto; background:var(--wt-sand); color:var(--wt-ink); border:2px solid #A8935A; border-radius:16px; padding:14px 14px 12px; box-shadow:0 18px 44px rgba(0,0,0,.55); }
+  .wt-tail{ position:absolute; width:16px; height:16px; background:var(--wt-sand); border:2px solid #A8935A; transform:rotate(45deg); }
+  .wt-pop.s-r .wt-tail{ left:-9px; border-right:0; border-top:0; } .wt-pop.s-l .wt-tail{ right:-9px; border-left:0; border-bottom:0; }
+  .wt-pop-x{ position:absolute; right:8px; top:8px; width:34px; height:34px; border-radius:50%; border:2px solid var(--wt-ink); background:transparent; color:var(--wt-ink); font:900 15px/1 inherit; cursor:pointer; }
+  .wt-pop-h{ display:flex; align-items:center; gap:11px; padding-right:40px; }
+  .wt-pop-h .wt-f{ width:48px; height:48px; border:3px solid var(--wt-gold); font-size:24px; background:#fff; }
+  .wt-pop-n{ margin:0; font:900 23px/1.05 Georgia,'Times New Roman',serif; }
+  .wt-pop-s{ margin:3px 0 0; font-size:13px; font-weight:800; color:var(--wt-red); } .wt-pop-s.won{ color:#8A6200; } .wt-pop-s small{ margin-left:6px; font-weight:600; color:#6B5A31; }
+  .wt-pop-st{ margin:9px 0 0; font:14px/1.5 Georgia,serif; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+  .wt-pop-cards{ display:grid; grid-template-columns:1fr auto; gap:12px; margin-top:11px; }
+  .wt-pop-cards h5{ margin:0 0 6px; font-size:13px; font-weight:800; color:#5C4B22; }
+  .wt-pop-row{ display:flex; gap:7px; }
+  .wt-pc{ position:relative; width:78px; flex:none; }
+  .wt-pc.rw{ width:98px; filter:drop-shadow(0 0 7px rgba(227,179,65,.75)); }
+  .wt-pc.lead::after{ content:'👑'; position:absolute; top:-9px; left:-5px; font-size:17px; transform:rotate(-14deg); }
+  .wt-pc b{ display:block; margin-top:4px; font:800 11.5px/1.2 inherit; text-align:center; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .wt-pop-rw{ padding-left:12px; border-left:2px dashed #A8935A; }
+  .wt-pop-rw small{ display:block; margin-top:3px; font-size:11px; line-height:1.3; color:#6B5A31; text-align:center; max-width:98px; }
+  .wt-pop-go{ margin-top:12px; padding-top:11px; border-top:2px dashed #A8935A; display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+  .wt-pop-go .wt-btn{ flex:1; min-width:150px; } .wt-btn.go{ background:var(--wt-red); border-color:var(--wt-red); color:#fff; }
+  .wt-pop-note{ margin:0; font-size:12.5px; font-weight:700; color:#6B5A31; flex:1 1 100%; }
+  @keyframes wtPopIn{ from{ opacity:0; transform:scale(.5); } to{ opacity:1; transform:none; } }
+  @media (max-width:640px){ .wt-pop{ left:8px !important; right:8px; top:auto !important; bottom:8px; width:auto; } .wt-tail{ display:none; } .wt-pop-in{ max-height:64dvh !important; } .wt-pc{ width:64px; } .wt-pc.rw{ width:80px; } }
+  /* phòng chơi: tờ vé nổi lên giữa màn hình */
+  .wt-sheet{ --wt-sea:#0C2340; --wt-deep:#081A30; --wt-sand:#EBDDBA; --wt-ink:#2A2216; --wt-red:#D2453D; --wt-gold:#E3B341; position:fixed; inset:0; z-index:140; display:flex; align-items:center; justify-content:center; padding:12px; background:rgba(5,16,30,.8); animation:wtFade .2s ease-out; }
+  .wt-sheet-p{ position:relative; width:min(940px,100%); max-height:calc(100dvh - 24px); overflow:auto; border-radius:16px; background:var(--wt-sand); box-shadow:0 22px 60px rgba(0,0,0,.6); animation:wtRise .28s cubic-bezier(.2,1.2,.4,1); }
+  .wt-sheet-p .wt-ticket{ margin:0; }
+  .wt-sheet-x{ position:absolute; right:10px; top:10px; z-index:3; width:40px; height:40px; border-radius:50%; border:2px solid var(--wt-ink); background:var(--wt-sand); color:var(--wt-ink); font:900 16px/1 inherit; cursor:pointer; }
+  .wt-sheet .wt-main{ padding-right:56px; } .wt-sheet .wt-main .wt-f{ width:54px; height:54px; border:3px solid var(--wt-gold); background:#fff; font-size:28px; }
+  @keyframes wtFade{ from{ opacity:0; } to{ opacity:1; } } @keyframes wtRise{ from{ opacity:0; transform:translateY(24px) scale(.96); } to{ opacity:1; transform:none; } }
+  @media (prefers-reduced-motion:reduce){ .wt-pop.in, .wt-sheet, .wt-sheet-p{ animation:none; } }
   .wt-note{ margin:0; padding:6px 12px; font-size:11.5px; color:#9DB4C9; }
   .wt-ticket{ margin:14px; display:grid; grid-template-columns:1fr; background:var(--wt-sand); color:var(--wt-ink); border-radius:14px; position:relative; }
   @media (min-width:700px){ .wt-ticket{ grid-template-columns:1.25fr 1fr; } .wt-stub{ border-top:0 !important; border-left:2px dashed #A8935A; } }
@@ -14004,29 +14042,77 @@
      Phòng: <FIREBASE_BASE>/kidchart_wtour_rooms/<MÃ>.json  { ws, nation, host, state:'lobby'|'locked', slots:{0..2:{id,name,card:{id,name,ovr,pos}}} }
      Tối thiểu 2, tối đa 3 người. Chủ phòng bấm «Chốt team» → state='locked' (Giai đoạn 2 đọc team từ đây). */
   var WTR = FIREBASE_BASE + '/kidchart_wtour_rooms/', WT_ROOM_KEY = 'dbcd_wt_room';
-  var wtLive = null, wtCode = '', wtRoom = null, wtPoll = 0, wtMy = '', wtErr = '';
+  var wtLive = null, wtCode = '', wtRoom = null, wtPoll = 0, wtMy = '', wtErr = '', wtSel = '';   // wtSel = ws của ghim đang chọn để thi đấu (chọn tự do, không theo thứ tự)
   function wtHide(){
+    wtDropSheet(); wtPopClose();
     if(typeof wtbStop === 'function') wtbStop();
     if(wtPoll){ clearInterval(wtPoll); wtPoll = 0; }
     var v = document.getElementById('wtour-view'); if(v) v.style.display = 'none';
     var q = document.getElementById('battle-quota'); if(q) q.style.display = '';
   }
-  function wtCurWeek(cfg){ var td = wtY(new Date()); return (cfg.weeks || []).filter(function(w){ return w.ws && w.ws <= td && td <= wtAdd(w.ws, 6); })[0] || null; }
-  /* Bản đồ = ảnh Atlas; ghim đặt theo % (kinh độ/vĩ độ → x/y). Nếu ảnh lệch vị trí thì chỉnh 4 số lon0/lon1/lat0/lat1 (mép trái/phải/trên/dưới của ảnh). */
-  var WT_REWARD_OVR = 3;   // thẻ thưởng World Tour: cầu thủ chỉ định được cộng sẵn +3 Overall (chỉnh số này nếu muốn đổi)
-  var WT_MAP = { url:'https://res.cloudinary.com/tgvj8prc/image/upload/v1793011116/Colorful_World_Atlas_Map.png', lon0:-180, lon1:180, lat0:90, lat1:-90 };
-  function wtPct(w){
-    var x = (w.lon - WT_MAP.lon0) / (WT_MAP.lon1 - WT_MAP.lon0) * 100, y = (WT_MAP.lat0 - w.lat) / (WT_MAP.lat0 - WT_MAP.lat1) * 100;
-    return [Math.min(96, Math.max(4, x)), Math.min(95, Math.max(21, y))];
+  function wtDateWeek(cfg){ var td = wtY(new Date()); return (cfg.weeks || []).filter(function(w){ return w.ws && w.ws <= td && td <= wtAdd(w.ws, 6); })[0] || null; }   // chặng theo lịch (chỉ để chào đón)
+  function wtCurWeek(cfg){ var ws = wtSel || (wtRoom && wtRoom.ws) || ''; return (cfg.weeks || []).filter(function(w){ return w.ws && w.ws === ws; })[0] || null; }   // chặng đang chơi = ghim đã chọn / phòng đang ở
+  function wtEffortStart(cfg){ var td = wtY(new Date()), a = ''; (cfg.weeks || []).forEach(function(w){ if(w.ws && w.ws <= td && w.ws > a) a = w.ws; }); return wtAdd(a || td, -7); }   // 7 ngày tập luyện tuần gần nhất, dùng chung cho mọi ghim
+  /* Bản đồ = ảnh Atlas. Ảnh này không theo phép chiếu chuẩn nên vị trí ghim được hiệu chỉnh bằng bảng điểm chuẩn:
+     [tên, vĩ độ, kinh độ, x, y] với x,y là pixel trên ảnh tham chiếu 1152×648 (tâm của nước đó trên ảnh).
+     Muốn ghim chính xác hơn ở vùng nào, thêm 1 dòng điểm chuẩn ở vùng đó. Hệ thống tự nội suy phần còn lại. */
+  var WT_MAP = { url:'https://res.cloudinary.com/tgvj8prc/image/upload/v1793011116/Colorful_World_Atlas_Map.png', W:1152, H:648, sig:28, lam:0.02 };
+  var WT_CTRL = [
+    ['Peru',-9.2,-75.0,265.5,430.5], ['Bolivia',-16.3,-63.55,305.5,452.5], ['Argentina',-38.4,-63.6,302.5,538],
+    ['Ukraine',48.4,31.2,630,187], ['Libya',26.35,17.3,568.5,291], ['Egypt',26.8,30.8,619.5,291],
+    ['Mali',17.6,-4.0,487.5,325.5], ['Niger',17.6,8.1,534,327.5], ['Chad',15.4,18.7,574.5,337.5],
+    ['Sudan',15.4,30.2,620,336.5], ['Ethiopia',9.15,40.5,663.5,363], ['DRC',-4.0,21.75,586.5,415],
+    ['Angola',-11.2,17.9,568,448.5], ['Zambia',-13.15,27.85,606.5,460], ['Tanzania',-6.4,34.9,647.5,432],
+    ['Kenya',0.2,37.9,658,398.5], ['Namibia',-22.97,18.5,565.5,502.5], ['Botswana',-22.3,24.7,599.5,491],
+    ['Mauritania',21.0,-10.95,458,312], ['SaudiArabia',24.3,45.1,679,303.5], ['Iraq',33.25,43.7,675,262.5],
+    ['Kazakhstan',48.0,66.9,758.5,189], ['Mongolia',46.9,103.8,871,198], ['Australia',-27.2,133.4,988.5,503],
+    ['Greenland',71.7,-42.2,387,74], ['USA',37.0,-95.8,213.5,229.5], ['Mexico',23.6,-102.0,179.5,285],
+    ['Spain',39.9,-3.0,492.5,231.5], ['France',46.2,2.2,513.5,199.5], ['Poland',51.9,19.1,588.5,174.5],
+    ['China',35.9,104.2,882,242.5], ['Afghanistan',33.9,67.7,764,259.5], ['Japan',37.5,136.4,1004,254],
+    ['Ecuador',-2.0,-77.5,253.5,404], ['Switzerland',46.8182,8.2275,541.7,200.0], ['Turkey',39.0,35.0,645.3,236.3]
+  ];
+  var WT_FIT = null;
+  function wtFeat(la, lo){ la /= 50; lo /= 100; return [1, lo, la, lo * lo, lo * la, la * la]; }
+  function wtSolve(A, B){   // giải A·X = B (khử Gauss), B là ma trận n×2
+    var n = A.length, M = A.map(function(r, i){ return r.concat(B[i]); }), i, j, k, p, t, f;
+    for(i = 0; i < n; i++){
+      p = i; for(j = i + 1; j < n; j++) if(Math.abs(M[j][i]) > Math.abs(M[p][i])) p = j;
+      t = M[i]; M[i] = M[p]; M[p] = t;
+      for(j = i + 1; j < n; j++){ f = M[j][i] / M[i][i]; for(k = i; k < n + 2; k++) M[j][k] -= f * M[i][k]; }
+    }
+    var X = []; for(i = 0; i < n; i++) X.push([0, 0]);
+    for(i = n - 1; i >= 0; i--) for(var c = 0; c < 2; c++){ var s = M[i][n + c]; for(k = i + 1; k < n; k++) s -= M[i][k] * X[k][c]; X[i][c] = s / M[i][i]; }
+    return X;
   }
-  function wtMapHTML(cfg, cur){
-    var ws = cfg.weeks.filter(function(w){ return w.ws; }), td = wtY(new Date()), cl = wtClaims(), pts = [], placed = [];
+  function wtFitMap(){
+    var n = WT_CTRL.length, F = WT_CTRL.map(function(r){ return wtFeat(r[1], r[2]); }), T = WT_CTRL.map(function(r){ return [r[3], r[4]]; }), i, j, k;
+    var AtA = [], AtT = [];
+    for(i = 0; i < 6; i++){ AtA.push([]); for(j = 0; j < 6; j++){ var s = 0; for(k = 0; k < n; k++) s += F[k][i] * F[k][j]; AtA[i].push(s); } var u0 = 0, u1 = 0; for(k = 0; k < n; k++){ u0 += F[k][i] * T[k][0]; u1 += F[k][i] * T[k][1]; } AtT.push([u0, u1]); }
+    var C = wtSolve(AtA, AtT), R = [];
+    for(i = 0; i < n; i++){ var g = 0, h = 0; for(j = 0; j < 6; j++){ g += F[i][j] * C[j][0]; h += F[i][j] * C[j][1]; } R.push([T[i][0] - g, T[i][1] - h]); }
+    var K = [], s2 = WT_MAP.sig * WT_MAP.sig;
+    for(i = 0; i < n; i++){ K.push([]); for(j = 0; j < n; j++){ var d = (WT_CTRL[i][1] - WT_CTRL[j][1]), e = (WT_CTRL[i][2] - WT_CTRL[j][2]); K[i].push(Math.exp(-(d * d + e * e) / s2) + (i === j ? WT_MAP.lam : 0)); } }
+    WT_FIT = { C: C, Wt: wtSolve(K, R) };
+  }
+  function wtPct(w){
+    if(!WT_FIT) wtFitMap();
+    var f = wtFeat(w.lat, w.lon), x = 0, y = 0, i, s2 = WT_MAP.sig * WT_MAP.sig;
+    for(i = 0; i < 6; i++){ x += f[i] * WT_FIT.C[i][0]; y += f[i] * WT_FIT.C[i][1]; }
+    for(i = 0; i < WT_CTRL.length; i++){ var d = w.lat - WT_CTRL[i][1], e = w.lon - WT_CTRL[i][2], k = Math.exp(-(d * d + e * e) / s2); x += k * WT_FIT.Wt[i][0]; y += k * WT_FIT.Wt[i][1]; }
+    return [Math.min(97, Math.max(3, x / WT_MAP.W * 100)), Math.min(95, Math.max(14, y / WT_MAP.H * 100))];
+  }
+  function wtFaceHTML(w){
+    var club = w.themeType === 'club', src = (w.themeKey && cdnReady()) ? cdnUrl(w.themeKey) : '';
+    return '<span class="wt-f"><span aria-hidden="true">' + (club ? '🛡️' : '🌍') + '</span>' + (src ? '<img class="' + (club ? 'club' : 'nat') + '" src="' + uEsc(src) + '" alt="" loading="lazy" onerror="this.style.display=\'none\'">' : '') + '</span>';
+  }
+  function wtMapHTML(cfg){
+    var ws = cfg.weeks.filter(function(w){ return w.ws; }), td = wtY(new Date()), cl = wtClaims(), dw = wtDateWeek(cfg), pts = [], placed = [];
     ws.forEach(function(w){   // hai điểm quá gần nhau thì xê dịch sang phải để không chồng lên nhau
       var p = wtPct(w), guard = 0;
       for(var k = 0; k < placed.length && guard < 12; k++){ if(Math.abs(placed[k][0] - p[0]) < 3.6 && Math.abs(placed[k][1] - p[1]) < 8){ p[0] += 3.8; k = -1; guard++; } }
       p[0] = Math.min(96, p[0]); placed.push(p); pts.push(p);
     });
-    var h = '<img class="wt-atlas" src="' + uEsc(WT_MAP.url) + '" alt="Bản đồ thế giới" decoding="async" draggable="false" onload="this.parentNode.classList.add(\'ready\')" onerror="this.style.display=\'none\';this.parentNode.classList.add(\'ready\',\'noimg\')">';
+    var h = '<img class="wt-atlas" src="' + uEsc(WT_MAP.url) + '" alt="Bản đồ thế giới" decoding="async" draggable="false" onload="var m=this.parentNode;if(this.naturalHeight)m.style.setProperty(\'--ar\',this.naturalWidth/this.naturalHeight);m.classList.add(\'ready\')" onerror="this.style.display=\'none\';this.parentNode.classList.add(\'ready\',\'noimg\')">';
     h += '<svg class="wt-routes" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">';
     for(var i = 1; i < ws.length; i++){
       var a = pts[i - 1], b = pts[i], mx = (a[0] + b[0]) / 2, my = Math.min(a[1], b[1]) - 8 - Math.abs(a[0] - b[0]) * .12;
@@ -14034,25 +14120,27 @@
     }
     h += '</svg><div class="wt-pins">';
     ws.forEach(function(w, i){
-      var p = pts[i], past = wtAdd(w.ws, 6) < td, won = !!cl[w.ws], now = !!(cur && cur.ws === w.ws), club = w.themeType === 'club',
+      var p = pts[i], won = !!cl[w.ws], now = !!(dw && dw.ws === w.ws), club = w.themeType === 'club',
           src = (w.themeKey && cdnReady()) ? cdnUrl(w.themeKey) : '', name = w.nation || (club ? 'CLB' : 'Quốc gia'),
-          sub = won ? '★ đã chinh phục' : (now ? 'đang mở · ' + wtFmt(w.ws) + '–' + wtFmt(wtAdd(w.ws, 6)) : (past ? 'đã qua' : 'mở ' + wtFmt(w.ws))),
-          cls = 'wt-pin2' + (now ? ' now' : '') + (won ? ' won' : (past ? ' miss' : '')) + (p[0] > 68 ? ' flip' : ''),
+          sub = won ? '★ đã chinh phục' : (now ? 'tuần này · ' : '') + wtFmt(w.ws) + '–' + wtFmt(wtAdd(w.ws, 6)),
+          cls = 'wt-pin2' + (now ? ' now' : '') + (won ? ' won' : '') + (p[0] > 68 ? ' flip' : ''),
           z = Math.round(p[1] * 10) + (now ? 3000 : 0);
-      h += '<button type="button" class="' + cls + '" data-ws="' + uEsc(w.ws) + '" style="left:' + p[0].toFixed(2) + '%;top:' + p[1].toFixed(2) + '%;z-index:' + z + ';--d:' + (i * .22).toFixed(2) + 's" aria-label="' + uEsc(name + ' · ' + sub) + '" title="' + uEsc(name + ' · ' + sub) + '"><span class="wt-bob">'
+      h += '<button type="button" class="' + cls + '" data-ws="' + uEsc(w.ws) + '" style="left:' + p[0].toFixed(2) + '%;top:' + p[1].toFixed(2) + '%;z-index:' + z + ';--d:' + (i * .22).toFixed(2) + 's" aria-haspopup="dialog" aria-label="' + uEsc(name + ' · ' + sub) + '"><span class="wt-bob">'
         + (now && !won ? '<i class="wt-rip"></i><i class="wt-rip r2"></i>' : '') + '<span class="wt-sh"></span>'
         + '<span class="wt-pb"><span class="wt-pf"><span aria-hidden="true">' + (club ? '🛡️' : '🌍') + '</span>'
         + (src ? '<img class="' + (club ? 'club' : 'nat') + '" src="' + uEsc(src) + '" alt="" loading="lazy" onerror="this.style.display=\'none\'">' : '') + '</span></span>'
-        + (won ? '<em class="wt-st">★</em>' : (past ? '<em class="wt-st">✕</em>' : ''))
-        + (now ? '<i class="wt-sp s1">✨</i><i class="wt-sp s2">✨</i><i class="wt-sp s3">✨</i>' : '')
+        + (won ? '<em class="wt-st">★</em>' : '')
+        + (now && !won ? '<i class="wt-sp s1">✨</i><i class="wt-sp s2">✨</i><i class="wt-sp s3">✨</i>' : '')
         + '<span class="wt-hi"><i class="wt-wave">👋</i> ' + (now ? 'Chào mừng!' : 'Xin chào!') + '</span>'
         + '<span class="wt-lab">' + uEsc(name) + '<small>' + uEsc(sub) + '</small></span></span></button>';
     });
     return h + '</div>';
   }
-  function wtPassportLine(cfg){
-    var cl = wtClaims(), td = wtY(new Date()), open = cfg.weeks.filter(function(w){ return w.ws && w.ws <= td; }), n = open.filter(function(w){ return cl[w.ws]; }).length;
-    return '🛂 Hộ chiếu: ' + n + '/' + open.length + ' nước đã chinh phục.';
+  function wtStageHTML(cfg){
+    var ws = cfg.weeks.filter(function(w){ return w.ws; }), cl = wtClaims(), dw = wtDateWeek(cfg), n = ws.filter(function(w){ return cl[w.ws]; }).length;
+    return '<div class="wt-stage"><div class="wt-map">' + wtMapHTML(cfg) + '</div><div class="wt-dock"><span class="wt-pass" title="Hộ chiếu">🛂 ' + n + '/' + ws.length + '</span><div class="wt-dk-list" role="list">'
+      + ws.map(function(w){ var won = !!cl[w.ws]; return '<button type="button" role="listitem" class="wt-dk' + (won ? ' won' : '') + (dw && dw.ws === w.ws ? ' now' : '') + '" data-wt-pin="' + uEsc(w.ws) + '">' + wtFaceHTML(w) + '<span>' + uEsc(w.nation || 'Điểm đến') + '</span>' + (won ? '<em>★</em>' : '') + '</button>'; }).join('')
+      + '</div><span class="wt-chip-host" id="wt-chip-host"></span></div></div>';
   }
   function wtFmt(ds){ var d = wtD(ds); return d.getDate() + '/' + (d.getMonth() + 1); }
   function wtMe(){
@@ -14083,9 +14171,10 @@
       + '<div class="wt-row"><input class="wt-in" id="wt-code" maxlength="4" placeholder="MÃ" aria-label="Mã phòng của bạn bè" autocomplete="off"><button type="button" class="wt-btn alt" data-wt-act="join"' + (wtMy ? '' : ' disabled') + '>Vào phòng</button></div>'
       + (wtErr ? '<p class="wt-err" role="alert">' + uEsc(wtErr) + '</p>' : '');
   }
-  function wtPaintStub(){ var el = document.getElementById('wt-stub'); if(el) el.innerHTML = wtStubHTML(wtLive && wtCurWeek(wtLive)); }
+  function wtPaintStub(){ var el = document.getElementById('wt-stub'); if(el) el.innerHTML = wtStubHTML(wtLive && wtCurWeek(wtLive)); wtPaintChip(); }
+  function wtPaintChip(){ var h = document.getElementById('wt-chip-host'); if(h) h.innerHTML = (wtCode && wtRoom) ? '<button type="button" class="wt-room-chip" data-wt-act="sheet">🚪 Phòng ' + uEsc(wtCode) + (wtRoom.nation ? ' · ' + uEsc(wtRoom.nation) : '') + '</button>' : ''; }
   async function wtRender(){
-    wtbStop();
+    wtbStop(); wtDropSheet(); wtPopClose();
     var v = document.getElementById('wtour-view'); if(!v) return;
     ['battle-road-view', 'battle-pick-view', 'season-view', 'season-subtabs'].forEach(function(id){ var e = document.getElementById(id); if(e) e.style.display = 'none'; });
     var q = document.getElementById('battle-quota'); if(q) q.style.display = 'none';
@@ -14093,15 +14182,18 @@
     v.style.display = ''; v.innerHTML = '<p class="wt-empty">Đang mở bản đồ…</p>';
     try{ var r = await fetch(WT_URL), d = r.ok ? await r.json() : null; wtLive = wtNorm(d); }catch(e){ wtLive = wtNorm(null); }
     if(battleMode !== 'wtour') return;
-    var cur = wtCurWeek(wtLive), upcoming = wtLive.weeks.filter(function(w){ return w.ws > wtY(new Date()); })[0];
     if(!wtLive.weeks.length){ v.innerHTML = '<p class="wt-empty">Chuyến du lịch vòng quanh thế giới sắp khởi hành. Quay lại sau nhé! ✈️</p>'; return; }
     if(!wtCode){ try{ wtCode = localStorage.getItem(WT_ROOM_KEY) || ''; }catch(e){} }
-    if(wtCode){ wtRoom = await wtGetRoom(wtCode); if(!wtRoom || !cur || wtRoom.ws !== cur.ws){ wtCode = ''; wtRoom = null; try{ localStorage.removeItem(WT_ROOM_KEY); }catch(e){} } }
-    v.innerHTML = '<div class="wt-map">' + wtMapHTML(wtLive, cur) + '</div><div class="wt-info" id="wt-info" hidden></div><p class="wt-note">Chạm vào ghim để xem Boss và phần thưởng. ' + wtPassportLine(wtLive) + '</p>'
-      + (cur ? '<div class="wt-ticket"><div class="wt-main"><p class="wt-kick">Chuyến bay tuần này</p><h3 class="wt-nation">' + uEsc(cur.nation) + '</h3><p class="wt-dates">Mở cửa ' + wtFmt(cur.ws) + ' – ' + wtFmt(wtAdd(cur.ws, 6)) + '</p>'
-        + (cur.story ? '<p class="wt-story">' + uEsc(cur.story) + '</p>' : '') + '<p class="wt-boss">Đội chủ nhà: ' + cur.bossIds.filter(Boolean).map(function(id){ var p = PLAYER_DB_BY_ID[id]; return uEsc(p ? p.name : '?'); }).join(', ') + '</p></div><div class="wt-stub" id="wt-stub"></div></div>'
-        : '<div class="wt-empty">Tuần này chưa có chuyến bay mới.' + (upcoming ? ' Chặng kế tiếp: <b>' + uEsc(upcoming.nation) + '</b>, khởi hành ' + wtFmt(upcoming.ws) + '.' : '') + '</div>');
-    if(cur){ wtPaintStub(); if(wtCode && !wtPoll) wtPoll = setInterval(wtTick, 2500); }
+    if(wtCode){
+      wtRoom = await wtGetRoom(wtCode);
+      var rw = wtRoom && wtLive.weeks.filter(function(w){ return w.ws === wtRoom.ws; })[0];
+      if(!rw){ wtCode = ''; wtRoom = null; try{ localStorage.removeItem(WT_ROOM_KEY); }catch(e){} } else wtSel = wtRoom.ws;
+    }
+    if(wtSel && !wtLive.weeks.some(function(w){ return w.ws === wtSel; })) wtSel = '';
+    v.innerHTML = wtStageHTML(wtLive);
+    wtPaintChip(); wtFit(true); requestAnimationFrame(function(){ wtFit(false); });
+    if(wtCode && wtRoom && wtCurWeek(wtLive)) wtOpenSheet();
+    if(wtCode && !wtPoll) wtPoll = setInterval(wtTick, 2500);
   }
   async function wtGetRoom(c){ try{ var r = await fetch(WTR + c + '.json'); return r.ok ? await r.json() : null; }catch(e){ return null; } }
   async function wtPut(path, val){ var r = await fetch(WTR + path + '.json', { method: val === null ? 'DELETE' : 'PUT', headers:{'Content-Type':'application/json'}, body: val === null ? undefined : JSON.stringify(val) }); if(!r.ok) throw new Error('HTTP ' + r.status); }
@@ -14114,15 +14206,20 @@
     else {
       wtRoom = room;
       if(room.state === 'locked' && !room.boss && room.host === syncId && wtAllDone(room) && wtLive){
-        var cw = wtCurWeek(wtLive); if(cw) wtPut(wtCode + '/boss', wtBossCalc(room, wtLive, cw)).catch(function(){});
+        var cw = wtLive.weeks.filter(function(w){ return w.ws === room.ws; })[0]; if(cw) wtPut(wtCode + '/boss', wtBossCalc(room, wtLive, cw)).catch(function(){});
       }
     }
     wtPaintStub();
   }
-  function wtEnter(code, room){ wtCode = code; wtRoom = room; wtErr = ''; try{ localStorage.setItem(WT_ROOM_KEY, code); }catch(e){} wtPaintStub(); if(!wtPoll) wtPoll = setInterval(wtTick, 2500); }
+  function wtEnter(code, room){ wtCode = code; wtRoom = room; wtErr = ''; try{ localStorage.setItem(WT_ROOM_KEY, code); }catch(e){} if(room && room.ws && room.ws !== wtSel){ wtSel = room.ws; wtOpenSheet(); } else wtPaintStub(); if(!wtPoll) wtPoll = setInterval(wtTick, 2500); }
   async function wtAct(act, el){
     var cur = wtLive && wtCurWeek(wtLive); wtErr = '';
     try{
+      if(act === 'go'){ var gw = el.getAttribute('data-ws'); if(wtCode && wtRoom && wtRoom.ws !== gw) return; wtSel = gw; wtOpenSheet(); return; }
+      if(act === 'leave-go'){ var lw = el.getAttribute('data-ws'); await wtAct('leave', el); wtSel = lw; wtOpenSheet(); return; }
+      if(act === 'sheet'){ wtOpenSheet(); return; }
+      if(act === 'sheet-x'){ wtCloseSheet(); return; }
+      if(act === 'quiz' || act === 'fight' || act === 'reveal' || act === 'home') wtDropSheet();
       if(act === 'pick'){ wtMy = el.getAttribute('data-id'); wtPaintStub(); return; }
       if(act === 'quiz'){ await wtQuiz(); return; }
       if(act === 'reveal'){ await wtReveal(); return; }
@@ -14148,7 +14245,7 @@
         if(c.length !== 4){ wtErr = 'Mã phòng gồm 4 ký tự.'; return wtPaintStub(); }
         var rm = await wtGetRoom(c);
         if(!rm) wtErr = 'Không tìm thấy phòng ' + c + '. Kiểm tra lại mã nhé.';
-        else if(rm.ws !== cur.ws) wtErr = 'Phòng này thuộc chuyến bay khác.';
+        else if(!wtLive.weeks.some(function(w){ return w.ws === rm.ws; })) wtErr = 'Phòng này thuộc chuyến bay khác.';
         else if(rm.state !== 'lobby') wtErr = 'Phòng đã chốt team.';
         else if(wtMembers(rm).some(function(i){ return rm.slots[i].id === syncId; })) return wtEnter(c, rm);
         else {
@@ -14173,39 +14270,115 @@
     wtPaintStub();
   }
   document.addEventListener('click', function(e){
-    var b = e.target && e.target.closest ? e.target.closest('#wtour-view [data-wt-act]') : null;
+    var b = e.target && e.target.closest ? e.target.closest('#wtour-view [data-wt-act], #wt-sheet [data-wt-act], #wt-pop [data-wt-act]') : null;
     if(b) wtAct(b.getAttribute('data-wt-act'), b);
   });
-  function wtInfoHTML(w, st){
-    function pc(id, cls, tag){ var q = id && PLAYER_DB_BY_ID[id]; return '<span class="wt-chip ' + cls + '"><b>' + (tag || '') + uEsc(q ? (q.name || q.fullName || id) : 'Chưa chọn') + '</b>' + (q ? '<small>OVR ' + (q.realOvr || q.ovr || q.overall || '?') + (q.pos ? ' · ' + uEsc(q.pos) : '') + '</small>' : '') + '</span>'; }
-    var club = w.themeType === 'club', src = (w.themeKey && cdnReady()) ? cdnUrl(w.themeKey) : '';
-    var sub = st === 'won' ? '★ Đã chinh phục' : (st === 'now' ? 'Đang mở · ' + wtFmt(w.ws) + ' – ' + wtFmt(wtAdd(w.ws, 6)) : (st === 'miss' ? 'Chặng đã qua · ' + wtFmt(w.ws) + ' – ' + wtFmt(wtAdd(w.ws, 6)) : 'Sắp mở · ' + wtFmt(w.ws)));
-    return '<button type="button" class="wt-if-x" data-wt-close aria-label="Đóng">✕</button>'
-      + '<div class="wt-if-h"><span class="wt-if-f"><span aria-hidden="true">' + (club ? '🛡️' : '🌍') + '</span>' + '</span><div><h4 class="wt-if-n">' + uEsc(w.nation || (club ? 'CLB' : 'Quốc gia')) + '</h4><p class="wt-if-s">' + uEsc(sub) + '</p></div></div>'
-      + (w.story ? '<p class="wt-if-st">' + uEsc(w.story) + '</p>' : '')
-      + '<div class="wt-if-g"><div class="wt-if-b"><h5>👹 Đội Boss</h5><div class="wt-chips">' + pc(w.bossIds[0], 'lead', '👑 ') + pc(w.bossIds[1], '') + pc(w.bossIds[2], '') + '</div></div>'
-      + '<div class="wt-if-b rw"><h5>🎁 Phần thưởng</h5><div class="wt-chips">' + pc(w.rewardId, 'gold') + '</div><small style="display:block;margin-top:4px;font-size:11.5px;color:#6B5A31">Hạ Boss để nhận thẻ cầu thủ này, tự động +' + WT_REWARD_OVR + ' Overall</small></div></div>';
+  /* ---- popover tại ghim: thông tin + ảnh thẻ Boss/thưởng + nút thi đấu ---- */
+  function wtCardHTML(id, bonus){
+    var q = id && PLAYER_DB_BY_ID[id]; if(!q) return '';
+    var o = Object.assign({}, q), ov = q.realOvr || q.ovr || q.overall || 0; o.ovr = ov; o.realOvr = ov;
+    if(bonus){ var np = ownedPlayerFromBase(q); np.ovrBonus = bonus; o = hydratePlayer(np); }
+    return fcCardHTML(o) || '';
   }
+  function wtPopHTML(w){
+    var cl = wtClaims(), won = !!cl[w.ws], dw = wtDateWeek(wtLive), now = !!(dw && dw.ws === w.ws), inRoom = !!(wtCode && wtRoom), same = inRoom && wtRoom.ws === w.ws, ws = uEsc(w.ws);
+    function card(id, cls, bonus){
+      var q = id && PLAYER_DB_BY_ID[id], h = wtCardHTML(id, bonus);
+      return '<div class="wt-pc ' + cls + '">' + (h || '<span class="wt-chip"><b>' + uEsc(q ? q.name : 'Chưa chọn') + '</b></span>') + '<b>' + uEsc(q ? (q.name || '') : '') + '</b></div>';
+    }
+    var go = won ? '<p class="wt-pop-note">Chặng này đã đóng dấu vàng trên hộ chiếu.</p>'
+      : same ? '<button type="button" class="wt-btn go" data-wt-act="go" data-ws="' + ws + '">Vào phòng của con</button>'
+      : inRoom ? '<p class="wt-pop-note">Con đang ở phòng ' + uEsc(wtCode) + ' (' + uEsc(wtRoom.nation || '') + ').</p><button type="button" class="wt-btn alt" data-wt-act="leave-go" data-ws="' + ws + '">Rời phòng và đến đây</button>'
+      : '<button type="button" class="wt-btn go" data-wt-act="go" data-ws="' + ws + '">Thi đấu ở đây</button>';
+    return '<i class="wt-tail"></i><div class="wt-pop-in"><button type="button" class="wt-pop-x" data-wt-close aria-label="Đóng">✕</button>'
+      + '<div class="wt-pop-h">' + wtFaceHTML(w) + '<div><h4 class="wt-pop-n">' + uEsc(w.nation || 'Điểm đến') + '</h4><p class="wt-pop-s' + (won ? ' won' : '') + '">' + (won ? '★ Đã chinh phục' : (now ? 'Đang mở tuần này' : 'Chưa chinh phục')) + '<small>' + wtFmt(w.ws) + ' – ' + wtFmt(wtAdd(w.ws, 6)) + '</small></p></div></div>'
+      + (w.story ? '<p class="wt-pop-st">' + uEsc(w.story) + '</p>' : '')
+      + '<div class="wt-pop-cards"><div><h5>Đội Boss</h5><div class="wt-pop-row">' + card(w.bossIds[0], 'lead') + card(w.bossIds[1], '') + card(w.bossIds[2], '') + '</div></div>'
+      + '<div class="wt-pop-rw"><h5>Phần thưởng</h5>' + card(w.rewardId, 'rw', WT_REWARD_OVR) + '<small>Hạ Boss để nhận, thẻ có sẵn +' + WT_REWARD_OVR + ' Overall</small></div></div>'
+      + '<div class="wt-pop-go">' + go + '</div></div>';
+  }
+  function wtPopPlace(stage, pop, pin){
+    var inner = pop.querySelector('.wt-pop-in'), tail = pop.querySelector('.wt-tail'), map = stage.querySelector('.wt-map');
+    var sr = stage.getBoundingClientRect(), mr = map.getBoundingClientRect(), hr = pin.querySelector('.wt-pb').getBoundingClientRect();
+    if(window.innerWidth <= 640){ pop.style.transformOrigin = '50% 100%'; return; }
+    var mx0 = mr.left - sr.left, my0 = mr.top - sr.top, mw = mr.width, mh = mr.height;
+    inner.style.maxHeight = Math.max(160, mh - 12) + 'px';
+    var pw = pop.offsetWidth, ph = pop.offsetHeight, hx = hr.left + hr.width / 2 - sr.left, hy = hr.top + hr.height / 2 - sr.top, gap = hr.width * .55 + 12;
+    var side = (hx + gap + pw <= mx0 + mw - 6) ? 'r' : ((hx - gap - pw >= mx0 + 6) ? 'l' : (hx - mx0 < mw / 2 ? 'r' : 'l'));
+    var x = side === 'r' ? hx + gap : hx - gap - pw; x = Math.min(Math.max(x, mx0 + 6), mx0 + mw - pw - 6);
+    var y = Math.min(Math.max(hy - ph * .4, my0 + 6), my0 + mh - ph - 6);
+    pop.style.left = x + 'px'; pop.style.top = y + 'px'; pop.classList.add(side === 'r' ? 's-r' : 's-l');
+    tail.style.top = Math.min(Math.max(hy - y - 8, 18), ph - 34) + 'px';
+    pop.style.transformOrigin = (hx - x) + 'px ' + (hy - y) + 'px';
+  }
+  function wtPopClose(){
+    var p = document.getElementById('wt-pop'); if(p) p.remove();
+    Array.prototype.forEach.call(document.querySelectorAll('#wtour-view .wt-pin2.show, #wtour-view .wt-dk.on'), function(n){ n.classList.remove('show', 'on'); });
+    var s = document.querySelector('#wtour-view .wt-stage'); if(s) s.classList.remove('popping');
+  }
+  function wtPopOpen(ws){
+    var v = document.getElementById('wtour-view'), stage = v && v.querySelector('.wt-stage'), pin = stage && stage.querySelector('.wt-pin2[data-ws="' + ws + '"]'),
+        w = wtLive && wtLive.weeks.filter(function(q){ return q.ws === ws; })[0];
+    if(!stage || !pin || !w) return;
+    wtPopClose();
+    var pop = document.createElement('div'); pop.id = 'wt-pop'; pop.className = 'wt-pop'; pop.setAttribute('role', 'dialog'); pop.setAttribute('aria-label', w.nation || 'Điểm đến'); pop.setAttribute('data-ws', ws);
+    pop.innerHTML = wtPopHTML(w); pop.style.visibility = 'hidden'; stage.appendChild(pop);
+    pin.classList.add('show'); stage.classList.add('popping');
+    Array.prototype.forEach.call(stage.querySelectorAll('.wt-dk'), function(n){ if(n.getAttribute('data-wt-pin') === ws){ n.classList.add('on'); try{ n.scrollIntoView({ block:'nearest', inline:'nearest' }); }catch(e){} } });
+    wtPopPlace(stage, pop, pin); pop.style.visibility = ''; pop.classList.add('in');
+  }
+  /* ---- phòng chơi (chọn cầu thủ, mở/vào phòng, làm quiz, đánh Boss) nổi giữa màn hình ---- */
+  function wtDropSheet(){ var s = document.getElementById('wt-sheet'); if(s) s.remove(); }
+  function wtCloseSheet(){ wtDropSheet(); wtPaintChip(); }
+  function wtOpenSheet(){
+    var cur = wtLive && wtCurWeek(wtLive); if(!cur) return;
+    wtDropSheet(); wtPopClose();
+    var s = document.createElement('div'); s.id = 'wt-sheet'; s.className = 'wt-sheet'; s.setAttribute('role', 'dialog'); s.setAttribute('aria-modal', 'true'); s.setAttribute('aria-label', 'Phòng chơi ' + (cur.nation || ''));
+    s.innerHTML = '<div class="wt-sheet-p"><button type="button" class="wt-sheet-x" data-wt-act="sheet-x" aria-label="Đóng">✕</button><div class="wt-ticket"><div class="wt-main">' + wtFaceHTML(cur)
+      + '<p class="wt-kick">Chuyến bay tới</p><h3 class="wt-nation">' + uEsc(cur.nation) + '</h3><p class="wt-dates">Lịch mở ' + wtFmt(cur.ws) + ' – ' + wtFmt(wtAdd(cur.ws, 6)) + '</p>'
+      + (cur.story ? '<p class="wt-story">' + uEsc(cur.story) + '</p>' : '') + '<p class="wt-boss">Đội chủ nhà: ' + cur.bossIds.filter(Boolean).map(function(id){ var q = PLAYER_DB_BY_ID[id]; return uEsc(q ? q.name : '?'); }).join(', ') + '</p></div><div class="wt-stub" id="wt-stub"></div></div></div>';
+    document.body.appendChild(s); wtPaintStub();
+  }
+  /* ---- bản đồ vừa khít màn hình (iPad): tính chiều cao còn trống giữa thanh trên và thanh menu dưới ---- */
+  function wtTopInset(){
+    var best = 0;
+    [.5, .2, .8].forEach(function(f){
+      var e = document.elementFromPoint(Math.round(window.innerWidth * f), 3), n = 0;
+      while(e && e !== document.body && e !== document.documentElement && n++ < 14){
+        var ps = getComputedStyle(e).position;
+        if(ps === 'fixed' || ps === 'sticky'){ var b = e.getBoundingClientRect().bottom; if(b > best && b < window.innerHeight * .4) best = b; break; }
+        e = e.parentElement;
+      }
+    });
+    return best;
+  }
+  function wtFit(scroll){
+    var v = document.getElementById('wtour-view'), stage = v && v.querySelector('.wt-stage'), map = stage && stage.querySelector('.wt-map'); if(!map || !v.offsetParent) return;
+    var tb = document.querySelector('.tab-bar'), bot = 0, top = wtTopInset(), dock = stage.querySelector('.wt-dock');
+    if(tb){ var tr = tb.getBoundingClientRect(); if(tr.height) bot = Math.max(0, window.innerHeight - tr.top); }
+    var h = Math.max(200, window.innerHeight - top - bot - (dock ? dock.offsetHeight : 44) - 8 - 18 - 8);
+    map.style.setProperty('--wt-h', Math.round(h) + 'px');
+    if(scroll){
+      stage.style.scrollMarginTop = (top + 4) + 'px';
+      var r = stage.getBoundingClientRect();
+      if(r.top < top || r.bottom > window.innerHeight - bot + 2){ try{ stage.scrollIntoView({ block:'start', behavior:'smooth' }); }catch(e){ stage.scrollIntoView(true); } }
+    }
+  }
+  window.addEventListener('resize', function(){ var v = document.getElementById('wtour-view'); if(v && v.querySelector('.wt-stage')){ wtPopClose(); wtFit(false); } });
+  document.addEventListener('keydown', function(e){ if(e.key !== 'Escape') return; if(document.getElementById('wt-sheet')) wtCloseSheet(); else wtPopClose(); });
   document.addEventListener('click', function(e){
     var tg = e.target && e.target.closest ? e.target : null; if(!tg) return;
-    var info = document.getElementById('wt-info'), pin = tg.closest('#wtour-view .wt-pin2'), x = tg.closest('#wtour-view [data-wt-close]');
-    function clear(){ Array.prototype.forEach.call(document.querySelectorAll('#wtour-view .wt-pin2.show'), function(n){ n.classList.remove('show'); }); }
-    if(x){ clear(); if(info){ info.hidden = true; info.innerHTML = ''; } return; }
-    if(!pin || !info || !wtLive) return;
-    var was = pin.classList.contains('show'); clear();
-    if(was){ info.hidden = true; info.innerHTML = ''; return; }
-    var ws = pin.getAttribute('data-ws'), w = wtLive.weeks.filter(function(q){ return q.ws === ws; })[0]; if(!w) return;
-    var st = pin.classList.contains('won') ? 'won' : (pin.classList.contains('now') ? 'now' : (pin.classList.contains('miss') ? 'miss' : 'next'));
-    pin.classList.add('show'); info.innerHTML = wtInfoHTML(w, st); info.hidden = false;
-    var img = info.querySelector('.wt-if-f'), s = (w.themeKey && cdnReady()) ? cdnUrl(w.themeKey) : '';
-    if(img && s){ var im = document.createElement('img'); im.className = w.themeType === 'club' ? 'club' : 'nat'; im.alt = ''; im.src = s; im.onerror = function(){ im.style.display = 'none'; }; img.appendChild(im); }
-    if(info.scrollIntoView) info.scrollIntoView({ block:'nearest', behavior:'smooth' });
+    if(tg.id === 'wt-sheet'){ wtCloseSheet(); return; }
+    if(tg.closest('#wt-pop [data-wt-close]')){ wtPopClose(); return; }
+    var ref = tg.closest('#wtour-view [data-wt-pin], #wtour-view .wt-pin2');
+    if(ref){
+      var ws = ref.getAttribute('data-wt-pin') || ref.getAttribute('data-ws'), cp = document.getElementById('wt-pop');
+      if(cp && cp.getAttribute('data-ws') === ws) wtPopClose(); else wtPopOpen(ws);
+      return;
+    }
+    if(tg.closest('#wt-pop')) return;
+    if(document.getElementById('wt-pop') && tg.closest('#wtour-view .wt-stage')) wtPopClose();
   });
-
-  /* ===== WORLD TOUR · Giai đoạn 2: 10 câu riêng từng bé → tỷ lệ sai → tiết lộ sức mạnh Boss =====
-     Phòng đã chốt: res/<ghế> = { id, a:{0..9: 0|1}, pts, done }. Mỗi câu GHI 0 (sai) NGAY khi hiện ra, đúng mới sửa thành 1,
-     nên tải lại trang để đổi câu không có tác dụng; nộp xong thì khóa. Khi cả team nộp, chủ phòng ghi boss = công thức Giai đoạn 0. */
-  var WT_PLAN = ['toan', 'toan', 'toan', 'anh', 'anh', 'anh', 'tviet', 'tnxh', 'bongda', 'khac'], WT_Q_SECS = 20;
   function wtSlotOf(room){ return wtMembers(room).filter(function(i){ return room.slots[i].id === syncId; })[0]; }
   function wtRight(r){ return wtList(r && r.a).filter(function(x){ return x === 1; }).length; }
   function wtAllDone(room){ var m = wtMembers(room); return m.length >= 2 && m.every(function(i){ return room.res && room.res[i] && room.res[i].done; }); }
@@ -14278,7 +14451,7 @@
         document.getElementById('wt-fb').textContent = (good ? '🎉 Chính xác! ' : (pick < 0 ? '⏰ Hết giờ. ' : '💡 Chưa đúng. ')) + (q.explain || '');
         await new Promise(function(r){ setTimeout(r, good ? 1300 : 2400); });
       }
-      wtMonths = {}; var wp = await wtWeekPoints(syncId, wtAdd(cur.ws, -7));
+      wtMonths = {}; var wp = await wtWeekPoints(syncId, wtEffortStart(wtLive));
       await wtPut(base + '/pts', wp.total); await wtPut(base + '/done', true);
     }catch(e){ wtErr = 'Mất kết nối khi làm bài. Vào lại để làm tiếp từ câu đang dở.'; }
     await wtRender();
@@ -19878,14 +20051,14 @@
 
 
   /* ===== HÌNH NỀN ĐỔI THEO LẦN VÀO / MENU =====
-     Ảnh nằm trên Cloudinary: .../upload/v1791253913/bayer1.jpg … bayer9.jpg (thêm ảnh: bỏ ảnh mới lên cùng thư mục rồi nâng BG_COUNT).
+     Ảnh nằm trên Cloudinary: .../upload/v1793068189/hinhnen01.jpg … hinhnen38.jpg (tên đánh số 2 chữ số; thêm ảnh: bỏ ảnh mới lên cùng thư mục rồi nâng BG_COUNT).
      • Mở app: chọn ngẫu nhiên 1 ảnh, không trùng ảnh lần trước.   • Mỗi lần chuyển menu: ảnh mới (không trùng ảnh đang hiện).
      • Quay lại app sau ≥ 1 phút (tab trình duyệt/app chạy nền) cũng đổi ảnh.
      • Tải bản đã tối ưu (f_auto,q_auto, rộng theo màn hình); lỗi thì tải bản gốc; ảnh nào lỗi thì bỏ qua; không tải được gì thì giữ nền sân bóng.
      • ⚙️ Cài đặt → Hình nền: đổi mỗi menu / chỉ mỗi lần mở app / tắt. */
   var BG_BASE = 'https://res.cloudinary.com/tgvj8prc/image/upload/';
-  var BG_VERSION = 'v1791253913';
-  var BG_COUNT = 9;
+  var BG_VERSION = 'v1793068189';
+  var BG_COUNT = 38;
   var BG_LAST_KEY = 'dbcd_bg_last';   // cố ý KHÔNG bắt đầu bằng "kidchart_" để không bị đồng bộ lên Firebase
   var bgZ = 1, bgBusyUntil = 0, bgDefer = 0, bgCur = 0, bgFront = -1, bgToken = 0, bgBad = {}, bgNextIdx = 0, bgHiddenAt = 0, bgLastTab = null;
   function bgMode(){ var f = window.appGetSettings, st = f ? f() : null; return (st && st.bgMode) || 'tab'; }   // đọc cài đặt từ script chính
@@ -19894,7 +20067,7 @@
     return w <= 700 ? 800 : (w <= 1300 ? 1280 : 1920);
   }
   function bgUrls(i){
-    var f = 'bayer' + i + '.jpg';
+    var f = 'hinhnen' + (i < 10 ? '0' : '') + i + '.jpg';
     return [BG_BASE + 'f_auto,q_auto,w_' + bgWidth() + ',c_limit/' + BG_VERSION + '/' + f, BG_BASE + BG_VERSION + '/' + f];
   }
   function bgLoad(i, cb){
