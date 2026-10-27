@@ -14013,6 +14013,7 @@
   }
   function wtCurWeek(cfg){ var td = wtY(new Date()); return (cfg.weeks || []).filter(function(w){ return w.ws && w.ws <= td && td <= wtAdd(w.ws, 6); })[0] || null; }
   /* Bản đồ = ảnh Atlas; ghim đặt theo % (kinh độ/vĩ độ → x/y). Nếu ảnh lệch vị trí thì chỉnh 4 số lon0/lon1/lat0/lat1 (mép trái/phải/trên/dưới của ảnh). */
+  var WT_REWARD_OVR = 3;   // thẻ thưởng World Tour: cầu thủ chỉ định được cộng sẵn +3 Overall (chỉnh số này nếu muốn đổi)
   var WT_MAP = { url:'https://res.cloudinary.com/tgvj8prc/image/upload/v1793011116/Colorful_World_Atlas_Map.png', lon0:-180, lon1:180, lat0:90, lat1:-90 };
   function wtPct(w){
     var x = (w.lon - WT_MAP.lon0) / (WT_MAP.lon1 - WT_MAP.lon0) * 100, y = (WT_MAP.lat0 - w.lat) / (WT_MAP.lat0 - WT_MAP.lat1) * 100;
@@ -14183,7 +14184,7 @@
       + '<div class="wt-if-h"><span class="wt-if-f"><span aria-hidden="true">' + (club ? '🛡️' : '🌍') + '</span>' + '</span><div><h4 class="wt-if-n">' + uEsc(w.nation || (club ? 'CLB' : 'Quốc gia')) + '</h4><p class="wt-if-s">' + uEsc(sub) + '</p></div></div>'
       + (w.story ? '<p class="wt-if-st">' + uEsc(w.story) + '</p>' : '')
       + '<div class="wt-if-g"><div class="wt-if-b"><h5>👹 Đội Boss</h5><div class="wt-chips">' + pc(w.bossIds[0], 'lead', '👑 ') + pc(w.bossIds[1], '') + pc(w.bossIds[2], '') + '</div></div>'
-      + '<div class="wt-if-b rw"><h5>🎁 Phần thưởng</h5><div class="wt-chips">' + pc(w.rewardId, 'gold') + '</div><small style="display:block;margin-top:4px;font-size:11.5px;color:#6B5A31">Hạ Boss để nhận thẻ, tự động +1 Overall</small></div></div>';
+      + '<div class="wt-if-b rw"><h5>🎁 Phần thưởng</h5><div class="wt-chips">' + pc(w.rewardId, 'gold') + '</div><small style="display:block;margin-top:4px;font-size:11.5px;color:#6B5A31">Hạ Boss để nhận thẻ cầu thủ này, tự động +' + WT_REWARD_OVR + ' Overall</small></div></div>';
   }
   document.addEventListener('click', function(e){
     var tg = e.target && e.target.closest ? e.target : null; if(!tg) return;
@@ -14737,7 +14738,7 @@
     var shown = null, rec = { at: Date.now(), room: code, got: 'none' }, base = week && week.rewardId ? PLAYER_DB_BY_ID[week.rewardId] : null;
     if(base){
       var players = loadPlayers(), np = ownedPlayerFromBase(base);
-      np.ovrBonus = 1;   // thẻ thưởng World Tour tự động +1 Overall; trùng thẻ đã có cũng được (bé tự chọn thẻ này)
+      np.ovrBonus = WT_REWARD_OVR;   // thẻ thưởng World Tour tự động +3 Overall (WT_REWARD_OVR); trùng thẻ đã có cũng được (bé tự chọn thẻ này)
       players.push(np);
       if(savePlayers(players) === false){ alert('Chưa lưu được thẻ vào máy. Con bấm «Nhận thẻ thưởng» lại nhé!'); if(W) W.claimed = 0; return; }
       rec.got = 'card'; rec.id = base.dbId; rec.name = base.name; shown = hydratePlayer(np);
@@ -14752,7 +14753,7 @@
     var o = document.createElement('div'); o.className = 'cm-reveal';
     var card = base ? '<div class="cm-rv-card">' + playerCardHTML(base, false) + '</div>' : '';
     o.innerHTML = '<div class="cm-rv-box"><div class="cm-rv-t">' + (base ? '🎁 Thẻ thưởng World Tour!' : '🛂 Con dấu hộ chiếu!') + '</div>' + card
-      + '<div class="cm-rv-n">' + (rec.got === 'card' ? uEsc(base.name || '') + ' đã về Kho cầu thủ của con, tự động +1 Overall!' : (rec.got === 'frags' ? 'Con đã có ' + uEsc(base.name || 'cầu thủ này') + ' rồi nên thẻ được đổi thành <b>' + (rec.n | 0) + ' 🧩 mảnh ghép</b> cho Hành trình!' : 'Chặng này đã được đóng dấu vàng trên hộ chiếu của con.')) + '</div>'
+      + '<div class="cm-rv-n">' + (rec.got === 'card' ? uEsc(base.name || '') + ' đã về Kho cầu thủ của con, tự động +' + WT_REWARD_OVR + ' Overall!' : (rec.got === 'frags' ? 'Con đã có ' + uEsc(base.name || 'cầu thủ này') + ' rồi nên thẻ được đổi thành <b>' + (rec.n | 0) + ' 🧩 mảnh ghép</b> cho Hành trình!' : 'Chặng này đã được đóng dấu vàng trên hộ chiếu của con.')) + '</div>'
       + '<button type="button" class="btn-primary" data-cm="rv-ok">Tuyệt vời!</button></div>';
     document.body.appendChild(o);
   }
@@ -14888,7 +14889,7 @@
         + '<label>Vị trí trên bản đồ · vĩ độ<input type="number" data-f="lat" step="0.1" value="' + w.lat + '"></label>'
         + '<label>Kinh độ<input type="number" data-f="lon" step="0.1" value="' + w.lon + '"></label>'
         + pl('boss0', 'Boss 1 (thủ lĩnh)', w.bossIds[0], th) + pl('boss1', 'Boss 2 (hộ vệ)', w.bossIds[1], th) + pl('boss2', 'Boss 3 (hộ vệ)', w.bossIds[2], th)
-        + pl('rewardId', 'Thẻ thưởng (tự động +1 Overall)', w.rewardId, th)
+        + pl('rewardId', 'Thẻ thưởng (cầu thủ chỉ định, tự động +' + WT_REWARD_OVR + ' Overall)', w.rewardId, th)
         + '<label>Nội dung về cầu thủ thưởng &amp; quốc gia (hiện trên bản đồ)<textarea data-f="story" maxlength="600" rows="3">' + uEsc(w.story) + '</textarea></label></div>';
     }).join('') : '<p class="hint-text" style="margin:0">Chưa có tuần nào. Bấm «Thêm tuần».</p>';
     document.getElementById('wt-count').textContent = wtCfg.weeks.length ? '(' + wtCfg.weeks.length + ')' : '';
