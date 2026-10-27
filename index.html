@@ -1392,9 +1392,12 @@
   .wt-pop-x{ position:absolute; right:8px; top:8px; width:34px; height:34px; border-radius:50%; border:2px solid var(--wt-ink); background:transparent; color:var(--wt-ink); font:900 15px/1 inherit; cursor:pointer; }
   .wt-pop-h{ display:flex; align-items:center; gap:11px; padding-right:40px; }
   .wt-pop-h .wt-f{ width:48px; height:48px; border:3px solid var(--wt-gold); font-size:24px; background:#fff; }
-  .wt-pop-n{ margin:0; font:900 23px/1.05 Georgia,'Times New Roman',serif; }
+  .wt-pop-n{ margin:0; font-family:var(--font-display); font-weight:800; font-size:22px; line-height:1.15; }
   .wt-pop-s{ margin:3px 0 0; font-size:13px; font-weight:800; color:var(--wt-red); } .wt-pop-s.won{ color:#8A6200; } .wt-pop-s small{ margin-left:6px; font-weight:600; color:#6B5A31; }
-  .wt-pop-st{ margin:9px 0 0; font:14px/1.5 Georgia,serif; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+  .wt-pop-st{ margin:9px 0 0; font-family:var(--font-body); font-size:14px; line-height:1.55; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+  .wt-pop-st.open{ display:block; -webkit-line-clamp:unset; overflow:visible; }
+  .wt-pop-more{ margin:2px 0 0; padding:7px 0; border:0; background:none; color:var(--wt-red); font:800 13.5px/1 inherit; cursor:pointer; }
+  .wt-pop-more:not([hidden]){ display:block; }
   .wt-pop-cards{ display:grid; grid-template-columns:1fr auto; gap:12px; margin-top:11px; }
   .wt-pop-cards h5{ margin:0 0 6px; font-size:13px; font-weight:800; color:#5C4B22; }
   .wt-pop-row{ display:flex; gap:7px; }
@@ -1414,6 +1417,8 @@
   .wt-sheet-p{ position:relative; width:min(940px,100%); max-height:calc(100dvh - 24px); overflow:auto; border-radius:16px; background:var(--wt-sand); box-shadow:0 22px 60px rgba(0,0,0,.6); animation:wtRise .28s cubic-bezier(.2,1.2,.4,1); }
   .wt-sheet-p .wt-ticket{ margin:0; }
   .wt-sheet-x{ position:absolute; right:10px; top:10px; z-index:3; width:40px; height:40px; border-radius:50%; border:2px solid var(--wt-ink); background:var(--wt-sand); color:var(--wt-ink); font:900 16px/1 inherit; cursor:pointer; }
+  .wt-sheet .wt-nation, .wt-sheet .wt-story, .wt-sheet .wt-dates, .wt-sheet .wt-boss, .wt-sheet .wt-kick{ font-family:var(--font-body); }
+  .wt-sheet .wt-nation{ font-weight:800; }
   .wt-sheet .wt-main{ padding-right:56px; } .wt-sheet .wt-main .wt-f{ width:54px; height:54px; border:3px solid var(--wt-gold); background:#fff; font-size:28px; }
   @keyframes wtFade{ from{ opacity:0; } to{ opacity:1; } } @keyframes wtRise{ from{ opacity:0; transform:translateY(24px) scale(.96); } to{ opacity:1; transform:none; } }
   @media (prefers-reduced-motion:reduce){ .wt-pop.in, .wt-sheet, .wt-sheet-p{ animation:none; } }
@@ -14056,6 +14061,7 @@
   /* Bản đồ = ảnh Atlas. Ảnh này không theo phép chiếu chuẩn nên vị trí ghim được hiệu chỉnh bằng bảng điểm chuẩn:
      [tên, vĩ độ, kinh độ, x, y] với x,y là pixel trên ảnh tham chiếu 1152×648 (tâm của nước đó trên ảnh).
      Muốn ghim chính xác hơn ở vùng nào, thêm 1 dòng điểm chuẩn ở vùng đó. Hệ thống tự nội suy phần còn lại. */
+  var WT_REWARD_OVR = 3;   // thẻ thưởng World Tour: cầu thủ chỉ định được cộng sẵn +3 Overall (chỉnh số này nếu muốn đổi)
   var WT_MAP = { url:'https://res.cloudinary.com/tgvj8prc/image/upload/v1793011116/Colorful_World_Atlas_Map.png', W:1152, H:648, sig:28, lam:0.02 };
   var WT_CTRL = [
     ['Peru',-9.2,-75.0,265.5,430.5], ['Bolivia',-16.3,-63.55,305.5,452.5], ['Argentina',-38.4,-63.6,302.5,538],
@@ -14191,7 +14197,7 @@
     }
     if(wtSel && !wtLive.weeks.some(function(w){ return w.ws === wtSel; })) wtSel = '';
     v.innerHTML = wtStageHTML(wtLive);
-    wtPaintChip(); wtFit(true); requestAnimationFrame(function(){ wtFit(false); });
+    wtPaintChip(); wtFit(true); requestAnimationFrame(function(){ wtFit(true); }); setTimeout(function(){ wtFit(true); }, 450);
     if(wtCode && wtRoom && wtCurWeek(wtLive)) wtOpenSheet();
     if(wtCode && !wtPoll) wtPoll = setInterval(wtTick, 2500);
   }
@@ -14292,9 +14298,9 @@
       : '<button type="button" class="wt-btn go" data-wt-act="go" data-ws="' + ws + '">Thi đấu ở đây</button>';
     return '<i class="wt-tail"></i><div class="wt-pop-in"><button type="button" class="wt-pop-x" data-wt-close aria-label="Đóng">✕</button>'
       + '<div class="wt-pop-h">' + wtFaceHTML(w) + '<div><h4 class="wt-pop-n">' + uEsc(w.nation || 'Điểm đến') + '</h4><p class="wt-pop-s' + (won ? ' won' : '') + '">' + (won ? '★ Đã chinh phục' : (now ? 'Đang mở tuần này' : 'Chưa chinh phục')) + '<small>' + wtFmt(w.ws) + ' – ' + wtFmt(wtAdd(w.ws, 6)) + '</small></p></div></div>'
-      + (w.story ? '<p class="wt-pop-st">' + uEsc(w.story) + '</p>' : '')
+      + (w.story ? '<p class="wt-pop-st">' + uEsc(w.story) + '</p><button type="button" class="wt-pop-more" data-wt-more aria-expanded="false" hidden>Xem thêm ▾</button>' : '')
       + '<div class="wt-pop-cards"><div><h5>Đội Boss</h5><div class="wt-pop-row">' + card(w.bossIds[0], 'lead') + card(w.bossIds[1], '') + card(w.bossIds[2], '') + '</div></div>'
-      + '<div class="wt-pop-rw"><h5>Phần thưởng</h5>' + card(w.rewardId, 'rw', WT_REWARD_OVR) + '<small>Hạ Boss để nhận, thẻ có sẵn +' + WT_REWARD_OVR + ' Overall</small></div></div>'
+      + '<div class="wt-pop-rw"><h5>Phần thưởng</h5>' + card(w.rewardId, 'rw', WT_REWARD_OVR) + '</div></div>'
       + '<div class="wt-pop-go">' + go + '</div></div>';
   }
   function wtPopPlace(stage, pop, pin){
@@ -14323,6 +14329,7 @@
     wtPopClose();
     var pop = document.createElement('div'); pop.id = 'wt-pop'; pop.className = 'wt-pop'; pop.setAttribute('role', 'dialog'); pop.setAttribute('aria-label', w.nation || 'Điểm đến'); pop.setAttribute('data-ws', ws);
     pop.innerHTML = wtPopHTML(w); pop.style.visibility = 'hidden'; stage.appendChild(pop);
+    var stx = pop.querySelector('.wt-pop-st'), mbt = pop.querySelector('.wt-pop-more'); if(stx && mbt && stx.scrollHeight > stx.clientHeight + 1) mbt.hidden = false;
     pin.classList.add('show'); stage.classList.add('popping');
     Array.prototype.forEach.call(stage.querySelectorAll('.wt-dk'), function(n){ if(n.getAttribute('data-wt-pin') === ws){ n.classList.add('on'); try{ n.scrollIntoView({ block:'nearest', inline:'nearest' }); }catch(e){} } });
     wtPopPlace(stage, pop, pin); pop.style.visibility = ''; pop.classList.add('in');
@@ -14358,10 +14365,9 @@
     if(tb){ var tr = tb.getBoundingClientRect(); if(tr.height) bot = Math.max(0, window.innerHeight - tr.top); }
     var h = Math.max(200, window.innerHeight - top - bot - (dock ? dock.offsetHeight : 44) - 8 - 18 - 8);
     map.style.setProperty('--wt-h', Math.round(h) + 'px');
-    if(scroll){
-      stage.style.scrollMarginTop = (top + 4) + 'px';
-      var r = stage.getBoundingClientRect();
-      if(r.top < top || r.bottom > window.innerHeight - bot + 2){ try{ stage.scrollIntoView({ block:'start', behavior:'smooth' }); }catch(e){ stage.scrollIntoView(true); } }
+    if(scroll){   // đưa khung bản đồ xuống ngay dưới thanh trên (cuộn tức thì, không cuộn mượt để khỏi bị lệch khi ảnh đang tải)
+      var dy = Math.round(stage.getBoundingClientRect().top - (top + 4));
+      if(Math.abs(dy) > 2){ try{ window.scrollTo({ top: window.pageYOffset + dy, behavior: 'instant' }); }catch(e){ window.scrollTo(0, window.pageYOffset + dy); } }
     }
   }
   window.addEventListener('resize', function(){ var v = document.getElementById('wtour-view'); if(v && v.querySelector('.wt-stage')){ wtPopClose(); wtFit(false); } });
@@ -14370,6 +14376,13 @@
     var tg = e.target && e.target.closest ? e.target : null; if(!tg) return;
     if(tg.id === 'wt-sheet'){ wtCloseSheet(); return; }
     if(tg.closest('#wt-pop [data-wt-close]')){ wtPopClose(); return; }
+    var more = tg.closest('#wt-pop [data-wt-more]');
+    if(more){
+      var pp = document.getElementById('wt-pop'), st2 = pp.querySelector('.wt-pop-st'), open = st2.classList.toggle('open'), stg = document.querySelector('#wtour-view .wt-stage'), pn = stg && stg.querySelector('.wt-pin2[data-ws="' + pp.getAttribute('data-ws') + '"]');
+      more.textContent = open ? 'Thu gọn ▴' : 'Xem thêm ▾'; more.setAttribute('aria-expanded', open ? 'true' : 'false');
+      if(pn){ pp.classList.remove('s-r', 's-l'); wtPopPlace(stg, pp, pn); }
+      return;
+    }
     var ref = tg.closest('#wtour-view [data-wt-pin], #wtour-view .wt-pin2');
     if(ref){
       var ws = ref.getAttribute('data-wt-pin') || ref.getAttribute('data-ws'), cp = document.getElementById('wt-pop');
@@ -15058,7 +15071,7 @@
       return '<div data-wt="' + i + '" style="' + box + '"><h4 style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin:0">🌍 Tuần ' + (i + 1) + ' <button type="button" class="btn-secondary" data-wt-del="' + i + '">🗑️ Xóa</button></h4>'
         + '<label>Ngày mở tuần chơi (mở 7 ngày liên tiếp, không cần là Chủ nhật; điểm tính từ 7 ngày liền trước)<input type="date" data-f="ws" value="' + uEsc(w.ws) + '"></label>'
         + tBox + warn
-        + '<label>Tên quốc gia / CLB hiển thị trên bản đồ (gõ tên, vì dữ liệu chỉ có ảnh)<input type="text" data-f="nation" maxlength="40" value="' + uEsc(w.nation) + '"></label>'
+        + '<label>✏️ Tên hiển thị trên bản đồ, thẻ ghim và phòng chơi (tự điền theo ảnh đã chọn, có thể sửa lại, ví dụ gõ \"Thụy Sĩ\"; đổi chủ đề sẽ không ghi đè tên con đã sửa)<input type="text" data-f="nation" maxlength="40" placeholder="Ví dụ: Thụy Sĩ" value="' + uEsc(w.nation) + '"></label>'
         + '<label>Vị trí trên bản đồ · vĩ độ<input type="number" data-f="lat" step="0.1" value="' + w.lat + '"></label>'
         + '<label>Kinh độ<input type="number" data-f="lon" step="0.1" value="' + w.lon + '"></label>'
         + pl('boss0', 'Boss 1 (thủ lĩnh)', w.bossIds[0], th) + pl('boss1', 'Boss 2 (hộ vệ)', w.bossIds[1], th) + pl('boss2', 'Boss 3 (hộ vệ)', w.bossIds[2], th)
@@ -15114,9 +15127,10 @@
         var w = wtCfg.weeks[+card.getAttribute('data-wt')]; if(!w) return;
         var v = e.target.value;
         if(f === 'theme'){
+          var pth = wtThemeOf(w), pl0 = pth && pth.label;   // tên tự điền của chủ đề cũ (để biết Admin có tự sửa tên chưa)
           var pr = v.split('|'); w.themeType = pr[0] === 'club' || pr[0] === 'nation' ? pr[0] : ''; w.themeKey = pr.slice(1).join('|');
           var t = wtThemeOf(w);
-          if(t){ w.nation = t.label; var ids = {}; t.list.forEach(function(p){ ids[p.dbId] = 1; }); w.bossIds = w.bossIds.map(function(id){ return ids[id] ? id : ''; }); if(!ids[w.rewardId]) w.rewardId = ''; }
+          if(t){ if(t.label && (!String(w.nation).trim() || w.nation === pl0)) w.nation = t.label; var ids = {}; t.list.forEach(function(p){ ids[p.dbId] = 1; }); w.bossIds = w.bossIds.map(function(id){ return ids[id] ? id : ''; }); if(!ids[w.rewardId]) w.rewardId = ''; }
           wtPaint(); return;
         }
         if(f.indexOf('boss') === 0){ w.bossIds[+f.slice(4)] = v.trim(); }
@@ -15129,9 +15143,10 @@
         var tp = e.target.closest('[data-wt-theme]');
         if(tp){
           var card = tp.closest('[data-wt]'), w = card && wtCfg.weeks[+card.getAttribute('data-wt')]; if(!w) return;
+          var pth = wtThemeOf(w), pl0 = pth && pth.label;   // tên tự điền của chủ đề cũ (để biết Admin có tự sửa tên chưa)
           var pr = tp.getAttribute('data-wt-theme').split('|'); w.themeType = pr[0] === 'club' ? 'club' : 'nation'; w.themeKey = pr.slice(1).join('|');
           var t = wtThemeOf(w);
-          if(t){ if(t.label) w.nation = t.label; var ids = {}; t.list.forEach(function(p){ ids[p.dbId] = 1; }); w.bossIds = w.bossIds.map(function(id){ return ids[id] ? id : ''; }); if(!ids[w.rewardId]) w.rewardId = ''; }
+          if(t){ if(t.label && (!String(w.nation).trim() || w.nation === pl0)) w.nation = t.label; var ids = {}; t.list.forEach(function(p){ ids[p.dbId] = 1; }); w.bossIds = w.bossIds.map(function(id){ return ids[id] ? id : ''; }); if(!ids[w.rewardId]) w.rewardId = ''; }
           wtPaint(); return;
         }
         var b = e.target.closest('[data-wt-del]'); if(!b) return;
