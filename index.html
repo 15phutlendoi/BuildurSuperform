@@ -19799,12 +19799,23 @@
   }
 
   /* ---- sút luân lưu qua mạng: hai bên cùng chọn ô, trùng = bị cản ---- */
+  /* GIF của lượt luân lưu chọn THEO SEED TRẬN (không dùng Math.random / túi localStorage từng máy) nên hai máy cùng thấy đúng một ảnh.
+     Mỗi loại (vào / trượt) có một "túi" xáo theo seed trận; lượt thứ n cùng loại lấy ảnh thứ n trong túi → trong 1 trận không lặp ảnh cho đến khi hết túi. */
+  function frlPsoGif(m, kick){
+    var kind = kick.scored ? 'goal' : 'miss', cfg = SHOT_GIFS[kind], n = cfg.n, idx = 0, i, j, t, bag = [];
+    m.pso.kicks.forEach(function(x){ if(x.k < kick.k && !!x.scored === !!kick.scored) idx++; });
+    var rng = seRng(seHash(m.seed + ':psoGif:' + kind));
+    for(i = 1; i <= n; i++) bag.push(i);
+    for(i = n - 1; i > 0; i--){ j = Math.floor(rng() * (i + 1)); t = bag[i]; bag[i] = bag[j]; bag[j] = t; }
+    var pick = bag[idx % n];
+    return cfg.url + (pick < 10 ? '0' : '') + pick + '.gif';
+  }
   function frlGoalHTML(on){ return frGoalHTML('data-frl="dir"', on); }
   function frlPsoRender(res){
     var c = sMC; if(!c || !c.lv) return; c.busy = false; var m = c.m, p = m.pso, me = mMe(m), h = sPsoBoard(m), secs = c.lv.qetSecs;
     if(c.psoIv){ clearInterval(c.psoIv); c.psoIv = 0; }
     if(res && res.kick){
-      var k = res.kick, gif = shotGifPick(k.scored ? 'goal' : 'miss');
+      var k = res.kick, gif = frlPsoGif(m, k);
       h += '<div class="mx-body"><div class="fr-res ' + (k.scored ? 'goal' : 'save') + '"><img class="fr-gif" src="' + gif + '" alt="" onerror="this.style.display=\'none\'">'
         + frGoalResult(k) + '<p><b>' + (k.scored ? '⚽ VÀO LƯỚI!' : '🧤 BỊ CẢN PHÁ!') + '</b><br><small>' + escHtml(sNm(m.teams[k.side], k.taker).replace(/&[^;]+;/g, '')) + ' sút sang ' + FR_DIRS[k.shot] + ' · thủ môn ' + escHtml(sNm(m.teams[1 - k.side], k.gk).replace(/&[^;]+;/g, '')) + ' bay sang ' + FR_DIRS[k.dive] + '</small></p></div></div>'
         + '<div class="mx-foot"><div class="se-btns">' + (p.done ? '<button type="button" class="se-btn" data-frl="pend">🏁 Xem kết quả trận</button>' : '<button type="button" class="se-btn" data-frl="pnext">▶ Lượt sút tiếp theo</button>') + '</div></div>';
