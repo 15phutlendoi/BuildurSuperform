@@ -16915,11 +16915,52 @@
     pass:['Pass','Chuyền bóng'], wall:['Wall','Hàng rào'], goal:['Goal','Bàn thắng'], shot:['Shot','Cú sút'],
     var:['VAR','Trọng tài video'], offside:['Offside','Việt vị'], handball:['Handball','Chạm tay'], yellow:['Yellow card','Thẻ vàng'], red:['Red card','Thẻ đỏ'],
     injury:['Injury','Chấn thương'], substitute:['Substitute','Cầu thủ dự bị / thay người'], extratime:['Extra time','Bù giờ'],
-    throwin:['Throw-in','Ném biên'], secondball:['Second ball','Bóng bật ra / bóng hai'], wide:['Wide','Sút ra ngoài'], press:['Pressing','Áp sát đoạt bóng'], intercept:['Intercept','Cắt bóng'], keeper:['Goalkeeper','Thủ môn'], defendcounter:['Track back','Lùi về chống phản công']};
+    throwin:['Throw-in','Ném biên'], secondball:['Second ball','Bóng bật ra / bóng hai'], wide:['Wide','Sút ra ngoài'], press:['Pressing','Áp sát đoạt bóng'], intercept:['Intercept','Cắt bóng'], keeper:['Goalkeeper','Thủ môn'], defendcounter:['Track back','Lùi về chống phản công'],
+    possession:['Ball possession','Kiểm soát bóng'], addedtime:['Added time','Thời gian bù giờ'], assist:['Assist','Kiến tạo'], equaliser:['Equaliser','Bàn gỡ hòa'], attendance:['Attendance','Số khán giả']};
   var COM_ICON = {rs:'🔄', miss:'😮', pre:'📋', play:'👟', key:'⚡', goal:'⚽', goalx:'😬', save:'🧤', set:'🚩', warn:'⚠️', ans:'🧠', info:'🗣️', next:'👀', ht:'⏸️', ft:'🏁', fire:'🔥', var:'📺', card:'🟨', red:'🟥', inj:'🚑', sub:'🔁', xt:'⏱️'};
   var comVoice = false; try{ comVoice = localStorage.getItem('se_com_voice') === '1'; }catch(e){}
 
   function comL(min, k, t, w){ var o = {min:min, k:k, t:t}; if(w) o.w = w; return o; }
+  function comLx(min, k, t, w){ var o = comL(min, k, t, w); o.fx = 1; return o; }   // dòng "nền" của trận (kiểm soát bóng, tranh chấp...): phát nhanh hơn dòng chính
+  /* ===== TƯỜNG THUẬT GẦN THỰC TẾ HƠN =====
+     Học từ 3 trận có live commentary thật (Roma–Cagliari, PSG–Lyon, Barcelona–Real Madrid): giữa các pha chính luôn có dòng "nền"
+     (đang cầm bóng, tranh bóng, phá bóng, tạt bị cắt...), cứ vài phút có thống kê kiểm soát bóng, bàn thắng có người kiến tạo + câu về ý nghĩa bàn thắng
+     (mở tỉ số / gỡ hòa / bàn quyết định), thẻ phạt và chấn thương có từng bước, VAR xem lại phạt đền, trọng tài báo bù giờ trước khi hết hiệp.
+     LƯU Ý cho hiệu ứng sân (mxDo): dòng 'play' KHÔNG có w = cảnh chuẩn bị sút; 'play' + w clear/tackle/foul/handball = pha cản/phạm lỗi; k goal/goalx/save/miss chỉ xuất hiện 1 lần mỗi pha.
+     Các dòng phụ mới đều dùng k khác ('rs', 'info', 'var', 'xt'...) nên không làm đổi hoạt ảnh. */
+  var COM_STYLE_POSS = {tiki:4, wenger:3, delbosque:3, sebes:2, total:2, press:1, bielsa:1, sacchi:1, counter:-5, herrera:-4, steel:-3, choli:-3};
+  function comPossPct(m, mn){   // % cầm bóng của đội MÌNH. Tính từ góc nhìn đội số 0 (chủ phòng) rồi đảo lại → hai máy PvP luôn thấy hai số cộng lại đúng 100%
+    var a = m.teams[0], b = m.teams[1];
+    function avg(t){ var s0 = 0, n = 0; t.pitch.forEach(function(q){ if(!q.gone){ s0 += (q.o || 60); n++; } }); return n ? s0 / n : 60; }
+    var v = 50 + Math.max(-14, Math.min(14, (avg(a) - avg(b)) * 0.9)) + (COM_STYLE_POSS[a.style] || 0) - (COM_STYLE_POSS[b.style] || 0);
+    if(m.goals[0] < m.goals[1]) v += 3; else if(m.goals[0] > m.goals[1]) v -= 2;   // đội đang thua dồn ép nhiều hơn
+    v += (seRng(seHash(m.seed + ':pos' + Math.floor((mn || 0) / 5)))() - 0.5) * 6;
+    var p0 = Math.max(34, Math.min(68, Math.round(v)));
+    return mMe(m) === 0 ? p0 : 100 - p0;
+  }
+  function comPossLine(m, min){ var p0 = comPossPct(m, min); return comLx(min, 'info', 'Ball possession: ' + mT(m).name + ': ' + p0 + '%, ' + oT(m).name + ': ' + (100 - p0) + '%.', 'possession'); }
+  function comSideLR(m, i){ return seRng(seHash(m.seed + ':cside' + i))() < 0.5 ? 'left' : 'right'; }   // phạt góc bên trái hay phải (dùng chung cho lời dẫn và kết quả)
+  function comAdded(m, lo, hi, tag){ return lo + Math.floor(seRng(seHash(m.seed + ':add' + tag))() * (hi - lo + 1)); }
+  function comTexture(m, cur, o, r, lo, mn, F, kind){   // 0–2 dòng "nền" trước lời dẫn của tình huống
+    if(cur.i === 0 || kind === 'penalty' || kind === 'blunder') return [];
+    if(F && (F.first || F.type === 'kickoff')) return [];
+    var pool = [
+      ['{A} are in control of the ball.'],
+      ['{A} are trying to create something here.'],
+      ['{p1} makes the tackle and wins possession for his team'],
+      ['{p2} wins an air challenge against {d1}'],
+      ['{d1} relieves the pressure with a clearance', '{p1} wins the ball back for {A}.'],
+      ['{d2} from {D} intercepts a cross aimed towards the box.', '{A} are in control of the ball.']
+    ];
+    if(!F) pool.push(["{A} take a throw-in in the opponent's half of the field."]);
+    var n = r() < 0.8 ? 1 : 0; if(n && r() < 0.35) n = 2;
+    var out = [], used = {}, mi = Math.max(lo, mn - 4);
+    for(var q = 0; q < n; q++){
+      var ix = Math.floor(r() * pool.length), tries = 0; while(used[ix] && tries++ < 8) ix = Math.floor(r() * pool.length); used[ix] = 1;
+      pool[ix].forEach(function(t){ out.push(comLx(mi, 'rs', comFmt(t, o))); });
+    }
+    return out.slice(0, 3);
+  }
   function comShort(p){
     var n = String((p && p.n) || 'Player').trim().split(/\s+/);
     if(n.length < 2) return n[0];
@@ -16932,7 +16973,7 @@
   function comPick(arr, r){ return arr[Math.floor(r() * arr.length)]; }
   function comFmt(s, o){ return s.replace(/\{(\w+)\}/g, function(_, k){ var v = o[k]; if(v == null) return ''; return /^(p\d|d\d|sh|gk|st|tk|w1|fo|vi|kp)$/.test(k) ? '**' + v + '**' : v; }); }
   function comTxt(t){ return escHtml(String(t)).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>'); }
-  function comPush(m, lines){ if(!Array.isArray(m.feed)) m.feed = []; lines.forEach(function(l){ m.feed.push(l); }); if(m.feed.length > 150) m.feed.splice(0, m.feed.length - 150); }
+  function comPush(m, lines){ if(!Array.isArray(m.feed)) m.feed = []; lines.forEach(function(l){ m.feed.push(l); }); if(m.feed.length > 220) m.feed.splice(0, m.feed.length - 220); }
   function comEnsure(m){ if(!Array.isArray(m.feed)) m.feed = []; if(!m.mom) m.mom = [0, 0]; if(!m.feed.length && m.i === 0) comPush(m, comPre(m)); }
 
   /* ---- trước trận ---- */
@@ -16944,6 +16985,10 @@
     var mx = seMatchup(t0, t1), ws = (mx.s.why[0] && (!mx.f.why[0] || Math.abs(mx.s.why[0].v) >= Math.abs(mx.f.why[0].v))) ? mx.s.why[0] : mx.f.why[0];
     if(Math.abs(mx.mu) >= 0.05 && ws) out.push(comL(0, 'pre', 'Scout says: ' + ws.en.replace(/\{T\}/g, ws.v > 0 ? t0.name : t1.name)));
     else out.push(comL(0, 'pre', 'The tactics look even. It will be a close game!'));
+    var rp = seRng(seHash(m.seed + ':pre')), wxid = (typeof sWx === 'function' && sWx(m)) ? sWx(m).id : 'fair';
+    var atm = {rain:'It is raining tonight. The pitch is wet and the ball will run fast!', hot:'It is a very hot day. The players will get tired quickly.', cold:'It is freezing cold tonight, but the fans are loud!', dry:'The pitch is dry and dusty today. The ball may bounce high!', wind:'A strong wind is blowing across the stadium!'}[wxid];
+    out.push(comL(0, 'pre', atm || comPick(["Welcome to tonight's game where the floodlights surround the pitch.", 'The pitch is in fantastic condition today and the players are enjoying the surface.'], rp)));
+    out.push(comL(0, 'pre', "Today's attendance is " + (18000 + Math.floor(rp() * 52000)).toLocaleString('en-US') + '.', 'attendance'));
     out.push(comL(0, 'pre', 'Your team plays ' + sFidName(t0.fid) + '. Answer the questions at the key moments. A right and fast answer gives your team power!'));
     return out;
   }
@@ -16968,6 +17013,9 @@
         var g0 = mG(m)[0], g1 = mG(m)[1];
         ex.push(['info', g0 > g1 ? 'Your team is winning ' + g0 + '–' + g1 + '. Keep going!' : (g0 < g1 ? 'Your team needs a goal! It is ' + g0 + '–' + g1 + '.' : 'It is ' + g0 + '–' + g1 + '. Who scores next?')]);
       }
+      var pcx = comPossPct(m, mn);
+      if(m.i >= 3 && Math.abs(pcx - 50) >= 12) ex.push(['info', 'The match is very one-sided right now. ' + (pcx > 50 ? mT(m).name : oT(m).name) + ' are clearly dominating possession.']);
+      if(m.i >= 4 && m.goals[0] + m.goals[1] >= 3) ex.push(['info', 'What a game! We are witnessing intense and high quality play from both sides.']);
       ex.push(['info', A.name + ' like ' + (COM_STYLE_EN[A.style] || 'a balanced game') + '.']);
       return r() < 0.55 ? comPick(ex, r) : null;
     }
@@ -17007,6 +17055,9 @@
       }
       return false;
     }
+    var lo = cur.i > 0 ? seMinute(m, cur.i - 1) : 0, br = Math.floor(mn / 15) * 15;
+    if(cur.i > 0 && mn <= 90 && br > 0 && br !== 45 && br !== 90 && Math.floor(mn / 15) > Math.floor(lo / 15)) out.push(comPossLine(m, br));   // mỗi ~15 phút một dòng thống kê (45' và 90' đã có ở hết hiệp)
+    comTexture(m, cur, o, seRng(seHash(m.seed + ':tx' + cur.i)), lo, mn, F, kind).forEach(function(l){ out.push(l); });
     if(kind === 'open'){
       if(!link()) add(2, 'play', comPick(['{A} have the ball in midfield.', '{p1} gets the ball for {A}.', '{A} pass the ball around.'], r));
       add(1, 'play', comPick(['{p1} passes to {p2}.', '{p1} runs forward with the ball.', 'Nice pass from {p1} to {p2}!', '{p1} plays it to {p2}.'], r), 'pass');
@@ -17018,7 +17069,7 @@
       add(1, 'play', '{p2} joins in. Only {d1} is back to defend!');
     } else if(kind === 'corner'){
       add(2, 'set', F && F.how === 'parry' ? 'Corner kick for {A} after that save.' : (F && F.how === 'block' ? 'Corner kick for {A}. The ball went out off {w1}.' : 'Corner kick for {A}.'), 'corner');
-      add(1, 'play', '{tk} goes to the corner flag.');
+      add(1, 'play', '{tk} goes to the ' + comSideLR(m, cur.i) + ' corner flag.');
       add(1, 'play', 'Everyone runs into the box. {p2} is close to {d1}.');
     } else if(kind === 'freekick'){
       var fzz = cur.fz || (F && F.fz) || 'direct';
@@ -17038,8 +17089,13 @@
       add(1, 'play', '{tk} runs onto the loose ball!');
       add(0, 'play', mine ? '{tk} is close to the goal. This is a big chance!' : 'Danger! {tk} is running at our goal!');
     } else {
+      if(r() < 0.3){
+        add(3, 'var', 'The referee waves play on... but VAR stops the game. A possible penalty for {A}!', 'var');
+        add(2, 'var', 'After the VAR check, the referee changes the call and awards a penalty for {A}!', 'var');
+      }
       add(2, 'set', 'PENALTY! The referee points to the spot!', 'penalty');
       if(F && F.sev === 'hand') add(1, 'play', '{fo} touched the ball with his hand in the box.', 'handball');
+      if(F && F.sev === 'hand') out.push(comL(Math.max(1, mn - 1), 'info', comFmt('Heavy protests from {fo}, but the referee is not interested.', o)));
       else add(1, 'play', (F && F.by ? '{fo} fouled {vi}' : '{d1} fouled {p1}') + ' in the box.', 'foul');
       add(1, 'play', '{tk} puts the ball on the spot. Everyone goes quiet.');
     }
@@ -17063,17 +17119,20 @@
     var o = {A:A.name, D:D.name, sh:comNmId(A, rec.shooter), gk:comNmId(D, rec.keeper), st:comNmId(D, rec.stopper), p1:comNmId(A, pa0), p2:comNmId(A, pa1), tk:comNmId(A, rec.taker || pa0)};
     var sc = mT(m).name + ' ' + rec.g[mMe(m)] + '–' + rec.g[1 - mMe(m)] + ' ' + oT(m).name;
     var ok = !!(rec.q && rec.q.ok), shot = (rec.res === 'goal' || rec.res === 'saved');
-    function add(k, t, w){ out.push(comL(mn, k, comFmt(t, o), w)); }
+    var foot = r() < 0.7 ? 'right' : 'left', gA = rec.g[rec.att], gB = rec.g[1 - rec.att];
+    function add(k, t, w){ var l = comL(mn, k, comFmt(t, o), w); out.push(l); return l; }
     if(rec.skipped) add('ans', 'Question skipped. No extra power this time.');
     else if(rec.q) add('ans', ok ? 'Great answer! Your power is ' + recScore(m, rec) + '.' : (rec.q.timeout ? 'Time is up! ' : 'Oh no, not right. ') + 'No extra power this time.');
-    if(kind === 'penalty') add('play', '{sh} runs up and shoots...');
-    else if(kind === 'corner') add('play', shot ? '{tk} swings it in... {sh} jumps for the ball!' : '{tk} swings the ball in...');
-    else if(kind === 'freekick') add('play', shot ? '{sh} curls the ball towards goal...' : '{tk} sends the ball into the box...');
-    else if(kind === 'longshot') add('play', '{sh} shoots from far away!');
-    else if(kind === 'cross') add('play', shot ? '{tk} crosses... {sh} rises for a header!' : '{tk} crosses the ball into the box...', shot ? 'header' : null);
-    else if(shot) add('play', '{sh} takes the shot...');
+    var wl = null, csd = comSideLR(m, rec.i);   // wl: dòng chuẩn bị sút (hiệu ứng sân dựa vào dòng 'play' không có w); sf = có cú sút → phát tiếng sút bóng
+    if(kind === 'penalty') wl = add('play', '{sh} runs up and shoots...');
+    else if(kind === 'corner') wl = add('play', shot ? comPick(['{tk} swings it in from the ' + csd + '... {sh} jumps for the ball!', '{tk} swings in the corner from the ' + csd + '... {sh} goes up for the ball!'], r) : '{tk} swings in the ball from a corner on the ' + csd + '...');
+    else if(kind === 'freekick') wl = add('play', shot ? '{sh} curls the ball towards goal...' : '{tk} sends the ball into the box...');
+    else if(kind === 'longshot') wl = add('play', '{sh} shoots from far away!');
+    else if(kind === 'cross') wl = add('play', shot ? comPick(['{tk} crosses... {sh} rises for a header!', 'The cross by {tk} from {A} finds a teammate in the box... {sh} rises for a header!'], r) : '{tk} crosses the ball into the box...', shot ? 'header' : null);
+    else if(shot) wl = add('play', comPick(['{sh} takes the shot...', '{sh} sees a chance and shoots...', '{sh} gets some space on the edge of the area and shoots...'], r));
     else if(rec.res === 'cleared') add('play', '{p2} tries a pass into the box...');
     else add('play', '{p1} tries to keep the ball...');
+    if(wl && (shot || kind === 'penalty' || kind === 'longshot')) wl.sf = 1;
     var vc = rec.varChk, voff = !!(vc && vc.off);
     if(vc){
       add('var', 'The ball is in the net! The referee waits... VAR is checking.', 'var');
@@ -17081,24 +17140,68 @@
       else add('var', 'VAR says: the goal stands!');
     }
     if(voff){ add('warn', mine ? 'So close! A great chance, but no goal this time.' : 'Phew! We are lucky. The goal does not count.'); }
-    else if(rec.res === 'goal'){
-      if(mine){ add('goal', 'GOAL!!! {sh} scores for {A}! ' + sc, 'goal'); add('info', comPick(['What a moment!', 'The fans go wild!', 'Brilliant!'], r)); if(rec.sup) add('sub', 'Super sub! {sh} came on from the bench and scored!', 'substitute'); }
-      else { add('goalx', 'Goal for {A}. {sh} scores. ' + sc, 'goal'); if(rec.sup) add('sub', 'A super sub! {sh} came off the bench and scored for {A}.', 'substitute'); }
+    else if(rec.res === 'goal'){   // đúng 1 dòng goal/goalx (hiệu ứng lưới rung); các dòng sau là kiến tạo · ý nghĩa bàn thắng · tỉ số
+      var gtxt;
+      if(kind === 'penalty') gtxt = '{sh} from {A} puts it away from the penalty spot with the ' + foot + ' foot! {gk} chose the wrong side.';
+      else if(kind === 'corner' || kind === 'cross') gtxt = comPick(['{sh} from {A} heads the ball home!', '{sh} rises highest and heads the ball into the net!'], r);
+      else if(kind === 'freekick') gtxt = '{sh} from {A} curls the free kick into the net with the ' + foot + ' foot!';
+      else if(kind === 'longshot') gtxt = '{sh} from {A} beats the keeper from outside the box with the ' + foot + ' foot!';
+      else gtxt = comPick(['{sh} from {A} finds the net with the ' + foot + ' foot!', '{sh} scores with the ' + foot + ' foot!', '{sh} volleys the ball into the back of the net with the ' + foot + '. A great finish!', '{sh} taps the ball in with the ' + foot + '! An easy finish for {sh}.'], r);
+      add(mine ? 'goal' : 'goalx', 'G O O O A A A L - ' + gtxt, 'goal');
+      if(kind === 'blunder' && rec.stopper) add('warn', '{st} with a bad execution which leads to a goal for the opponent.', 'mistake');
+      var asId = null;
+      if(kind === 'cross' || kind === 'corner') asId = (rec.taker && rec.taker !== rec.shooter) ? rec.taker : null;
+      else if(kind === 'open' || kind === 'counter') asId = (rec.pa || []).filter(function(id){ return id && id !== rec.shooter; })[0] || null;
+      if(asId) add('info', comNmId(A, asId) + (r() < 0.25 ? ' made the key pass for the goal!' : ' provided the assist for the goal.'), 'assist');
+      var bA = gA - 1, late = mn >= 85, gctx = '', gw = null;
+      if(late && gA - gB === 1 && bA === gB) gctx = '{A} managed to score the decisive goal in the dying minutes of the game!';
+      else if(gA + gB === 1) gctx = '{A} managed to score the important first goal. Will they build on that?';
+      else if(gA === gB){ gctx = 'With that goal, {A} equalised. Game on!'; gw = 'equaliser'; }
+      else if(bA === gB) gctx = '{A} take the lead!';
+      else if(gA - gB >= 3) gctx = 'Another goal for {A}! They are running away with the game.';
+      if(gctx) add('info', gctx, gw);
+      add('info', 'Score: ' + sc + '.');
+      if(rec.sup) add('sub', 'What a super sub by the coach. {sh} has just entered the pitch and is already on the scoresheet!', 'substitute');
+      else if(mine) add('info', comPick(['What a moment!', 'The fans go wild!', 'Brilliant!'], r));
     } else if(rec.res === 'saved'){
       if(kind === 'penalty') add('save', mine ? 'Penalty saved! {gk} dives the right way!' : 'Penalty saved! Our keeper {gk} is a hero!', 'save');
       else if(rec.wood){ var wn = rec.wood === 'bar' ? 'crossbar' : 'post'; add('save', mine ? 'So close! The ball hits the ' + wn + '!' : 'Phew! The ball hits the ' + wn + '. Lucky!', wn); }
-      else if(rec.miss) add('miss', mine ? 'Wide! {sh} shoots just past the post.' : 'Phew! {sh} shoots wide of our goal.', 'wide');
-      else add('save', mine ? 'Great save by {gk}! {D} stay in the game.' : 'Great save by {gk}! Our keeper stops it!', 'save');
+      else if(rec.miss){
+        var mv;
+        if(mine){
+          mv = ['Wide! {sh} shoots just past the post.', '{sh} from {A} sends an effort wide of target.'];
+          if(kind === 'longshot') mv.push('{sh} fails to find the target with a shot from outside the box.');
+          if(kind === 'cross' || kind === 'corner') mv.push('A chance presents itself to {sh} from {A} but his header goes wide.');
+          if(kind === 'open' || kind === 'counter' || kind === 'blunder') mv.push('Oooh... that was a sitter! {sh} should have scored from that position.');
+        } else {
+          mv = ['Phew! {sh} shoots wide of our goal.', 'Phew! {sh} from {A} sends an effort wide of target.'];
+          if(kind === 'open' || kind === 'counter' || kind === 'blunder') mv.push('Oooh... {sh} should have scored from there. Lucky for us!');
+        }
+        add('miss', comPick(mv, r), 'wide');
+      } else {
+        var sv = mine ? ['Great save by {gk}! {D} stay in the game.', 'Good effort by {sh} as he directs a shot on target, but {gk} saves it!', '{gk} makes a crucial save!']
+                      : ['Great save by {gk}! Our keeper stops it!', '{gk} makes a crucial save! Our keeper is a hero!'];
+        if(kind === 'cross' || kind === 'corner') sv.push('{sh} sends a header towards goal, but {gk} is there to save it.');
+        if(kind === 'longshot' && !(rec.nx && rec.nx.type === 'corner')) sv.push('{sh} shoots from outside the box, but {gk} has it under control.');
+        add('save', comPick(sv, r), 'save');
+      }
     } else if(rec.offside){
-      add('warn', 'Offside! The flag goes up. ' + comNmId(A, rec.offside.id) + ' was too far forward.', 'offside');
+      var onm = comNmId(A, rec.offside.id);
+      add('warn', comPick(['Offside! The flag goes up. ' + onm + ' was too far forward.', onm + ' from {A} is ruled offside.'], r), 'offside');
     } else if(rec.afoul){
-      add('warn', 'Foul by ' + comNmId(A, rec.afoul.id) + '! He pushes the defender.', 'foul');
+      var anm = comNmId(A, rec.afoul.id);
+      add('warn', comPick(['Foul by ' + anm + '! He pushes the defender.', anm + ' is penalised for pushing the defender.'], r), 'foul');
     } else if(rec.foul){
       o.fo = comNmId(D, rec.foul.id);
-      add('play', rec.foul.zone === 'box' ? (rec.foul.sev === 'hand' ? 'Handball! The ball hits the arm of {fo} in the box!' : 'Foul! {fo} trips {p1} in the box!') : (rec.foul.sev === 'cynical' ? 'Foul! {fo} pulls {p1} back to stop the counter-attack.' : (rec.foul.sev === 'last' ? 'Foul! {fo} is the last defender and brings {p1} down!' : 'Foul! {fo} brings down {p1}.')), rec.foul.sev === 'hand' ? 'handball' : 'foul');
+      var ftx;
+      if(rec.foul.zone === 'box') ftx = rec.foul.sev === 'hand' ? comPick(['Handball! The ball hits the arm of {fo} in the box!', 'PENALTY! {fo} handles the ball in the penalty box! Heavy protests from {fo}, but the ref is not interested.'], r) : 'Foul! {fo} trips {p1} in the box!';
+      else if(rec.foul.sev === 'cynical') ftx = comPick(['Foul! {fo} pulls {p1} back to stop the counter-attack.', 'The ref blows his whistle. {fo} pulls {p1} back to stop the counter-attack.'], r);
+      else if(rec.foul.sev === 'last') ftx = 'Foul! {fo} is the last defender and brings {p1} down!';
+      else ftx = comPick(['Foul! {fo} brings down {p1}.', 'The referee signals a free kick as {fo} from {D} trips {p1}.', '{fo} from {D} goes a bit too far there as he pulls down {p1}.', 'The ref blows his whistle. {fo} charged {p1} from behind and it is a free kick.'], r);
+      add('play', ftx, rec.foul.sev === 'hand' ? 'handball' : 'foul');
     } else if(rec.res === 'cleared'){
-      add('play', kind === 'corner' ? 'Cleared! {st} heads the ball away.' : comPick(['Blocked! {st} clears the ball away.', '{st} stops it. The danger is over.'], r), 'clear');
-    } else add('play', (rec.nx && rec.nx.type === 'throw') ? '{st} slides in and knocks the ball away!' : '{st} wins the ball with a tackle!', 'tackle');
+      add('play', kind === 'corner' ? 'Cleared! {st} heads the ball away.' : comPick(['Blocked! {st} clears the ball away.', '{st} stops it. The danger is over.', 'Danger! But {st} relieves the pressure with a clearance.'], r), 'clear');
+    } else add('play', (rec.nx && rec.nx.type === 'throw') ? '{st} slides in and knocks the ball away!' : comPick(['{st} wins the ball with a tackle!', '{st} makes the tackle and wins possession for {D}.'], r), 'tackle');
     var NX = rec.nx || null;
     if(NX && !voff && !rec.offside && !rec.afoul && !rec.foul){   // bóng đi đâu sau pha này
       o.X = m.teams[NX.att] ? m.teams[NX.att].name : '';
@@ -17112,18 +17215,24 @@
     }
     if(rec.card){
       var cd = rec.card, ct2 = m.teams[cd.side], cn = comNmId(ct2, cd.id);
-      if(cd.t === 'y') add('card', 'Yellow card for ' + cn + '. Be careful now!', 'yellow');
+      if(cd.t === 'y'){
+        var cpool = rec.foul ? [cn + ' is shown a yellow card for tripping an opponent.', 'The referee shows ' + cn + ' the yellow card for unsportsmanlike conduct.', 'The referee is not having the complaints from ' + cn + ', who is given a yellow card for dissent.']
+                             : ['The referee shows ' + cn + ' the yellow card for unsportsmanlike conduct.', 'The referee is not having the complaints from ' + cn + ', who is given a yellow card for dissent.'];
+        add('card', (rec.foul && rec.foul.sev === 'cynical') ? 'After a tactical foul, ' + cn + ' sees no other way than stopping the counter and receives a yellow card.' : comPick(cpool, r), 'yellow');
+      }
       else if(cd.t === 'y2') add('red', 'Second yellow card for ' + cn + '... that is a RED card! ' + ct2.name + ' play with ' + (11 - seDown(ct2)) + ' players.', 'red');
       else add('red', 'RED CARD! ' + cn + ' is sent off! ' + ct2.name + ' play with ' + (11 - seDown(ct2)) + ' players.', 'red');
     }
     if(rec.inj){
       var ij = rec.inj, it = m.teams[ij.side], inm = comNmId(it, ij.out);
-      add('inj', 'Injury! ' + inm + ' is hurt and cannot go on.', 'injury');
-      if(ij.inn) add('sub', 'Substitution: ' + comNmId(it, ij.inn) + ' comes on for ' + inm + '.', 'substitute');
+      add('inj', 'Play has been stopped because there is a player lying on the pitch.', 'injury');
+      add('inj', inm + ' is down injured and receives medical attention on the field.');
+      add('inj', inm + ' cannot go on and is taken off the field to receive medical treatment.');
+      if(ij.inn) add('sub', inm + ' is injured and is replaced by ' + comNmId(it, ij.inn) + '.', 'substitute');
       else if(ij.need) add('warn', 'Choose a player to come on for ' + inm + ' in the Team tab. Or play with ' + (11 - seDown(it)) + ' players!');
       else add('warn', it.name + ' have no more substitutes. They play with ' + (11 - seDown(it)) + ' players.');
     }
-    (rec.oppSubs || []).forEach(function(sb){ var ot = m.teams[sb.side != null ? sb.side : 1]; add('sub', ot.name + ' make a change: ' + comNmId(ot, sb.inn) + ' comes on for ' + comNmId(ot, sb.out) + '.', 'substitute'); });
+    (rec.oppSubs || []).forEach(function(sb){ var ot = m.teams[sb.side != null ? sb.side : 1]; add('sub', ot.name + ': ' + comNmId(ot, sb.out) + ' is leaving the field to be replaced by ' + comNmId(ot, sb.inn) + ' in a tactical substitution.', 'substitute'); });
     if(!rec.skipped && rec.q){
       if(ok && mine && rec.res === 'goal') add('fire', 'Your answer helped the team score!');
       else if(ok && !mine && rec.res !== 'goal') add('fire', 'Your answer helped the defence!');
@@ -17140,10 +17249,22 @@
       out.push(comL(120, 'xt', 'Penalty shoot-out! Who has the strongest nerves?'));
     } else if(last){
       var endMin = (m.etBase != null) ? 120 : 90;
-      out.push(comL(endMin, 'ft', (m.etBase != null ? 'End of extra time! ' : 'Full-time! ') + sc + '.', 'fulltime'));
+      if(m.etBase == null) out.push(comPossLine(m, 90));
+      out.push(comL(endMin, 'ft', (m.etBase != null ? 'End of extra time! ' : "Full-time! That's it! The referee blows the final whistle. ") + sc + '.', 'fulltime'));
+      out.push(comLx(endMin, 'info', gm[0] > gm[1] ? mT(m).name + ' with a deserved victory after a fine display.' : (gm[0] < gm[1] ? oT(m).name + ' with a deserved victory after a fine display.' : 'A draw. Both teams fought hard until the very end.')));
       out.push(comL(endMin, 'ft', gm[0] > gm[1] ? 'Your team wins! Amazing!' : (gm[0] < gm[1] ? 'Your team loses this time. Keep trying!' : 'It is a draw. Well played both teams!')));
     } else if(ht){
-      out.push(comL(etHt ? 105 : 45, 'ht', (etHt ? 'Half-time in extra time! ' : 'Half-time! ') + sc + '. Time to change your plan.', 'halftime'));
+      if(etHt) out.push(comL(105, 'ht', 'Half-time in extra time! ' + sc + '. Time to change your plan.', 'halftime'));
+      else {
+        var ad = comAdded(m, 1, 3, 'ht'), pcm = comPossPct(m, 45), hsum;
+        if(gm[0] !== gm[1]) hsum = 'It was a great first half by ' + (gm[0] > gm[1] ? mT(m).name : oT(m).name) + '. Their fans have something to cheer about during the half-time!';
+        else if(Math.abs(pcm - 50) >= 6) hsum = (pcm >= 50 ? mT(m).name : oT(m).name) + " had the ball in their control, but couldn't take the lead into the break.";
+        else hsum = 'Both teams go into the break level. The second half will be exciting!';
+        out.push(comLx(45, 'xt', 'The fourth official shows there ' + (ad === 1 ? 'is 1 minute' : 'are ' + ad + ' minutes') + ' of added time.', 'addedtime'));
+        out.push(comPossLine(m, 45));
+        out.push(comL(45, 'ht', "Half-time! It's over! The referee blows for half-time. " + sc + '. Time to change your plan.', 'halftime'));
+        out.push(comLx(45, 'info', hsum));
+      }
     } else {
       var nx = rec.next, NN = rec.nx;
       if(NN){ o.X = m.teams[NN.att] ? m.teams[NN.att].name : ''; o.kp = NN.by ? comNmId(m.teams[NN.bs != null ? NN.bs : NN.att], NN.by) : ''; }
@@ -17162,7 +17283,7 @@
       var mo = rec.mom || [0, 0], mom0 = mo[mMe(m)], mom1 = mo[1 - mMe(m)];
       if(mom0 >= 2) add('fire', 'Momentum! Your team is playing with fire!');
       else if(mom1 >= 2) add('warn', 'The other team is pushing. A right answer can calm them down.');
-      if(m.xt && rec.i === m.N - 1 && m.etBase == null) out.push(comL(90, 'xt', 'Extra time! The referee adds 3 minutes. One more chance for both teams!', 'extratime'));
+      if(m.xt && rec.i === m.N - 1 && m.etBase == null) out.push(comL(90, 'xt', 'The fourth official shows there are 3 minutes of added time. One more chance for both teams!', 'addedtime'));
     }
     return out;
   }
@@ -17207,14 +17328,14 @@
   }
   /* ===== ÂM THANH TRẬN ĐẤU (Mùa giải + Giao hữu: đá với đội bóng ma và PvP) =====
      goal: sút vào (kể cả penalty) · miss: sút không vào (kể cả penalty) · kick: tiếng sút bóng (mọi cú sút, kể cả penalty)
-     key: có key moment · right / wrong: trả lời đúng / sai (hết giờ tính là sai) · whistle: trọng tài thổi còi phạt (lỗi, việt vị, chạm tay, phạt đền)
+     key: có key moment (tiếng ồn sân vận động) · right / wrong: trả lời đúng (tiếng cổ vũ) / sai (hết giờ tính là sai) · whistle: trọng tài thổi còi phạt (lỗi, việt vị, chạm tay, phạt đền)
      max = số mili-giây tối đa cho tiếng khán giả dài (cắt để không đè lên câu hỏi). Tắt tiếng: localStorage se_sfx = '0'. */
   var SE_SFX = {
     goal:{u:'https://res.cloudinary.com/tgvj8prc/video/upload/v1793163785/Am_thanh_sut_vao_da_bong-www_tiengdong_com.mp3'},
     miss:{u:'https://res.cloudinary.com/tgvj8prc/video/upload/v1793163786/Am_thanh_khong_vao_da_bong-www_tiengdong_com.mp3'},
-    key:{u:'https://res.cloudinary.com/tgvj8prc/video/upload/v1793163785/Am_thanh_tieng_co_vu_tran_bong_da-www_tiengdong_com.mp3', max:5000},
+    key:{u:'https://res.cloudinary.com/tgvj8prc/video/upload/v1793163786/tieng_on_san_van_dong_da_bong-www_tiengdong_com.mp3', max:5000},
     wrong:{u:'https://res.cloudinary.com/tgvj8prc/video/upload/v1793163785/Am_thanh_tieng_O_o_cua_khan_gia-www_tiengdong_com.mp3', max:4000},
-    right:{u:'https://res.cloudinary.com/tgvj8prc/video/upload/v1793163786/tieng_on_san_van_dong_da_bong-www_tiengdong_com.mp3', max:4000},
+    right:{u:'https://res.cloudinary.com/tgvj8prc/video/upload/v1793163785/Am_thanh_tieng_co_vu_tran_bong_da-www_tiengdong_com.mp3', max:4000},
     whistle:{u:'https://res.cloudinary.com/tgvj8prc/video/upload/v1793163785/tieng_thoi_coi_nhac_nho-www_tiengdong_com.mp3'},
     kick:{u:'https://res.cloudinary.com/tgvj8prc/video/upload/v1793163785/tieng_sut_bong_sut_bong_vao_gon8230_khi_da_bong-www_tiengdong_com.mp3'}
   };
@@ -17250,7 +17371,7 @@
     if(k === 'key'){ seSfx('key'); return; }
     if(k === 'goal' || k === 'goalx'){ seSfx('goal'); return; }
     if(k === 'save' || k === 'miss'){ seSfx('miss'); return; }
-    if(k === 'play' && SE_SHOT_RE.test(t)){ seSfx('kick'); return; }
+    if(k === 'play' && (l.sf || SE_SHOT_RE.test(t))){ seSfx('kick'); return; }
     if(w === 'foul' || w === 'offside' || w === 'handball' || w === 'penalty' || (k === 'play' && /^(\*\*)?(Foul|Handball)!/.test(t)) || (k === 'warn' && /^Offside!/.test(t))){
       var now = Date.now(); if(now - seSfxWhistleAt < 3500) return;   // một pha phạt chỉ thổi còi một lần
       seSfxWhistleAt = now; seSfx('whistle');
@@ -17268,12 +17389,12 @@
       box.appendChild(row); box.scrollTop = box.scrollHeight;
       if(hook){ try{ hook(lines[i], i, lines); }catch(e){} }
       if(!(sMC && sMC.skip)) comSfx(lines[i]);
-      await comWait(reducedMotion() || (sMC && sMC.skip) ? 0 : 450, tok);
+      await comWait(reducedMotion() || (sMC && sMC.skip) ? 0 : (lines[i].fx ? 250 : 450), tok);
       row.classList.remove('typing');
       if(c){ c.shownN = base + i + 1; if(c.busy && c.tab === 'log') sTabBusy('log'); }
       if(lines[i].k === 'goal'){ try{ if(!reducedMotion()) spawnConfetti(40, 'perfect'); }catch(e){} }
       if(!(sMC && sMC.skip)) comSpeak(lines[i].t);
-      await comWait(fast ? 500 : Math.min(4200, 900 + String(lines[i].t).length * 50), tok);
+      await comWait(fast ? 500 : (lines[i].fx ? 700 : Math.min(4200, 900 + String(lines[i].t).length * 50)), tok);
     }
     if(c) c.shownN = null;
   }
