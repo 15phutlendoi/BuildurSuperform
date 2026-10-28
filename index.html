@@ -3658,6 +3658,21 @@
 #season-match .fr-gres .fr-gz.shot{ border:3px solid #FDE047; background:rgba(253,224,71,.2) }
 #season-match .fr-gres .fr-gz.dive{ border:3px solid #38BDF8; background:rgba(56,189,248,.2) }
 #season-match .fr-gres .fr-gz.shot.dive{ border-color:#FBBF24 }
+/* luân lưu: xếp thứ tự sút + kết quả đè lên ảnh khung thành */
+#season-match .fr-ord{ display:flex; flex-direction:column; gap:6px; margin:8px 0 }
+#season-match .fr-ord-row{ display:flex; align-items:center; gap:8px; padding:6px 8px; border-radius:10px; background:rgba(255,255,255,.1) }
+#season-match .fr-ord-n{ min-width:26px; height:26px; border-radius:50%; background:var(--gold,#F59E0B); color:#111; display:flex; align-items:center; justify-content:center; font-size:13px }
+#season-match .fr-ord-nm{ flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-weight:700 }
+#season-match .fr-ord-nm small{ opacity:.7; font-weight:600; margin-left:4px }
+#season-match .fr-ord-mv{ width:44px; height:40px; border:0; border-radius:10px; font-size:18px; cursor:pointer; background:rgba(255,255,255,.18); color:inherit }
+#season-match .fr-ord-mv:active{ transform:scale(.95) }
+#season-match .fr-ord-mv:disabled{ opacity:.3; cursor:default }
+#season-match .fr-gov > .fr-ovgif{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:1; pointer-events:none }
+#season-match .fr-gov .fr-gz{ z-index:2 }
+#season-match .fr-ovb{ position:absolute; z-index:3; left:0; right:0; top:8px; text-align:center; font-size:22px; font-weight:900; color:#fff; text-shadow:0 2px 6px rgba(0,0,0,.95) }
+#season-match .fr-ovb.goal{ color:#4ade80 }
+#season-match .fr-ovb.save{ color:#fbbf24 }
+#season-match .fr-ovc{ position:absolute; z-index:3; left:0; right:0; bottom:0; padding:18px 8px 8px; text-align:center; font-size:12.5px; font-weight:700; color:#fff; background:linear-gradient(transparent, rgba(0,0,0,.78)) }
 #season-match .fr-gm{ font-style:normal; font-size:clamp(22px,7vw,34px); line-height:1; filter:drop-shadow(0 2px 3px rgba(0,0,0,.7)) }
 #season-match .fr-gleg{ margin:2px 0 6px; font-size:12.5px; opacity:.8 }
 /* 4.2 thống kê giao hữu */
@@ -17190,6 +17205,59 @@
       (function tick(){ if(!sAlive(tok) || (sMC && sMC.skip) || performance.now() - t0 >= ms) return res(); setTimeout(tick, 40); })();
     });
   }
+  /* ===== ÂM THANH TRẬN ĐẤU (Mùa giải + Giao hữu: đá với đội bóng ma và PvP) =====
+     goal: sút vào (kể cả penalty) · miss: sút không vào (kể cả penalty) · kick: tiếng sút bóng (mọi cú sút, kể cả penalty)
+     key: có key moment · right / wrong: trả lời đúng / sai (hết giờ tính là sai) · whistle: trọng tài thổi còi phạt (lỗi, việt vị, chạm tay, phạt đền)
+     max = số mili-giây tối đa cho tiếng khán giả dài (cắt để không đè lên câu hỏi). Tắt tiếng: localStorage se_sfx = '0'. */
+  var SE_SFX = {
+    goal:{u:'https://res.cloudinary.com/tgvj8prc/video/upload/v1793163785/Am_thanh_sut_vao_da_bong-www_tiengdong_com.mp3'},
+    miss:{u:'https://res.cloudinary.com/tgvj8prc/video/upload/v1793163786/Am_thanh_khong_vao_da_bong-www_tiengdong_com.mp3'},
+    key:{u:'https://res.cloudinary.com/tgvj8prc/video/upload/v1793163785/Am_thanh_tieng_co_vu_tran_bong_da-www_tiengdong_com.mp3', max:5000},
+    wrong:{u:'https://res.cloudinary.com/tgvj8prc/video/upload/v1793163785/Am_thanh_tieng_O_o_cua_khan_gia-www_tiengdong_com.mp3', max:4000},
+    right:{u:'https://res.cloudinary.com/tgvj8prc/video/upload/v1793163786/tieng_on_san_van_dong_da_bong-www_tiengdong_com.mp3', max:4000},
+    whistle:{u:'https://res.cloudinary.com/tgvj8prc/video/upload/v1793163785/tieng_thoi_coi_nhac_nho-www_tiengdong_com.mp3'},
+    kick:{u:'https://res.cloudinary.com/tgvj8prc/video/upload/v1793163785/tieng_sut_bong_sut_bong_vao_gon8230_khi_da_bong-www_tiengdong_com.mp3'}
+  };
+  var seSfxEl = {}, seSfxWhistleAt = 0;
+  function seSfxWarm(){
+    Object.keys(SE_SFX).forEach(function(k){ if(!seSfxEl[k]){ try{ var a = new Audio(SE_SFX[k].u); a.preload = 'auto'; seSfxEl[k] = a; }catch(e){} } });
+  }
+  function seSfxOn(){ try{ return localStorage.getItem('se_sfx') !== '0'; }catch(e){ return true; } }
+  function seSfx(name, vol){
+    try{
+      var cfg = SE_SFX[name]; if(!cfg || !seSfxOn()) return;
+      seSfxWarm();
+      var base = seSfxEl[name]; if(!base) return;
+      var a = (base.paused || base.ended) ? base : base.cloneNode();   // đang phát dở thì phát thêm 1 bản (tiếng chồng nhau)
+      a.currentTime = 0; a.volume = vol == null ? 0.85 : vol;
+      var pr = a.play(); if(pr && pr.catch) pr.catch(function(){});
+      if(cfg.max) setTimeout(function(){ try{ a.pause(); }catch(e){} }, cfg.max);
+    }catch(e){}
+  }
+  /* iOS/Safari chỉ cho phát âm thanh sau lần chạm đầu tiên: mở khóa các file ngay khi bé chạm màn hình */
+  (function seSfxUnlock(){
+    function go(){
+      document.removeEventListener('pointerdown', go, true); document.removeEventListener('keydown', go, true);
+      seSfxWarm();
+      Object.keys(seSfxEl).forEach(function(k){ var a = seSfxEl[k]; try{ a.muted = true; var pr = a.play(); var back = function(){ try{ a.pause(); a.currentTime = 0; }catch(e){} a.muted = false; }; if(pr && pr.then) pr.then(back, function(){ a.muted = false; }); else back(); }catch(e){} });
+    }
+    document.addEventListener('pointerdown', go, true); document.addEventListener('keydown', go, true);
+  })();
+  var SE_SHOT_RE = /runs up and shoots|takes the shot|shoots from far away|curls the ball towards goal|rises for a header|jumps for the ball/;
+  function comSfx(l){   // một dòng tường thuật vừa hiện → âm thanh tương ứng
+    if(!l) return;
+    var k = l.k, w = l.w || '', t = String(l.t || '');
+    if(k === 'key'){ seSfx('key'); return; }
+    if(k === 'goal' || k === 'goalx'){ seSfx('goal'); return; }
+    if(k === 'save' || k === 'miss'){ seSfx('miss'); return; }
+    if(k === 'play' && SE_SHOT_RE.test(t)){ seSfx('kick'); return; }
+    if(w === 'foul' || w === 'offside' || w === 'handball' || w === 'penalty' || (k === 'play' && /^(\*\*)?(Foul|Handball)!/.test(t)) || (k === 'warn' && /^Offside!/.test(t))){
+      var now = Date.now(); if(now - seSfxWhistleAt < 3500) return;   // một pha phạt chỉ thổi còi một lần
+      seSfxWhistleAt = now; seSfx('whistle');
+    }
+  }
+  function psoSfx(scored){ seSfx('kick'); setTimeout(function(){ seSfx(scored ? 'goal' : 'miss'); }, 650); }   // luân lưu: tiếng sút, rồi tiếng vào / không vào
+
   /* Ghi dòng vào nhật ký + lưu TRƯỚC, rồi mới hiện từng dòng (thoát giữa chừng không mất diễn biến). */
   async function comPlay(m, lines, tok, fast, hook){
     var c = sMC, base = (m.feed || []).length; comPush(m, lines); if(c){ sSave(c.st); c.shownN = base; }
@@ -17199,6 +17267,7 @@
       var row = document.createElement('div'); row.className = 'fe fe-' + lines[i].k + ' fe-in typing'; row.innerHTML = comRowInner(lines[i]);
       box.appendChild(row); box.scrollTop = box.scrollHeight;
       if(hook){ try{ hook(lines[i], i, lines); }catch(e){} }
+      if(!(sMC && sMC.skip)) comSfx(lines[i]);
       await comWait(reducedMotion() || (sMC && sMC.skip) ? 0 : 450, tok);
       row.classList.remove('typing');
       if(c){ c.shownN = base + i + 1; if(c.busy && c.tab === 'log') sTabBusy('log'); }
@@ -18453,7 +18522,7 @@
       function rem(){ return secs - (performance.now() - t0) / 1000; }
       function finish(res){
         if(done) return; done = true; clearInterval(iv);
-        res.score = res.ok ? Math.min(10, Math.max(1, res.secLeft)) : 1;
+        res.score = res.ok ? Math.min(10, Math.max(1, res.secLeft)) : 1; seSfx(res.ok ? 'right' : 'wrong');
         optsEl.querySelectorAll('.mt-opt').forEach(function(b, i){ b.disabled = true; if(i === q.correct) b.classList.add('ok'); else if(i === res.picked) b.classList.add('bad'); });
         var fb = sEl('mt-qfb');
         if(fb) fb.innerHTML = res.ok ? '✅ <b>Chính xác!</b> Còn ' + res.secLeft + ' giây → ' + res.score + ' điểm' : ((res.timeout ? '⏰ <b>Hết giờ!</b> ' : '❌ <b>Chưa đúng.</b> ') + 'Đáp án: <b>' + escHtml(q.options[q.correct]) + '</b>' + (q.explain ? '<br><small>' + escHtml(q.explain) + '</small>' : ''));
@@ -18622,7 +18691,7 @@
       return;
     }
     var fm = t.closest('#season-match [data-fr]');
-    if(fm){ var fa = fm.getAttribute('data-fr'); if(fa === 'dir') sPsoPick(parseInt(fm.getAttribute('data-d'), 10)); else if(fa === 'pnext') sPsoRender(); else if(fa === 'pend') sFrFinish(); return; }
+    if(fm){ var fa = fm.getAttribute('data-fr'); if(fa === 'dir') sPsoPick(parseInt(fm.getAttribute('data-d'), 10)); else if(fa === 'pnext' || fa === 'pready') sPsoNext(); else if(fa === 'pord-up' || fa === 'pord-dn') psoMove(parseInt(fm.getAttribute('data-i'), 10), fa === 'pord-up' ? -1 : 1); else if(fa === 'pord-auto') psoAuto(); else if(fa === 'pord-ok') sPsoOrderOk(); else if(fa === 'pend') sFrFinish(); return; }
     if(t.closest('#fr-open')){ sFrPicker(); return; }
     if(t.closest('#fr-resume')){ sFrOpen(); return; }
     var fb = t.closest('#season-modal [data-fr]');
@@ -18824,19 +18893,80 @@
       + '<div class="fr-board"><div><small>' + escHtml(a.name) + '</small><div>' + row(me) + '</div></div><div><small>' + escHtml(b.name) + '</small><div>' + row(1 - me) + '</div></div></div>';
   }
   function sPsoGoalHTML(on){ return frGoalHTML('data-fr="dir"', on); }
+  /* ===== LUÂN LƯU: xếp thứ tự sút · sẵn sàng · kết quả hiện ngay trên ảnh khung thành (dùng chung đội bóng ma và PvP) =====
+     1) Mỗi bên xếp thứ tự sút từ các cầu thủ còn trên sân (m.pso.order[side] = chỉ số trong t.pitch); chỉ khi CẢ HAI xác nhận (p.ordDone) mới có lượt sút.
+     2) Sau khi xác nhận chỉ còn khung thành + 3 ô; bấm Sẵn sàng (lượt đầu) hoặc Lượt sút tiếp theo (các lượt sau) mới bắt đầu chọn hướng.
+     3) Kết quả (GIF + ⚽ 🧤 + chữ) đè lên ảnh khung thành. */
+  var PSO_ORD_SECS = 60, PSO_GO_FIRST = 30000, PSO_GO_NEXT = 10000;   // PvP: hạn xếp thứ tự (giây) · hạn chờ Sẵn sàng lượt đầu · hạn chờ Lượt sút tiếp theo (mili giây)
+  function psoArr(v){ if(Array.isArray(v)) return v.slice(); if(v && typeof v === 'object') return Object.keys(v).sort(function(x, y){ return x - y; }).map(function(k){ return v[k]; }); return []; }
+  function psoApplyOrder(m, side, arr){   // thứ tự hợp lệ (đúng tập cầu thủ còn trên sân, không trùng) mới được nhận; sai thì giữ thứ tự mặc định
+    var p = m.pso, base = p.order[side]; arr = psoArr(arr).map(function(x){ return parseInt(x, 10); });
+    if(arr.length !== base.length) return false;
+    var seen = {}, ok = true; arr.forEach(function(x){ if(base.indexOf(x) < 0 || seen[x]) ok = false; seen[x] = 1; });
+    if(!ok) return false;
+    p.order[side] = arr; return true;
+  }
+  function psoOrderScreen(m, c, attr, locked, msg){
+    var t = mT(m), me = mMe(m), p = m.pso; if(!c.ordTmp || c.ordTmp.length !== p.order[me].length) c.ordTmp = p.order[me].slice();
+    var arr = c.ordTmp, dis = locked ? ' disabled' : '';
+    var rows = arr.map(function(ix, i){
+      var pl = t.pitch[ix], gk = (t.slots[ix] === 'GK' || pl.pos === 'GK');
+      return '<div class="fr-ord-row"><b class="fr-ord-n">' + (i + 1) + '</b><span class="fr-ord-nm">' + escHtml(pl.n) + ' <small>' + escHtml(gk ? 'GK' : (pl.pos || '')) + ' · ' + (pl.o | 0) + '</small></span>'
+        + '<button type="button" class="fr-ord-mv" ' + attr + '="pord-up" data-i="' + i + '" aria-label="Đưa lên"' + (locked || i === 0 ? ' disabled' : '') + '>▲</button>'
+        + '<button type="button" class="fr-ord-mv" ' + attr + '="pord-dn" data-i="' + i + '" aria-label="Đưa xuống"' + (locked || i === arr.length - 1 ? ' disabled' : '') + '>▼</button></div>';
+    }).join('');
+    return '<div class="mx-body"><div class="mt-half">📋 Xếp thứ tự sút penalty</div>'
+      + '<p class="fr-hint">Chạm ▲ ▼ để đổi chỗ. Người số 1 sút đầu tiên; hết danh sách thì quay lại từ số 1.</p><div class="fr-ord">' + rows + '</div>'
+      + (c.lv && !locked ? '<div class="mt-qtime"><span id="fr-t">' + PSO_ORD_SECS + '</span>s<div class="mt-qbar"><i id="fr-b"></i></div></div>' : '')
+      + (msg ? '<p class="fr-hint" id="frl-ph">' + msg + '</p>' : '')
+      + '</div><div class="mx-foot"><div class="se-btns"><button type="button" class="se-btn" ' + attr + '="pord-auto"' + dis + '>🔄 Xếp tự động</button><button type="button" class="se-btn" ' + attr + '="pord-ok"' + dis + '>✅ Xác nhận thứ tự</button></div></div>';
+  }
+  function psoMove(i, dir){
+    var c = sMC; if(!c || !c.m || c.m.stage !== 'pso' || c.m.pso.ordDone || c.ordLocked || !c.ordTmp) return;
+    var j = i + dir; if(i < 0 || j < 0 || i >= c.ordTmp.length || j >= c.ordTmp.length) return;
+    var t = c.ordTmp[i]; c.ordTmp[i] = c.ordTmp[j]; c.ordTmp[j] = t;
+    if(c.lv) frlPsoRender(); else sPsoRender();
+  }
+  function psoAuto(){
+    var c = sMC; if(!c || !c.m || c.m.stage !== 'pso' || c.m.pso.ordDone || c.ordLocked) return;
+    c.ordTmp = c.m.pso.order[mMe(c.m)].slice();   // chưa xác nhận thì order[me] vẫn là thứ tự tự động (giỏi nhất trước, thủ môn cuối)
+    if(c.lv) frlPsoRender(); else sPsoRender();
+  }
+  function psoWhoName(m, side, id){ return escHtml(sNm(m.teams[side], id).replace(/&[^;]+;/g, '')); }
+  function frGoalOverlay(m, k, gif){   // kết quả đè lên ảnh khung thành: GIF phủ ảnh, ⚽ ở ô sút, 🧤 ở ô thủ môn, chữ kết quả ở trên, tên người sút ở dưới
+    var cls = k.scored ? 'goal' : 'save';
+    return '<div class="fr-gst fr-gres fr-gov ' + cls + '" role="img" aria-label="Bóng sút sang ' + FR_DIRS[k.shot] + ', thủ môn bay sang ' + FR_DIRS[k.dive] + '">' + frGoalImg()
+      + '<img class="fr-ovgif" src="' + gif + '" alt="" onerror="this.style.display=\'none\'">'
+      + [0, 1, 2].map(function(d){
+        return '<div class="fr-gz' + (d === k.shot ? ' shot' : '') + (d === k.dive ? ' dive' : '') + '" style="' + frZoneBox(d) + '">' + (d === k.shot ? '<i class="fr-gm">⚽</i>' : '') + (d === k.dive ? '<i class="fr-gm">🧤</i>' : '') + '</div>'; }).join('')
+      + '<div class="fr-ovb ' + cls + '">' + (k.scored ? '⚽ VÀO LƯỚI!' : '🧤 BỊ CẢN PHÁ!') + '</div>'
+      + '<div class="fr-ovc">' + psoWhoName(m, k.side, k.taker) + ' sút sang ' + FR_DIRS[k.shot] + ' · thủ môn ' + psoWhoName(m, 1 - k.side, k.gk) + ' bay sang ' + FR_DIRS[k.dive] + '</div></div>';
+  }
+  function sPsoNext(){ var c = sMC; if(!c || !c.m || !c.m.pso) return; c.psoGoK = c.m.pso.k; sPsoRender(); }   // Sẵn sàng / Lượt sút tiếp theo (đội bóng ma: không phải chờ ai)
+  function sPsoOrderOk(){
+    var c = sMC; if(!c || !c.fr || c.m.stage !== 'pso' || c.m.pso.ordDone) return; var m = c.m, p = m.pso;
+    if(c.ordTmp) psoApplyOrder(m, mMe(m), c.ordTmp);   // đội bóng ma giữ thứ tự tự động
+    p.ordDone = true; c.ordTmp = null; sSave(c.st); sPsoRender();
+  }
   function sPsoRender(res){
     var c = sMC; if(!c) return; c.busy = false; var m = c.m, p = m.pso, me = mMe(m), h = sPsoBoard(m);
+    if(!p.ordDone && p.kicks && p.kicks.length) p.ordDone = true;   // trận lưu từ bản cũ: đã sút dở thì coi như đã xếp xong
     if(c.psoIv){ clearInterval(c.psoIv); c.psoIv = 0; }
-    if(res && res.kick){   // vừa sút xong: lộ kết quả
-      var k = res.kick, mineShot = k.side === me, gif = shotGifPick(k.scored ? 'goal' : 'miss');
-      h += '<div class="mx-body"><div class="fr-res ' + (k.scored ? 'goal' : 'save') + '"><img class="fr-gif" src="' + gif + '" alt="" onerror="this.style.display=\'none\'">'
-        + frGoalResult(k) + '<p><b>' + (k.scored ? '⚽ VÀO LƯỚI!' : '🧤 BỊ CẢN PHÁ!') + '</b><br><small>' + escHtml(sNm(m.teams[k.side], k.taker).replace(/&[^;]+;/g, '')) + ' sút sang ' + FR_DIRS[k.shot] + ' · thủ môn ' + escHtml(sNm(m.teams[1 - k.side], k.gk).replace(/&[^;]+;/g, '')) + ' bay sang ' + FR_DIRS[k.dive] + '</small></p></div></div>'
+    if(res && res.kick){   // vừa sút xong: kết quả hiện ngay trên ảnh khung thành
+      var k = res.kick, gif = shotGifPick(k.scored ? 'goal' : 'miss'); psoSfx(k.scored);
+      h += '<div class="mx-body">' + frGoalOverlay(m, k, gif) + '</div>'
         + '<div class="mx-foot"><div class="se-btns">' + (p.done ? '<button type="button" class="se-btn" data-fr="pend">🏁 Xem kết quả trận</button>' : '<button type="button" class="se-btn" data-fr="pnext">▶ Lượt sút tiếp theo</button>') + '</div></div>';
       sMatchShow(h); return;
     }
     if(p.done){ sMatchShow(h + '<div class="mx-body"><p class="mt-half">' + (p.winner === me ? '🎉 Bé thắng loạt sút luân lưu!' : '💪 Đội bạn thắng loạt sút luân lưu.') + '</p></div><div class="mx-foot"><div class="se-btns"><button type="button" class="se-btn" data-fr="pend">🏁 Xem kết quả trận</button></div></div>'); return; }
+    if(!p.ordDone){ sMatchShow(h + psoOrderScreen(m, c, 'data-fr', false, '')); return; }
     var nx = pso.peek(m), iShoot = nx.side === me, secs = settings.friendly.quizSecsET || settings.quizSeconds || 15;
-    h += '<div class="mx-body"><div class="mt-half">' + (iShoot ? '🥅 Đến lượt bé SÚT: <b>' + escHtml(sNm(m.teams[nx.side], nx.taker).replace(/&[^;]+;/g, '')) + '</b>! Chọn ô để sút.' : '🧤 Đội bạn sút! Chọn ô để thủ môn <b>' + escHtml(sNm(m.teams[me], m.teams[me].pitch[nx.gk].id).replace(/&[^;]+;/g, '')) + '</b> bay người.') + '</div>'
+    var who = iShoot ? '🥅 Lượt ' + (p.k + 1) + ': bé SÚT — <b>' + psoWhoName(m, nx.side, nx.taker) + '</b>' : '🧤 Lượt ' + (p.k + 1) + ': đội bạn sút — thủ môn <b>' + psoWhoName(m, me, m.teams[me].pitch[nx.gk].id) + '</b> bay người';
+    if(c.psoGoK !== p.k){   // chỉ còn khung thành + 3 ô: bấm Sẵn sàng mới bắt đầu chọn hướng
+      sMatchShow(h + '<div class="mx-body"><div class="mt-half">' + who + '</div>' + sPsoGoalHTML(false) + '<p class="fr-hint">Bấm <b>Sẵn sàng</b> để bắt đầu chọn hướng.</p></div><div class="mx-foot"><div class="se-btns"><button type="button" class="se-btn" data-fr="pready">✋ Sẵn sàng</button></div></div>');
+      return;
+    }
+    h += '<div class="mx-body"><div class="mt-half">' + (iShoot ? '🥅 Đến lượt bé SÚT: <b>' + psoWhoName(m, nx.side, nx.taker) + '</b>! Chọn ô để sút.' : '🧤 Đội bạn sút! Chọn ô để thủ môn <b>' + psoWhoName(m, me, m.teams[me].pitch[nx.gk].id) + '</b> bay người.') + '</div>'
       + sPsoGoalHTML(true) + '<div class="mt-qtime"><span id="fr-t">' + secs + '</span>s<div class="mt-qbar"><i id="fr-b"></i></div></div><p class="fr-hint">Chọn <b>trùng</b> ô: bị cản phá. Chọn <b>lệch</b> ô: bóng vào lưới.</p></div>';
     sMatchShow(h);
     var tok = c.tok, t0 = performance.now();
@@ -19383,6 +19513,8 @@
          ans/<i>/<side>  {p, ok, s, sec, to, px}  đáp án + điểm (px = máy kia ghi hộ vì bên này mất kết nối: tính 1 điểm)
          sh/<i>/<side>   đã xem xong kết quả · at/<i>  mốc giờ server để tình huống kế bắt đầu (người nào đủ điều kiện trước ghi trước)
          hash/<i>/<side> mã kiểm sau mỗi tình huống · need/<i> · snap/<i>  guest xin bản chụp trạng thái của host khi mã lệch
+         pord/<side>     thứ tự sút luân lưu của mỗi bên (mảng chỉ số cầu thủ); cả hai có mặt mới bắt đầu
+         pgo/<k>/<side>  đã bấm Sẵn sàng / Lượt sút tiếp theo của lượt luân lưu k (chờ tối đa 30 giây lượt đầu, 10 giây các lượt sau)
          pso/<k>/<side>  ô sút / ô bay người của lượt luân lưu k
          result {...}    kết quả; status live → done
        Mọi ghi dùng CAS (ghi nếu chưa có): ai ghi trước thì thắng, máy còn lại đọc lại từ phòng.
@@ -19509,6 +19641,12 @@
     var ap = [0, 0], info = {inSit:false, cur:null, ap:ap, hashes:{}};
     for(var guard = 0; guard < 60; guard++){
       if(m.stage === 'pso'){
+        if(m.pso && !m.pso.ordDone){   // thứ tự sút: có đủ hai bên thì áp dụng; phòng cũ (chưa có pord) mà đã có lượt sút thì dùng thứ tự tự động
+          var oh = frlGet(d, 'pord', 'host'), og = frlGet(d, 'pord', 'guest');
+          if(oh != null && og != null){ psoApplyOrder(m, 0, oh); psoApplyOrder(m, 1, og); m.pso.ordDone = true; }
+          else if(frlGet(d, 'pso', 0, 'host') != null) m.pso.ordDone = true;
+        }
+        if(m.pso && !m.pso.ordDone) return info;
         while(m.pso && !m.pso.done){
           var k = m.pso.k, a = frlGet(d, 'pso', k), h = a && a.host, g = a && a.guest; if(h == null || g == null) break;
           var nx = pso.peek(m); pso.step(m, {shot:(nx.side === 0 ? h : g), dive:(nx.side === 0 ? g : h)});
@@ -19677,7 +19815,7 @@
       function rem(){ return (endAt - frnNow()) / 1000; }
       function finish(res){
         if(done) return; done = true; clearInterval(iv);
-        res.score = res.ok ? Math.min(10, Math.max(1, res.secLeft)) : 1;
+        res.score = res.ok ? Math.min(10, Math.max(1, res.secLeft)) : 1; seSfx(res.ok ? 'right' : 'wrong');
         optsEl.querySelectorAll('.mt-opt').forEach(function(b, i){ b.disabled = true; if(i === q.correct) b.classList.add('ok'); else if(i === res.picked) b.classList.add('bad'); });
         var fb = sEl('mt-qfb');
         if(fb) fb.innerHTML = res.ok ? '✅ <b>Chính xác!</b> Còn ' + res.secLeft + ' giây → ' + res.score + ' điểm' : ((res.timeout ? '⏰ <b>Hết giờ!</b> ' : '❌ <b>Chưa đúng.</b> ') + 'Đáp án: <b>' + escHtml(opts[q.correct]) + '</b>' + (q.explain ? '<br><small>' + escHtml(q.explain) + '</small>' : ''));
@@ -19811,19 +19949,50 @@
     return cfg.url + (pick < 10 ? '0' : '') + pick + '.gif';
   }
   function frlGoalHTML(on){ return frGoalHTML('data-frl="dir"', on); }
+  function frlPsoGoTimer(c, label){   // đếm ngược trên nút Sẵn sàng / Lượt sút tiếp theo; hết giờ tự coi như đã bấm
+    var tok = c.tok;
+    c.psoIv = setInterval(function(){
+      if(!sAlive(tok)){ clearInterval(c.psoIv); c.psoIv = 0; return; }
+      var left = Math.ceil((c.psoGoEnd - Date.now()) / 1000), b = sEl('frl-go');
+      if(b && !b.disabled) b.textContent = label + ' (' + Math.max(0, left) + ')';
+      if(left <= 0){ clearInterval(c.psoIv); c.psoIv = 0; frlPsoGate(); }
+    }, 250);
+  }
   function frlPsoRender(res){
-    var c = sMC; if(!c || !c.lv) return; c.busy = false; var m = c.m, p = m.pso, me = mMe(m), h = sPsoBoard(m), secs = c.lv.qetSecs;
+    var c = sMC; if(!c || !c.lv) return; c.busy = false; var m = c.m, p = m.pso, me = mMe(m), h = sPsoBoard(m), secs = c.lv.qetSecs, R = frnRoom;
+    if(!p.ordDone && p.kicks && p.kicks.length) p.ordDone = true;
     if(c.psoIv){ clearInterval(c.psoIv); c.psoIv = 0; }
-    if(res && res.kick){
-      var k = res.kick, gif = frlPsoGif(m, k);
-      h += '<div class="mx-body"><div class="fr-res ' + (k.scored ? 'goal' : 'save') + '"><img class="fr-gif" src="' + gif + '" alt="" onerror="this.style.display=\'none\'">'
-        + frGoalResult(k) + '<p><b>' + (k.scored ? '⚽ VÀO LƯỚI!' : '🧤 BỊ CẢN PHÁ!') + '</b><br><small>' + escHtml(sNm(m.teams[k.side], k.taker).replace(/&[^;]+;/g, '')) + ' sút sang ' + FR_DIRS[k.shot] + ' · thủ môn ' + escHtml(sNm(m.teams[1 - k.side], k.gk).replace(/&[^;]+;/g, '')) + ' bay sang ' + FR_DIRS[k.dive] + '</small></p></div></div>'
-        + '<div class="mx-foot"><div class="se-btns">' + (p.done ? '<button type="button" class="se-btn" data-frl="pend">🏁 Xem kết quả trận</button>' : '<button type="button" class="se-btn" data-frl="pnext">▶ Lượt sút tiếp theo</button>') + '</div></div>';
-      sMatchShow(h); return;
+    if(res && res.kick){   // kết quả hiện ngay trên ảnh khung thành; lượt sau chỉ bắt đầu khi cả hai bấm (chờ tối đa 10 giây)
+      var k = res.kick, gif = frlPsoGif(m, k); psoSfx(k.scored);
+      h += '<div class="mx-body">' + frGoalOverlay(m, k, gif) + (p.done ? '' : '<p class="fr-hint">Lượt sút tiếp theo bắt đầu khi <b>cả hai bạn</b> cùng bấm (chờ tối đa 10 giây).</p>') + '</div>'
+        + '<div class="mx-foot"><div class="se-btns">' + (p.done ? '<button type="button" class="se-btn" data-frl="pend">🏁 Xem kết quả trận</button>' : '<button type="button" class="se-btn" id="frl-go" data-frl="pgo">▶ Lượt sút tiếp theo (10)</button>') + '</div></div>';
+      sMatchShow(h);
+      if(!p.done){ c.psoGoEnd = Date.now() + PSO_GO_NEXT; c.psoGoBusy = false; frlPsoGoTimer(c, '▶ Lượt sút tiếp theo'); }
+      return;
     }
     if(p.done){ sMatchShow(h + '<div class="mx-body"><p class="mt-half">' + (p.winner === me ? '🎉 Bé thắng loạt sút luân lưu!' : '💪 Đội bạn thắng loạt sút luân lưu.') + '</p></div><div class="mx-foot"><div class="se-btns"><button type="button" class="se-btn" data-frl="pend">🏁 Xem kết quả trận</button></div></div>'); return; }
-    var nx = pso.peek(m), iShoot = nx.side === me;
-    h += '<div class="mx-body"><div class="mt-half">' + (iShoot ? '🥅 Đến lượt bé SÚT: <b>' + escHtml(sNm(m.teams[nx.side], nx.taker).replace(/&[^;]+;/g, '')) + '</b>! Chọn ô để sút.' : '🧤 Bạn ấy sút! Chọn ô để thủ môn <b>' + escHtml(sNm(m.teams[me], m.teams[me].pitch[nx.gk].id).replace(/&[^;]+;/g, '')) + '</b> bay người.') + '</div>'
+    if(!p.ordDone){   // xếp thứ tự sút: chỉ bắt đầu khi cả hai xác nhận
+      if(!c.ordEnd) c.ordEnd = Date.now() + PSO_ORD_SECS * 1000;
+      var on0 = frnWho(R && R.d, frlKey(1 - me));
+      sMatchShow(h + psoOrderScreen(m, c, 'data-frl', !!c.ordLocked, c.ordLocked ? '⏳ Bé đã xác nhận! Đang chờ <b>' + escHtml(on0) + '</b> xác nhận thứ tự…' : ''));
+      if(!c.ordLocked){
+        var tok0 = c.tok;
+        c.psoIv = setInterval(function(){
+          if(!sAlive(tok0)){ clearInterval(c.psoIv); c.psoIv = 0; return; }
+          var r = (c.ordEnd - Date.now()) / 1000, te = sEl('fr-t'), be = sEl('fr-b'); if(te) te.textContent = String(Math.max(0, Math.ceil(r))); if(be) be.style.width = Math.max(0, r / PSO_ORD_SECS * 100) + '%';
+          if(r <= 0){ clearInterval(c.psoIv); c.psoIv = 0; frlPsoOrderConfirm(); }   // hết giờ: xác nhận thứ tự đang xếp
+        }, 200);
+      }
+      return;
+    }
+    var nx = pso.peek(m), iShoot = nx.side === me, picked = frlGet(R && R.d, 'pso', p.k, frlKey(me)) != null;
+    var who = iShoot ? '🥅 Lượt ' + (p.k + 1) + ': bé SÚT — <b>' + psoWhoName(m, nx.side, nx.taker) + '</b>' : '🧤 Lượt ' + (p.k + 1) + ': bạn ấy sút — thủ môn <b>' + psoWhoName(m, me, m.teams[me].pitch[nx.gk].id) + '</b> bay người';
+    if(c.lv.psoGoK !== p.k && !picked){   // chỉ còn khung thành + 3 ô: hai bên cùng bấm Sẵn sàng mới bắt đầu chọn hướng
+      sMatchShow(h + '<div class="mx-body"><div class="mt-half">' + who + '</div>' + frlGoalHTML(false) + '<p class="fr-hint">Bấm <b>Sẵn sàng</b>. Khi <b>cả hai bạn</b> sẵn sàng sẽ bắt đầu chọn hướng.</p></div><div class="mx-foot"><div class="se-btns"><button type="button" class="se-btn" id="frl-go" data-frl="pgo">✋ Sẵn sàng (30)</button></div></div>');
+      c.psoGoEnd = Date.now() + PSO_GO_FIRST; c.psoGoBusy = false; frlPsoGoTimer(c, '✋ Sẵn sàng');
+      return;
+    }
+    h += '<div class="mx-body"><div class="mt-half">' + (iShoot ? '🥅 Đến lượt bé SÚT: <b>' + psoWhoName(m, nx.side, nx.taker) + '</b>! Chọn ô để sút.' : '🧤 Bạn ấy sút! Chọn ô để thủ môn <b>' + psoWhoName(m, me, m.teams[me].pitch[nx.gk].id) + '</b> bay người.') + '</div>'
       + frlGoalHTML(true) + '<div class="mt-qtime"><span id="fr-t">' + secs + '</span>s<div class="mt-qbar"><i id="fr-b"></i></div></div><p class="fr-hint" id="frl-ph">Chọn <b>trùng</b> ô: bị cản phá. Chọn <b>lệch</b> ô: bóng vào lưới. Hai bên chọn cùng lúc, không nhìn được nhau.</p></div>';
     sMatchShow(h);
     var tok = c.tok, t0 = performance.now();
@@ -19832,7 +20001,38 @@
       var r = secs - (performance.now() - t0) / 1000, te = sEl('fr-t'), be = sEl('fr-b'); if(te) te.textContent = String(Math.max(0, Math.ceil(r))); if(be) be.style.width = Math.max(0, r / secs * 100) + '%';
       if(r <= 0){ clearInterval(c.psoIv); c.psoIv = 0; frlPsoPick(Math.floor(fxR() * 3)); }
     }, 100);
-    if(frlGet(frnRoom && frnRoom.d, 'pso', p.k, frlKey(me)) != null){ frlPsoPick(frlGet(frnRoom.d, 'pso', p.k, frlKey(me))); }   // vào lại giữa lượt: đã chọn rồi thì chờ kết quả
+    if(picked){ frlPsoPick(frlGet(frnRoom.d, 'pso', p.k, frlKey(me))); }   // vào lại giữa lượt: đã chọn rồi thì chờ kết quả
+  }
+  async function frlPsoOrderConfirm(){   // ghi thứ tự của mình, chờ bên kia, rồi cả hai cùng áp dụng
+    var c = sMC, R = frnRoom; if(!c || !c.lv || !R || c.m.stage !== 'pso' || c.ordLocked) return;
+    var m = c.m, p = m.pso; if(p.ordDone) return;
+    var me = mMe(m), opp = 1 - me, tok = c.tok, on = frnWho(R.d, frlKey(opp)), arr = (c.ordTmp && c.ordTmp.length ? c.ordTmp : p.order[me]).slice();
+    if(c.psoIv){ clearInterval(c.psoIv); c.psoIv = 0; }
+    c.ordLocked = true; c.busy = true; frlPsoRender(); c.busy = true;
+    await frlPut(R, 'pord/' + frlKey(me), arr, true); if(!sAlive(tok)) return;
+    function oppV(dd){ var v = frlGet(dd, 'pord', frlKey(opp)); return v == null ? null : {v:v}; }
+    var oa = await frlWait(oppV, tok, (PSO_ORD_SECS + 8) * 1000); if(!sAlive(tok)) return;
+    if(!oa){   // đối thủ vắng: giữ thứ tự tự động của họ
+      await frlPut(R, 'pord/' + frlKey(opp), p.order[opp].slice(), true);
+      oa = await frlWait(oppV, tok, 10000); if(!sAlive(tok)) return;
+      if(!oa){ c.ordLocked = false; c.ordEnd = 0; frlLost(c); return; }
+    }
+    psoApplyOrder(m, me, frlGet(R.d, 'pord', frlKey(me))); psoApplyOrder(m, opp, frlGet(R.d, 'pord', frlKey(opp)));
+    p.ordDone = true; c.ordLocked = false; c.ordTmp = null; c.ordEnd = 0; c.busy = false;
+    frlPsoRender();
+  }
+  async function frlPsoGate(){   // Sẵn sàng (lượt đầu) / Lượt sút tiếp theo: ghi "đã bấm", chờ bên kia tới hết hạn rồi mới bắt đầu chọn hướng
+    var c = sMC, R = frnRoom; if(!c || !c.lv || !R || c.m.stage !== 'pso' || c.psoGoBusy) return;
+    var m = c.m, p = m.pso; if(p.done || !p.ordDone) return;
+    var me = mMe(m), opp = 1 - me, k = p.k, tok = c.tok, on = frnWho(R.d, frlKey(opp));
+    c.psoGoBusy = true; if(c.psoIv){ clearInterval(c.psoIv); c.psoIv = 0; }
+    var b = sEl('frl-go'); if(b){ b.disabled = true; b.textContent = '⏳ Đang chờ ' + on + '…'; }
+    await frlPut(R, 'pgo/' + k + '/' + frlKey(me), 1, true); if(!sAlive(tok)){ c.psoGoBusy = false; return; }
+    function oppV(dd){ return frlGet(dd, 'pgo', k, frlKey(opp)) != null ? {v:1} : null; }
+    var left = Math.max(0, (c.psoGoEnd || 0) - Date.now());
+    if(left > 0) await frlWait(oppV, tok, left);
+    if(!sAlive(tok)){ c.psoGoBusy = false; return; }
+    c.psoGoBusy = false; c.lv.psoGoK = k; frlPsoRender();
   }
   async function frlPsoPick(d){
     var c = sMC, R = frnRoom; if(!c || !c.lv || !R || c.m.stage !== 'pso' || c.busy) return;
@@ -19911,7 +20111,10 @@
     var a = b.getAttribute('data-frl'), c = sMC;
     if(a === 'open') frlOpenView();
     else if(a === 'dir') frlPsoPick(parseInt(b.getAttribute('data-d'), 10));
-    else if(a === 'pnext') frlPsoRender();
+    else if(a === 'pnext' || a === 'pgo') frlPsoGate();
+    else if(a === 'pord-up' || a === 'pord-dn') psoMove(parseInt(b.getAttribute('data-i'), 10), a === 'pord-up' ? -1 : 1);
+    else if(a === 'pord-auto') psoAuto();
+    else if(a === 'pord-ok') frlPsoOrderConfirm();
     else if(a === 'pend') frlFinish();
     else if(a === 'stay') sModalClose();
     else if(a === 'leave'){
