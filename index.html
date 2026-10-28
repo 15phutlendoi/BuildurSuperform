@@ -393,7 +393,7 @@
     background:#04070d; box-shadow:0 0 0 3px rgba(255,214,74,.7), 0 18px 40px rgba(0,0,0,.55); }
   .shot-gif-layer[hidden]{ display:none; }
   .shot-gif-layer.goal{ cursor:pointer; }
-  /* bảng 5 lượt sút (ghi đủ 3 bàn là thắng) */
+  /* bảng 5 lượt sút (sút đủ 5 lượt, ghi từ 3 bàn là thắng) */
   .shot-board{ display:flex; align-items:center; justify-content:center; gap:10px; flex-wrap:wrap; max-width:100%; padding:8px 12px; border-radius:14px;
     background:rgba(15,23,42,.72); border:1px solid rgba(245,158,11,.4); }
   .shot-board.st-won{ border-color:#10B981; } .shot-board.st-lost{ border-color:#F87171; }
@@ -11560,14 +11560,15 @@
     var t = periodTotals(period), g = settings.monthlyGoal;
     return g>0 ? Math.floor(t.total/g*100) : 0;
   }
-  /* Mỗi kỳ có SHOOT_SHOTS lượt sút; ghi đủ SHOOT_WIN_GOALS bàn là THẮNG (thông báo chiến thắng rồi mới quay thưởng).
-     Hết lượt mà chưa đủ bàn là thua. hide = ẩn bớt n cú sút cuối (đang sút dở thì chưa được lộ kết quả). */
+  /* Mỗi kỳ có SHOOT_SHOTS lượt sút và luôn được sút ĐỦ hết lượt; hết lượt mà ghi từ SHOOT_WIN_GOALS bàn trở lên là THẮNG
+     (thông báo chiến thắng rồi mới quay thưởng), ít hơn là thua. hide = ẩn bớt n cú sút cuối (đang sút dở thì chưa được lộ kết quả). */
   var SHOOT_SHOTS = 5, SHOOT_WIN_GOALS = 3;
   function shootState(month, hide){
     var all = month.shots || [], shots = hide ? all.slice(0, Math.max(0, all.length - hide)) : all;
     var goals = 0; shots.forEach(function(x){ if(x.goal) goals++; });
-    var won = goals >= SHOOT_WIN_GOALS || !!month.shootWon || !!month.prize;
-    var lost = !won && (shots.length >= SHOOT_SHOTS || !!month.shootLost);
+    var finished = shots.length >= SHOOT_SHOTS;   // sút đủ lượt mới tính kết quả (đã đủ 3 bàn vẫn sút tiếp)
+    var won = (finished && goals >= SHOOT_WIN_GOALS) || !!month.shootWon || !!month.prize;
+    var lost = !won && (finished || !!month.shootLost);
     if(won) goals = Math.max(goals, SHOOT_WIN_GOALS);
     return {shots:shots, goals:goals, left:Math.max(0, SHOOT_SHOTS - shots.length), status: won ? 'won' : (lost ? 'lost' : 'open')};
   }
@@ -11580,7 +11581,7 @@
       else cls += ' off';
       h += '<span class="' + cls + '">' + ico + '</span>';
     }
-    return h + '</span><span class="sb-score"><b>' + st.goals + '</b>/' + SHOOT_WIN_GOALS + ' bàn</span>';
+    return h + '</span><span class="sb-score"><b>' + st.goals + '</b> bàn · cần ≥' + SHOOT_WIN_GOALS + '</span>';
   }
   var shotBoardPrev = {key:'', n:0};
   function renderShotBoard(st){
@@ -11596,15 +11597,29 @@
      • Ảnh Cloudinary .../v1791287953/1.jpg (sân penalty) làm ảnh nền, luôn đứng im.
      • Quả bóng là 1 phần tử riêng nằm phía trên ảnh, đặt trùng đúng quả bóng trong ảnh (SHOOT_BALL_SPOT). Mọi hiệu ứng áp lên quả bóng này:
        bơm to dần (1× → 1+SHOOT_PUMP_GAIN×), quầng sáng, tia sét, lửa, giật điện, bộc phá, và cú ĐÁ bay vào cầu môn / lệch ra ngoài.
-     • Mỗi kỳ có 5 lượt sút, ghi đủ 3 bàn là thắng. Vào → random GIF pen1…pen15; trượt → random GIF MISSPEN1…MISSPEN18.
+     • Mỗi kỳ có 5 lượt sút, luôn sút đủ 5 lượt; ghi từ 3 bàn trở lên là thắng. Vào → GIF pen01…pen33; trượt → GIF MISSPEN01…MISSPEN31 (chọn theo "túi xáo trộn" nên các ảnh xuất hiện đều nhau).
        Cú chưa quyết định: GIF chạy hết 1 vòng rồi trả lại sân cho lượt sau. Hết kỳ sút (đủ 3 bàn hoặc hết 5 lượt): GIF của tất cả các cú đã sút
        LUÂN PHIÊN lặp lại mãi (lưu theo kỳ) kèm chữ WINNER + pháo hoa/pháo giấy (thắng) hoặc KEEP TRYING + hiệu ứng động viên (thua).
        Thắng → thông báo CHIẾN THẮNG rồi mới tới vòng quay thưởng; chạm GIF/bóng để xem lại phần thưởng. */
   var SHOOT_BALL = {base:'https://res.cloudinary.com/tgvj8prc/image/upload/', ver:'v1791287953', file:'1.jpg'};
   var SHOT_GIFS = {
-    goal:{url:'https://res.cloudinary.com/tgvj8prc/image/upload/v1791287530/pen', n:15},
-    miss:{url:'https://res.cloudinary.com/tgvj8prc/image/upload/v1791287517/MISSPEN', n:18}
+    goal:{url:'https://res.cloudinary.com/tgvj8prc/image/upload/v1793158056/pen', n:33},      // pen01.gif … pen33.gif
+    miss:{url:'https://res.cloudinary.com/tgvj8prc/image/upload/v1793154917/MISSPEN', n:31}   // MISSPEN01.gif … MISSPEN31.gif
   };
+  /* Chọn GIF kiểu "túi xáo trộn": xáo cả n ảnh, rút lần lượt từng ảnh, hết túi mới xáo lại → mọi ảnh xuất hiện ĐỀU NHAU (không ảnh nào lặp trước khi các ảnh khác đã ra đủ).
+     Túi lưu trong localStorage theo từng loại (vào / trượt) nên qua các lần mở app vẫn đều. Dùng chung cho Sút Quyết Định và sút penalty giao hữu. */
+  function shotGifPick(kind){
+    var cfg = SHOT_GIFS[kind], key = 'kidchart_shotbag_' + kind + '_' + cfg.n, bag = [], last = 0, i, j, tmp;
+    try{ var o = JSON.parse(localStorage.getItem(key) || 'null'); if(o && Array.isArray(o.bag)){ bag = o.bag.filter(function(x){ return x >= 1 && x <= cfg.n; }); last = o.last | 0; } }catch(e){}
+    if(!bag.length){
+      for(i = 1; i <= cfg.n; i++) bag.push(i);
+      for(i = bag.length - 1; i > 0; i--){ j = Math.floor(Math.random() * (i + 1)); tmp = bag[i]; bag[i] = bag[j]; bag[j] = tmp; }
+      if(bag.length > 1 && bag[bag.length - 1] === last){ tmp = bag[0]; bag[0] = bag[bag.length - 1]; bag[bag.length - 1] = tmp; }   // ảnh vừa ra cuối túi trước không ra liền đầu túi sau
+    }
+    var pick = bag.pop();
+    try{ localStorage.setItem(key, JSON.stringify({bag:bag, last:pick})); }catch(e){}
+    return cfg.url + (pick < 10 ? '0' : '') + pick + '.gif';
+  }
   var SHOOT_BALL_SPOT = {x:0.4972, y:0.7587, d:0.059};   // tâm quả bóng trong ảnh nền (tỉ lệ theo chiều rộng/cao ảnh) và đường kính phần tử bóng (theo chiều rộng)
   var SHOOT_PUMP_GAIN = 1.2;                              // bơm 100% → bóng to 1 + 1.2 = 2.2 lần (0% = đúng bằng bóng trong ảnh)
   var shootBusy = false;
@@ -11655,7 +11670,7 @@
   }
   var shotGifCache = {goal:null, miss:null};
   function shotGifPrepare(kind){
-    var cfg = SHOT_GIFS[kind], url = cfg.url + (1 + Math.floor(Math.random() * cfg.n)) + '.gif';
+    var url = shotGifPick(kind);
     return fetch(url).then(function(r){ if(!r.ok) throw new Error('HTTP ' + r.status); return r.arrayBuffer(); })
       .then(function(buf){ return {src:url, url:url, buf:buf, durMs:gifDurationMs(buf), blob:true}; })
       .catch(function(){   // không đọc được byte (CORS/mạng) → vẫn phát bằng đường dẫn thường, thời gian mặc định
@@ -11736,9 +11751,9 @@
   }
   function shotVerdictHTML(won, goals){
     if(won) return '<div class="sv-fx">' + winFxHTML() + '</div>'
-      + '<div class="sv-banner win"><div class="sv-crown">👑</div><div class="sv-title">WINNER</div><div class="sv-sub">Ghi ' + goals + '/' + SHOOT_WIN_GOALS + ' bàn thắng! 🏆</div></div>';
+      + '<div class="sv-banner win"><div class="sv-crown">👑</div><div class="sv-title">WINNER</div><div class="sv-sub">Ghi ' + goals + ' bàn thắng sau ' + SHOOT_SHOTS + ' lượt sút! 🏆</div></div>';
     return '<div class="sv-fx">' + loseFxHTML() + '</div>'
-      + '<div class="sv-banner lose"><div class="sv-title">KEEP TRYING</div><div class="sv-sub">Ghi ' + goals + '/' + SHOOT_WIN_GOALS + ' bàn — kỳ sau con sẽ làm được! 💪</div></div>';
+      + '<div class="sv-banner lose"><div class="sv-title">KEEP TRYING</div><div class="sv-sub">Ghi ' + goals + ' bàn (cần từ ' + SHOOT_WIN_GOALS + ' bàn) — kỳ sau con sẽ làm được! 💪</div></div>';
   }
   function showShotPlaylist(items, won, goals, key){
     var layer = document.getElementById('shot-gif-layer'), stage = document.getElementById('shoot-stage');
@@ -11784,7 +11799,7 @@
       if(!items.length){   // dữ liệu cũ chưa lưu GIF: chọn 1 GIF hợp kết quả
         var url = m.final && m.final.url;
         if(!url){
-          var cfg = SHOT_GIFS[won ? 'goal' : 'miss']; url = cfg.url + (1 + Math.floor(Math.random() * cfg.n)) + '.gif';
+          url = shotGifPick(won ? 'goal' : 'miss');
           m.final = {url:url, dur:0}; saveMonth(monthKey);
         }
         items.push({url:url, dur:(m.final && m.final.dur) || 0});
@@ -12001,18 +12016,18 @@
     if(!shootBusy) syncShotResult(currentPeriod.key, st);
     if(!shootBusy) shootFxSet(pct/100, (!isOpen && !reducedMotion()) ? 'gif' : (spentNow ? 'spent' : (readyNow ? 'ready' : (pct>0 ? 'pump' : 'idle'))));
     if(isOpen && examOk && pct>0) shotGifWarm();
-    var prog = st.shots.length && isOpen ? ' Đã ghi ' + st.goals + '/' + SHOOT_WIN_GOALS + ' bàn, còn ' + st.left + ' lượt.' : '';
+    var prog = st.shots.length && isOpen ? ' Đã ghi ' + st.goals + ' bàn, còn ' + st.left + ' lượt.' : '';
     var hintTxt;
     if(isWon){
       hintTxt = month.prize ? 'Chiến thắng rồi! Ấn vào hình để xem lại phần thưởng nhé! 🏆' : 'Chiến thắng rồi! Ấn vào hình để quay thưởng nhé! 🏆';
     } else if(isLost){
-      hintTxt = 'Hết ' + SHOOT_SHOTS + ' lượt sút kỳ này (ghi ' + st.goals + '/' + SHOOT_WIN_GOALS + ' bàn). Kỳ sau bơm căng hơn nhé!';
+      hintTxt = 'Hết ' + SHOOT_SHOTS + ' lượt sút kỳ này (ghi ' + st.goals + ' bàn, cần từ ' + SHOOT_WIN_GOALS + ' bàn). Kỳ sau bơm căng hơn nhé!';
     } else if(!examOk){
       hintTxt = 'Nhập đủ điểm thi tháng (còn thiếu: ' + missingExam.join(', ') + ') để được sút nhé!';
     } else if(reached){
-      hintTxt = 'Bơm căng 100% — mỗi cú sút vào chắc chắn! Ghi đủ ' + SHOOT_WIN_GOALS + ' bàn trong ' + SHOOT_SHOTS + ' lượt để thắng.' + prog;
+      hintTxt = 'Bơm căng 100% — mỗi cú sút vào chắc chắn! Sút đủ ' + SHOOT_SHOTS + ' lượt, ghi từ ' + SHOOT_WIN_GOALS + ' bàn trở lên để thắng.' + prog;
     } else if(pct>0){
-      hintTxt = 'Bóng bơm ' + pct + '% — mỗi cú sút vào ' + chance + '%. Có ' + SHOOT_SHOTS + ' lượt, ghi đủ ' + SHOOT_WIN_GOALS + ' bàn để thắng!' + prog;
+      hintTxt = 'Bóng bơm ' + pct + '% — mỗi cú sút vào ' + chance + '%. Sút đủ ' + SHOOT_SHOTS + ' lượt, ghi từ ' + SHOOT_WIN_GOALS + ' bàn trở lên để thắng!' + prog;
     } else {
       hintTxt = 'Hoàn thành nhiệm vụ mỗi ngày để bóng đầy dần nhé!';
     }
@@ -12035,12 +12050,12 @@
         rSub = 'Nhớ nhắc bố mẹ thực hiện nhé!';
       } else if(isWon){
         rState = 'ready'; rIcon = '🏆';
-        rTitle = 'Chiến thắng! Ghi đủ ' + SHOOT_WIN_GOALS + ' bàn';
+        rTitle = 'Chiến thắng! Ghi ' + st.goals + ' bàn';
         rSub = 'Ấn vào hình để quay thưởng 🎡';
       } else if(isLost){
         rState = 'missed'; rIcon = '😢';
         rTitle = 'Hết ' + SHOOT_SHOTS + ' lượt sút';
-        rSub = 'Ghi ' + st.goals + '/' + SHOOT_WIN_GOALS + ' bàn — kỳ sau thử lại nhé!';
+        rSub = 'Ghi ' + st.goals + ' bàn (cần từ ' + SHOOT_WIN_GOALS + ') — kỳ sau thử lại nhé!';
       } else if(!examOk){
         rState = 'locked'; rIcon = '📝';
         rTitle = 'Nhập đủ điểm thi tháng để được sút';
@@ -12048,11 +12063,11 @@
       } else if(reached){
         rState = 'ready'; rIcon = '🔥';
         rTitle = 'Đủ mốc ' + goal + ' điểm rồi!';
-        rSub = 'Sút là vào chắc chắn · ghi ' + SHOOT_WIN_GOALS + ' bàn trong ' + SHOOT_SHOTS + ' lượt rồi quay thưởng 🎡';
+        rSub = 'Sút là vào chắc chắn · sút đủ ' + SHOOT_SHOTS + ' lượt, ghi từ ' + SHOOT_WIN_GOALS + ' bàn rồi quay thưởng 🎡';
       } else {
         rState = 'locked'; rIcon = '🎁';
         rTitle = 'Mỗi cú sút vào: ' + chance + '%';
-        rSub = (chance>=100 ? '' : 'Dưới 50% sẽ trượt · mỗi +10% bơm thêm 20% cơ hội · ' + t.total + '/' + goal + ' điểm · ') + SHOOT_SHOTS + ' lượt, ghi ' + SHOOT_WIN_GOALS + ' bàn để thắng';
+        rSub = (chance>=100 ? '' : 'Dưới 50% sẽ trượt · mỗi +10% bơm thêm 20% cơ hội · ' + t.total + '/' + goal + ' điểm · ') + 'sút đủ ' + SHOOT_SHOTS + ' lượt, ghi từ ' + SHOOT_WIN_GOALS + ' bàn để thắng';
       }
       banner.className = 'month-reward ' + rState;
       banner.innerHTML = '<div class="mr-icon">' + rIcon + '</div>'
@@ -12607,7 +12622,7 @@
     var st = shootState(month, 0);
     var label = formatPeriodLabel(period);
     document.getElementById('prize-lead').innerHTML = st.shots.length
-      ? 'Con đã ghi đủ <b>' + SHOOT_WIN_GOALS + ' bàn</b> sau <b>' + st.shots.length + ' lượt sút</b> trong ' + label + ' (đạt <b>' + t.total + ' điểm</b>). Quay thưởng thôi nào!'
+      ? 'Con đã ghi <b>' + st.goals + ' bàn</b> sau <b>' + st.shots.length + ' lượt sút</b> trong ' + label + ' (đạt <b>' + t.total + ' điểm</b>). Quay thưởng thôi nào!'
       : 'Con đã đạt <b>'+t.total+' điểm</b> trong ' + label + '! Đây là cú sút quyết định mang về chiến thắng — quay thưởng thôi nào!';
     buildWheel();
     var res = document.getElementById('prize-result');
@@ -12623,7 +12638,7 @@
     } else {
       // bước 1: thông báo chiến thắng; bấm nút mới sang bước 2: vòng quay thưởng
       document.getElementById('pv-text').textContent = st.shots.length
-        ? 'Con đã ghi đủ ' + SHOOT_WIN_GOALS + ' bàn thắng sau ' + st.shots.length + ' lượt sút ở ' + label + '!'
+        ? 'Con đã ghi ' + st.goals + ' bàn thắng sau ' + st.shots.length + ' lượt sút ở ' + label + '!'
         : 'Con đã giành chiến thắng ở ' + label + '!';
       document.getElementById('pv-board').innerHTML = st.shots.length ? shootBoardHTML(st, false) : '';
       vic.style.display = 'flex'; lead.style.display = 'none';
@@ -13103,7 +13118,7 @@
     var chance = shotChance(rawPct);
     if(!reached && st.shots.length === 0){
       var shownPct = Math.min(99, rawPct);
-      if(!confirm('Bóng mới bơm ' + shownPct + '%, mỗi cú sút vào ' + chance + '%.\nMỗi kỳ có ' + SHOOT_SHOTS + ' lượt sút, ghi đủ ' + SHOOT_WIN_GOALS + ' bàn để thắng và được quay thưởng. Sút luôn nhé?')) return;
+      if(!confirm('Bóng mới bơm ' + shownPct + '%, mỗi cú sút vào ' + chance + '%.\nMỗi kỳ có ' + SHOOT_SHOTS + ' lượt sút, sút đủ hết lượt và ghi từ ' + SHOOT_WIN_GOALS + ' bàn trở lên để thắng, được quay thưởng. Sút luôn nhé?')) return;
     }
     var isGoal = reached || (Math.random()*100 < chance);
     month.shots.push({pct: Math.min(100, rawPct), chance: chance, goal: isGoal, date: ymd(new Date())});
@@ -13172,8 +13187,8 @@
   function shootMonthBall(isGoal, replay){
     var key = currentPeriod.key;
     if(replay){ openPrizeModal(key); return; }
-    var celebrate = function(){   // đủ 3 bàn: thông báo CHIẾN THẮNG (pháo giấy) rồi mới tới vòng quay thưởng
-      triggerCelebration('perfect', '🏆 CHIẾN THẮNG! Con đã ghi đủ ' + SHOOT_WIN_GOALS + ' bàn thắng!', 3);
+    var celebrate = function(){   // sút đủ lượt và ghi từ 3 bàn: thông báo CHIẾN THẮNG (pháo giấy) rồi mới tới vòng quay thưởng
+      triggerCelebration('perfect', '🏆 CHIẾN THẮNG! Con đã ghi ' + shootState(loadMonth(key), 0).goals + ' bàn thắng!', 3);
       if(!reducedMotion()) setTimeout(function(){ openPrizeModal(key); }, 1800);
     };
     var finish = function(){
@@ -13184,12 +13199,12 @@
         celebrate();
       } else if(st.status === 'lost'){
         renderMonthly();
-        triggerToast('low', 'Keep trying! 💪 Hết ' + SHOOT_SHOTS + ' lượt sút, mới ghi ' + st.goals + '/' + SHOOT_WIN_GOALS + ' bàn — kỳ sau con sẽ làm được!');
+        triggerToast('low', 'Keep trying! 💪 Hết ' + SHOOT_SHOTS + ' lượt sút, mới ghi ' + st.goals + ' bàn (cần từ ' + SHOOT_WIN_GOALS + ') — kỳ sau con sẽ làm được!');
       } else {
         shotResultHide();   // chưa quyết định: trả lại sân cho lượt sau
         renderMonthly();
-        if(last && last.goal) triggerCelebration('excellent', 'VÀO! ⚽ Đã ghi ' + st.goals + '/' + SHOOT_WIN_GOALS + ' bàn — còn ' + st.left + ' lượt!', 2);
-        else triggerToast('low', 'Trượt rồi! 😢 Đã ghi ' + st.goals + '/' + SHOOT_WIN_GOALS + ' bàn — còn ' + st.left + ' lượt!');
+        if(last && last.goal) triggerCelebration('excellent', 'VÀO! ⚽ Đã ghi ' + st.goals + ' bàn' + (st.goals >= SHOOT_WIN_GOALS ? ' — đủ điều kiện thắng, sút nốt nhé' : '') + ' — còn ' + st.left + ' lượt!', 2);
+        else triggerToast('low', 'Trượt rồi! 😢 Đã ghi ' + st.goals + ' bàn — còn ' + st.left + ' lượt!');
       }
     };
     if(reducedMotion()){ finish(); return; }
@@ -18813,7 +18828,7 @@
     var c = sMC; if(!c) return; c.busy = false; var m = c.m, p = m.pso, me = mMe(m), h = sPsoBoard(m);
     if(c.psoIv){ clearInterval(c.psoIv); c.psoIv = 0; }
     if(res && res.kick){   // vừa sút xong: lộ kết quả
-      var k = res.kick, mineShot = k.side === me, cfg = SHOT_GIFS[k.scored ? 'goal' : 'miss'], gif = cfg.url + (1 + Math.floor(fxR() * cfg.n)) + '.gif';
+      var k = res.kick, mineShot = k.side === me, gif = shotGifPick(k.scored ? 'goal' : 'miss');
       h += '<div class="mx-body"><div class="fr-res ' + (k.scored ? 'goal' : 'save') + '"><img class="fr-gif" src="' + gif + '" alt="" onerror="this.style.display=\'none\'">'
         + frGoalResult(k) + '<p><b>' + (k.scored ? '⚽ VÀO LƯỚI!' : '🧤 BỊ CẢN PHÁ!') + '</b><br><small>' + escHtml(sNm(m.teams[k.side], k.taker).replace(/&[^;]+;/g, '')) + ' sút sang ' + FR_DIRS[k.shot] + ' · thủ môn ' + escHtml(sNm(m.teams[1 - k.side], k.gk).replace(/&[^;]+;/g, '')) + ' bay sang ' + FR_DIRS[k.dive] + '</small></p></div></div>'
         + '<div class="mx-foot"><div class="se-btns">' + (p.done ? '<button type="button" class="se-btn" data-fr="pend">🏁 Xem kết quả trận</button>' : '<button type="button" class="se-btn" data-fr="pnext">▶ Lượt sút tiếp theo</button>') + '</div></div>';
@@ -19789,7 +19804,7 @@
     var c = sMC; if(!c || !c.lv) return; c.busy = false; var m = c.m, p = m.pso, me = mMe(m), h = sPsoBoard(m), secs = c.lv.qetSecs;
     if(c.psoIv){ clearInterval(c.psoIv); c.psoIv = 0; }
     if(res && res.kick){
-      var k = res.kick, cfg = SHOT_GIFS[k.scored ? 'goal' : 'miss'], gif = cfg.url + (1 + Math.floor(fxR() * cfg.n)) + '.gif';
+      var k = res.kick, gif = shotGifPick(k.scored ? 'goal' : 'miss');
       h += '<div class="mx-body"><div class="fr-res ' + (k.scored ? 'goal' : 'save') + '"><img class="fr-gif" src="' + gif + '" alt="" onerror="this.style.display=\'none\'">'
         + frGoalResult(k) + '<p><b>' + (k.scored ? '⚽ VÀO LƯỚI!' : '🧤 BỊ CẢN PHÁ!') + '</b><br><small>' + escHtml(sNm(m.teams[k.side], k.taker).replace(/&[^;]+;/g, '')) + ' sút sang ' + FR_DIRS[k.shot] + ' · thủ môn ' + escHtml(sNm(m.teams[1 - k.side], k.gk).replace(/&[^;]+;/g, '')) + ' bay sang ' + FR_DIRS[k.dive] + '</small></p></div></div>'
         + '<div class="mx-foot"><div class="se-btns">' + (p.done ? '<button type="button" class="se-btn" data-frl="pend">🏁 Xem kết quả trận</button>' : '<button type="button" class="se-btn" data-frl="pnext">▶ Lượt sút tiếp theo</button>') + '</div></div>';
