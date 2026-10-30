@@ -1475,6 +1475,9 @@
   .wt-rev:not(.wt-hid) .wt-facts{ display:flex; }
   .wt-fact{ padding:10px 12px; border-radius:10px; background:#102C49; border:1px solid #2C4C6C; font-size:15px; line-height:1.5; }
   .wt-fact b{ color:var(--wt-gold); }
+  .wt-lv[aria-pressed="true"]{ background:#E3B341; color:#2A2216; border-color:#E3B341; }
+  .wt-dchip{ flex:1; min-width:120px; } .wt-dchip[aria-pressed="true"]{ background:var(--wt-ink); color:var(--wt-sand); }
+.wt-lr{ display:inline-flex; gap:3px; vertical-align:middle; } .wt-lr b{ display:inline-flex; align-items:center; justify-content:center; width:26px; height:32px; border-radius:6px; background:#0B1B2A; border:2px solid #E3B341; color:#FDE68A; font:900 20px Georgia,serif; }
   /* ===== World Tour · trận Boss + hộ chiếu ===== */
   .wt-thbox{ display:flex; flex-direction:column; gap:8px; } .wt-thcur{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
   .wt-tpg{ display:grid; grid-template-columns:repeat(10,minmax(0,1fr)); gap:6px; max-height:320px; overflow-y:auto; padding:2px; }
@@ -3968,7 +3971,7 @@
       <div class="battle-pick-grid" id="battle-pick-grid"></div>
     </div>
     <div class="panel" id="battle-arena-view" style="display:none">
-      <div class="bt-arena" id="bt-arena"><div class="bt-arena-bg" id="bt-arena-bg" aria-hidden="true"><div class="ab-layer" id="ab-a"></div><div class="ab-layer" id="ab-b"></div><div class="ab-shade"></div></div><div class="battle-vs-row" id="battle-vs-row"></div><div class="bt-slot" id="bt-slot" aria-hidden="true"><div class="bt-slot-top"><i></i><span id="bt-slot-title">LUCKY ROLL</span><i></i></div><div class="bt-slot-body"><div class="bt-slot-win"><div class="bt-reel"><div class="bt-reel-strip"></div></div><div class="bt-reel"><div class="bt-reel-strip"></div></div><div class="bt-reel"><div class="bt-reel-strip"></div></div><div class="bt-slot-line"></div></div><div class="bt-slot-lever"><b></b></div></div><div class="bt-slot-foot" id="bt-slot-foot">ĐANG QUAY…</div></div><div class="bt-fx" id="bt-fx"></div></div>
+      <div class="bt-arena" id="bt-arena"><div class="bt-arena-bg" id="bt-arena-bg" aria-hidden="true"><div class="ab-layer" id="ab-a"></div><div class="ab-layer" id="ab-b"></div><div class="ab-shade"></div></div><div class="battle-vs-row" id="battle-vs-row"></div><div class="bt-slot" id="bt-slot" aria-hidden="true"><div class="bt-slot-top"><i></i><span id="bt-slot-title">LUCKY ROLL</span><i></i></div><div class="bt-slot-body"><div class="bt-slot-win"><div class="bt-reel"><div class="bt-reel-strip"></div></div><div class="bt-reel"><div class="bt-reel-strip"></div></div><div class="bt-slot-line"></div></div><div class="bt-slot-lever"><b></b></div></div><div class="bt-slot-foot" id="bt-slot-foot">ĐANG QUAY…</div></div><div class="bt-fx" id="bt-fx"></div></div>
       <div class="bt-console" id="bt-console" data-side="0">
         <div class="bt-turn-slot"><div class="bt-turn" id="bt-turn">⚔️ Sẵn sàng!</div></div>
         <div class="bt-stage">
@@ -4211,7 +4214,7 @@
     <label>⏱️ Thời gian trả lời mỗi câu (5–60 giây)
       <input type="number" id="settings-quiz-seconds" min="5" max="60" step="1">
     </label>
-    <p class="hint-text" style="margin:-6px 0 0">Số giây còn lại khi trả lời đúng = điểm của đòn đánh (tối đa 10). Trả lời sai hoặc hết giờ chỉ được 1 điểm.</p>
+    <p class="hint-text" style="margin:-6px 0 0">Số giây còn lại khi trả lời đúng = điểm của đòn đánh (tối đa 10). Trả lời sai hoặc hết giờ được 0 điểm (câu sai không có điểm).</p>
       </div>
       <div class="ap-card" data-save="1">
         <h4>📊 Tỷ lệ câu hỏi theo lĩnh vực (%)</h4>
@@ -4362,6 +4365,11 @@
         <label>Hệ số K: Overall cộng thêm = K × (1 − tỷ lệ hoàn thành)<input type="number" id="wt-k" min="0" max="40" step="1"></label>
         <label>Hệ số Thể lực: Thể lực Boss × (1 + tỷ lệ sai × hệ số)<input type="number" id="wt-sta" min="0" max="3" step="0.1"></label>
         <label>Số lần thử đấu Boss mỗi tuần (mỗi phòng; thắng rồi thì không đánh lại)<input type="number" id="wt-tries" min="1" max="10" step="1"></label>
+      </div>
+      <div class="ap-card">
+        <h4>⭐ Mức độ khó (áp dụng cho mọi chặng)</h4>
+        <p class="hint-text" style="margin:0">Mỗi chặng chỉ mở đúng 3 trong 5 mức, ADMIN chọn ở từng tuần. Thắng mức nào thì thẻ thưởng được cộng sẵn số Overall tương ứng.</p>
+        <div id="wt-diff" style="display:flex;flex-direction:column;gap:10px"></div>
       </div>
       <div class="ap-card">
         <h4>🗺️ Hành trình theo tuần <span class="ap-count" id="wt-count"></span></h4>
@@ -8854,7 +8862,23 @@
   }
   /* Đánh 1 lượt: bên `side` hiện tại tấn công bên còn lại, trả về sự kiện vừa xảy ra
      (hoặc null nếu trận đã kết thúc). Đây là hàm thuần — không đụng DOM. */
-  function battleStep(b, forcedRoll){
+  var WT_D30_SLOPE = 1;   // đội đánh 0–30 điểm: ô 1–10 dùng đúng bảng d10 như đánh đơn; từ ô 11 trở đi bảng nối dài thẳng theo bước trung bình của d10 (nhân hệ số này; 1 = nối dài nguyên bước, 0.5 = chậm một nửa)
+  function battleD30(cfg, S){
+    var d = cfg.formula.d10, n = d.length; S = Math.max(0, Math.round(S));
+    if(S <= n) return d[Math.max(1, S) - 1];
+    return d[n - 1] + (S - n) * ((d[n - 1] - d[0]) / (n - 1)) * WT_D30_SLOPE;
+  }
+  var BATTLE_MISS = { base: 0.5, slope: 0.3, min: 0.1, max: 0.9 };   // tỷ lệ TRƯỢT khi trả lời sai hết (0 điểm): cùng lực chiến → 50%; mạnh gấp đôi mục tiêu → 20%; yếu một nửa → 80%
+  function battleMissChance(b, ai, di){
+    var A = b.sides[ai].battle, D = b.sides[di].battle, ratio = Math.max(0.05, (+A.cp || 1) / Math.max(1, +D.cp || 1));
+    return Math.max(BATTLE_MISS.min, Math.min(BATTLE_MISS.max, BATTLE_MISS.base - BATTLE_MISS.slope * Math.log2(ratio)));
+  }
+  function battleDecideMiss(b, ai, di, opt){   // opt.miss (true/false) = quyết định đã chốt sẵn (phát lại trận nhiều máy); opt.zero = 0 điểm → tung xúc xắc trượt
+    if(!opt) return false;
+    if(opt.miss === true || opt.miss === false) return opt.miss;
+    return !!opt.zero && Math.random() < battleMissChance(b, ai, di);
+  }
+  function battleStep(b, forcedRoll, opt){
     if(!b || b.finished) return null;
     var cfg=b.cfg, mode=b.mode;
     var ai=b.side, di=1-b.side;
@@ -8871,7 +8895,7 @@
     } else {
       r = battleRollD10(canReroll); rollInfo = battleLastRoll;
     }
-    var d10 = cfg.formula.d10[r-1];
+    var d10 = cfg.formula.d10[r-1], missed = battleDecideMiss(b, ai, di, opt);
     var mult = 1, bonusHit = false;
     if(ai !== b.firstSide && !b.secondMoverBonusUsed){
       mult *= (1 + (mode.secondMoverBonus||0));
@@ -8881,20 +8905,20 @@
     var atkMod = (cfg.elements[ab.element]||{}).atkMod||1;
     var elemM = battleElemMult(cfg, ab.element, db.element);
     var base = ab.cp * cfg.formula.atkK * mode.tempo;
-    var raw = base * atkMod * elemM * mult * d10;
+    var raw = base * atkMod * elemM * mult * (missed ? 0 : d10);
     var reduce = db.armor / (db.armor + cfg.formula.armorK);
     var dmg = raw * (1-reduce);
     var iconCut = (db.rarity === 'ICON' && !D.firstHitTaken);
     if(iconCut) dmg *= 0.8;
     D.firstHitTaken = true;
-    dmg = Math.max(1, Math.round(dmg));
+    dmg = missed ? 0 : Math.max(1, Math.round(dmg));
     D.hp = Math.max(0, D.hp - dmg);
     var evt = {turn:++b.turn, atkSide:ai, defSide:di, roll:r, d10:d10, crit:(r===10),
       dmg:dmg, hpAfter:D.hp, hpMax:D.hpMax, bonusHit:bonusHit, reroll:canReroll,
       firstRoll:rollInfo.first, rerolled:rollInfo.rerolled,
       calc:{cp:ab.cp, base:base, atkMod:atkMod, elemM:elemM, bonusM:mult, d10:d10, raw:Math.round(raw),
             reducePct:Math.round(reduce*1000)/10, iconCut:iconCut}};
-    b.log.push(evt);
+    evt.miss = missed; evt.shown = (opt && opt.zero) ? 0 : r; evt.team = (opt && opt.team != null) ? opt.team : null; b.log.push(evt);
     if(D.hp <= 0){ b.finished = true; b.winner = ai; } else { b.side = di; }
     return evt;
   }
@@ -9931,9 +9955,7 @@
   function btSlotBuild(){
     var sl = btEl('bt-slot'); if(!sl) return null;
     if(!sl.getAttribute('data-built')){
-      var items = '';
-      for(var r = 0; r < 3; r++) for(var n = 1; n <= 10; n++) items += '<span'+(n === 10 ? ' class="t"' : '')+'>'+n+'</span>';
-      sl.querySelectorAll('.bt-reel-strip').forEach(function(e){ e.innerHTML = items; });
+      sl.querySelectorAll('.bt-reel-strip').forEach(function(e, k){ var cl = k ? 10 : 4, items = ''; for(var r = 0; r < 3; r++) for(var n = 0; n < cl; n++) items += '<span>' + n + '</span>'; e.innerHTML = items; });   // cuộn 0 = hàng chục (0–3), cuộn 1 = hàng đơn vị (0–9)
       sl.setAttribute('data-built', '1');
     }
     return sl;
@@ -9959,9 +9981,9 @@
   function btSlotStop(sl, k, v){
     var r = sl.querySelectorAll('.bt-reel')[k], strip = r.querySelector('.bt-reel-strip'), H = r.clientHeight || 56;
     strip.style.animation = 'none'; strip.style.transition = 'none';
-    strip.style.transform = 'translateY('+(-(v - 1)*H)+'px)'; void strip.offsetWidth;
+    var cl = k ? 10 : 4; strip.style.transform = 'translateY('+(-v*H)+'px)'; void strip.offsetWidth;
     strip.style.transition = 'transform .75s cubic-bezier(.12,.8,.2,1.12)';
-    strip.style.transform = 'translateY('+(-(10 + v - 1)*H)+'px)';
+    strip.style.transform = 'translateY('+(-(cl + v)*H)+'px)';
     r.classList.remove('spin');
   }
   function btSlotLand(st, v){
@@ -9980,9 +10002,10 @@
     if(!sl){ if(die){ die.className = 'bt-die landed'; die.textContent = finalVal; } return; }
     btSlotStart(sl);
     await bwait(st, 650); if(!btAlive(st)) return;
-    for(var k = 0; k < 3; k++){
-      btSlotStop(sl, k, finalVal);
-      await bwait(st, k < 2 ? 330 : 780); if(!btAlive(st)) return;
+    var dg = [Math.floor(finalVal / 10), finalVal % 10];
+    for(var k = 0; k < 2; k++){
+      btSlotStop(sl, k, dg[k]);
+      await bwait(st, k < 1 ? 400 : 780); if(!btAlive(st)) return;
     }
     btSlotLand(st, finalVal);
   }
@@ -10030,8 +10053,8 @@
         finish({ok:(i === q.correct), picked:i, secLeft:Math.ceil(rem)});
       };
     });
-    // chấm điểm: đúng → số giây còn lại (tối đa 10); sai / hết giờ / bỏ qua → luôn 1 điểm (mọi phẩm chất thẻ)
-    res.score = res.ok ? Math.min(10, Math.max(1, res.secLeft)) : 1;
+    // chấm điểm: đúng → số giây còn lại (tối đa 10); sai / hết giờ / bỏ qua → 0 điểm (engine đòn đánh tự nâng lên ô 1 của bảng d10)
+    res.score = res.ok ? Math.min(10, Math.max(1, res.secLeft)) : 0;
     var streakBefore = streak;
     if(!res.skipped) st.b.quizStreak = res.ok ? streak + 1 : Math.floor(streak * QZ_STREAK_KEEP_ON_MISS);
     res.streak = st.b.quizStreak || 0;
@@ -10073,11 +10096,11 @@
     var qres = null;
     if(quizTurn){
       qres = await btAskQuestion(st); if(!btAlive(st)) return;
-      evt = battleStep(b, qres.score);
+      evt = battleStep(b, Math.max(1, qres.score | 0), { zero: !(qres.score > 0) });   // 0 điểm → đòn yếu nhất, có tỷ lệ trượt
       if(!evt) return;
       evt.quiz = {ok:qres.ok, secLeft:qres.secLeft || 0, timeout:!!qres.timeout, skipped:!!qres.skipped};
       c = evt.calc;
-      await btRollDice(st, evt.roll); if(!btAlive(st)) return;
+      await btRollDice(st, evt.shown != null ? evt.shown : evt.roll); if(!btAlive(st)) return;
       dnote.innerHTML = (qres.ok ? '✅ Đúng! Còn <b>'+qres.secLeft+'s</b>' : (qres.timeout ? '⏰ Hết giờ' : '❌ Chưa đúng'))
         + ' → <b>'+evt.roll+' điểm</b> (×'+c.d10.toFixed(1)+')' + (evt.crit ? '<br>🎯 <b>CHÍ MẠNG!</b>' : '');
       if(evt.crit){
@@ -10141,7 +10164,7 @@
     var defSide = document.querySelector('#battle-vs-row .battle-side[data-side="'+Dn+'"]');
     if(defSide){ defSide.classList.remove('hit'); void defSide.offsetWidth; defSide.classList.add('hit'); }
     if(evt.crit){ var ar = btEl('bt-arena'); ar.classList.remove('bt-shake'); void ar.offsetWidth; ar.classList.add('bt-shake'); }
-    btFloat(st, to.x, to.y - 10, '−'+evt.dmg, evt.crit ? 'crit' : '', evt.crit ? 70 : 56, 1200);
+    btFloat(st, to.x, to.y - 10, evt.miss ? '💨 TRƯỢT' : '−'+evt.dmg, evt.crit ? 'crit' : '', evt.crit ? 70 : 56, 1200);
     if(c.elemM > 1) btFloat(st, to.x, to.y + 34, 'KHẮC HỆ!', 'tag', 36, 1200);
     if(c.iconCut) btFloat(st, to.x, to.y + 52, '👑 đỡ −20%', 'tag gold', 30, 1200);
     btApplyHp(st, Dn, sd.hp);
@@ -10184,7 +10207,7 @@
     if(st.is3){ battleSkipToEnd3(); return; }
     if(st.b.quizMode && !st.b.finished){
       var held = performance.now();   // dừng đồng hồ câu hỏi trong lúc hỏi xác nhận
-      var okSkip = confirm('Bỏ qua trận: các lượt đánh còn lại của con sẽ chỉ được 1 điểm (không trả lời câu hỏi). Con chắc chưa?');
+      var okSkip = confirm('Bỏ qua trận: các lượt đánh còn lại của con sẽ được 0 điểm (câu sai không có điểm) (không trả lời câu hỏi). Con chắc chưa?');
       if(st.quiz) st.quiz.shift(performance.now() - held);
       if(!okSkip || battleState !== st || st.skipping) return;
     }
@@ -10393,7 +10416,7 @@
     return foes[Math.floor(Math.random() * foes.length)];
   }
   /* Đánh 1 lượt: thẻ đến lượt của bên b.side đánh thẻ targetIdx. forcedRoll = điểm do câu hỏi quyết định (lượt người chơi). */
-  function battleStep3(b, targetIdx, forcedRoll){
+  function battleStep3(b, targetIdx, forcedRoll, opt){
     if(!b || b.finished) return null;
     var cfg = b.cfg, team = b.side, ai = peekAttacker3(b, team);
     var foes = alive3(b, 1 - team);
@@ -10407,16 +10430,17 @@
       if(canReroll && r <= 2){ r = battleMachineRoll(b.machineHigh); rr0 = true; }
       rollInfo = {first:f0, rerolled:rr0};
     } else { r = battleRollD10(canReroll); rollInfo = battleLastRoll; }
-    var d10 = cfg.formula.d10[r-1];
-    var c = calcHit3(b, ai, di, d10);
+    var d10 = cfg.formula.d10[r-1], missed = battleDecideMiss(b, ai, di, opt);
+    if(opt && opt.team != null) d10 = battleD30(cfg, opt.team);   // đội đánh: hệ số theo thang 0–30, không quy đổi về 10
+    var c = calcHit3(b, ai, di, missed ? 0 : d10);
     if(c.bonusHit) b.secondMoverBonusUsed = true;
-    var mainDmg = hurt3(D, c.main), guardDmg = 0, ko = [], splash = [];
-    if(c.guard >= 0 && c.guardDmg > 0){
+    var mainDmg = missed ? 0 : hurt3(D, c.main), guardDmg = 0, ko = [], splash = [];
+    if(!missed && c.guard >= 0 && c.guardDmg > 0){
       guardDmg = hurt3(b.sides[c.guard], c.guardDmg);
       b.sides[c.guard].rage = Math.min(T3.rageMax, b.sides[c.guard].rage + 1);
     }
     var dealt = mainDmg + guardDmg;
-    var splashRate = (c.special ? T3.splash : 0) + c.splashUp;
+    var splashRate = missed ? 0 : (c.special ? T3.splash : 0) + c.splashUp;
     if(splashRate > 0){
       alive3(b, D.team).forEach(function(k){
         if(k !== di && Math.abs(b.sides[k].slot - D.slot) === 1){
@@ -10429,7 +10453,7 @@
     A.rage = c.special ? 0 : Math.min(T3.rageMax, A.rage + 1);
     if(D.hp > 0) D.rage = Math.min(T3.rageMax, D.rage + 1);
     var status = null;
-    if(D.hp > 0 && r >= T3.statusMinRoll){
+    if(!missed && D.hp > 0 && r >= T3.statusMinRoll){
       if(ab.element === 'hoa'){ D.burn = T3.burnTurns; status = 'burn'; }
       else if(ab.element === 'thuy'){ D.slow = true; status = 'slow'; }
     }
@@ -10472,7 +10496,7 @@
         if(u.hp <= 0) evt.ko.push(k);
       }
     });
-    b.log.push(evt);
+    evt.miss = missed; evt.shown = (opt && opt.zero) ? 0 : r; evt.team = (opt && opt.team != null) ? opt.team : null; b.log.push(evt);
     if(!alive3(b, 1 - team).length){ b.finished = true; b.winner = team; }
     else if(!alive3(b, team).length){ b.finished = true; b.winner = 1 - team; }
     else { b.side = 1 - team; if(b.side === b.firstSide) b.round++; }
@@ -11156,10 +11180,10 @@
     if(quizTurn){
       dnote.textContent = 'Trả lời đúng và nhanh để đánh mạnh!';
       qres = await btAskQuestion(st); if(!btAlive(st)) return;
-      evt = battleStep3(b, target, qres.score); if(!evt) return;
+      evt = battleStep3(b, target, Math.max(1, qres.score | 0), { zero: !(qres.score > 0) }); if(!evt) return;
       evt.quiz = {ok:qres.ok, secLeft:qres.secLeft || 0, timeout:!!qres.timeout, skipped:!!qres.skipped};
       c = evt.calc;
-      await btRollDice(st, evt.roll); if(!btAlive(st)) return;
+      await btRollDice(st, evt.shown != null ? evt.shown : evt.roll); if(!btAlive(st)) return;
       dnote.innerHTML = (qres.ok ? '✅ Đúng! Còn <b>'+qres.secLeft+'s</b>' : (qres.timeout ? '⏰ Hết giờ' : '❌ Chưa đúng'))
         + ' → <b>'+evt.roll+' điểm</b> (×'+c.d10.toFixed(1)+')' + (evt.crit ? '<br>🎯 <b>CHÍ MẠNG!</b>' : '');
       await w(evt.crit ? 800 : 500); if(!btAlive(st)) return;
@@ -11281,7 +11305,7 @@
     var b = st.b;
     if(b.quizMode && !b.finished){
       var held = performance.now();
-      var okSkip = confirm('Bỏ qua trận: các lượt đánh còn lại của con sẽ chỉ được 1 điểm (không trả lời câu hỏi). Con chắc chưa?');
+      var okSkip = confirm('Bỏ qua trận: các lượt đánh còn lại của con sẽ được 0 điểm (câu sai không có điểm) (không trả lời câu hỏi). Con chắc chưa?');
       if(st.quiz) st.quiz.shift(performance.now() - held);
       if(!okSkip || battleState !== st || st.skipping) return;
     }
@@ -13911,7 +13935,7 @@
     + '<section class="rules-sec" id="rules-sec-battle"><h4>⚔️ Đấu Trường</h4><ul>'
     + (journeyAllowed() ? '<li>Có 2 cách chơi: <b>Hành trình</b> (bản đồ chiến dịch: mỗi chương có <b>9 thử thách</b> tăng dần theo một đội bóng / quốc gia rồi tới <b>Boss</b> cuối) hoặc <b>Đấu nhanh</b> với đối thủ ngẫu nhiên.</li>' : '<li>Đấu nhanh với đối thủ ngẫu nhiên.</li>')
     + (journeyAllowed() ? '<li>🧩 Vượt ải <b>lần đầu</b> nhận <b>mảnh ghép</b> (Boss nhiều nhất). Hạ Boss để mở kệ thẻ thưởng của chương, rồi dùng mảnh ghép <b>đổi cầu thủ</b> — thẻ càng giỏi càng cần nhiều mảnh.</li>' : '')
-    + '<li>Đến lượt con đánh sẽ có <b>1 câu hỏi</b>: trả lời đúng càng nhanh, đòn càng mạnh (tối đa <b>10 điểm</b>). Mỗi câu có '+sec+' giây; trả lời sai hoặc hết giờ chỉ được 1 điểm.</li>'
+    + '<li>Đến lượt con đánh sẽ có <b>1 câu hỏi</b>: trả lời đúng càng nhanh, đòn càng mạnh (tối đa <b>10 điểm</b>). Mỗi câu có '+sec+' giây; trả lời sai hoặc hết giờ được 0 điểm (câu sai không có điểm).</li>'
     + '<li>Lượt đấu nhận theo <b>điểm nhiệm vụ trong ngày</b>: có điểm được <b>1</b> lượt · mốc 👟 <b>50, 60, 70</b> điểm mỗi mốc <b>+2</b> · mốc ⚽ <b>80, 90</b> điểm mỗi mốc <b>+3</b> · mốc 🏃 <b>100</b> điểm <b>+5</b> (tối đa 18 lượt/ngày). Hôm nay con đã nhận <b>'+perDay+'</b> lượt. Hành trình và Đấu nhanh dùng chung số lượt này.</li>'
     + '<li><b>Thắng</b> nhận ⚡ Năng Lượng như khi hiến chính đối thủ vừa hạ: đối thủ càng giống thẻ của con, ⚡ càng nhiều. Hành trình còn thưởng thêm ⚡ khi vượt trận lần đầu.</li>'
     + '<li><b>Thua</b> không nhận gì, nhưng cũng <b>không mất thẻ nào</b>.</li>'
@@ -14280,11 +14304,17 @@
     if(!m || !m.id) return '<div class="wt-seat empty">Ghế ' + (i + 1) + ' · đang chờ bạn vào</div>';
     return '<div class="wt-seat"><div><b>' + uEsc(m.name) + (room.host === m.id ? ' (chủ phòng)' : '') + '</b><small>' + uEsc(m.card.name) + (m.card.pos ? ' · ' + uEsc(m.card.pos) : '') + '</small>' + wtStat(room, i) + '</div><span class="wt-ovr">' + (m.card.ovr | 0) + '</span></div>';
   }
+  function wtDiffHTML(cur, host, locked){
+    var lv = (cur && cur.levels) || [1, 2, 3], sel = wtRoomStar(wtRoom, cur), df = wtDiffNorm(wtLive && wtLive.diff), d = df[sel - 1], can = host && !locked;
+    return '<p class="wt-kick">Mức độ khó' + (can ? ' · chủ phòng chọn trước khi chốt team' : '') + '</p><div class="wt-row">'
+      + lv.map(function(s){ return '<button type="button" class="wt-btn alt wt-dchip" data-wt-act="diff" data-star="' + s + '" aria-pressed="' + (s === sel) + '"' + (can ? '' : ' disabled') + '>' + wtStarsTxt(s) + '</button>'; }).join('') + '</div>'
+      + '<p class="wt-note" style="color:#6B5A31;padding:0">Boss +' + d.ovr + ' Overall, +' + d.pct + '% sức mạnh · thẻ thưởng +' + d.plus + ' Overall</p>';
+  }
   function wtStubHTML(cur){
     if(wtCode && wtRoom){
       var n = wtMembers(wtRoom).length, host = wtRoom.host === syncId, locked = wtRoom.state === 'locked';
       return '<p class="wt-kick">Mã phòng · gửi cho bạn bè</p><div class="wt-code" aria-label="Mã phòng">' + uEsc(wtCode) + '</div>'
-        + [0, 1, 2].map(function(i){ return wtSeatHTML(wtRoom, i); }).join('')
+        + [0, 1, 2].map(function(i){ return wtSeatHTML(wtRoom, i); }).join('') + wtDiffHTML(cur, host, locked)
         + (locked ? wtLockedHTML(n)
           : '<p class="wt-boss">' + (n < 2 ? 'Cần ít nhất 2 người để chốt team.' : (host ? 'Đủ người rồi, chốt team nhé!' : 'Đợi chủ phòng chốt team…')) + '</p>')
         + '<div class="wt-row">' + (host && !locked ? '<button type="button" class="wt-btn" data-wt-act="lock"' + (n < 2 ? ' disabled' : '') + '>Chốt team</button>' : '')
@@ -14355,6 +14385,10 @@
       if(act === 'retry'){ await wtbRetry(); return; }
       if(act === 'claim'){ await wtbClaimAct(); wtPaintStub(); return; }
       if(!cur) return;
+      if(act === 'diff'){
+        if(wtRoom && wtRoom.host === syncId && wtRoom.state === 'lobby'){ var sd = +el.getAttribute('data-star'); if((cur.levels || [1, 2, 3]).indexOf(sd) >= 0){ await wtPut(wtCode + '/diff', sd); wtRoom.diff = sd; } }
+        return wtPaintStub();
+      }
       if(act === 'create'){
         wtAutoClean();
         var me = wtMe(); if(!me){ wtErr = 'Hãy chọn một cầu thủ trước.'; return wtPaintStub(); }
@@ -14390,7 +14424,7 @@
         else if(rr){ var mine = wtMembers(rr).filter(function(i){ return rr.slots[i].id === syncId; })[0]; if(mine !== undefined) await wtPut(wtCode + '/slots/' + mine, null); }
         wtCode = ''; wtRoom = null; try{ localStorage.removeItem(WT_ROOM_KEY); }catch(e){} if(wtPoll){ clearInterval(wtPoll); wtPoll = 0; }
       } else if(act === 'lock' && wtRoom && wtMembers(wtRoom).length >= 2){
-        await wtPut(wtCode + '/state', 'locked'); wtRoom.state = 'locked';
+        await wtPut(wtCode + '/diff', wtRoomStar(wtRoom, cur)); await wtPut(wtCode + '/state', 'locked'); wtRoom.state = 'locked';
       }
     }catch(e){ wtErr = 'Mất kết nối, thử lại nhé.'; }
     wtPaintStub();
@@ -14530,8 +14564,8 @@
   function wtBossCalc(room, cfg, cur){
     var idx = wtMembers(room), pts = idx.map(function(i){ return room.res[i].pts | 0; }), right = 0;
     idx.forEach(function(i){ right += wtRight(room.res[i]); });
-    var total = idx.length * 10, w = (total - right) / total, ratio = wtRatio(pts, cfg.goal), bonus = wtOvrBonus(ratio, cfg);
-    return { pts: pts, right: right, total: total, w: w, ratio: ratio, bonus: bonus, mult: wtStaMult(w, cfg), tries: cfg.tries || 3, at: Date.now(),
+    var star = wtRoomStar(room, cur), dd = wtDiffNorm(cfg.diff)[star - 1], total = idx.length * 10, w = (total - right) / total, ratio = wtRatio(pts, cfg.goal), bonus = wtOvrBonus(ratio, cfg) + dd.ovr;
+    return { pts: pts, right: right, total: total, w: w, ratio: ratio, bonus: bonus, star: star, dOvr: dd.ovr, pct: dd.pct, plus: dd.plus, mult: wtStaMult(w, cfg), tries: cfg.tries || 3, at: Date.now(),
       boss: cur.bossIds.filter(Boolean).map(function(id){ var q = PLAYER_DB_BY_ID[id], b = q ? (q.ovr || q.overall || 0) : 0; return { id: id, base: b, ovr: b + bonus }; }) };
   }
   /* chọn 1 câu theo lĩnh vực (mức 2 ≈ lớp 3); lĩnh vực chưa có câu trong kho thì rơi về Toán máy tự tạo */
@@ -14597,7 +14631,8 @@
       + wtList(b.boss).map(function(o){ var q = PLAYER_DB_BY_ID[o.id], art = q ? fcCardHTML(Object.assign({}, q, { ovr: o.ovr, realOvr: o.ovr })) : '';
           return '<div><div class="wt-bcard">' + (art || '<p class="wt-fact">' + uEsc(q ? q.name : '?') + '</p>') + '</div><div class="wt-bov wt-facts" style="display:block;visibility:hidden">' + o.base + ' → ' + o.ovr + '</div></div>'; }).join('')
       + '</div><button type="button" class="wt-btn" id="wt-open" style="background:var(--wt-gold);border-color:var(--wt-gold);color:var(--wt-ink)">Mở hồ sơ Boss</button>'
-      + '<div class="wt-facts"><div class="wt-fact">Team hoàn thành <b>' + Math.round(b.ratio * 100) + '%</b> mốc ' + wtLive.goal + ' điểm tuần → Overall Boss <b>+' + b.bonus + '</b>.</div>'
+      + '<div class="wt-facts"><div class="wt-fact">Team hoàn thành <b>' + Math.round(b.ratio * 100) + '%</b> mốc ' + wtLive.goal + ' điểm tuần → Overall Boss <b>+' + (b.bonus - (b.dOvr | 0)) + '</b>.</div>'
+      + '<div class="wt-fact">Mức độ <b>' + wtStarsTxt(b.star || 1) + '</b> → Boss thêm <b>+' + (b.dOvr | 0) + '</b> Overall và <b>+' + (b.pct | 0) + '%</b> sức mạnh; thắng sẽ nhận thẻ thưởng <b>+' + (b.plus | 0) + '</b> Overall.</div>'
       + '<div class="wt-fact">Trả lời sai <b>' + (b.total - b.right) + '/' + b.total + '</b> câu (' + Math.round(b.w * 100) + '%) → Thể lực Boss <b>×' + b.mult.toFixed(2) + '</b>.</div>'
       + idx.map(function(i, j){ var m = room.slots[i]; return '<div class="wt-fact">' + uEsc(m.name) + ' · ' + (b.pts[j] | 0) + '/' + wtLive.goal + ' điểm · ' + wtRight(room.res[i]) + '/10 đúng</div>'; }).join('')
       + '<div class="wt-row" style="justify-content:center">' + wtFightBtns() + '<button type="button" class="wt-btn" data-wt-act="home" style="background:var(--wt-sand);color:var(--wt-ink)">Về chuyến bay</button></div></div></div>';
@@ -14658,11 +14693,12 @@
     var b = effectiveBattleStats(c) || c.battle || {};
     return { el: b.element || '', ra: b.rarity || '', cp: +b.cp || 0, hp: Math.round(+b.hp) || 1, ar: +b.armor || 0 };
   }
-  function wtbBossSnap(o, mult){   // Boss: OVR mới = OVR gốc + bonus → tính lại chỉ số theo OVR mới, rồi Thể lực × mult (mult đã lưu trong phòng)
+  function wtbBossSnap(o, mult, pct){   // Boss: OVR mới = OVR gốc + bonus → tính lại chỉ số theo OVR mới, rồi Thể lực × mult (mult đã lưu trong phòng)
     var q = PLAYER_DB_BY_ID[o.id]; if(!q) return null;
     var lv = Math.max(0, (o.ovr | 0) - (o.base | 0));
     var b = effectiveBattleStats(Object.assign({}, q, { ovrBase: q.realOvr, ovrBonus: lv, statsBase: q.realStats })) || q.battle || {};
-    return { el: b.element || '', ra: b.rarity || '', cp: +b.cp || 0, hp: Math.max(1, Math.round((+b.hp || 1) * (+mult || 1))), ar: +b.armor || 0 };
+    var pm = 1 + (+pct || 0) / 100;   // % sức mạnh theo mức độ khó: nhân cả lực chiến lẫn máu
+    return { el: b.element || '', ra: b.rarity || '', cp: Math.round((+b.cp || 0) * pm), hp: Math.max(1, Math.round((+b.hp || 1) * (+mult || 1) * pm)), ar: +b.armor || 0 };
   }
   function wtbSlotSnap(m){   // phòng cũ chưa có ảnh chụp chỉ số → lấy chỉ số gốc trong CSDL
     var c = m.card || {}; if(c.bt) return c.bt;
@@ -14675,7 +14711,7 @@
     var qt = Math.min(1, 0.4 + 0.6 * (weeks.length > 1 ? wi / (weeks.length - 1) : 0.5));
     var init = { v: 1, at: { '.sv': 'timestamp' }, qt: qt, hi: quizMachineHighChance(qt), sk: qt, mine: {}, boss: {} };
     wtMembers(room).forEach(function(i){ var m = room.slots[i], c = m.card; init.mine['m' + i] = { id: c.id, ovr: c.ovr | 0, bt: wtbSlotSnap(m) }; });
-    wtList(boss.boss).forEach(function(o, i){ if(i > 2) return; var bt = wtbBossSnap(o, boss.mult); if(bt) init.boss['b' + i] = { id: o.id, ovr: o.ovr | 0, bt: bt }; });
+    wtList(boss.boss).forEach(function(o, i){ if(i > 2) return; var bt = wtbBossSnap(o, boss.mult, boss.pct); if(bt) init.boss['b' + i] = { id: o.id, ovr: o.ovr | 0, bt: bt }; });
     return init;
   }
   function wtbBuild(W, init){
@@ -14702,7 +14738,8 @@
   function wtbApply(b, ev){
     b.side = ev.s ? 1 : 0;
     if(!ev.s) b.rot[0] = ev.k | 0;
-    var evt = battleStep3(b, ev.t | 0, Math.max(1, Math.min(10, ev.r | 0)));
+    var rr = ev.s ? Math.max(1, Math.min(10, ev.r | 0)) : (ev.r > 0 ? Math.min(10, Math.ceil((ev.r | 0) / 3)) : 1);   // rr chỉ dùng cho ngưỡng chí mạng / hiệu ứng (tỷ lệ theo điểm tối đa)
+    var evt = battleStep3(b, ev.t | 0, rr, { miss: !!ev.m, team: ev.s ? null : Math.max(0, Math.min(30, ev.r | 0)) });   // sát thương dùng thẳng thang 0–30
     if(ev.s){ b.wt.ph = 'h'; b.wt.q = alive3(b, 0); }
     else { b.wt.q = b.wt.q.filter(function(x){ return x !== (ev.k | 0); }); }
     if(evt) evt.ev = ev;
@@ -14818,20 +14855,33 @@
       }
     }finally{ if(wtb === W) W.playing = false; }
   }
+  function wtbSpinLR(S){
+    var el = document.getElementById('wtb-lr'); if(!el) return;
+    var bs = el.querySelectorAll('b'), dg = [Math.floor(S / 10), S % 10], n = 0;
+    if(reducedMotion()) return;
+    var iv = setInterval(function(){
+      if(!document.getElementById('wtb-lr') || ++n > 9){ clearInterval(iv); if(bs[0]){ bs[0].textContent = dg[0]; bs[1].textContent = dg[1]; } return; }
+      bs[0].textContent = Math.floor(Math.random() * 4); bs[1].textContent = Math.floor(Math.random() * 10);
+    }, 70);
+  }
   async function wtbPlay(W, e){
     var k = W.queue.length > 2 ? 0.3 : 1, ev = e.ev || {}, ai = e.atk, di = e.def, ua = wtbU(ai), ud = wtbU(di), A = W.cards[ai], D = W.cards[di];
     var an = ai < 3 ? wtbWho(W, ai) + ' (' + sn3(A) + ')' : 'Boss ' + sn3(A), dn = di < 3 ? wtbWho(W, di) + ' (' + sn3(D) + ')' : 'Boss ' + sn3(D);
-    var roll;
-    if(ai < 3) roll = (ev.to ? (ev.a ? '🤖 Máy đánh thay' : '⏰ Hết giờ') : (ev.o ? '✅ Đúng! Còn ' + (ev.l | 0) + ' giây' : '❌ Chưa đúng')) + ' → <b>' + e.roll + ' điểm</b>';
+    var roll, S0 = ev.S != null ? ev.S : (ev.r | 0);
+    if(ai < 3){
+      var parts = wtMembers(W.room).map(function(i){ return uEsc(wtbWho(W, i)) + ' ' + ((wtList(ev.p)[i]) | 0); }).join(' + ');
+      roll = (ev.to ? (ev.a ? '🤖 Máy đánh thay' : '⏰ Hết giờ') : '🧮 ' + parts + ' =') + ' <span class="wt-lr" id="wtb-lr"><b>' + Math.floor(S0 / 10) + '</b><b>' + (S0 % 10) + '</b></span> <small>/ 30 điểm đòn · hệ số ×' + (+e.d10 || 0).toFixed(2) + '</small>' + (e.miss ? ' · 💨 <b>TRƯỢT!</b>' : '');
+    }
     else roll = '🎲 Boss ra <b>' + e.roll + ' điểm</b>';
     if(e.crit) roll += ' · 🎯 <b>CHÍ MẠNG!</b>';
     var c = e.calc || {}, chips = (c.elemM > 1 ? ' · ▲ Khắc Hệ' : (c.elemM < 1 ? ' · ▼ Bị khắc Hệ' : '')) + (c.special ? ' · 💥 Đòn tuyệt kỹ' : '');
     wtbSay((ai < 3 ? '🟦 ' : '🟪 ') + '<b>' + uEsc(an) + '</b> ➜ <b>' + uEsc(dn) + '</b>', roll + chips);
+    if(ai < 3) wtbSpinLR(S0);
     document.querySelectorAll('#wtb .wtb-u.act').forEach(function(x){ x.classList.remove('act'); });
     if(ua) ua.classList.add('act');
     await wtbSleep(850 * k); if(wtb !== W) return;
     if(ud){ ud.classList.add('hit'); setTimeout(function(){ ud.classList.remove('hit'); }, 450); }
-    wtbSetHp(W, di, e.hpAfter); wtbFloat(di, '−' + e.dmg, e.crit ? 'crit' : '');
+    wtbSetHp(W, di, e.hpAfter); wtbFloat(di, e.miss ? '💨 Trượt' : '−' + e.dmg, e.crit ? 'crit' : '');
     if(e.guard){ wtbSetHp(W, e.guard.i, e.guard.hpAfter); wtbFloat(e.guard.i, '🛡️−' + e.guard.dmg, ''); }
     (e.splash || []).forEach(function(s){ wtbSetHp(W, s.i, s.hpAfter); wtbFloat(s.i, '−' + s.dmg, ''); });
     if(e.heal){ wtbSetHp(W, e.heal.i, e.heal.hpAfter); wtbFloat(e.heal.i, '+' + e.heal.amt, 'heal'); }
@@ -14890,6 +14940,8 @@
   function wtbDecide(W){
     if(!W.b || W.b.finished || W.queue.length || W.playing) return;
     var nx = wtbNext(W.b); if(!nx) return;
+    var qn = W.f && W.f.qs && W.f.qs['q' + W.applied], aKey = W.att + ':' + W.applied;
+    if(qn && nx.k === 'h' && wtList(qn.need).indexOf(W.seat) >= 0 && W.ansKey !== aKey && !(W.f.ans && W.f.ans['q' + W.applied] && W.f.ans['q' + W.applied]['s' + W.seat])){ W.ansKey = aKey; wtbAnswer(W, W.applied, qn); }
     var idle = wtbNow() - W.lastAt, drv = wtbDriver(W) === W.seat;
     if(nx.k === 'h' && nx.seat === W.seat){
       if(!W.flowing && idle > 900 && W.flow !== W.applied){ W.flow = W.applied; wtbMyTurn(W, W.applied, nx.seat); }
@@ -14908,7 +14960,7 @@
       if(kind === 'boss'){ ev = { s: 1, k: 0, t: aiPickTarget3(b, 1, W.init.sk || 0.5), r: battleMachineRoll(W.init.hi || 0.1), o: 0 }; }
       else {
         b.rot[0] = nx.seat;
-        ev = { s: 0, k: nx.seat, t: aiPickTarget3(b, 0, W.init.sk || 0.5), r: kind === 'machine' ? battleMachineRoll(W.init.hi || 0.1) : 1, o: 0, to: 1, a: kind === 'machine' ? 1 : 0 };
+        ev = { s: 0, k: nx.seat, t: aiPickTarget3(b, 0, W.init.sk || 0.5), r: kind === 'machine' ? battleMachineRoll(W.init.hi || 0.1) : 0, o: 0, to: 1, a: kind === 'machine' ? 1 : 0 };
       }
       if(!(ev.t >= 0)) return;
       ev.at = { '.sv': 'timestamp' };
@@ -14917,20 +14969,50 @@
   }
 
   /* ---- lượt của chính bé: chọn mục tiêu → câu hỏi → ghi đòn ---- */
+  /* LỰC CHIẾN CẢ TEAM: bé đến lượt chọn mục tiêu → máy bé đăng 1 câu hỏi (qs/q<lượt>) → mọi bé đang online cùng trả lời, mỗi người ghi điểm của mình
+     (đúng = số giây còn lại 1–10, sai / hết giờ = 0; ans/q<lượt>/s<ghế>) → máy bé ra đòn cộng tổng, quy về thang 1–10 của engine (tổng ÷ số người trong team) rồi ghi đòn. */
   async function wtbMyTurn(W, seq, seat){
     var gone = function(){ return wtb !== W || W.applied !== seq; };
     W.flowing = true;
     try{
       var b = W.b, foes = alive3(b, 1), target = foes[0], secs = settings.quizSeconds || 15;
       if(foes.length > 1){ target = await wtbPickTarget(W, seat, gone); if(gone() || target < 0) return; }
-      var q = quizPick(W.init.qt || 0.5), res = await wtbAsk(W, q, secs, gone);
-      if(res.gone) return;
-      var ev = { s: 0, k: seat, t: target, r: res.ok ? Math.min(10, Math.max(1, res.secLeft | 0)) : 1, o: res.ok ? 1 : 0, l: res.secLeft | 0, at: { '.sv': 'timestamp' } };
-      if(res.timeout) ev.to = 1;
+      var q = quizPick(W.init.qt || 0.5), need = wtbPresent(W), put = null;
+      var node = { q: { subject: q.subject, question: q.question, options: q.options, correct: q.correct, explain: q.explain || '' }, seat: seat, t: target, need: need, secs: secs, at: { '.sv': 'timestamp' } };
+      for(var n = 0; n < 4 && put === null; n++){ put = await wtbCas(W.code + '/fight/a' + W.att + '/qs/q' + seq, node); if(put === null) await wtbSleep(600); }
+      if(put !== true) return;
+      var ans = await wtbCollect(W, seq, need, secs); if(!ans || gone()) return;
+      var S = 0, p = [0, 0, 0], anyOk = 0, lm = 0, nm = Math.max(1, wtMembers(W.room).length);
+      need.forEach(function(s){ var a = ans['s' + s]; if(a){ p[s] = a.s | 0; S += p[s]; if(a.ok) anyOk = 1; lm = Math.max(lm, a.l | 0); } });
+      b.rot[0] = seat;   // trượt chỉ khi CẢ ĐỘI 0 điểm; máy bé ra đòn tung xúc xắc một lần rồi ghi vào đòn để mọi máy phát lại giống nhau
+      var miss = (S === 0 && Math.random() < battleMissChance(b, peekAttacker3(b, 0), target)) ? 1 : 0;
+      var ev = { s: 0, k: seat, t: target, r: S, m: miss, o: anyOk, l: lm, p: p, S: S, at: { '.sv': 'timestamp' } };
       W.hold = true;
-      var wrote = null; for(var n = 0; n < 4 && wrote === null; n++){ wrote = await wtbCas(wtbEvPath(W, seq), ev); if(wrote === null) await wtbSleep(600); }
-      await wtbSleep(res.ok ? 900 : 2300);
+      var wrote = null; for(var n2 = 0; n2 < 4 && wrote === null; n2++){ wrote = await wtbCas(wtbEvPath(W, seq), ev); if(wrote === null) await wtbSleep(600); }
+      await wtbSleep(anyOk ? 900 : 2300);
     }finally{ W.hold = false; W.flowing = false; W.panelKey = ''; wtbClearTargets(); }
+  }
+  async function wtbCollect(W, seq, need, secs){
+    var t0 = Date.now(), url = wtbUrl(W.code + '/fight/a' + W.att + '/ans/q' + seq), r = {};
+    while(wtb === W && W.applied === seq){
+      try{ var x = await fetch(url); r = (x.ok && await x.json()) || {}; }catch(e){}
+      if(need.every(function(s){ return r['s' + s]; }) || Date.now() - t0 > (secs + 5) * 1000) return r;
+      await wtbSleep(700);
+    }
+    return null;
+  }
+  async function wtbAnswer(W, seq, qn){
+    var own = !W.flowing, gone = function(){ return wtb !== W || W.applied !== seq; }, path = W.code + '/fight/a' + W.att + '/ans/q' + seq + '/s' + W.seat;
+    if(own) W.flowing = true;
+    try{
+      var secs = qn.secs || 15, left = secs - (wtbNow() - (typeof qn.at === 'number' ? qn.at : wtbNow())) / 1000;
+      if(left < 2){ await wtbCas(path, { s: 0, ok: 0, l: 0, to: 1 }); return; }   // vào trễ quá → 0 điểm
+      var res = await wtbAsk(W, qn.q, Math.min(secs, Math.ceil(left)), gone);
+      if(res.gone) return;
+      var sc = res.ok ? Math.min(10, Math.max(1, res.secLeft | 0)) : 0, w = null;
+      for(var n = 0; n < 4 && w === null; n++){ w = await wtbCas(path, { s: sc, ok: res.ok ? 1 : 0, l: res.secLeft | 0 }); if(w === null) await wtbSleep(600); }
+      await wtbSleep(res.ok ? 900 : 2300);
+    }finally{ if(own){ W.flowing = false; W.panelKey = ''; } }
   }
   function wtbClearTargets(){
     document.querySelectorAll('#wtb .wtb-u.tg').forEach(function(u){ u.classList.remove('tg'); u.disabled = true; });
@@ -14939,7 +15021,7 @@
   }
   function wtbPickTarget(W, seat, gone){
     return new Promise(function(resolve){
-      var b = W.b, foes = alive3(b, 1), avg = avgD10(b.cfg), t0 = Date.now(), iv = 0, done = false;
+      var b = W.b, foes = alive3(b, 1), avg = battleD30(b.cfg, Math.round(6 * Math.max(1, wtbPresent(W).length))), t0 = Date.now(), iv = 0, done = false;   // xem trước theo mức trung bình ≈ 60% điểm tối đa của đội
       b.rot[0] = seat;
       foes.forEach(function(di){
         var c = calcHit3(b, seat, di, avg), D = b.sides[di], u = wtbU(di), tg = document.getElementById('wtb-tag' + di);
@@ -14963,7 +15045,7 @@
     return new Promise(function(resolve){
       var sj = QUIZ_SUBJECTS[q.subject] || QUIZ_SUBJECTS.khac, t0 = performance.now(), done = false;
       W.panelKey = '';
-      wtbPanel(W, 'q:' + W.applied, '<div class="wt-qwrap wtb-q"><div class="wt-qhead"><span>' + sj.ic + ' ' + uEsc(sj.name) + ' · lượt của con</span><span id="wtb-qt">' + secs + '</span></div><div class="wt-qbar"><i id="wtb-qb"></i></div>'
+      wtbPanel(W, 'q:' + W.applied, '<div class="wt-qwrap wtb-q"><div class="wt-qhead"><span>' + sj.ic + ' ' + uEsc(sj.name) + ' · cả đội cùng trả lời</span><span id="wtb-qt">' + secs + '</span></div><div class="wt-qbar"><i id="wtb-qb"></i></div>'
         + '<p class="wt-q">' + uEsc(q.question) + '</p><div class="wt-qo" id="wtb-qo">' + q.options.map(function(o, j){ return '<button type="button" class="wt-opt" data-i="' + j + '">' + uEsc(o) + '</button>'; }).join('') + '</div><p class="wt-fb" id="wtb-fb" aria-live="polite"></p></div>');
       var qo = document.getElementById('wtb-qo'), box = document.getElementById('wtb'); if(box) box.classList.add('q');
       function fin(r){
@@ -14973,7 +15055,7 @@
           var btns = document.querySelectorAll('#wtb-qo .wt-opt'); btns.forEach(function(b2, j){ b2.disabled = true; if(j === q.correct) b2.classList.add('ok'); else if(j === r.pick) b2.classList.add('bad'); });
           var fb = document.getElementById('wtb-fb');
           if(fb) fb.innerHTML = r.ok ? '🎉 Chính xác! Còn ' + r.secLeft + ' giây → <b>' + Math.min(10, Math.max(1, r.secLeft)) + ' điểm</b>'
-            : ((r.timeout ? '⏰ Hết giờ. ' : '💡 Chưa đúng. ') + 'Đáp án: <b>' + uEsc(q.options[q.correct]) + '</b>' + (q.explain ? '<br><small>' + uEsc(q.explain) + '</small>' : ''));
+            : ((r.timeout ? '⏰ Hết giờ. ' : '💡 Chưa đúng. ') + '<b>0 điểm</b> · Đáp án: <b>' + uEsc(q.options[q.correct]) + '</b>' + (q.explain ? '<br><small>' + uEsc(q.explain) + '</small>' : ''));
         }
         resolve(r);
       }
@@ -15043,11 +15125,11 @@
     }
     var shown = null, rec = { at: Date.now(), room: code, got: 'none' }, base = week && week.rewardId ? PLAYER_DB_BY_ID[week.rewardId] : null;
     if(base){
-      var players = loadPlayers(), np = ownedPlayerFromBase(base);
-      np.ovrBonus = WT_REWARD_OVR;   // thẻ thưởng World Tour tự động +3 Overall (WT_REWARD_OVR); trùng thẻ đã có cũng được (bé tự chọn thẻ này)
+      var players = loadPlayers(), np = ownedPlayerFromBase(base), plus = (room.boss && room.boss.plus != null) ? (room.boss.plus | 0) : WT_REWARD_OVR;
+      np.ovrBonus = plus;   // thẻ thưởng World Tour tự động +3 Overall (WT_REWARD_OVR); trùng thẻ đã có cũng được (bé tự chọn thẻ này)
       players.push(np);
       if(savePlayers(players) === false){ alert('Chưa lưu được thẻ vào máy. Con bấm «Nhận thẻ thưởng» lại nhé!'); if(W) W.claimed = 0; return; }
-      rec.got = 'card'; rec.id = base.dbId; rec.name = base.name; shown = hydratePlayer(np);
+      rec.got = 'card'; rec.plus = plus; rec.star = (room.boss && room.boss.star) || 0; rec.id = base.dbId; rec.name = base.name; shown = hydratePlayer(np);
     }
     cl[ws] = rec; safeSet(WT_CLAIM_KEY, cl);
     try{ renderBadges(); }catch(e){}
@@ -15059,7 +15141,7 @@
     var o = document.createElement('div'); o.className = 'cm-reveal';
     var card = base ? '<div class="cm-rv-card">' + playerCardHTML(base, false) + '</div>' : '';
     o.innerHTML = '<div class="cm-rv-box"><div class="cm-rv-t">' + (base ? '🎁 Thẻ thưởng World Tour!' : '🛂 Con dấu hộ chiếu!') + '</div>' + card
-      + '<div class="cm-rv-n">' + (rec.got === 'card' ? uEsc(base.name || '') + ' đã về Kho cầu thủ của con, tự động +' + WT_REWARD_OVR + ' Overall!' : (rec.got === 'frags' ? 'Con đã có ' + uEsc(base.name || 'cầu thủ này') + ' rồi nên thẻ được đổi thành <b>' + (rec.n | 0) + ' 🧩 mảnh ghép</b> cho Hành trình!' : 'Chặng này đã được đóng dấu vàng trên hộ chiếu của con.')) + '</div>'
+      + '<div class="cm-rv-n">' + (rec.got === 'card' ? uEsc(base.name || '') + ' đã về Kho cầu thủ của con, tự động +' + (rec.plus != null ? rec.plus : WT_REWARD_OVR) + ' Overall!' : (rec.got === 'frags' ? 'Con đã có ' + uEsc(base.name || 'cầu thủ này') + ' rồi nên thẻ được đổi thành <b>' + (rec.n | 0) + ' 🧩 mảnh ghép</b> cho Hành trình!' : 'Chặng này đã được đóng dấu vàng trên hộ chiếu của con.')) + '</div>'
       + '<button type="button" class="btn-primary" data-cm="rv-ok">Tuyệt vời!</button></div>';
     document.body.appendChild(o);
   }
@@ -15094,14 +15176,45 @@
   function wtSunday(s){ var d = wtD(s); d.setDate(d.getDate() - d.getDay()); return wtY(d); }
   function wtNum(v, def, lo, hi){ v = parseFloat(v); return (isNaN(v) || v < lo || v > hi) ? def : v; }
   function wtList(x){ return Array.isArray(x) ? x : (x && typeof x === 'object' ? Object.keys(x).map(function(k){ return x[k]; }) : []); }
+  var WT_STAR_NAMES = ['Dễ', 'Bình thường', 'Khó', 'Ác mộng', 'Địa ngục'];
+  var WT_DIFF_DEF = [[0, 0, 0], [3, 10, 1], [6, 25, 2], [10, 45, 3], [15, 70, 4]];   // [Overall Boss +, sức mạnh Boss +%, thẻ thưởng +Overall] theo 1★…5★ (ADMIN chỉnh được)
+  function wtStarsTxt(n){ return '★'.repeat(n) + '☆'.repeat(5 - n) + ' ' + WT_STAR_NAMES[n - 1]; }
+  function wtDiffNorm(d){ var a = wtList(d); return WT_DIFF_DEF.map(function(x, i){ var o = a[i] || {}; return { ovr: Math.round(wtNum(o.ovr, x[0], 0, 30)), pct: Math.round(wtNum(o.pct, x[1], 0, 300)), plus: Math.round(wtNum(o.plus, x[2], 0, 10)) }; }); }
+  function wtLevelsNorm(l){ var a = wtList(l).map(function(x){ return Math.round(+x); }).filter(function(x, i, s){ return x >= 1 && x <= 5 && s.indexOf(x) === i; }).sort(); return a.length === 3 ? a : [1, 2, 3]; }
+  function wtRoomStar(room, cur){ var lv = (cur && cur.levels) || [1, 2, 3], s = room ? +room.diff : 0; return lv.indexOf(s) >= 0 ? s : lv[0]; }
+  function wtLevelsHTML(w){
+    var lv = w.levels || [1, 2, 3];
+    return '<div><p class="hint-text" style="margin:0 0 4px">Mức độ khó của chặng: chọn đúng 3 trong 5 mức (đã chọn ' + lv.length + '/3)</p><div style="display:flex;gap:6px;flex-wrap:wrap">'
+      + WT_STAR_NAMES.map(function(nm, i){ return '<button type="button" class="btn-secondary wt-lv" data-wt-lv="' + (i + 1) + '" aria-pressed="' + (lv.indexOf(i + 1) >= 0) + '">' + wtStarsTxt(i + 1) + '</button>'; }).join('') + '</div></div>';
+  }
+  function wtDiffPaint(){
+    var el = document.getElementById('wt-diff'); if(!el) return;
+    if(!wtCfg.diff) wtCfg.diff = wtDiffNorm();
+    el.innerHTML = WT_STAR_NAMES.map(function(nm, i){ var d = wtCfg.diff[i];
+      return '<div data-d="' + i + '" style="display:grid;grid-template-columns:1.3fr repeat(3,1fr);gap:6px;align-items:end"><b>' + wtStarsTxt(i + 1) + '</b>'
+        + '<label>Overall Boss +<input type="number" min="0" max="30" data-df="ovr" value="' + d.ovr + '"></label>'
+        + '<label>Sức mạnh Boss +%<input type="number" min="0" max="300" data-df="pct" value="' + d.pct + '"></label>'
+        + '<label>Thẻ thưởng + Overall<input type="number" min="0" max="10" data-df="plus" value="' + d.plus + '"></label></div>'; }).join('');
+  }
+  document.addEventListener('input', function(e){
+    var f = e.target.getAttribute && e.target.getAttribute('data-df'), row = f && e.target.closest('[data-d]'); if(!row || !wtCfg.diff) return;
+    wtCfg.diff[+row.getAttribute('data-d')][f] = Math.max(0, Math.round(+e.target.value || 0));
+  });
+  document.addEventListener('click', function(e){
+    var b = e.target.closest ? e.target.closest('[data-wt-lv]') : null; if(!b) return;
+    var card = b.closest('[data-wt]'), w = card && wtCfg.weeks[+card.getAttribute('data-wt')]; if(!w) return;
+    var s = +b.getAttribute('data-wt-lv'), lv = (w.levels || [1, 2, 3]).slice(), i = lv.indexOf(s);
+    if(i >= 0) lv.splice(i, 1); else if(lv.length < 3) lv.push(s); else return;
+    w.levels = lv.sort(); wtPaint();
+  });
   function wtNorm(c){
     c = c || {};
     return {
-      goal: wtNum(c.goal, 700, 100, 700), k: wtNum(c.k, 15, 0, 40), staminaCoef: wtNum(c.staminaCoef, 1, 0, 3), tries: Math.round(wtNum(c.tries, 3, 1, 10)),
+      goal: wtNum(c.goal, 700, 100, 700), k: wtNum(c.k, 15, 0, 40), staminaCoef: wtNum(c.staminaCoef, 1, 0, 3), tries: Math.round(wtNum(c.tries, 3, 1, 10)), diff: wtDiffNorm(c.diff),
       weeks: wtList(c.weeks).filter(function(w){ return w && typeof w === 'object'; }).map(function(w){
         var b = wtList(w.bossIds).map(String).slice(0, 3); while(b.length < 3) b.push('');
         return { ws: /^\d{4}-\d{2}-\d{2}$/.test(w.ws || '') ? w.ws : '', nation: String(w.nation || ''), lat: wtNum(w.lat, 0, -90, 90), lon: wtNum(w.lon, 0, -180, 180),
-                 bossIds: b, rewardId: String(w.rewardId || ''), story: String(w.story || ''),
+                 bossIds: b, rewardId: String(w.rewardId || ''), story: String(w.story || ''), levels: wtLevelsNorm(w.levels),
                  themeType: (w.themeType === 'club' || w.themeType === 'nation') ? w.themeType : '', themeKey: String(w.themeKey || '') };
       }).sort(function(a, b){ return a.ws < b.ws ? -1 : (a.ws > b.ws ? 1 : 0); })
     };
@@ -15170,6 +15283,7 @@
   }
   function wtPaint(){
     var el = document.getElementById('wt-weeks'); if(!el) return;
+    wtDiffPaint();
     var box = 'border:1px solid var(--line);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:8px';
     function pl(f, label, val, th){
       var opts = '<option value="">— chưa chọn —</option>', found = !val;
@@ -15192,6 +15306,7 @@
         + '<label>Ngày mở tuần chơi (mở 7 ngày liên tiếp, không cần là Chủ nhật; điểm tính từ 7 ngày liền trước)<input type="date" data-f="ws" value="' + uEsc(w.ws) + '"></label>'
         + tBox + warn
         + '<label>✏️ Tên hiển thị trên bản đồ, thẻ ghim và phòng chơi (tự điền theo ảnh đã chọn, có thể sửa lại, ví dụ gõ \"Thụy Sĩ\"; đổi chủ đề sẽ không ghi đè tên con đã sửa)<input type="text" data-f="nation" maxlength="40" placeholder="Ví dụ: Thụy Sĩ" value="' + uEsc(w.nation) + '"></label>'
+        + wtLevelsHTML(w)
         + '<label>Vị trí trên bản đồ · vĩ độ<input type="number" data-f="lat" step="0.1" value="' + w.lat + '"></label>'
         + '<label>Kinh độ<input type="number" data-f="lon" step="0.1" value="' + w.lon + '"></label>'
         + pl('boss0', 'Boss 1 (thủ lĩnh)', w.bossIds[0], th) + pl('boss1', 'Boss 2 (hộ vệ)', w.bossIds[1], th) + pl('boss2', 'Boss 3 (hộ vệ)', w.bossIds[2], th)
@@ -15218,6 +15333,8 @@
   }
   async function wtPublish(){
     var st = document.getElementById('wt-status'); wtReadGlobals();
+    var badLv = wtCfg.weeks.filter(function(w){ return w.levels && w.levels.length !== 3; })[0];
+    if(badLv){ st.textContent = '⚠️ Chặng «' + (badLv.nation || '?') + '»: cần chọn đúng 3 mức độ khó.'; return; }
     var cfg = wtNorm(wtCfg), seen = {}, err = '';
     cfg.weeks.forEach(function(w, i){
       if(err) return;
@@ -18733,7 +18850,7 @@
       function rem(){ return secs - (performance.now() - t0) / 1000; }
       function finish(res){
         if(done) return; done = true; clearInterval(iv);
-        res.score = res.ok ? Math.min(10, Math.max(1, res.secLeft)) : 1; seSfx(res.ok ? 'right' : 'wrong');
+        res.score = res.ok ? Math.min(10, Math.max(1, res.secLeft)) : 0; seSfx(res.ok ? 'right' : 'wrong');
         optsEl.querySelectorAll('.mt-opt').forEach(function(b, i){ b.disabled = true; if(i === q.correct) b.classList.add('ok'); else if(i === res.picked) b.classList.add('bad'); });
         var fb = sEl('mt-qfb');
         if(fb) fb.innerHTML = res.ok ? '✅ <b>Chính xác!</b> Còn ' + res.secLeft + ' giây → ' + res.score + ' điểm' : ((res.timeout ? '⏰ <b>Hết giờ!</b> ' : '❌ <b>Chưa đúng.</b> ') + 'Đáp án: <b>' + escHtml(q.options[q.correct]) + '</b>' + (q.explain ? '<br><small>' + escHtml(q.explain) + '</small>' : ''));
@@ -18752,16 +18869,17 @@
       };
     });
   }
-  function sSpin(score, tok){
+  function sSpin(score, tok){   // Lucky roll 2 chữ số (hàng chục · hàng đơn vị) — dùng chung cho Mùa giải và Giao hữu
     var el = sEl('mt-reel');
     return new Promise(function(resolve){
       if(!el){ resolve(); return; }
-      el.innerHTML = '<div class="mt-rt">🎰 ĐIỂM TÌNH HUỐNG</div><div class="mt-rr"><b>?</b><b>?</b><b>?</b></div>';
+      var sc = Math.max(0, Math.round(+score || 0)), dg = [Math.floor(sc / 10), sc % 10];
+      el.innerHTML = '<div class="mt-rt">🎰 ĐIỂM TÌNH HUỐNG</div><div class="mt-rr"><b>?</b><b>?</b></div>';
       var bs = el.querySelectorAll('.mt-rr b');
-      if(reducedMotion()){ bs.forEach(function(b){ b.textContent = score; }); setTimeout(resolve, 500); return; }
-      var stopped = 0, iv = setInterval(function(){ if(!sAlive(tok)){ clearInterval(iv); return; } bs.forEach(function(b, k){ if(k >= stopped) b.textContent = 1 + Math.floor(fxR() * 10); }); }, 70);
-      [550, 800, 1050].forEach(function(ms, k){ setTimeout(function(){ if(!sAlive(tok)) return; stopped = k + 1; bs[k].textContent = score; bs[k].classList.add('stop'); }, ms); });
-      setTimeout(function(){ clearInterval(iv); if(el && score >= 8) el.classList.add('hi'); resolve(); }, 1500);
+      if(reducedMotion()){ bs.forEach(function(b, k){ b.textContent = dg[k]; }); setTimeout(resolve, 500); return; }
+      var stopped = 0, iv = setInterval(function(){ if(!sAlive(tok)){ clearInterval(iv); return; } bs.forEach(function(b, k){ if(k >= stopped) b.textContent = Math.floor(fxR() * (k ? 10 : 4)); }); }, 70);
+      [650, 1050].forEach(function(ms, k){ setTimeout(function(){ if(!sAlive(tok)) return; stopped = k + 1; bs[k].textContent = dg[k]; bs[k].classList.add('stop'); }, ms); });
+      setTimeout(function(){ clearInterval(iv); if(el && sc >= 8) el.classList.add('hi'); resolve(); }, 1500);
     });
   }
   async function sMatchNext(auto){   // auto = true: hết giờ nghỉ, tự chạy (bỏ lựa chọn chưa xác nhận, không hỏi lại)
@@ -19208,18 +19326,33 @@
      - Trẻ em: chỉ mời bạn trong sổ người dùng, chỉ có emoji định sẵn, không chat tự do.
      ===================================================================== */
   var FRN_BASE = FIREBASE_BASE + '/kidchart_friendly';
+  var FRN_PROTO = 2;   // phiên bản giao thức trận trực tiếp (go/gf, ans/fin, trọng tài). Hai máy khác phiên bản không đá được với nhau → chặn từ lúc mời
   var FRN_EMOJIS = ['👍', '😀', '😮', '🔥', '💪', '👏'];
   var FRN_INVITE_TTL = 120000, FRN_LOBBY_TTL = 600000;   // lời mời hiệu lực 2 phút; phòng chờ tối đa 10 phút
   var frnSkew = 0, frnSkewN = 0;                         // độ lệch giờ server − giờ máy (ms), dùng cho startAt ở Giai đoạn 3
   function frnNow(){ return Date.now() + frnSkew; }
   function frnUrl(p){ return FRN_BASE + '/' + p + '.json'; }
   function frnMS(ms){ var s = Math.max(0, Math.ceil(ms / 1000)); return Math.floor(s / 60) + ':' + ('0' + (s % 60)).slice(-2); }
-  function frnReq(method, path, body, keep){
-    var ctl = (typeof AbortController !== 'undefined') ? new AbortController() : null, tm = ctl ? setTimeout(function(){ ctl.abort(); }, 8000) : 0;
-    var o = {method:method, headers:{'Content-Type':'application/json'}};
-    if(ctl) o.signal = ctl.signal; if(keep) o.keepalive = true;
-    if(body !== undefined) o.body = JSON.stringify(body);
-    return fetch(frnUrl(path), o).then(function(r){ if(tm) clearTimeout(tm); if(!r.ok) throw new Error('HTTP ' + r.status); return r.json(); }, function(e){ if(tm) clearTimeout(tm); throw e; });
+  /* Mọi lệnh đọc/ghi giao hữu đều idempotent (GET/PUT/PATCH/DELETE) nên tự thử lại khi rớt mạng hoặc lỗi 5xx (tối đa 3 lần, lùi 150ms → 600ms);
+     lỗi 4xx (trừ 429) trả ngay. keep=true (đóng tab) không thử lại. tries / tmo cho phép đường găng dùng ít lần, hạn ngắn. */
+  function frnReq(method, path, body, keep, tries, tmo){
+    var max = keep ? 1 : (tries || 3), n = 0;
+    function once(){
+      n++;
+      var ctl = (typeof AbortController !== 'undefined') ? new AbortController() : null, tm = ctl ? setTimeout(function(){ ctl.abort(); }, tmo || 6000) : 0;
+      var o = {method:method, headers:{'Content-Type':'application/json'}};
+      if(ctl) o.signal = ctl.signal; if(keep) o.keepalive = true;
+      if(body !== undefined) o.body = JSON.stringify(body);
+      return fetch(frnUrl(path), o).then(function(r){ if(tm) clearTimeout(tm); if(!r.ok){ var e = new Error('HTTP ' + r.status); e.status = r.status; throw e; } return r.json(); }, function(e){ if(tm) clearTimeout(tm); throw e; });
+    }
+    function go(){
+      return once().catch(function(e){
+        var st = e && e.status;
+        if(n >= max || (st && st < 500 && st !== 429)) throw e;
+        return new Promise(function(r){ setTimeout(r, 150 * n * n + Math.floor(Math.random() * 100)); }).then(go);
+      });
+    }
+    return go();
   }
   function frnNewId(){
     var a = '';
@@ -19227,31 +19360,65 @@
     return 'r' + Date.now().toString(36) + a;
   }
   /* Ghi giá trị chỉ khi nút còn đúng trạng thái mong đợi (ETag If-Match); nếu trình duyệt không cho dùng ETag thì kiểm tra rồi ghi. */
-  function frnCas(path, expect, val){
-    return fetch(frnUrl(path), {headers:{'X-Firebase-ETag':'true'}}).then(function(r){
-      var et = r.headers.get('ETag');
+  /* Ghi giá trị chỉ khi nút còn đúng trạng thái mong đợi.
+     • Máy chủ trả ETag (frnEtag = true): ghi If-Match → nguyên tử thật sự.
+     • Trình duyệt không đọc được ETag (frnEtag = false, vd. CORS không cho lộ header): KHÔNG còn ghi "mù" như trước; ghi rồi đợi một nhịp mạng rồi đọc lại,
+       thấy giá trị khác của mình thì coi là THUA ('state'). Cách này không tuyệt đối nên các quyết định có tranh chấp trong trận đã chuyển sang trọng tài (frlDecide). */
+  var frnEtag = null;
+  function frnSame(a, b){ return a === b || (a != null && b != null && typeof a === 'object' && typeof b === 'object' && JSON.stringify(a) === JSON.stringify(b)); }
+  /* Ghi giá trị chỉ khi nút còn đúng trạng thái mong đợi.
+     • Máy chủ trả ETag (frnEtag = true): ghi If-Match → nguyên tử thật sự.
+     • Trình duyệt không đọc được ETag (frnEtag = false, vd. CORS không cho lộ header): KHÔNG còn ghi "mù" như trước; ghi rồi đợi một nhịp mạng rồi đọc lại,
+       thấy giá trị khác của mình thì coi là THUA ('state'). Cách này không tuyệt đối nên các quyết định có tranh chấp trong trận đã chuyển sang trọng tài (frlDecide).
+     • Mọi fetch đều có hạn (tmo, mặc định 6s): bản cũ dùng fetch trần nên một gói tin rớt là treo vĩnh viễn. */
+  var frnEtag = null;
+  function frnSame(a, b){ return a === b || (a != null && b != null && typeof a === 'object' && typeof b === 'object' && JSON.stringify(a) === JSON.stringify(b)); }
+  function frnFetch(url, o, tmo){
+    var ctl = (typeof AbortController !== 'undefined') ? new AbortController() : null, tm = ctl ? setTimeout(function(){ ctl.abort(); }, tmo || 6000) : 0;
+    o = o || {}; if(ctl) o.signal = ctl.signal;
+    return fetch(url, o).then(function(r){ if(tm) clearTimeout(tm); return r; }, function(e){ if(tm) clearTimeout(tm); throw e; });
+  }
+  function frnCas(path, expect, val, tmo){
+    return frnFetch(frnUrl(path), {headers:{'X-Firebase-ETag':'true'}}, tmo).then(function(r){
+      var et = r.headers.get('ETag'); if(frnEtag === null) frnEtag = !!et;
       return r.json().then(function(v){
-        if(v !== expect) throw new Error('state');
-        var h = {'Content-Type':'application/json'}; if(et) h['if-match'] = et;
-        return fetch(frnUrl(path), {method:'PUT', headers:h, body:JSON.stringify(val)}).then(function(w){ if(!w.ok) throw new Error(w.status === 412 ? 'state' : 'HTTP ' + w.status); });
+        if(!frnSame(v, expect)) throw new Error('state');
+        if(et) return frnFetch(frnUrl(path), {method:'PUT', headers:{'Content-Type':'application/json', 'if-match':et}, body:JSON.stringify(val)}, tmo).then(function(w){ if(!w.ok) throw new Error(w.status === 412 ? 'state' : 'HTTP ' + w.status); });
+        return frnReq('PUT', path, val, false, 1, tmo).then(function(){ return new Promise(function(r2){ setTimeout(r2, Math.min(1200, 250 + 1.5 * (frnRtt.med || 150))); }); })
+          .then(function(){ return frnReq('GET', path, undefined, false, 1, tmo); }).then(function(back){ if(!frnSame(back, val)) throw new Error('state'); });
       });
     }).catch(function(e){
       if(e && e.message === 'state') throw e;
-      return frnReq('GET', path).then(function(v){ if(v !== expect) throw new Error('state'); return frnReq('PUT', path, val); });
+      return frnReq('GET', path, undefined, false, 2, tmo).then(function(v){ if(!frnSame(v, expect)) throw new Error('state'); return frnReq('PUT', path, val, false, 2, tmo); });
     });
   }
 
   /* ---- đồng hồ server + presence (2.1, 2.6) ---- */
+  /* Mẫu đồng hồ kiểu NTP: giữ 12 mẫu gần nhất, lấy độ lệch = trung vị của 3 mẫu có RTT thấp nhất (sai số ≈ RTT/2 của mẫu tốt nhất, không bị mẫu chậm kéo lệch).
+     frnRtt: RTT nhỏ nhất / trung vị — dùng chọn độ dẫn (lead) và dung sai chờ. Giờ máy bị chỉnh (lệch > 2s so với trước) thì bỏ mẫu cũ. */
+  var frnSmp = [], frnRtt = {min:0, med:0};
   function frnSample(t0, t1, sv){
-    if(typeof sv !== 'number' || t1 - t0 > 3000) return;
-    var s = sv - Math.round((t0 + t1) / 2);
-    frnSkew = frnSkewN ? Math.round(frnSkew * 0.6 + s * 0.4) : s; frnSkewN++;
+    var rtt = t1 - t0;
+    if(typeof sv !== 'number' || !(rtt >= 0) || rtt > 3000) return;
+    var off = sv - (t0 + t1) / 2;
+    if(frnSmp.length && frnSkewN && Math.abs(off - frnSkew) > 2000 && rtt < 1500) frnSmp = [];
+    frnSmp.push({o:off, r:rtt, at:t1});
+    while(frnSmp.length > 12 || (frnSmp.length > 3 && t1 - frnSmp[0].at > 300000)) frnSmp.shift();
+    var top = frnSmp.slice().sort(function(a, b){ return a.r - b.r; }).slice(0, 3).map(function(x){ return x.o; }).sort(function(a, b){ return a - b; });
+    frnSkew = Math.round(top[Math.floor(top.length / 2)]); frnSkewN++;
+    var rs = frnSmp.map(function(x){ return x.r; }).sort(function(a, b){ return a - b; });
+    frnRtt.min = rs[0]; frnRtt.med = rs[Math.floor(rs.length / 2)];
   }
   function frnBeat(){
     var t0 = Date.now();
-    return frnReq('PUT', 'presence/' + encodeURIComponent(syncId), {t:{'.sv':'timestamp'}, name:userNameOf(syncId)}).then(function(d){ frnSample(t0, Date.now(), d && d.t); return d; });
+    return frnReq('PUT', 'presence/' + encodeURIComponent(syncId), {t:{'.sv':'timestamp'}, name:userNameOf(syncId), v:FRN_PROTO}).then(function(d){ frnSample(t0, Date.now(), d && d.t); return d; });
   }
   function frnCalib(){ var t0 = Date.now(); return frnReq('PUT', 'clock', {t:{'.sv':'timestamp'}}).then(function(d){ frnSample(t0, Date.now(), d && d.t); return d; }); }
+  function frnCalibN(n){   // n mẫu liên tiếp (cách 120ms) để đồng hồ chung chính xác trước khi vào trận
+    var p = Promise.resolve();
+    for(var k = 0; k < n; k++) p = p.then(function(){ return frnCalib().catch(function(){}); }).then(function(){ return new Promise(function(r){ setTimeout(r, 120); }); });
+    return p;
+  }
   var frnHb = {on:false, tm:0};
   function frnHbLoop(){ if(!frnHb.on) return; frnBeat().catch(function(){}); frnHb.tm = setTimeout(frnHbLoop, settings.friendly.heartbeatSecs * 1000); }
   /* 4.5: tự dọn phòng quá 24 giờ (mỗi máy tối đa 1 lần/ngày, chạy ngầm) */
@@ -19274,8 +19441,12 @@
   }
 
   /* ---- luồng dữ liệu: EventSource, lỗi thì polling 1,5 giây (thử lại EventSource sau 30 giây) ---- */
-  function frnStream(path, onData){
-    var url = frnUrl(path), S = {data:null, es:null, poll:0, retry:0, closed:false, last:null};
+  /* Luồng dữ liệu phòng. Khác bản cũ:
+     • Lỗi EventSource thoáng qua KHÔNG còn bị đóng ngay rồi tải lại cả phòng mỗi 1,5s: để trình duyệt tự nối lại; chỉ chuyển sang polling (1s) khi kết nối hỏng thật (≥2 lỗi liền hoặc CLOSED).
+     • Có "chó giữ nhà": im lặng quá 45s (Firebase gửi keep-alive ~30s) hoặc bị nghi ngờ (suspect) → mở lại kết nối; kết nối mới luôn bắt đầu bằng ảnh chụp đầy đủ nên không mất/đảo thứ tự dữ liệu.
+     • inject(path, val): nhét một giá trị đã được xác nhận bằng GET trực tiếp (xem frlWait) vào bản sao cục bộ khi luồng chậm / chết im lặng. */
+  function frnStream(path, onData, pollMs){   // pollMs: nhịp polling dự phòng (mặc định 1500ms; phòng đang đấu truyền 1000)
+    var url = frnUrl(path), S = {data:null, es:null, poll:0, retry:0, wd:0, closed:false, last:null, ev:Date.now(), bad:0, sus:false, mode:''};
     function emit(){ if(!S.closed) onData(S.data); }
     function parts(p){ return String(p || '/').split('/').filter(Boolean); }
     function setAt(ps, val){
@@ -19287,30 +19458,36 @@
       if(val === null || val === undefined) delete o[last]; else o[last] = val;
       if(!Object.keys(S.data).length) S.data = null;
     }
-    function onPut(e){ try{ var d = JSON.parse(e.data); setAt(parts(d.path), d.data === undefined ? null : d.data); emit(); }catch(x){} }
-    function onPatch(e){ try{ var d = JSON.parse(e.data), base = parts(d.path); Object.keys(d.data || {}).forEach(function(k){ setAt(base.concat(parts(k)), d.data[k]); }); emit(); }catch(x){} }
+    function touch(){ S.ev = Date.now(); S.bad = 0; }
+    function onPut(e){ touch(); try{ var d = JSON.parse(e.data); setAt(parts(d.path), d.data === undefined ? null : d.data); emit(); }catch(x){} }
+    function onPatch(e){ touch(); try{ var d = JSON.parse(e.data), base = parts(d.path); Object.keys(d.data || {}).forEach(function(k){ setAt(base.concat(parts(k)), d.data[k]); }); emit(); }catch(x){} }
     function stopPoll(){ if(S.poll){ clearInterval(S.poll); S.poll = 0; } if(S.retry){ clearTimeout(S.retry); S.retry = 0; } }
+    function dropES(){ if(S.es){ try{ S.es.close(); }catch(x){} S.es = null; } }
     function startPoll(){
-      if(S.poll || S.closed) return;
+      if(S.poll || S.closed) return; S.mode = 'poll';
       var tick = function(){
-        fetch(url).then(function(r){ return r.ok ? r.json() : Promise.reject(new Error('HTTP')); }).then(function(j){
-          if(S.closed) return; var s = JSON.stringify(j); if(s !== S.last){ S.last = s; S.data = j; emit(); }
+        frnFetch(url, null, 5000).then(function(r){ return r.ok ? r.json() : Promise.reject(new Error('HTTP')); }).then(function(j){
+          if(S.closed || S.mode !== 'poll') return; var s = JSON.stringify(j); if(s !== S.last){ S.last = s; S.data = j; emit(); }
         }).catch(function(){});
       };
-      tick(); S.poll = setInterval(tick, 1500);
-      S.retry = setTimeout(function(){ stopPoll(); openES(); }, 30000);
+      tick(); S.poll = setInterval(tick, pollMs || 1500);
+      S.retry = setTimeout(function(){ S.retry = 0; stopPoll(); openES(); }, 20000);
     }
     function openES(){
-      if(S.closed) return;
+      if(S.closed) return; dropES(); stopPoll();
       if(typeof EventSource === 'undefined'){ startPoll(); return; }
       var es; try{ es = new EventSource(url); }catch(x){ startPoll(); return; }
-      S.es = es;
-      es.addEventListener('put', onPut); es.addEventListener('patch', onPatch);
-      es.onerror = function(){ try{ es.close(); }catch(x){} if(S.es === es) S.es = null; startPoll(); };
+      S.es = es; S.mode = 'es'; S.ev = Date.now(); S.sus = false; S.bad = 0;
+      es.addEventListener('put', onPut); es.addEventListener('patch', onPatch); es.addEventListener('keep-alive', touch);
+      es.addEventListener('cancel', function(){ if(S.es === es){ dropES(); startPoll(); } });
+      es.addEventListener('auth_revoked', function(){ if(S.es === es){ dropES(); startPoll(); } });
+      es.onopen = function(){ if(S.es === es) S.ev = Date.now(); };
+      es.onerror = function(){ if(S.es !== es) return; S.bad++; if(es.readyState === 2 || S.bad >= 2){ dropES(); startPoll(); } };
     }
-    function close(){ S.closed = true; try{ if(S.es) S.es.close(); }catch(x){} S.es = null; stopPoll(); }
+    function close(){ S.closed = true; dropES(); stopPoll(); clearInterval(S.wd); }
+    S.wd = setInterval(function(){ if(!S.closed && S.es && (S.sus || Date.now() - S.ev > 45000)){ S.sus = false; openES(); } }, 2000);
     openES();
-    return {close:close};
+    return {close:close, suspect:function(){ S.sus = true; }, inject:function(p, v){ setAt(parts(p), v); emit(); }, info:function(){ return {mode:S.mode, age:Date.now() - S.ev}; }};
   }
 
   /* ---- hộp thư lời mời (2.3) ---- */
@@ -19458,11 +19635,28 @@
     var log = []; try{ log = JSON.parse(sessionStorage.getItem('frn_inv') || '[]'); }catch(e){}
     log.push(Date.now()); try{ sessionStorage.setItem('frn_inv', JSON.stringify(log.slice(-8))); }catch(e){}
   }
+  /* Dấu vân tay dữ liệu: hai máy dựng đội từ kho cầu thủ + cấu hình luật LƯU CỤC BỘ (chỉ tải một lần lúc mở app). Khác phiên bản → hai trận mô phỏng khác nhau ngay từ đầu.
+     dv = băm (id, OVR gốc, vị trí, hệ, chỉ số gốc của đúng các cầu thủ trong đội hình) + băm cấu hình luật; mỗi bên ghi dv của mình vào lineup, bên kia tính lại bằng kho CỦA MÌNH và so. */
+  function frnCfgHash(){ try{ return seHash(JSON.stringify(BATTLE_CONFIG || null)); }catch(e){ return 0; } }
+  function frnDataFp(pl){
+    var ids = Object.keys(pl || {}).map(function(k){ return (pl[k] && pl[k].d) || ''; }).filter(Boolean).sort();
+    return seHash(ids.map(function(id){ var b = PLAYER_DB_BY_ID[id]; return b ? [id, b.realOvr, b.pos, b.battle && b.battle.element, JSON.stringify(b.realStats)].join(':') : id + ':?'; }).join('|') + '#' + frnCfgHash());
+  }
+  async function frnRefreshData(){   // tải lại kho cầu thủ + luật dùng chung rồi dựng lại chỉ mục
+    try{ var l = await loadPlayerDb(); if(l && l.length){ PLAYER_DB = l; registerPlayerDb(PLAYER_DB); } var bc = await loadBattleConfig(); if(bc) BATTLE_CONFIG = bc; }catch(e){}
+  }
+  function frnDataBad(d){ var bad = false; ['host', 'guest'].forEach(function(k){ var sn = frlGet(d, 'lineup', k); if(sn && sn.dv != null && String(frnDataFp(sn.pl)) !== String(sn.dv)) bad = true; }); return bad; }
+  async function frnDataCheck(R){   // phòng chờ: nếu dữ liệu hai máy lệch → tự làm mới một lần, còn lệch thì báo
+    var d = R.d; if(!d || R.dvBusy || R.dvDone || !frlGet(d, 'lineup', 'host') || !frlGet(d, 'lineup', 'guest')) return;
+    if(!frnDataBad(d)){ R.dvDone = true; R.dvBad = false; return; }
+    R.dvBusy = true; await frnRefreshData(); R.dvBusy = false; R.dvDone = true;
+    if(frnRoom === R){ R.dvBad = frnDataBad(R.d || d); if(R.shown) frnLobbyPaint(); }
+  }
   function frnSnap(lu, styleId){   // ảnh chụp đội hình để hai máy dựng lại trận từ seed + lineup (Giai đoạn 3)
     var pl = {}, sum = 0, n = 0;
     lu.starters.concat(lu.bench).forEach(function(x){ if(x.p) pl[x.id] = {d:x.p.dbId || '', b:x.p.ovrBonus || 0, e:x.p.energy || 0}; });
     lu.starters.forEach(function(x){ if(x.p){ sum += (x.p.ovr || x.p.realOvr || 0); n++; } });
-    return {fid:lu.f.id, pitch:lu.starters.map(function(x){ return x.id; }), bench:lu.bench.map(function(x){ return x.id; }), style:styleId || 'flex', pl:pl, avg:n ? Math.round(sum / n * 10) / 10 : 0, tn:teamGet().name || ''};
+    return {fid:lu.f.id, pitch:lu.starters.map(function(x){ return x.id; }), bench:lu.bench.map(function(x){ return x.id; }), style:styleId || 'flex', pl:pl, avg:n ? Math.round(sum / n * 10) / 10 : 0, tn:teamGet().name || '', dv:frnDataFp(pl)};
   }
   function frnMyStyle(lu){ var st = sLoad(); return (st.styleBy && st.styleBy[lu.f.id]) || 'flex'; }
   function frnNotReadyMsg(lu){ return 'Đội hình của bé chưa đủ cầu thủ (còn thiếu ' + lu.missS + ' đá chính, ' + lu.missB + ' dự bị). Vào Kho cầu thủ xếp thêm nhé!'; }
@@ -19479,9 +19673,10 @@
       var fl = await sFrLoadFriend(code); if(!fl.ok){ frMsg('🤝 ' + escHtml(name), escHtml(fl.msg)); return; }
       var pr = await frnReq('GET', 'presence/' + encodeURIComponent(code));
       if(!frnOnline(pr)){ frMsg('🤝 ' + escHtml(name), 'Bạn ấy vừa ngoại tuyến rồi, mời lại khi bạn ấy online nhé.'); return; }
+      if(pr.v !== FRN_PROTO){ frMsg('🤝 ' + escHtml(name), 'Bạn ấy đang dùng phiên bản ứng dụng cũ. Nhờ bạn ấy tải lại / cập nhật ứng dụng rồi mời lại nhé.'); return; }
       var f = settings.friendly, id = frnNewId(), tok = frnNewId(), exp = frnNow() + FRN_INVITE_TTL;
       var room = {status:'invite', mode:'season-friendly', token:tok, host:{code:syncId, name:userNameOf(syncId)}, guest:{code:code, name:name},
-        seed:hashStr(id + ':' + tok), createdAt:{'.sv':'timestamp'}, expiresAt:exp, phase:'reg',
+        seed:hashStr(id + ':' + tok), createdAt:{'.sv':'timestamp'}, expiresAt:exp, phase:'reg', proto:FRN_PROTO,
         settings:{breakSecs:f.breakSecs, maxSubs:f.maxSubs, etSituations:f.etSituations, quizSecsET:f.quizSecsET, quizSecs:settings.quizSeconds || 15, gx:sCfg().gx, qT:0.3, forfeitAfter:f.forfeitAfter},
         lineup:{host:frnSnap(lu, frnMyStyle(lu))}, ready:{host:false, guest:false}, hb:{host:{'.sv':'timestamp'}}};
       await frnReq('PUT', 'rooms/' + id, room);
@@ -19498,6 +19693,7 @@
     try{
       var d = await frnReq('GET', 'rooms/' + id);
       if(!d || d.status !== 'invite' || d.token !== inv.tok || !d.guest || d.guest.code !== syncId || !(d.expiresAt > frnNow())){ frnInboxDrop(id); frMsg('🤝 Giao hữu', 'Lời mời đã hết hiệu lực.'); frnInvPaint(); return; }
+      if(d.proto !== FRN_PROTO){ frnInboxDrop(id); frMsg('🤝 Giao hữu', 'Lời mời đến từ phiên bản ứng dụng khác. Bé tải lại ứng dụng rồi nhờ bạn mời lại nhé.'); frnInvPaint(); return; }
       await frnCas('rooms/' + id + '/status', 'invite', 'lobby');   // người mời hủy cùng lúc thì không ghi đè
       var up = {expiresAt:frnNow() + FRN_LOBBY_TTL, joinedAt:{'.sv':'timestamp'}};
       up['lineup/guest'] = frnSnap(lu, frnMyStyle(lu)); up['ready/guest'] = false; up['hb/guest'] = {'.sv':'timestamp'};
@@ -19517,12 +19713,12 @@
     if(frnRoom){ frnRoomStop(frnRoom); frnRoom = null; }
     var R = frnRoom = {id:id, side:side, d:null, stream:null, hbTm:0, okAt:Date.now(), shown:true, saw:false, emoN:null, emoAt:0, quiet:!!quiet};
     try{ localStorage.setItem(FRL_KEY, JSON.stringify({id:id, side:side, u:syncId})); }catch(e){}
-    R.stream = frnStream('rooms/' + id, function(d){ if(frnRoom === R) frnRoomData(d); });
-    frnRoomHb(); if(!quiet) frnLobbyPaint(true); frnInvPaint(); frnPaintList();
+    R.stream = frnStream('rooms/' + id, function(d){ if(frnRoom === R) frnRoomData(d); }, 1000);
+    frnRoomHb(); frnCalibN(4).catch(function(){}); if(!quiet) frnLobbyPaint(true); frnInvPaint(); frnPaintList();
   }
   function frnRoomHb(){
     var R = frnRoom; if(!R) return; clearTimeout(R.hbTm);
-    if(!document.hidden){ var o = {}; o['hb/' + R.side] = {'.sv':'timestamp'}; frnReq('PATCH', 'rooms/' + R.id, o).then(function(){ R.okAt = Date.now(); }).catch(function(){}); }
+    if(!document.hidden){ var o = {}, t0 = Date.now(); o['hb/' + R.side] = {'.sv':'timestamp'}; frnReq('PATCH', 'rooms/' + R.id, o, false, 1).then(function(d){ R.okAt = Date.now(); var v = d && d['hb/' + R.side]; if(typeof v === 'number') frnSample(t0, Date.now(), v); }).catch(function(){}); }
     R.hbTm = setTimeout(frnRoomHb, settings.friendly.heartbeatSecs * 1000);
   }
   function frnWho(d, side){ var p = d && d[side]; return (p && p.name) || (side === 'host' ? 'Chủ phòng' : 'Bạn'); }
@@ -19543,6 +19739,7 @@
     } else if(R.emoN === null) R.emoN = 0;
     R.d = d;
     if(d.status === 'lobby' && R.side === 'host' && d.ready && d.ready.host && d.ready.guest && !R.startTry) frlHostStart(R);
+    if(d.status === 'lobby') frnDataCheck(R);
     if(d.status === 'live' || d.status === 'done'){ frlRoomLive(R, d); return; }
     var sig = JSON.stringify([d.status, d.ready, d.host, d.guest, d.lineup]);   // nhịp hb / emoji / hạn không làm vẽ lại phòng
     if(sig !== R.sig){ R.sig = sig; frnLobbyPaint(); }
@@ -19609,6 +19806,7 @@
     h += '<p class="sl-intro">' + (on ? 'Đã mời <b>' + escHtml(frnWho(d, 'guest')) + '</b>, đang chờ bạn ấy trả lời · còn <span id="frn-cd"></span>'
       : 'Cả hai đã vào phòng · phòng tự đóng sau <span id="frn-cd"></span>') + '. Không tính vào bảng xếp hạng.</p>';
     h += '<div class="frn-cols">' + frnColHTML(d, 'host', me) + frnColHTML(d, 'guest', me) + '</div>';
+    if(R.dvBad) h += '<p class="frn-warn">⚠️ Dữ liệu cầu thủ của hai máy chưa khớp. Nếu trận bị chậm hoặc lệch, hãy mở lại ứng dụng nhé.</p>';
     if(both) h += '<p class="frn-ok">🎉 Cả hai đã sẵn sàng! Trận sắp bắt đầu, bé giữ nguyên màn hình nhé!</p>';
     if(d.status === 'lobby'){
       h += '<div class="frn-emos" role="group" aria-label="Gửi emoji cho ' + escHtml(frnWho(d, other)) + '">' + FRN_EMOJIS.map(function(e, i){ return '<button type="button" data-frn="emo" data-i="' + i + '" aria-label="Emoji ' + e + '">' + e + '</button>'; }).join('') + '</div><div id="frn-emo" class="frn-emo" aria-live="polite"></div>';
@@ -19649,7 +19847,7 @@
   function frnVis(){
     var R = frnRoom;
     if(document.hidden){ if(R && R.stream && !(R.d && R.d.status === 'live')){ R.stream.close(); R.stream = null; } }
-    else if(R){ if(!R.stream) R.stream = frnStream('rooms/' + R.id, function(d){ if(frnRoom === R) frnRoomData(d); }); frnRoomHb(); }
+    else if(R){ if(!R.stream) R.stream = frnStream('rooms/' + R.id, function(d){ if(frnRoom === R) frnRoomData(d); }, 1000); else if(R.stream.suspect) R.stream.suspect(); frnRoomHb(); frnCalibN(2).catch(function(){}); }
     frnSync();
   }
   document.addEventListener('visibilitychange', frnVis);
@@ -19746,36 +19944,135 @@
     for(var i = 0; i < ps.length - 1; i++){ var k = ps[i]; if(o[k] == null || typeof o[k] !== 'object') o[k] = {}; o = o[k]; }
     o[ps[ps.length - 1]] = val;
   }
-  async function frlPut(R, path, val, cas){
-    var full = 'rooms/' + R.id + '/' + path;
-    for(var k = 0; k < 8; k++){
+  async function frlPut(R, path, val, cas){   // 5 lần, lùi 0/200/500/1000/2000ms (bản cũ: 8 lần × 500ms·k ≈ 18s treo đường găng)
+    var full = 'rooms/' + R.id + '/' + path, back = [0, 200, 500, 1000, 2000];
+    for(var k = 0; k < back.length; k++){
       if(frnRoom !== R) return false;
+      if(back[k]) await frlSleep(back[k]);
       try{
-        if(cas) await frnCas(full, null, val); else await frnReq('PUT', full, val);
+        if(cas) await frnCas(full, null, val, 4000); else await frnReq('PUT', full, val, false, 1, 5000);
         if(R.d) frlLocalSet(R.d, path, val);
         return true;
       }catch(e){
         if(e && e.message === 'state') return false;   // đã có người ghi trước: đọc lại từ R.d
-        await frlSleep(500 * (k + 1));
       }
     }
     return false;
   }
-  function frlWait(pred, tok, ms){   // chờ dữ liệu phòng thỏa pred (trả về giá trị thật), hết hạn hoặc trận đã thoát thì trả null
+  /* Chờ dữ liệu phòng thỏa pred. probe = đường dẫn (hoặc mảng) đang chờ: sau 2,5s chưa thấy thì cứ 2s GET thẳng đúng nút đó (rất nhẹ);
+     nếu máy chủ đã có mà luồng chưa giao tới → nhét vào bản sao cục bộ và nghi ngờ luồng (mở lại). Nhờ vậy kết nối "chết im lặng" chỉ chậm vài giây thay vì cả phút. */
+  function frlWait(pred, tok, ms, probe){
+    var probes = !probe ? [] : (Array.isArray(probe) ? probe : [probe]);
     return new Promise(function(res){
-      var t0 = Date.now(), iv = setInterval(chk, 200);
+      var t0 = Date.now(), iv = setInterval(chk, 200), pAt = 0, pBusy = false;
+      function probeNow(R){
+        if(!probes.length || pBusy || Date.now() - t0 < 2500 || Date.now() - pAt < 2000) return;
+        pAt = Date.now(); pBusy = true;
+        Promise.all(probes.map(function(pp){ return frnReq('GET', 'rooms/' + R.id + '/' + pp, undefined, false, 1, 3000).then(function(v){ return {p:pp, v:v}; }, function(){ return null; }); })).then(function(rs){
+          pBusy = false; if(frnRoom !== R || !R.d) return;
+          rs.forEach(function(x){ if(x && x.v != null && frlGet.apply(null, [R.d].concat(x.p.split('/'))) == null){ frlLocalSet(R.d, x.p, x.v); if(R.stream && R.stream.suspect) R.stream.suspect(); } });
+        });
+      }
       function chk(){
         var R = frnRoom; if(!sAlive(tok) || !R || !R.d){ clearInterval(iv); res(null); return; }
         var v = null; try{ v = pred(R.d); }catch(e){}
         if(v){ clearInterval(iv); res(v); return; }
-        if(ms != null && Date.now() - t0 > ms){ clearInterval(iv); res(null); }
+        if(ms != null && Date.now() - t0 > ms){ clearInterval(iv); res(null); return; }
+        probeNow(R);
       }
       chk();
     });
   }
   function frlContig(d, key, from){ var n = from || 0; while(frlGet(d, 'tac', key, n)) n++; return n; }
+  /* ---------- TRỌNG TÀI & QUYẾT ĐỊNH CHUNG (giao thức v2) ----------
+     Mỗi bên chỉ ghi ĐỀ XUẤT vào nút của MÌNH (go/<i>/<mình>, ans/<i>/<mình>) — không ai ghi đè ai. Mọi thứ có thể tranh chấp (đủ go chưa, câu trả lời nào được tính,
+     ghi hộ bên vắng mặt, giờ nghỉ at/<i>) do TRỌNG TÀI ghi đúng một lần vào gf/<i> / fin/<i> / at/<i>; cả hai máy chỉ dựng lại trận từ các bản quyết định này.
+     Trọng tài = host; khách chỉ thay khi host mất nhịp quá dropAfterSecs, hoặc host im lặng quá lâu sau hạn (kiên nhẫn). Ghi quyết định kiểm tra "đã có chưa" trước (frlPutOnce).
+     Vì không dựa vào ghi nguyên tử nên vẫn đúng khi trình duyệt không đọc được ETag. */
+  var FRL_PATIENCE = 10000;
+  var FRL_COMP = 2500;   // trễ mạng ≤ 2,5 giây khi nhận câu hỏi được miễn (bé vẫn đủ thời gian); trễ hơn thì tính phần vượt
+  function frlArb(R){
+    if(!R) return false; if(R.side === 'host') return true;
+    var hb = R.d && R.d.hb && R.d.hb.host;
+    return typeof hb === 'number' && frnNow() - hb > settings.friendly.dropAfterSecs * 1000;
+  }
+  async function frlPutOnce(R, path, val){   // ghi nếu CHƯA có (frnCas tự kiểm "chưa có"); thua thì đọc lại giá trị đang có vào bản sao cục bộ
+    var ok = await frlPut(R, path, val, true);
+    if(!ok && frnRoom === R){ try{ var cur = await frnReq('GET', 'rooms/' + R.id + '/' + path, undefined, false, 2, 4000); if(cur != null && R.d) frlLocalSet(R.d, path, cur); }catch(e){} }
+    return ok;
+  }
+  function frlRttMax(d, i){
+    var h = frlGet(d, 'qr', i, 'host'), g = frlGet(d, 'qr', i, 'guest');
+    return Math.max(frnRtt.med || 0, (h && h.r) | 0, (g && g.r) | 0, 100);
+  }
+  function frlTol(d, i){ return Math.min(9000, Math.max(FRL_GRACE, 2500 + 3 * frlRttMax(d, i))); }   // dung sai chờ đối thủ còn "sống" nhưng chậm: tăng theo độ trễ thật
+  var FRL_HELP = 1500;   // đủ đề xuất thật của hai bên mà trọng tài chưa chốt sau ngần này ms → bên kia ghi giúp (nội dung chắc chắn giống nhau); ghi hộ người VẮNG vẫn chỉ trọng tài
+  async function frlDecide(R, tok, sp){
+    var rdy0 = 0;
+    var r = await frlWait(function(dd){
+      var f = sp.done(dd); if(f) return {f:f};
+      if(sp.ready(dd)){ if(frlArb(R)) return {mk:1}; if(!rdy0) rdy0 = Date.now(); else if(Date.now() - rdy0 > FRL_HELP) return {mk:1}; }
+      return null;
+    }, tok, Math.max(0, sp.hard - frnNow()), sp.probe);
+    if(!sAlive(tok) || frnRoom !== R) return null;
+    if(r && r.f) return r.f;
+    if(r && r.mk) await frlPutOnce(R, sp.path, sp.build(R.d));
+    else {   // quá hạn: trọng tài ghi hộ bên vắng; khách chờ thêm một nhịp, host vẫn im thì mới tự chốt
+      var more = await frlWait(function(dd){ var f = sp.done(dd); if(f) return {f:f}; return frlArb(R) ? {mk:1} : null; }, tok, sp.patience || FRL_PATIENCE, sp.probe);
+      if(!sAlive(tok) || frnRoom !== R) return null;
+      if(more && more.f) return more.f;
+      await frlPutOnce(R, sp.path, sp.build(R.d));
+    }
+    var fin = await frlWait(function(dd){ var f = sp.done(dd); return f ? {f:f} : null; }, tok, 8000, sp.probe);
+    return fin ? fin.f : null;
+  }
+  function frlNormAns(a){ return {p:(a.p == null ? -1 : a.p), ok:!!a.ok, s:a.s | 0, sec:a.sec | 0, to:!!a.to}; }
+  function frlAwaitGo(R, tok, i, grace, ap){   // gf/<i> = {host:{n,px?}, guest:{n,px?}}: số tac mỗi bên đã chốt trước tình huống i
+    var opp = R.side === 'host' ? 'guest' : 'host';
+    return frlDecide(R, tok, {
+      path:'gf/' + i, hard:frnNow() + grace, probe:['gf/' + i, 'go/' + i + '/' + opp],
+      done:function(d){ var g = frlGet(d, 'gf', i); return g && g.host && g.guest ? g : null; },
+      ready:function(d){ return !!(frlGet(d, 'go', i, 'host') && frlGet(d, 'go', i, 'guest')); },
+      build:function(d){ var o = {by:R.side}; ['host', 'guest'].forEach(function(k, s){ var g = frlGet(d, 'go', i, k); o[k] = g ? {n:g.n | 0} : {n:frlContig(d, k, ap[s]), px:1}; }); return o; }
+    });
+  }
+  function frlAwaitFin(R, tok, i, hard){   // fin/<i> = câu trả lời ĐƯỢC TÍNH của hai bên (bên vắng: px, 1 điểm)
+    var opp = R.side === 'host' ? 'guest' : 'host';
+    return frlDecide(R, tok, {
+      path:'fin/' + i, hard:hard, probe:['fin/' + i, 'ans/' + i + '/' + opp],
+      done:function(d){ var f = frlGet(d, 'fin', i); return f && f.host && f.guest ? f : null; },
+      ready:function(d){ return !!(frlGet(d, 'ans', i, 'host') && frlGet(d, 'ans', i, 'guest')); },
+      build:function(d){ var o = {by:R.side}; ['host', 'guest'].forEach(function(k){ var a = frlGet(d, 'ans', i, k); o[k] = a ? frlNormAns(a) : {p:-1, ok:false, s:1, sec:0, to:true, px:1}; }); return o; }
+    });
+  }
+  /* ---------- CÂU HỎI CÔNG BẰNG ----------
+     • Cả hai máy chỉ MỞ câu hỏi đúng giờ server t0 (trước đó chỉ có đếm ngược "Chuẩn bị", chưa lộ nội dung) → thời gian đọc bằng nhau, host không có lợi thế nhận sớm.
+     • t0 = bây giờ + lead; lead tự điều chỉnh theo RTT của CẢ HAI máy (qr/<i>/<bên>.r) để câu hỏi tới kịp hai máy trước t0.
+     • Mỗi bé có đủ `secs` giây tính từ lúc câu hỏi hiện trên MÀN HÌNH MÌNH, đo bằng đồng hồ đơn điệu performance.now() (không phụ thuộc độ lệch giờ máy). Trễ nhận ≤ FRL_COMP được miễn. */
+  function frlLead(rA, rB){ return Math.min(5000, Math.max(1000, Math.round(600 + (rA || 150) + (rB || 150)))); }
+  function frlQuizPlan(qd, nowSrv){
+    var late = nowSrv - qd.t0, secs = qd.secs || 15, over = Math.max(0, late - FRL_COMP);
+    return {wait:Math.max(0, -late), consumed:over, budget:Math.max(0, secs * 1000 - over)};
+  }
+  async function frlQuestion(R, tok, i, pick){   // host (hoặc khách thay khi host mất nhịp) bốc câu và phát; pick() → {q, secs}
+    var me = frlSide(R), got = frlGet(R.d, 'q', i);
+    if(got) return got;
+    async function make(){
+      var mr = frlGet(R.d, 'qr', i, frlKey(me)), or = frlGet(R.d, 'qr', i, frlKey(1 - me));
+      var lead = frlLead(Math.max(frnRtt.med || 0, (mr && mr.r) | 0), (or && or.r) | 0), p = pick();
+      await frlPutOnce(R, 'q/' + i, {q:p.q, secs:p.secs, t0:frnNow() + lead, lead:lead});
+    }
+    if(me === 0){
+      await frlWait(function(dd){ var q = frlGet(dd, 'qr', i); return q && q.host && q.guest; }, tok, 25000, 'qr/' + i + '/guest'); if(!sAlive(tok)) return null;
+      await make();
+    } else {
+      var w = await frlWait(function(dd){ return frlGet(dd, 'q', i); }, tok, 25000, 'q/' + i); if(!sAlive(tok)) return null;
+      if(!w){ w = await frlWait(function(dd){ return frlGet(dd, 'q', i) || (frlArb(R) ? {mk:1} : null); }, tok, 40000, 'q/' + i); if(!sAlive(tok)) return null; if(w && w.mk) await make(); }
+    }
+    return await frlWait(function(dd){ return frlGet(dd, 'q', i); }, tok, 20000, 'q/' + i);
+  }
   function frlTacComplete(d, ap, i){   // đủ sự kiện tac theo mốc n của cả hai bên chưa?
-    var g = frlGet(d, 'go', i); if(!g || !g.host || !g.guest) return false;
+    var g = frlGet(d, 'gf', i); if(!g || !g.host || !g.guest) return false;
     for(var s = 0; s < 2; s++){ var n = frlGet(g, frlKey(s), 'n') | 0; for(var q = ap[s]; q < n; q++) if(!frlGet(d, 'tac', frlKey(s), q)) return false; }
     return true;
   }
@@ -19822,7 +20119,7 @@
   }
   /* Bước chung cho cả chơi trực tiếp lẫn chạy lại: áp dụng các tac đã chốt (theo mốc n của go) rồi dựng tình huống i */
   function frlPrepare(m, d, ap, i){
-    var g = frlGet(d, 'go', i); if(!g || !g.host || !g.guest) return null;
+    var g = frlGet(d, 'gf', i); if(!g || !g.host || !g.guest) return null;
     for(var s = 0; s < 2; s++){
       var n = frlGet(g, frlKey(s), 'n') | 0;
       while(ap[s] < n){ var ev = frlGet(d, 'tac', frlKey(s), ap[s]); if(!ev) return null; frlApplyTac(m, s, ev); ap[s]++; }
@@ -19832,7 +20129,7 @@
     return cur;
   }
   function frlResolveSit(m, d, i, me){
-    var a = frlGet(d, 'ans', i), A0 = a.host, A1 = a.guest, mine = me === 0 ? A0 : A1;
+    var a = frlGet(d, 'fin', i), A0 = a.host, A1 = a.guest, mine = me === 0 ? A0 : A1;
     var rec = seResolve(m, [A0.s | 0, A1.s | 0], [!!A0.ok, !!A1.ok]);
     rec.q = {ok:!!mine.ok, sec:mine.sec || 0, timeout:!!mine.to}; if(mine.px) rec.skipped = true;
     m.phase = 'break';
@@ -19865,11 +20162,11 @@
         return info;
       }
       if(seDone(m)) return info;
-      var i = m.i, gg = frlGet(d, 'go', i);
+      var i = m.i, gg = frlGet(d, 'gf', i);
       if(!gg || !gg.host || !gg.guest) break;
       var cur = frlPrepare(m, d, ap, i);
       if(!cur) break;
-      var an = frlGet(d, 'ans', i);
+      var an = frlGet(d, 'fin', i);
       if(!(an && an.host && an.guest)){ info.inSit = true; info.cur = cur; return info; }
       var rec0 = frlResolveSit(m, d, i, me);
       comPush(m, comOutcome(m, rec0));
@@ -19906,10 +20203,11 @@
     b.hidden = false;
   }
   async function frlBegin(R){
-    var d = R.d, m = frlBuildMatch(R);
+    var d = R.d, m = (d && d.proto === FRN_PROTO) ? frlBuildMatch(R) : null;
     if(!m){ frMsg('🤝 Giao hữu', 'Không dựng được đội hình của hai bạn (thiếu dữ liệu cầu thủ?). Trận giao hữu bị hủy.'); frlAbort(R, 'build'); return; }
     var me = frlSide(R), info = frlReplay(m, d, me), st = sLoad(), f = frState(st);
     if(f.rid !== R.id){ f.rid = R.id; frUse(st); sSave(st); }
+    try{ frnCalibN(3).catch(function(){}); }catch(e){}
     sModalClose(); var bn = sEl('frl-banner'); if(bn) bn.hidden = true;
     try{ if(typeof window.appSwitchTab === 'function') window.appSwitchTab('battle'); }catch(e){}
     seMain = 'friendly';
@@ -19957,22 +20255,19 @@
     if(!auto && seNeedSub(m, me).length && !confirm('Cầu thủ bị chấn thương chưa được thay. Đội sẽ phải đá thiếu người. Vẫn tiếp tục?')) return;
     c.pend = []; c.pendForm = null; c.sel = null; c.busy = true; try{ sSubPitchMark(c, true); }catch(e){} frlBrkStop(c); lv.stage = 'go'; c.tab = 'sit';
     await lv.tacQ; if(!sAlive(tok)) return;
-    if(i > 0){ await frlReconcile(R, c, i - 1); if(!sAlive(tok)) return; }
-    await frlPut(R, 'go/' + i + '/' + frlKey(me), {n:lv.tacN, t:frnNow()}, true);
-    var mine = frlGet(R.d, 'go', i, frlKey(me));
-    if(mine && (mine.n | 0) !== lv.tacN){   // go của mình đã bị ghi hộ lúc mất kết nối: về đúng trạng thái chuẩn của phòng
+    var recon = i > 0 ? frlReconcile(R, c, i - 1) : null;   // đối chiếu mã kiểm chạy SONG SONG với lúc chờ đối thủ (bản cũ chặn tới 6s trước khi gửi go)
+    await frlPut(R, 'go/' + i + '/' + frlKey(me), {n:lv.tacN, t:frnNow()});   // đề xuất trong nút của mình (không tranh chấp)
+    if(!sAlive(tok)) return;
+    frlWaitScreen(c, '⏳ Bé đã sẵn sàng! Đang chờ <b>' + escHtml(on) + '</b>…');
+    var at = i > 0 ? frlGet(R.d, 'at', i - 1) : null, grace = at != null ? Math.max(0, at + 6000 - frnNow()) : 30000;
+    var gf = await frlAwaitGo(R, tok, i, grace, lv.ap); if(!sAlive(tok)) return;
+    if(!gf){ frlLost(c); return; }
+    var mf = gf[frlKey(me)];
+    if(mf && (mf.n | 0) !== lv.tacN){   // trọng tài đã chốt go của mình lúc mất kết nối: về đúng trạng thái chuẩn của phòng
       frMsg('🤝 Giao hữu', 'Mạng chậm nên vài thay đổi phút chót chưa kịp gửi đi, trận đã cập nhật lại cho khớp với bạn ấy.');
       await frlResync(R, c); return;
     }
-    frlWaitScreen(c, '⏳ Bé đã sẵn sàng! Đang chờ <b>' + escHtml(on) + '</b>…');
-    var at = i > 0 ? frlGet(R.d, 'at', i - 1) : null, grace = at != null ? Math.max(0, at + 6000 - frnNow()) : 30000;
-    function both(dd){ var g = frlGet(dd, 'go', i); return g && g.host && g.guest; }
-    var ok = await frlWait(both, tok, grace); if(!sAlive(tok)) return;
-    if(!ok){   // đối thủ vắng: ghi hộ go (mốc n = số tac liên tiếp đã thấy)
-      await frlPut(R, 'go/' + i + '/' + frlKey(opp), {n:frlContig(R.d, frlKey(opp), lv.ap[opp]), t:frnNow(), px:1}, true);
-      ok = await frlWait(both, tok, 10000); if(!sAlive(tok)) return;
-      if(!ok){ frlLost(c); return; }
-    }
+    if(recon){ await recon; if(!sAlive(tok)) return; }
     frlRun(R, c, i, false);
   }
   function frlLost(c){
@@ -19989,10 +20284,10 @@
   async function frlReconcile(R, c, j){   // guest đối chiếu mã kiểm của host; lệch thì tải bản chụp
     if(frlSide(R) === 0) return;
     var tok = c.tok, mine = c.lv.hashes[j]; if(mine == null) return;
-    var hh = await frlWait(function(dd){ var v = frlGet(dd, 'hash', j, 'host'); return v == null ? null : {v:v}; }, tok, 6000);
+    var hh = await frlWait(function(dd){ var v = frlGet(dd, 'hash', j, 'host'); return v == null ? null : {v:v}; }, tok, 6000, 'hash/' + j + '/host');
     if(!sAlive(tok) || !hh || hh.v === mine) return;
     await frlPut(R, 'need/' + j, 1);
-    var snap = await frlWait(function(dd){ return frlGet(dd, 'snap', j); }, tok, 15000);
+    var snap = await frlWait(function(dd){ return frlGet(dd, 'snap', j); }, tok, 15000, 'snap/' + j);
     if(!sAlive(tok) || !snap) return;
     try{
       var nm = sFixLive(JSON.parse(snap)); nm.me = 1; nm.feed = c.m.feed; c.m = nm; c.pitchSig = null; c.lv.hashes[j] = hh.v; MX_ME = 1;
@@ -20017,46 +20312,44 @@
   function frlQuizUI(qd, tok){
     var q = qd.q, secs = qd.secs || 15, subj = QUIZ_SUBJECTS[q.subject] || QUIZ_SUBJECTS.khac, tp = QUIZ_TOPICS[q.topic], box = sEl('mt-q');
     if(!box) return Promise.resolve({ok:false, score:1, timeout:true, picked:-1, secLeft:0});
-    var opts = Array.isArray(q.options) ? q.options : sArr(q.options), chip = tp ? ('🔬 Science · ' + tp.ic + ' ' + tp.en + ' · ' + tp.vi) : (subj.ic + ' ' + subj.name);
+    var opts = Array.isArray(q.options) ? q.options : sArr(q.options), chip = tp ? ('🔬 Science · ' + tp.ic + ' ' + tp.en + ' · ' + tp.vi) : (subj.ic + ' ' + subj.name), plan = frlQuizPlan(qd, frnNow());
     box.style.display = '';
-    box.innerHTML = '<div class="mt-qchip">' + escHtml(chip) + '</div><div class="mt-qq">' + escHtml(q.question) + '</div><div class="mt-qtime"><span id="mt-qt">' + secs + '</span>s<div class="mt-qbar"><i id="mt-qb"></i></div></div><div class="mt-qopts">'
+    box.innerHTML = '<div class="mt-qprep" id="mt-qprep">⏱ Chuẩn bị…</div><div class="mt-qchip" hidden>' + escHtml(chip) + '</div><div class="mt-qq" hidden>' + escHtml(q.question) + '</div><div class="mt-qtime" hidden><span id="mt-qt">' + secs + '</span>s<div class="mt-qbar"><i id="mt-qb"></i></div></div><div class="mt-qopts" hidden>'
       + opts.map(function(o, i){ return '<button type="button" class="mt-opt" data-i="' + i + '">' + escHtml(o) + '</button>'; }).join('') + '</div><div class="mt-qfb" id="mt-qfb"></div>';
     return new Promise(function(resolve){
-      var done = false, iv = null, optsEl = box.querySelector('.mt-qopts'), endAt = qd.t0 + secs * 1000;
-      function rem(){ return (endAt - frnNow()) / 1000; }
+      var done = false, iv = null, started = false, p0 = 0, optsEl = box.querySelector('.mt-qopts');
+      function rem(){ return started ? (plan.budget - (performance.now() - p0)) / 1000 : secs; }   // đồng hồ đơn điệu từ lúc câu hỏi hiện trên màn hình mình
       function finish(res){
         if(done) return; done = true; clearInterval(iv);
-        res.score = res.ok ? Math.min(10, Math.max(1, res.secLeft)) : 1; seSfx(res.ok ? 'right' : 'wrong');
+        res.score = res.ok ? Math.min(10, Math.max(1, res.secLeft)) : 0; seSfx(res.ok ? 'right' : 'wrong');
         optsEl.querySelectorAll('.mt-opt').forEach(function(b, i){ b.disabled = true; if(i === q.correct) b.classList.add('ok'); else if(i === res.picked) b.classList.add('bad'); });
         var fb = sEl('mt-qfb');
         if(fb) fb.innerHTML = res.ok ? '✅ <b>Chính xác!</b> Còn ' + res.secLeft + ' giây → ' + res.score + ' điểm' : ((res.timeout ? '⏰ <b>Hết giờ!</b> ' : '❌ <b>Chưa đúng.</b> ') + 'Đáp án: <b>' + escHtml(opts[q.correct]) + '</b>' + (q.explain ? '<br><small>' + escHtml(q.explain) + '</small>' : ''));
         setTimeout(function(){ resolve(res); }, 600);
       }
+      function reveal(){
+        started = true; p0 = performance.now();
+        Array.prototype.forEach.call(box.querySelectorAll('[hidden]'), function(x){ x.hidden = false; });
+        var pe = sEl('mt-qprep'); if(pe) pe.hidden = true;
+      }
       function tick(){
         if(!sAlive(tok)){ done = true; clearInterval(iv); return; }
-        var r = rem(), started = r <= secs + 0.05;
+        if(!started){
+          var w = qd.t0 - frnNow();
+          if(w > 0){ var pe = sEl('mt-qprep'); if(pe) pe.textContent = '⏱ Chuẩn bị… ' + Math.ceil(w / 1000); return; }   // chưa tới giờ: chưa lộ câu hỏi (cả hai máy cùng mở)
+          reveal();
+        }
+        var r = rem();
         if(r <= 0){ finish({ok:false, timeout:true, picked:-1, secLeft:0}); return; }
         var shown = Math.min(secs, r), te = sEl('mt-qt'), be = sEl('mt-qb'); if(te) te.textContent = String(Math.ceil(shown)); if(be) be.style.width = (shown / secs * 100) + '%';
-        optsEl.classList.toggle('frl-hold', !started);
       }
       tick(); iv = setInterval(tick, 100);
       optsEl.onclick = function(e){
-        var b = e.target.closest ? e.target.closest('.mt-opt') : null; if(!b || done) return;
-        var r = rem(); if(r <= 0 || r > secs + 0.05) return;
+        var b = e.target.closest ? e.target.closest('.mt-opt') : null; if(!b || done || !started) return;
+        var r = rem(); if(r <= 0) return;
         var i = parseInt(b.getAttribute('data-i'), 10); finish({ok:i === q.correct, picked:i, secLeft:Math.max(1, Math.ceil(Math.min(secs, r)))});
       };
     });
-  }
-  async function frlQuestion(R, c, i){   // host bốc câu hỏi khi cả hai đã xem xong tường thuật; guest chờ
-    var tok = c.tok, m = c.m, me = frlSide(R), got = frlGet(R.d, 'q', i);
-    if(got) return got;
-    if(me === 0){
-      await frlWait(function(dd){ var q = frlGet(dd, 'qr', i); return q && q.host && q.guest; }, tok, 25000); if(!sAlive(tok)) return null;
-      var q = quizPickSeeded(m.qT, seRng(seHash(m.seed + ':qz' + i)), {used:c.lv.used});
-      await frlPut(R, 'q/' + i, {q:{subject:q.subject, level:q.level, topic:q.topic || '', question:q.question, options:q.options, correct:q.correct, explain:q.explain || ''}, t0:frnNow() + 600, secs:m.secs}, true);
-      return frlGet(R.d, 'q', i);
-    }
-    return await frlWait(function(dd){ return frlGet(dd, 'q', i); }, tok, 40000);
   }
 
   /* ---- một tình huống (giống sMatchNext nhưng câu hỏi và điểm của hai bên đồng bộ) ---- */
@@ -20078,8 +20371,11 @@
       var sk = document.querySelector('#season-match .mt-skiprow'); if(sk) sk.style.display = 'none';
     } else { var fdr = sEl('mt-feed'); if(fdr) fdr.classList.add('compact'); }
     var qe = sEl('mt-q'); if(qe){ qe.style.display = ''; qe.innerHTML = '<div class="mt-qchip">⏳ Đang chờ <b>' + escHtml(on) + '</b> xem xong tường thuật…</div>'; if(qe.scrollIntoView) qe.scrollIntoView({block:'nearest', behavior:'smooth'}); }
-    await frlPut(R, 'qr/' + i + '/' + frlKey(me), 1);
-    var qd = await frlQuestion(R, c, i); if(!sAlive(tok)) return;
+    await frlPut(R, 'qr/' + i + '/' + frlKey(me), {r:Math.round(frnRtt.med || 0), t:frnNow()});   // đã xem xong tường thuật + RTT của mình (để host chọn độ dẫn)
+    var qd = await frlQuestion(R, tok, i, function(){
+      var q = quizPickSeeded(m.qT, seRng(seHash(m.seed + ':qz' + i)), {used:c.lv.used});
+      return {q:{subject:q.subject, level:q.level, topic:q.topic || '', question:q.question, options:q.options, correct:q.correct, explain:q.explain || ''}, secs:m.secs};
+    }); if(!sAlive(tok)) return;
     if(!qd){ frlLost(c); return; }
     var res;
     if(frlGet(R.d, 'ans', i, frlKey(me))){   // đã trả lời trước khi mất kết nối
@@ -20087,18 +20383,14 @@
       if(qe) qe.innerHTML = '<div class="mt-qchip">✅ Bé đã trả lời tình huống này rồi.</div>';
     } else {
       res = await frlQuizUI(qd, tok); if(!sAlive(tok)) return; mxScroll();
-      await frlPut(R, 'ans/' + i + '/' + frlKey(me), {p:res.picked, ok:!!res.ok, s:res.score, sec:res.secLeft || 0, to:!!res.timeout, t:frnNow()}, true);
+      await frlPut(R, 'ans/' + i + '/' + frlKey(me), {p:res.picked, ok:!!res.ok, s:res.score, sec:res.secLeft || 0, to:!!res.timeout, t:frnNow()});
     }
-    var fb = sEl('mt-qfb'); if(fb && !frlGet(R.d, 'ans', i, frlKey(opp))) fb.innerHTML += '<br><small>⏳ Đang chờ ' + escHtml(on) + ' trả lời…</small>';
-    var wm = Math.max(0, (qd.t0 + qd.secs * 1000) - frnNow()) + FRL_GRACE;
-    function oppAns(dd){ return frlGet(dd, 'ans', i, frlKey(opp)); }
-    var oa = await frlWait(oppAns, tok, wm); if(!sAlive(tok)) return;
-    if(!oa){   // đối thủ không trả lời: tính bỏ lỡ (1 điểm), ghi hộ
-      await frlPut(R, 'ans/' + i + '/' + frlKey(opp), {p:-1, ok:false, s:1, sec:0, to:true, px:1, t:frnNow()}, true);
-      oa = await frlWait(oppAns, tok, 10000); if(!sAlive(tok)) return;
-      if(!oa){ frlLost(c); return; }
-    }
-    var ma = frlGet(R.d, 'ans', i, frlKey(me)); if(!ma){ frlLost(c); return; }
+    var fb = sEl('mt-qfb'); if(fb && !frlGet(R.d, 'fin', i)) fb.innerHTML += '<br><small>⏳ Đang chờ ' + escHtml(on) + ' trả lời…</small>';
+    var hard = qd.t0 + FRL_COMP + (qd.secs || 15) * 1000 + frlTol(R.d, i);   // sau mốc này (đã cộng dung sai theo độ trễ) mới coi đối thủ là bỏ lỡ
+    var fin = await frlAwaitFin(R, tok, i, hard); if(!sAlive(tok)) return;
+    if(!fin){ frlLost(c); return; }
+    var ma = fin[frlKey(me)], oa = fin[frlKey(opp)];
+    if(fb && res && (ma.s | 0) !== (res.score | 0)) fb.innerHTML += '<br><small>⚠️ Mạng chậm nên câu này được tính ' + (ma.s | 0) + ' điểm.</small>';
     if(qe) qe.style.display = 'none';
     var fd = sEl('mt-feed'); if(fd){ fd.classList.remove('compact'); if(fd.scrollIntoView) fd.scrollIntoView({block:'nearest'}); }
     await frlSpin2(ma.s | 0, oa.s | 0, on, tok); if(!sAlive(tok)) return; mxScroll();
@@ -20108,8 +20400,8 @@
     frlAfterSit(c);
     c.outPending = false; lv.stage = 'break'; lv.shMine = Date.now();
     frlPut(R, 'sh/' + i + '/' + frlKey(me), 1); frlPut(R, 'hash/' + i + '/' + frlKey(me), lv.hashes[i]);
-    var rs = R.d.settings || {}, fa = rs.forfeitAfter || 3, streak = 0; for(var j = i; j >= 0; j--){ if(frlGet(R.d, 'ans', j, frlKey(opp), 'px')) streak++; else break; }
-    if(streak >= fa){ frlForfeit(R, c, opp); return; }
+    var rs = R.d.settings || {}, fa = rs.forfeitAfter || 3, streak = 0; for(var j = i; j >= 0; j--){ if(frlGet(R.d, 'fin', j, frlKey(opp), 'px')) streak++; else break; }
+    if(streak >= fa && frlArb(R)){ frlForfeit(R, c, opp); return; }   // chỉ trọng tài xử thua đối thủ (tránh hai bên xử thua nhau)
     if(sTacOK(m) || seNeedSub(m, me).length) c.tab = 'xi';
     sMatchRender();
   }
@@ -20137,7 +20429,8 @@
       var d = RR.d, at = frlGet(d, 'at', prev), rs = d.settings || {};
       if(at == null){
         var bothShown = frlGet(d, 'sh', prev, 'host') && frlGet(d, 'sh', prev, 'guest');
-        if((bothShown || (lv.shMine && Date.now() - lv.shMine > 25000)) && tries < 20){ tries++; frlPut(RR, 'at/' + prev, frnNow() + (rs.breakSecs != null ? rs.breakSecs : settings.friendly.breakSecs) * 1000, true); }
+        var may = frlArb(RR) ? (bothShown || (lv.shMine && Date.now() - lv.shMine > 25000)) : ((bothShown && Date.now() - (lv.bothAtP === prev ? lv.bothAt : (lv.bothAtP = prev, lv.bothAt = Date.now())) > 1500) || (lv.shMine && Date.now() - lv.shMine > 40000));   // trọng tài ghi; khách chỉ thay khi chờ quá lâu
+        if(may && tries < 20){ tries++; frlPutOnce(RR, 'at/' + prev, frnNow() + (rs.breakSecs != null ? rs.breakSecs : settings.friendly.breakSecs) * 1000); }
       }
       if(at !== lastAt){ lastAt = at; var ft = document.querySelector('#season-match .mx-foot'); if(ft && !c.busy) ft.innerHTML = frlFoot(c, false); }
       if(at != null){
@@ -20223,6 +20516,7 @@
     await frlPut(R, 'pord/' + frlKey(me), arr, true); if(!sAlive(tok)) return;
     function oppV(dd){ var v = frlGet(dd, 'pord', frlKey(opp)); return v == null ? null : {v:v}; }
     var oa = await frlWait(oppV, tok, (PSO_ORD_SECS + 8) * 1000); if(!sAlive(tok)) return;
+    if(!oa && !frlArb(R)){ oa = await frlWait(oppV, tok, 8000, 'pord/' + frlKey(opp)); if(!sAlive(tok)) return; }   // khách nhường trọng tài ghi hộ trước
     if(!oa){   // đối thủ vắng: giữ thứ tự tự động của họ
       await frlPut(R, 'pord/' + frlKey(opp), p.order[opp].slice(), true);
       oa = await frlWait(oppV, tok, 10000); if(!sAlive(tok)) return;
@@ -20254,6 +20548,7 @@
     await frlPut(R, 'pso/' + k + '/' + frlKey(me), d, true); if(!sAlive(tok)) return;
     function oppV(dd){ var v = frlGet(dd, 'pso', k, frlKey(opp)); return v == null ? null : {v:v}; }
     var oa = await frlWait(oppV, tok, (secs + 6) * 1000); if(!sAlive(tok)) return;
+    if(!oa && !frlArb(R)){ oa = await frlWait(oppV, tok, 8000, 'pso/' + k + '/' + frlKey(opp)); if(!sAlive(tok)) return; }   // khách nhường trọng tài ghi hộ trước
     if(!oa){
       var pk = pso.pick(m), nx0 = pso.peek(m), pd = nx0.side === opp ? pk.shot : pk.dive;   // đối thủ vắng: chọn hộ theo seed
       await frlPut(R, 'pso/' + k + '/' + frlKey(opp), pd, true);
