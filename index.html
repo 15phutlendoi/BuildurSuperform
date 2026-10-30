@@ -5166,6 +5166,7 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
       .then(function(res){ return res.ok ? res.json() : null; })
       .then(function(data){
         if(data && typeof data === 'object') userDirectory = data;
+        try{ homeIconRefresh(); }catch(e){}
         return data;
       })
       .catch(function(e){ console.warn('user list failed', e); return null; });
@@ -21597,10 +21598,64 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
     }).join('');
     var none = sEl('team-card-none'); if(none) none.hidden = !teamCardPick;
   }
+  /* ---- Biểu tượng "Thêm vào Màn hình chính" (iPhone/iPad) = ảnh thẻ đại diện của hồ sơ đang đăng nhập ----
+     iOS đọc <link rel="apple-touch-icon"> đúng lúc bấm "Thêm vào Màn hình chính", nên trang tự vẽ ảnh vuông 180×180 (nền màu đội + nền thẻ + ảnh cầu thủ)
+     rồi gắn vào thẻ này. Đổi thẻ đại diện sau đó thì phải xóa biểu tượng cũ và thêm lại. Chưa chọn thẻ → biểu tượng mặc định (màu đội + icon đội, hoặc ⚽). */
+  var homeIconSig = '';
+  function homeIconLink(){
+    var l = document.getElementById('dbcd-touch-icon');
+    if(!l){ l = document.createElement('link'); l.id = 'dbcd-touch-icon'; l.rel = 'apple-touch-icon'; l.setAttribute('sizes', '180x180'); document.head.appendChild(l); }
+    return l;
+  }
+  function homeIconImg(file){
+    return new Promise(function(res){
+      var src = file ? cdnUrl(file) : ''; if(!src){ res(null); return; }
+      var im = new Image(); im.crossOrigin = 'anonymous';
+      im.onload = function(){ res(im); }; im.onerror = function(){ res(null); };
+      im.src = src;
+    });
+  }
+  function homeIconDraw(p, team){
+    var S = 180, c = document.createElement('canvas'); c.width = c.height = S;
+    var g = c.getContext('2d'), grad = g.createLinearGradient(0, 0, S, S);
+    grad.addColorStop(0, team.color); grad.addColorStop(1, '#0F172A');
+    g.fillStyle = grad; g.fillRect(0, 0, S, S);
+    return Promise.all([homeIconImg(p && p.background), homeIconImg(p && p.image)]).then(function(im){
+      var bg = im[0], fg = im[1], ok = false;
+      if(bg){ var k = Math.max(S / bg.width, S / bg.height), w = bg.width * k, h = bg.height * k; g.drawImage(bg, (S - w) / 2, (S - h) / 2, w, h); }
+      if(fg){
+        var full = p && /^bg_/.test(p.image || '');
+        var k2 = full ? Math.max(S / fg.width, S / fg.height) : (S * 1.12) / fg.width, w2 = fg.width * k2, h2 = fg.height * k2;
+        g.drawImage(fg, (S - w2) / 2, full ? (S - h2) / 2 : S * 0.02, w2, h2); ok = true;
+      }
+      if(!ok){   // không có ảnh thẻ: vẽ icon đội (hoặc ⚽) ở giữa
+        g.font = '104px "Apple Color Emoji","Segoe UI Emoji",sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle';
+        g.fillText(team.icon || '⚽', S / 2, S / 2 + 8);
+      }
+      try{ return {url:c.toDataURL('image/png'), ok:ok || !p}; }catch(e){ return null; }   // canvas bị chặn (ảnh không cho đọc) → bỏ qua
+    });
+  }
+  function homeIconRefresh(){
+    var cur = teamCurCard(), t = teamGet(), key = 'dbcd_homeicon:' + syncId;
+    var cached = null; try{ cached = JSON.parse(localStorage.getItem(key) || 'null'); }catch(e){}
+    if(!userDirectory[syncId]){ if(cached && cached.url) homeIconLink().href = cached.url; return; }   // chưa biết thẻ đại diện: dùng bản đã lưu lần trước
+    if(cur && !PLAYER_DB_BY_ID[cur.id]) return;   // CSDL cầu thủ chưa tải xong, sẽ thử lại
+    var sig = (cur ? cur.id : '') + '|' + (cur ? t.color : t.color + t.icon);
+    if(sig === homeIconSig) return;
+    homeIconSig = sig;
+    if(cached && cached.sig === sig && cached.url){ homeIconLink().href = cached.url; return; }
+    homeIconDraw(cur ? PLAYER_DB_BY_ID[cur.id] : null, t).then(function(r){
+      if(!r){ homeIconSig = ''; return; }
+      homeIconLink().href = r.url;
+      if(r.ok){ try{ localStorage.setItem(key, JSON.stringify({sig:sig, url:r.url})); }catch(e){} } else homeIconSig = '';
+    }).catch(function(){ homeIconSig = ''; });
+  }
+  [1500, 5000, 12000].forEach(function(ms){ setTimeout(function(){ try{ homeIconRefresh(); }catch(e){} }, ms); });
+
   function teamCardSave(){   // ghi thẻ đại diện lên hồ sơ công khai nếu có thay đổi
     var cur = teamCurCard(), nw = teamCardPick;
     if((cur && nw && cur.id === nw.id && cur.b === nw.b) || (!cur && !nw)) return;
-    savePubPatch(syncId, nw ? {k:nw.id, b:nw.b} : {k:null, b:null}).catch(function(){ triggerToast('low', 'Chưa lưu được thẻ đại diện, con thử lại nhé!'); });
+    savePubPatch(syncId, nw ? {k:nw.id, b:nw.b} : {k:null, b:null}).then(function(){ try{ homeIconRefresh(); }catch(e){} }).catch(function(){ triggerToast('low', 'Chưa lưu được thẻ đại diện, con thử lại nhé!'); });
   }
 
   function teamGet(){
@@ -21609,7 +21664,7 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
     var color = /^#[0-9a-fA-F]{6}$/.test(t.color || '') ? t.color : '#10B981';
     return {name: (typeof t.name === 'string' ? t.name.trim().slice(0, 24) : ''), color: color, icon: (typeof t.icon === 'string' ? t.icon.slice(0, 8) : '')};
   }
-  function teamSet(t){ safeSet(TEAM_KEY, {name:t.name, color:t.color, icon:t.icon}); try{ syncPubProfile(false); }catch(e){} }
+  function teamSet(t){ safeSet(TEAM_KEY, {name:t.name, color:t.color, icon:t.icon}); try{ syncPubProfile(false); }catch(e){} try{ homeIconRefresh(); }catch(e){} }
   function teamTextOn(hex){   // chữ đen hay trắng trên nền màu đội
     var n = parseInt(hex.slice(1), 16), r = n >> 16, g = (n >> 8) & 255, b = n & 255;
     return (r * 299 + g * 587 + b * 114) / 1000 > 150 ? '#0F172A' : '#FFFFFF';
