@@ -864,16 +864,27 @@
     position:relative; width:100%; aspect-ratio:var(--fc-ar);
     container-type:inline-size; isolation:isolate; user-select:none; -webkit-user-select:none;
   }
+  /* Thẻ Rare: vệt sáng bóng loáng quét chéo qua thẻ, dùng chung cho mọi nơi hiển thị thẻ (class .rare do fcCardHTML thêm khi battle.rarity === 'RARE').
+     Chỉnh: --rare-shine-dur (chu kỳ), --rare-shine-op (độ sáng). */
+  .fc-card.rare{ --rare-shine-dur:3.8s; --rare-shine-op:.85; }
+  .fc-card.rare::after{
+    content:''; position:absolute; inset:1.2% 2.4%; z-index:5; pointer-events:none; border-radius:8% / 5.5%;
+    background:linear-gradient(112deg, transparent 38%, rgba(255,255,255,.62) 47%, rgba(255,240,190,.45) 52%, transparent 62%);
+    background-size:260% 100%; background-position:170% 0; background-repeat:no-repeat; opacity:var(--rare-shine-op);
+    animation:fcRareShine var(--rare-shine-dur) ease-in-out infinite;
+  }
+  @keyframes fcRareShine{ 0%{ background-position:170% 0; } 55%,100%{ background-position:-70% 0; } }
+  @media (prefers-reduced-motion: reduce){ .fc-card.rare::after{ animation:none; background-position:35% 0; opacity:.35; } }
   .fc-card.no-bg{ background:linear-gradient(170deg,#1b2f55,#0B1B2A 60%,#2a2110); border-radius:8% / 5.5%; border:2px solid #8A5A00; }
   .fc-card .fc-bg{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:0; }
   .fc-card .fc-render{
     position:absolute; z-index:1; left:var(--fc-r-side); width:calc(100% - 2*var(--fc-r-side));
     top:var(--fc-r-top); height:var(--fc-r-h); object-fit:contain; object-position:50% 100%;
-    /* Phóng ảnh chân dung to hơn 20% (đổi --fc-r-scale để chỉnh; 1 = kích thước cũ). Neo ở mép trên
+    /* Phóng ảnh chân dung thẻ thường 1.5× để to ngang ảnh thẻ chữ ký (đổi --fc-r-scale để chỉnh; mép mờ dần theo --fc-r-fade1/2 để vẫn nằm sau dải tên). Neo ở mép trên
        để đầu cầu thủ giữ nguyên vị trí, phần thân dưới mờ dần phía sau dải tên/cờ/logo. */
-    transform:scale(var(--fc-r-scale,1.2)); transform-origin:50% 0;
-    -webkit-mask-image:linear-gradient(to bottom,#000 78%,transparent 100%);
-            mask-image:linear-gradient(to bottom,#000 78%,transparent 100%);
+    transform:scale(var(--fc-r-scale,1.5)); transform-origin:50% 4%;
+    -webkit-mask-image:linear-gradient(to bottom,#000 var(--fc-r-fade1,62%),transparent var(--fc-r-fade2,80%));
+            mask-image:linear-gradient(to bottom,#000 var(--fc-r-fade1,62%),transparent var(--fc-r-fade2,80%));
   }
   /* Ảnh chính là nguyên tấm thẻ (tên tệp bắt đầu bằng bg_): hiển thị đúng kích thước như ảnh nền, không thu/phóng, không mờ chân. */
   .fc-card .fc-render.fc-full{ left:0; top:0; width:100%; height:100%; object-fit:cover; object-position:50% 50%; transform:none; -webkit-mask-image:none; mask-image:none; }
@@ -5438,7 +5449,7 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
       function cardHTML(dbId, bonus){
         var p = dbById[dbId]; if(!p) return '';
         var ovr = (p.realOvr || p.ovr || 0) + (bonus || 0);
-        return '<div class="fc-card' + (p.background ? '' : ' no-bg') + (String(ovr).length > 2 ? ' ovr3' : '') + '">' +
+        return '<div class="fc-card' + (p.background ? '' : ' no-bg') + (String(ovr).length > 2 ? ' ovr3' : '') + ((p.battle && p.battle.rarity === 'RARE') ? ' rare' : '') + '">' +
           (p.background ? '<img class="fc-bg" src="' + cdn(p.background) + '" alt="" onerror="this.remove()">' : '') +
           (p.image ? '<img class="fc-render' + (/^bg_/.test(p.image) ? ' fc-full' : '') + '" src="' + cdn(p.image) + '" alt="" loading="lazy" onerror="this.remove()">' : '') +
           '<div class="fc-ovr"><b>' + ovr + '</b><span>' + uEsc(p.pos || '') + '</span></div>' +
@@ -8503,7 +8514,7 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
     var foot = (flag || club) ? '<div class="fc-foot">'+flag+((flag && club) ? '<i class="fc-sep"></i>' : '')+club+'</div>' : '';
     var elCode = p.battle && p.battle.element;
     var elBadge = elCode ? '<div class="fc-element" style="'+elementColorVars(elCode)+'" title="'+escHtml(elementName(elCode))+' · CP '+escHtml(String(p.battle.cp))+'">'+elementIcon(elCode)+'</div>' : '';
-    return '<div class="fc-card'+(p.background ? '' : ' no-bg')+upCls+(extraCls ? ' '+extraCls : '')+'">'
+    return '<div class="fc-card'+(p.background ? '' : ' no-bg')+upCls+((p.battle && p.battle.rarity === 'RARE') ? ' rare' : '')+(extraCls ? ' '+extraCls : '')+'">'
       + bg
       + (p.image
           ? '<img class="fc-render'+(/^bg_/.test(p.image) ? ' fc-full' : '')+'" src="'+cdnUrl(p.image)+'" alt="'+name+'" data-ini="'+escHtml(initialsOf(p.name || '?'))+'" loading="lazy" onerror="window.fcRenderFail(this)">'
