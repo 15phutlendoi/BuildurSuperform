@@ -2519,7 +2519,7 @@
   #auth-screen::before{ flex-grow:6; }
   #auth-screen::after{ flex-grow:1; }
   #auth-screen .lg-grid{ width:min(960px,100%); display:flex; flex-wrap:wrap; justify-content:center; align-content:center; align-items:flex-start; gap:14px; }
-  #auth-screen .lg-tile{ position:relative; flex:0 0 auto; width:clamp(128px,30vw,156px); display:flex; flex-direction:column; align-items:center; gap:8px; padding:10px 8px; border-radius:18px; border:2px solid rgba(255,255,255,.14);
+  #auth-screen .lg-tile{ position:relative; flex:0 0 auto; --tm-tx:#fff; --tm-tx2:#E2E8F0; width:clamp(140px,32vw,172px); display:flex; flex-direction:column; align-items:center; gap:8px; padding:10px 8px; border-radius:18px; border:2px solid rgba(255,255,255,.14); border-color:color-mix(in srgb, var(--tm,#10B981) 55%, transparent); box-shadow:0 0 16px -8px var(--tm,#10B981);
     background:rgba(15,23,42,.62); -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px); color:#fff; font:inherit; cursor:pointer;
     transition:transform .28s cubic-bezier(.2,.9,.3,1.3), opacity .28s, filter .28s, border-color .2s, box-shadow .28s; -webkit-tap-highlight-color:transparent; }
   #auth-screen .lg-tile:hover, #auth-screen .lg-tile:focus-visible{ transform:translateY(-4px); outline:none; border-color:var(--tm,#10B981); box-shadow:0 10px 24px rgba(0,0,0,.45), 0 0 18px -4px var(--tm,#10B981); }
@@ -2536,8 +2536,17 @@
   #auth-screen .lg-art{ display:block; width:100%; max-width:112px; }
   #auth-screen .lg-big{ aspect-ratio:.74; width:100%; display:flex; align-items:center; justify-content:center; border-radius:14px; font-size:clamp(40px,12vw,56px);
     background:linear-gradient(160deg,var(--tm,#10B981),#0F172A 135%); color:var(--tm-ink,#fff); box-shadow:inset 0 0 0 2px rgba(255,255,255,.22); }
-  #auth-screen .lg-name{ display:flex; align-items:center; gap:6px; max-width:100%; }
-  #auth-screen .lg-name b{ font-size:14px; font-weight:900; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  #auth-screen .lg-name{ display:flex; align-items:center; justify-content:center; gap:6px; width:100%; max-width:100%; min-width:0; }
+  #auth-screen .lg-txt{ display:flex; flex-direction:column; flex:1 1 auto; min-width:0; gap:1px; }
+  #auth-screen .lg-fit{ display:block; text-align:center; line-height:1.3; overflow:hidden; white-space:nowrap; }
+  #auth-screen .lg-fit .lg-in{ display:inline-block; white-space:nowrap; }
+  #auth-screen .lg-fit.wrap{ overflow:visible; }   /* chỉ khi đã thu nhỏ tối đa mà vẫn dài: xuống dòng, không bao giờ cắt chữ */
+  #auth-screen .lg-fit.wrap .lg-in{ display:inline; white-space:normal; overflow-wrap:anywhere; word-break:break-word; }
+  #auth-screen .lg-l1 .lg-in{ font-weight:900; color:var(--tm-tx,#fff); }
+  #auth-screen .lg-l2 .lg-in{ font-weight:800; color:var(--tm-tx2,#E2E8F0); }
+  @supports (color:color-mix(in srgb, red 50%, white)){
+    #auth-screen .lg-tile, #auth-screen .lg-pv{ --tm-tx:color-mix(in srgb, var(--tm,#10B981) 55%, #fff); --tm-tx2:color-mix(in srgb, var(--tm,#10B981) 72%, #fff); }
+  }
   #auth-screen .lg-logo{ flex:none; display:inline-flex; align-items:center; justify-content:center; width:24px; height:24px; border-radius:50%; font-style:normal; font-size:14px;
     background:var(--tm,#10B981); color:var(--tm-ink,#fff); box-shadow:0 0 0 2px rgba(255,255,255,.25); }
   #auth-screen .lg-admin-btn{ position:fixed; left:12px; bottom:calc(12px + env(safe-area-inset-bottom,0px)); z-index:4; padding:9px 14px; border-radius:999px; border:1px solid rgba(251,191,36,.45);
@@ -2548,17 +2557,17 @@
   #auth-screen .lg-sheet-bg{ position:absolute; inset:0; background:rgba(2,6,23,.72); -webkit-backdrop-filter:blur(5px); backdrop-filter:blur(5px); }
   #auth-screen .lg-box{ position:relative; width:min(400px,100%); max-height:calc(100vh - 28px); max-height:calc(100dvh - 28px); overflow-y:auto; display:flex; flex-direction:column; gap:12px; padding:18px;
     border-radius:20px; background:#1E293B; border:1px solid #334155; box-shadow:0 24px 70px rgba(0,0,0,.6); }
+  #auth-screen .lg-box[style*="--tm"]{ border:2px solid var(--tm); box-shadow:0 24px 70px rgba(0,0,0,.6), 0 0 34px -4px var(--tm); }
   #auth-screen .lg-box.wide{ width:min(640px,100%); }
   #auth-screen .lg-box h3{ margin:0; font-size:17px; color:#fff; text-align:center; }
   #auth-screen .lg-pv{ display:flex; flex-direction:column; align-items:center; gap:8px; }
   #auth-screen .lg-pv-art{ width:116px; }
-  #auth-screen .lg-pv-name{ display:flex; align-items:center; gap:8px; max-width:100%; }
-  #auth-screen .lg-pv-name b{ font-size:17px; font-weight:900; color:#fff; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  #auth-screen .lg-pv-name{ display:flex; align-items:center; justify-content:center; gap:8px; width:100%; max-width:100%; min-width:0; }
   #auth-screen label{ display:flex; flex-direction:column; gap:5px; font-size:12px; font-weight:700; color:#CBD5E1; }
   #auth-screen input{ padding:11px 12px; border-radius:10px; border:1px solid #475569; background:#0F172A; color:#fff; font-size:16px; width:100%; }
-  #auth-screen input:focus{ outline:none; border-color:#10B981; }
+  #auth-screen input:focus{ outline:none; border-color:var(--tm,#10B981); box-shadow:0 0 0 2px color-mix(in srgb, var(--tm,#10B981) 35%, transparent); }
   #auth-screen input.bad{ border-color:#F87171; box-shadow:0 0 0 2px rgba(248,113,113,.35); animation:lgShake .38s; }
-  #auth-screen .au-go{ padding:12px; border:0; border-radius:12px; background:#10B981; color:#052e22; font-weight:900; font-size:15px; cursor:pointer; flex:1.4; }
+  #auth-screen .au-go{ padding:12px; border:0; border-radius:12px; background:var(--tm,#10B981); color:var(--tm-ink,#052e22); font-weight:900; font-size:15px; cursor:pointer; flex:1.4; }
   #auth-screen .au-go.admin{ background:linear-gradient(135deg,#FBBF24,#D97706); color:#3D2500; }
   #auth-screen .au-go:disabled{ opacity:.5; cursor:default; }
   #auth-screen .au-ghost{ padding:12px; border:1px solid #475569; border-radius:12px; background:transparent; color:#E2E8F0; font-weight:800; font-size:14px; cursor:pointer; flex:1; }
@@ -3130,8 +3139,10 @@
   #admin-page .st-bar i u{ display:block; height:100%; background:var(--stadium); border-radius:99px; }
 </style>
 <style id="team-css">
-  .team-chip{ display:inline-flex; align-items:center; gap:6px; max-width:100%; margin:2px 0 4px; padding:3px 12px; border-radius:999px; border:2px solid var(--team,#10B981); background:rgba(15,23,42,.45); color:var(--ink); font:inherit; font-size:12.5px; font-weight:900; cursor:pointer; }
-  .team-chip span{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .team-chip{ display:inline-flex; align-items:center; gap:6px; max-width:100%; margin:2px 0 4px; padding:4px 14px; border-radius:18px; border:2px solid var(--team,#10B981); background:rgba(15,23,42,.45); color:var(--ink); font:inherit; font-size:12.5px; font-weight:900; line-height:1.35; text-align:left; cursor:pointer; }
+  .team-chip .tc-txt{ display:block; min-width:0; white-space:normal; overflow:visible; text-overflow:clip; overflow-wrap:anywhere; word-break:break-word; }
+  .team-chip .tc-user{ font-weight:700; color:var(--ink-soft); }
+  @media (min-width:700px){ .team-chip{ font-size:14px; } }
   .tm-face-ic{ font-size:34px; line-height:1; filter:drop-shadow(0 2px 3px rgba(0,0,0,.45)); }
   .tm-logo{ display:inline-flex; align-items:center; justify-content:center; width:22px; height:22px; margin-right:6px; border-radius:50%; background:var(--tm,#10B981); color:var(--tm-ink,#fff); font-size:13px; vertical-align:middle; box-shadow:0 0 0 2px rgba(255,255,255,.25); }
   .tm-logo.big{ width:56px; height:56px; font-size:30px; margin:0; }
@@ -5409,6 +5420,7 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
         var u = userDirectory[code] || {}, p = u.pub || {}, un = String(u.name || '').trim();
         var tn = (typeof p.n === 'string') ? p.n.trim().slice(0, 24) : '';
         return { name: tn || un || ('Người dùng ' + code),   // chưa đặt tên đội → dùng tên người dùng
+                 user: (tn && un && un !== tn) ? un : '',   // tên người dùng hiện thêm ngay dưới tên đội (không lặp lại khi trùng)
                  color: /^#[0-9a-fA-F]{6}$/.test(p.c || '') ? p.c : '#10B981',
                  icon: (typeof p.i === 'string' && p.i) ? p.i.slice(0, 8) : '⚽',
                  card: (typeof p.k === 'string') ? p.k : '', bonus: (typeof p.b === 'number') ? p.b : 0 };
@@ -5436,11 +5448,31 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
         var t = info(code), c = t.card ? cardHTML(t.card, t.bonus) : '';
         return c || ('<div class="lg-big" style="--tm:' + t.color + ';--tm-ink:' + inkOn(t.color) + '">' + uEsc(t.icon) + '</div>');
       }
+      function nameHTML(t, big){   // dòng 1: tên đội, dòng 2: tên user — mỗi tên đúng 1 dòng, căn giữa
+        return '<span class=\"lg-txt\"><span class=\"lg-fit lg-l1\" data-max=\"' + (big ? 20 : 15) + '\"><b class=\"lg-in\">' + uEsc(t.name) + '</b></span>' +
+          (t.user ? '<span class=\"lg-fit lg-l2\" data-max=\"' + (big ? 15 : 12) + '\"><span class=\"lg-in\">' + uEsc(t.user) + '</span></span>' : '') + '</span>';
+      }
+      function fitNames(root){   // mỗi tên vừa khít 1 dòng: cỡ chữ tự co/giãn, tên ngắn thì giãn chữ đều cho đầy khung; không cắt chữ
+        Array.prototype.forEach.call((root || el).querySelectorAll('.lg-fit'), function(L){
+          var I = L.firstElementChild; if(!I) return;
+          L.classList.remove('wrap'); L.style.fontSize = ''; I.style.letterSpacing = ''; I.style.marginRight = '';
+          var w = L.clientWidth; if(!w) return;
+          var fs = parseFloat(L.getAttribute('data-max')) || 13;
+          L.style.fontSize = fs + 'px';
+          while(I.offsetWidth > w + 0.5 && fs > 8){ fs -= 0.5; L.style.fontSize = fs + 'px'; }
+          if(I.offsetWidth > w + 0.5){ L.classList.add('wrap'); return; }
+          var n = (I.textContent || '').length, gap = w - I.offsetWidth;
+          if(n > 1 && gap > 2){ var ls = Math.min(gap / n, 3); I.style.letterSpacing = ls.toFixed(2) + 'px'; I.style.marginRight = (-ls).toFixed(2) + 'px'; }
+        });
+      }
+      function fitSoon(root){ try{ requestAnimationFrame(function(){ fitNames(root); }); }catch(e){ fitNames(root); } }
+      window.addEventListener('resize', function(){ fitSoon(); });
+      try{ if(document.fonts && document.fonts.ready) document.fonts.ready.then(function(){ fitSoon(); }); }catch(e){}
       function tileHTML(code){
         var t = info(code);
         return '<button type="button" class="lg-tile' + (code === pickedCode ? ' picked' : '') + '" role="listitem" data-code="' + uEsc(code) + '" style="--tm:' + t.color + ';--tm-ink:' + inkOn(t.color) + '">' +
           '<span class="lg-art">' + artHTML(code) + '</span>' +
-          '<span class="lg-name"><i class="lg-logo">' + uEsc(t.icon) + '</i><b>' + uEsc(t.name) + '</b></span></button>';
+          '<span class="lg-name"><i class="lg-logo">' + uEsc(t.icon) + '</i>' + nameHTML(t) + '</span></button>';
       }
       function paintGrid(){
         var g = $('lg-grid'); if(!g) return;
@@ -5448,6 +5480,7 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
           .sort(function(a, b){ return info(a).name.localeCompare(info(b).name, 'vi'); });
         g.innerHTML = codes.map(tileHTML).join('');
         g.classList.toggle('has-pick', !!pickedCode);
+        fitSoon(g);
       }
       function setPick(code){
         pickedCode = code || '';
@@ -5475,7 +5508,7 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
       });
 
       /* ----- hộp thoại (đăng nhập · đổi mật khẩu · quản trị) ----- */
-      function openSheet(html, wide){ var b = $('lg-box'); b.className = 'lg-box' + (wide ? ' wide' : ''); b.innerHTML = html; $('lg-sheet').hidden = false; }
+      function openSheet(html, wide, color){ var b = $('lg-box'); b.className = 'lg-box' + (wide ? ' wide' : ''); b.removeAttribute('style'); if(color){ b.style.setProperty('--tm', color); b.style.setProperty('--tm-ink', inkOn(color)); } b.innerHTML = html; $('lg-sheet').hidden = false; fitNames(b); }
       function closeSheet(){ var s = $('lg-sheet'); if(s) s.hidden = true; var b = $('lg-box'); if(b) b.innerHTML = ''; clearTimeout(pickT); pickT = 0; setPick(''); }
       $('lg-sheet-bg').addEventListener('click', closeSheet);
       el.addEventListener('keydown', function(e){ if(e.key === 'Escape' && !$('lg-sheet').hidden) closeSheet(); });
@@ -5500,10 +5533,10 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
         var t = info(code);
         openSheet(
           '<div class="lg-pv" style="--tm:' + t.color + ';--tm-ink:' + inkOn(t.color) + '"><div class="lg-pv-art">' + artHTML(code) + '</div>' +
-          '<div class="lg-pv-name"><i class="lg-logo">' + uEsc(t.icon) + '</i><b>' + uEsc(t.name) + '</b></div></div>' +
+          '<div class="lg-pv-name"><i class="lg-logo">' + uEsc(t.icon) + '</i>' + nameHTML(t, true) + '</div></div>' +
           '<label>Mật khẩu<input type="password" id="lg-pw" autocomplete="current-password" placeholder="Nhập mật khẩu" enterkeyhint="go"></label>' +
           '<div class="lg-row"><button type="button" class="au-go" id="lg-go">Vào sân ⚽</button></div>' +
-          '<button type="button" class="au-cancel" id="lg-close">← Chọn đội khác</button>');
+          '<button type="button" class="au-cancel" id="lg-close">← Chọn đội khác</button>', false, t.color);
         var inp = $('lg-pw'); if(pw) inp.value = pw;
         var check = function(){
           if(!inp.value || pwHash(code + ':' + inp.value) !== userPwExpected(code)){ nope('lg-pw'); return false; }
@@ -5568,6 +5601,8 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
     try{ nm = (userNameOf(syncId) || '').trim(); }catch(e){}
     if(/^Người dùng\s/.test(nm) && !(userDirectory[syncId] && userDirectory[syncId].name)) nm = '';   // chưa có tên thật
     var team = nm ? ('Đội Bóng Của ' + nm) : 'Đội Bóng Của Bạn';
+    var _prevU = window.__teamUserLabel || ''; window.__teamUserLabel = nm;
+    if(_prevU !== nm && typeof window.__teamChipRender === 'function') try{ window.__teamChipRender(); }catch(e){}
     var _tm = safeGet('kidchart_team'); if(_tm && typeof _tm.name === 'string' && _tm.name.trim()) team = _tm.name.trim().slice(0, 24);
     document.title = team + ' ⚽ Nhật Ký Đội Hình Trong Mơ';
     var els = document.querySelectorAll('.brand-team-name');
@@ -21716,8 +21751,16 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
     var chip = sEl('team-chip');
     if(chip){
       chip.textContent = '';
-      var nm = document.createElement('span'); nm.textContent = t.name || 'Đặt tên đội ✏️';
+      var nm = document.createElement('span'); nm.className = 'tc-txt';
+      nm.appendChild(document.createTextNode(t.name || 'Đặt tên đội ✏️'));
+      var un = (window.__teamUserLabel || '').trim();
+      if(un){
+        var us = document.createElement('span'); us.className = 'tc-user';
+        us.textContent = ' · ' + un;   // tên người dùng đứng ngay sau tên đội, hiện đầy đủ
+        nm.appendChild(us);
+      }
       chip.appendChild(nm);
+      chip.title = (t.name ? t.name : 'Đặt tên, màu và logo cho đội') + (un ? ' · ' + un : '');
       chip.style.borderColor = t.color; chip.style.color = t.name ? '' : 'var(--ink-soft)';
     }
     if(typeof applyTeamBrandName === 'function') applyTeamBrandName();
@@ -21767,6 +21810,7 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
     if(t.id === 'team-color-input'){ teamDraft.color = t.value; }
     teamPreview();
   });
+  window.__teamChipRender = applyTeamIdentity;
   applyTeamIdentity();
 
   /* Quản trị viên: hiện nút 🛡️ và vào thẳng Trang quản trị ngay sau khi đăng nhập */
