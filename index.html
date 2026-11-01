@@ -5829,7 +5829,7 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
       skillTotal:0, skillGold:0, skillSilver:0, skillPts:0, ps:{}, psOwned:0,
       cards:0, squadCount:0, uniqueCards:0, maxOvr:0, cardsThisPeriod:0, periodLabel:'', top:[], wtNations:0, wtCards:0
     };
-    try{ var wcl = wtClaims(); Object.keys(wcl).forEach(function(k){ S.wtNations++; if(wcl[k] && wcl[k].got === 'card') S.wtCards++; }); }catch(e){}
+    try{ var wcl = wtClaims(); Object.keys(wcl).forEach(function(k){ S.wtNations++; var c = wcl[k], arr = c && c.lv ? Object.keys(c.lv).map(function(q){ return c.lv[q]; }) : [c]; arr.forEach(function(x){ if(x && x.got === 'card') S.wtCards++; }); }); }catch(e){}
     var target = settings.dailyGoal * 10;
     var monthKeys = {};
     allLocalMonthKeys().forEach(function(k){ monthKeys[k.replace('kidchart_month_','')] = 1; });
@@ -15284,8 +15284,8 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
     var cards = battleOwnedCards().slice().sort(function(a, b){ return (b.ovr || 0) - (a.ovr || 0); }).slice(0, 60);
     return '<p class="wt-kick">1. Chọn cầu thủ mang đi thi đấu</p>'
       + (cards.length ? '<div class="wt-picks">' + cards.map(function(p){ return '<button type="button" class="wt-pick' + (String(p.dbId) === wtMy ? ' on' : '') + '" data-wt-act="pick" data-id="' + uEsc(String(p.dbId)) + '" aria-pressed="' + (String(p.dbId) === wtMy) + '" aria-label="' + uEsc(p.name) + '">' + (fcCardHTML(p) || uEsc(p.name)) + '</button>'; }).join('') + '</div>' : '<p class="wt-boss">Con chưa có cầu thủ nào. Hãy nhận thẻ ở Kho cầu thủ trước nhé!</p>')
-      + '<p class="wt-kick">2. Mở phòng mới hoặc nhập mã của bạn</p><div class="wt-row"><button type="button" class="wt-btn" data-wt-act="create"' + (wtMy ? '' : ' disabled') + '>Mở phòng</button></div>'
-      + '<div class="wt-row"><input class="wt-in" id="wt-code" maxlength="4" placeholder="MÃ" aria-label="Mã phòng của bạn bè" autocomplete="off"><button type="button" class="wt-btn alt" data-wt-act="join"' + (wtMy ? '' : ' disabled') + '>Vào phòng</button></div>'
+      + '<p class="wt-kick">2. Mở phòng mới hoặc nhập mã của bạn</p>' + wtQuotaNote() + '<div class="wt-row"><button type="button" class="wt-btn" data-wt-act="create"' + (wtMy && battleLeftToday() > 0 ? '' : ' disabled') + '>Mở phòng</button></div>'
+      + '<div class="wt-row"><input class="wt-in" id="wt-code" maxlength="4" placeholder="MÃ" aria-label="Mã phòng của bạn bè" autocomplete="off"><button type="button" class="wt-btn alt" data-wt-act="join"' + (wtMy && battleLeftToday() > 0 ? '' : ' disabled') + '>Vào phòng</button></div>'
       + (wtErr ? '<p class="wt-err" role="alert">' + uEsc(wtErr) + '</p>' : '');
   }
   function wtPaintStub(){ var el = document.getElementById('wt-stub'); if(el) el.innerHTML = wtStubHTML(wtLive && wtCurWeek(wtLive)); wtPaintChip(); }
@@ -15325,7 +15325,7 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
     var room = rx.room;
     if(!room && ++wtGoneN < 2) return;   // phòng phải «biến mất» 2 lần liên tiếp mới coi là đã đóng
     if(room) wtGoneN = 0;
-    if(!room){ wtCode = ''; wtRoom = null; wtErr = 'Phòng đã đóng.'; try{ localStorage.removeItem(WT_ROOM_KEY); }catch(e){} clearInterval(wtPoll); wtPoll = 0; }
+    if(!room){ if(wtRoom && wtRoom.state === 'lobby') wtRefund(wtCode); wtCode = ''; wtRoom = null; wtErr = 'Phòng đã đóng.'; try{ localStorage.removeItem(WT_ROOM_KEY); }catch(e){} clearInterval(wtPoll); wtPoll = 0; }
     else if(wtMembers(room).every(function(i){ return room.slots[i].id !== syncId; })){ wtCode = ''; wtRoom = null; wtErr = 'Con không còn trong phòng này.'; clearInterval(wtPoll); wtPoll = 0; }
     else {
       wtRoom = room;
@@ -15361,11 +15361,12 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
       if(act === 'create'){
         wtAutoClean();
         var me = wtMe(); if(!me){ wtErr = 'Hãy chọn một cầu thủ trước.'; return wtPaintStub(); }
+        if(battleLeftToday() <= 0){ wtErr = wtNoTurn(); return wtPaintStub(); }
         for(var n = 0; n < 6; n++){
           var code = ''; for(var k = 0; k < 4; k++) code += 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'.charAt(Math.floor(Math.random() * 32));
           if(await wtGetRoom(code)) continue;
           var room = { ws: cur.ws, nation: cur.nation, host: syncId, state: 'lobby', created: Date.now(), slots: { 0: me } };
-          await wtPut(code, room); return wtEnter(code, room);
+          await wtPut(code, room); wtPay(code); return wtEnter(code, room);
         }
         wtErr = 'Chưa tạo được phòng, thử lại nhé.';
       } else if(act === 'join'){
@@ -15378,17 +15379,19 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
         else if(rm.state !== 'lobby') wtErr = 'Phòng đã chốt team.';
         else if(wtMembers(rm).some(function(i){ return rm.slots[i].id === syncId; })) return wtEnter(c, rm);
         else {
+          if(battleLeftToday() <= 0){ wtErr = wtNoTurn(); return wtPaintStub(); }
           for(var t2 = 0; t2 < 3; t2++){
             var free = [0, 1, 2].filter(function(i){ return !(rm.slots && rm.slots[i] && rm.slots[i].id); })[0];
             if(free === undefined){ wtErr = 'Phòng đã đủ 3 người.'; break; }
             await wtPut(c + '/slots/' + free, me2);
             rm = await wtGetRoom(c);
-            if(rm && rm.slots && rm.slots[free] && rm.slots[free].id === syncId) return wtEnter(c, rm);
+            if(rm && rm.slots && rm.slots[free] && rm.slots[free].id === syncId){ wtPay(c); return wtEnter(c, rm); }
           }
           if(!wtErr) wtErr = 'Chưa vào được phòng, thử lại nhé.';
         }
       } else if(act === 'leave' && wtCode){
         var rr = await wtGetRoom(wtCode);
+        if(rr && rr.state === 'lobby') wtRefund(wtCode);   // chưa chốt team thì hoàn lại 🎟️ lượt đấu
         if(rr && rr.host === syncId) await wtPut(wtCode, null);
         else if(rr){ var mine = wtMembers(rr).filter(function(i){ return rr.slots[i].id === syncId; })[0]; if(mine !== undefined) await wtPut(wtCode + '/slots/' + mine, null); }
         wtCode = ''; wtRoom = null; try{ localStorage.removeItem(WT_ROOM_KEY); }catch(e){} if(wtPoll){ clearInterval(wtPoll); wtPoll = 0; }
@@ -15416,10 +15419,14 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
       var q = id && PLAYER_DB_BY_ID[id], h = wtCardHTML(id, bonus);
       return '<div class="wt-pc ' + cls + '">' + (h || '<span class="wt-chip"><b>' + uEsc(q ? q.name : 'Chưa chọn') + '</b></span>') + '<b>' + uEsc(q ? (q.name || '') : '') + '</b></div>';
     }
-    var go = won ? '<p class="wt-pop-note">Chặng này đã đóng dấu vàng trên hộ chiếu.</p>'
-      : same ? '<button type="button" class="wt-btn go" data-wt-act="go" data-ws="' + ws + '">Vào phòng của con</button>'
-      : inRoom ? '<p class="wt-pop-note">Con đang ở phòng ' + uEsc(wtCode) + ' (' + uEsc(wtRoom.nation || '') + ').</p><button type="button" class="wt-btn alt" data-wt-act="leave-go" data-ws="' + ws + '">Rời phòng và đến đây</button>'
-      : '<button type="button" class="wt-btn go" data-wt-act="go" data-ws="' + ws + '">Thi đấu ở đây</button>';
+    var lvs = w.levels || [1, 2, 3], cs = wtClaimedStars(w.ws), left = battleLeftToday(),
+        rwNote = cs.length ? '<p class="wt-pop-note">🎁 Đã nhận thưởng: <b>' + cs.map(function(x){ return uEsc(WT_STAR_NAMES[x - 1] || ('★' + x)); }).join(', ') + '</b>'
+          + (lvs.filter(function(x){ return cs.indexOf(x) < 0; }).length ? ' · các độ khó còn lại vẫn có thưởng lần đầu.' : ' · con đã nhận đủ thưởng chặng này, thi đấu lại để luyện tập nhé!') + '</p>'
+          : '<p class="wt-pop-note">🎁 Thưởng chỉ nhận ở lần thắng đầu tiên của mỗi độ khó.</p>',
+        turnNote = '<p class="wt-pop-note">' + (left > 0 ? '🎟️ Hôm nay còn <b>' + left + '/' + battleLimit() + '</b> lượt đấu · mở/vào phòng trừ 1 lượt, mỗi lần thử lại Boss trừ thêm 1' : wtNoTurn()) + '</p>',
+        go = rwNote + (same ? '<button type="button" class="wt-btn go" data-wt-act="go" data-ws="' + ws + '">Vào phòng của con</button>'
+        : inRoom ? '<p class="wt-pop-note">Con đang ở phòng ' + uEsc(wtCode) + ' (' + uEsc(wtRoom.nation || '') + ').</p><button type="button" class="wt-btn alt" data-wt-act="leave-go" data-ws="' + ws + '">Rời phòng và đến đây</button>'
+        : turnNote + (left > 0 ? '<button type="button" class="wt-btn go" data-wt-act="go" data-ws="' + ws + '">' + (won ? 'Thi đấu lại ở đây' : 'Thi đấu ở đây') + '</button>' : '<button type="button" class="wt-btn alt" disabled>Hết lượt đấu hôm nay</button>'));
     return '<div class="wt-pop-in"><button type="button" class="wt-pop-x" data-wt-close aria-label="Đóng">✕</button>'
       + '<div class="wt-pop-h">' + wtFaceHTML(w) + '<div><h4 class="wt-pop-n">' + uEsc(w.nation || 'Điểm đến') + '</h4><p class="wt-pop-s' + (won ? ' won' : '') + '">' + (won ? '★ Đã chinh phục' : (now ? 'Đang mở tuần này' : 'Chưa chinh phục')) + '<small>' + wtFmt(w.ws) + ' – ' + wtFmt(wtAdd(w.ws, 6)) + '</small></p></div></div>'
       + (w.story ? '<p class="wt-pop-st">' + uEsc(w.story) + '</p><button type="button" class="wt-pop-more" data-wt-more aria-expanded="false" hidden>Xem thêm ▾</button>' : '')
@@ -15808,6 +15815,7 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
     if(room.state !== 'locked' || !room.boss) return wtbFail('Boss chưa sẵn sàng. Đợi cả đội nộp bài nhé.');
     var seat = wtSlotOf(room); if(seat === undefined) return wtbFail('Con không còn trong phòng này.');
     if(wtbWon(room)) return wtbFail('Đội đã hạ Boss tuần này rồi! 🏆');
+    if(!wtAttPay(wtCode, wtbAttOf(room))) return wtbFail(wtNoTurn());
     if(wtPoll){ clearInterval(wtPoll); wtPoll = 0; }
     wtbStop();
     var W = wtb = { code: wtCode, seat: seat, att: wtbAttOf(room), room: room, f: {}, b: null, applied: 0, queue: [], playing: false, flowing: false, hold: false, since: Date.now(), panelKey: '', hp: [], cards: [], gone: 0, unitsOk: 0, duo: false, enraged: 0, pre: false, entered: 0, entering: false, finVis: 0, st: null };
@@ -15840,6 +15848,7 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
       W.room = room; wtRoom = room;
       var att = wtbAttOf(room);
       if(att !== W.att){   // có người bấm «Thử lại» → sang lần mới
+        if(!wtAttPay(W.code, att)){ wtbStop(); wtbFail(wtNoTurn()); await wtRender(); return; }   // mỗi người tự trừ 1 🎟️ cho lần thử mới
         W.att = att; W.unitsOk = 0; W.duo = false; W.enraged = 0; W.pre = false; W.entered = 0; W.entering = false; W.b = null; W.init = null; W.applied = 0; W.queue = []; W.flow = -1; W.autoSeq = -1; W.panelKey = ''; W.finished = 0; W.claimed = 0; W.flowing = false; W.hold = false; W.since = Date.now();
         wtbBeat(W);
       }
@@ -16085,9 +16094,49 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
       wtbaControls(W, wtbaLeaveBtn(), function(c){ var lb = c.querySelector('#wtba-leave'); if(lb) lb.onclick = function(){ if(confirm('Rời sân đấu? Đồng đội vẫn đánh tiếp, máy sẽ đánh thay con.')) wtbaHome(W); }; });
     }
   }
+  /* ===== Kinh nghiệm ⚡ khi đánh Boss World Tour =====
+     Mọi thẻ tham gia đều được cộng ⚡ (thẻ của chính máy này, tự +OVR nếu đủ): công thức như Đấu nhanh 3v3 (fuseAnalyze thẻ mình với Boss cùng ô × REWARD3.base)
+     nhưng NHÂN WT_EXP_X (gấp đôi), rồi nhân thêm hệ số độ khó WT_EXP_DIFF[1★…5★] (tăng dần). Thắng: đủ; MVP (gây nhiều sát thương nhất đội) +REWARD3.mvp.
+     Thua vẫn được WT_EXP_LOSE × phần của lần thắng (Đấu nhanh thua thì không có). Mỗi lần thử (phòng + lần thử) chỉ cộng 1 lần. */
+  var WT_EXP_X = 2;
+  var WT_EXP_DIFF = [1, 1.25, 1.5, 2, 2.5];
+  var WT_EXP_LOSE = 0.3;
+  var WT_EXP_KEY = 'kidchart_wtour_exp';
+  function wtbApplyExp(W, win){
+    try{
+      var m = safeGet(WT_EXP_KEY); m = m && typeof m === 'object' && !Array.isArray(m) ? m : {};
+      var key = W.code + '#' + W.att; if(m[key]) return m[key];
+      var b = W.b, sd = W.seat, mi = W.init && W.init.mine && W.init.mine['m' + sd]; if(!b || !mi) return null;
+      var card = b.sides[sd] && b.sides[sd].card; if(!card || !card.name) return null;
+      var bs = [3 + sd, 3, 4, 5].map(function(i){ return b.sides[i]; }).filter(function(u){ return u && u.card && u.card.name; })[0], boss = bs && bs.card; if(!boss) return null;
+      var mvp = 0; for(var k = 1; k < 3; k++){ if(b.sides[k] && b.sides[k].card && b.sides[k].card.name && b.sides[k].dealt > b.sides[mvp].dealt) mvp = k; }
+      var star = wtStarOf(W.room), dm = WT_EXP_DIFF[Math.max(0, Math.min(WT_EXP_DIFF.length - 1, star - 1))] || 1, x = WT_EXP_X * dm;
+      var fz = fuseAnalyze(card, boss); fz.v = Math.min(fz.v, BATTLE_FRAC_CAP);
+      var frac = fz.v * (win ? (REWARD3.base + (mvp === sd ? REWARD3.mvp : 0)) * x : WT_EXP_LOSE * REWARD3.base * x);
+      var own = battleOwnedCards().filter(function(p){ return String(p.dbId) === String(mi.id); })[0], players = loadPlayers(), raw = own && players.find(function(q){ return q && q.id === own.id; });
+      var r = { name: card.name, win: !!win, mvp: mvp === sd, star: star, mult: x, gain: 0, levels: 0, pct: 0, oldOvr: card.ovr || 0, newOvr: card.ovr || 0, bonus: 0, cost: 0 };
+      if(raw){
+        if(typeof raw.ovrBonus !== 'number') raw.ovrBonus = raw.star || 0; delete raw.star;
+        r.gain = frac * battleCostForNext(raw.ovrBonus); r.oldOvr = (own.ovr || own.realOvr || r.oldOvr);
+        var pr = fuseProject(raw.ovrBonus, raw.energy || 0, frac); raw.ovrBonus = pr.bonus; raw.energy = pr.energy; r.levels = pr.levels;
+        var fresh = hydratePlayer(raw); r.newOvr = (fresh && fresh.ovr) || (r.oldOvr + r.levels);
+        r.cost = battleCostForNext(raw.ovrBonus); r.pct = Math.min(100, Math.round(raw.energy / r.cost * 100)); r.bonus = raw.ovrBonus; r.en = raw.energy;
+        savePlayers(players);
+      }
+      m[key] = r; var ks = Object.keys(m); if(ks.length > 40) ks.slice(0, ks.length - 40).forEach(function(q){ delete m[q]; });
+      safeSet(WT_EXP_KEY, m); return r;
+    }catch(e){ try{ console.error('[WorldTour/exp]', e); }catch(x){} return null; }
+  }
+  function wtbExpHTML(r){
+    if(!r || r.none) return '';
+    return '<div class="battle-up-wrap" style="margin:8px 0"><p class="hint-text">⚡ <b>+' + fuseFmt(r.gain) + '</b> Năng Lượng cho <b>' + escHtml(r.name || '') + '</b> · ' + (r.win ? 'thắng Boss' : 'chưa hạ Boss (vẫn có kinh nghiệm)') + (r.mvp && r.win ? ' · ⭐ MVP' : '') + ' · ' + wtStarsTxt(r.star) + ' (x' + (Math.round(r.mult * 100) / 100) + ' so với Đấu nhanh)</p>'
+      + (r.levels ? '<p class="hint-text"><span class="t3-lvup">▲ +' + r.levels + ' OVR (' + r.oldOvr + ' ➜ ' + r.newOvr + ')</span></p>' : '')
+      + (r.cost ? '<div class="battle-up"><div class="battle-up-bar"><i style="width:' + r.pct + '%"></i></div><div class="battle-up-txt">⚡ ' + fuseFmt(r.en || 0) + '/' + r.cost + ' → +' + ((r.bonus || 0) + 1) + ' OVR</div></div>' : '') + '</div>';
+  }
   function wtbaResult(W){
-    var st = W.st, b = W.b, win = b.winner === 0, room = W.room, f = W.f, tries = wtbTries(room), left = tries - W.att, cl = wtClaims(), got = cl[room.ws];
+    var st = W.st, b = W.b, win = b.winner === 0, room = W.room, f = W.f, tries = wtbTries(room), left = tries - W.att, got = wtClaimLv(room.ws, wtStarOf(room));
     var week = wtLive && wtLive.weeks.filter(function(w){ return w.ws === room.ws; })[0];
+    if(!W.exp) W.exp = wtbApplyExp(W, win) || { none: 1 };
     var key = 'res:' + W.att + ':' + (win ? 1 : 0) + ':' + (got ? 1 : 0) + ':' + (left > 0 ? 1 : 0);
     if(!W.finVis){   // cảnh kết thúc giống Đấu nhanh
       W.finVis = 1; mark3(-1, -1);
@@ -16109,15 +16158,16 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
       var html;
       if(win){
         html = '<div class="battle-result win"><h3>🏆 Cả đội đã hạ gục Boss!</h3><p>Hoàn thành sau <b>' + b.turn + '</b> lượt đánh' + (W.att > 1 ? ' (lần thử thứ ' + W.att + ')' : '') + '.</p>'
-          + (got ? '<p class="battle-reward">' + (got.got === 'frags' ? '🧩 Đã đổi thẻ thưởng thành ' + (got.n | 0) + ' mảnh ghép' : (got.got === 'card' ? '🎁 Đã nhận thẻ thưởng ' + escHtml(got.name || '') : '✅ Đã ghi con dấu vào hộ chiếu')) + '</p>' : '')
+          + (got && got.room && got.room !== W.code ? '<p class="battle-reward">🔁 Độ khó này con đã nhận thưởng rồi — lần thắng này chỉ để luyện tập, không nhận thêm thẻ nhé!</p>' : (got ? '<p class="battle-reward">' + (got.got === 'frags' ? '🧩 Đã đổi thẻ thưởng thành ' + (got.n | 0) + ' mảnh ghép' : (got.got === 'card' ? '🎁 Đã nhận thẻ thưởng ' + escHtml(got.name || '') : '✅ Đã ghi con dấu vào hộ chiếu')) + '</p>' : ''))
           + '</div>';
       } else {
         html = '<div class="battle-result lose"><h3>💪 Chưa hạ được Boss lần này</h3><p>Boss giữ nguyên sức mạnh đã tiết lộ. ' + (left > 0 ? 'Cả đội còn <b>' + left + '</b> lần thử trong tuần này.' : 'Cả đội đã dùng hết lượt thử của tuần này — chặng sau gặp lại nhé!') + '</p></div>';
       }
+      html += wtbExpHTML(W.exp);
       if(rz) rz.innerHTML = html;
       var btns = '';
       if(win && !got) btns += '<button type="button" class="' + btnGold + '" id="wtba-claim">🎁 ' + (week && week.rewardId ? 'Nhận thẻ thưởng' : 'Đóng dấu hộ chiếu') + '</button>';
-      if(!win && left > 0) btns += '<button type="button" class="' + btnGold + '" id="wtba-retry">🔁 Thử lại</button>';
+      if(!win && left > 0) btns += '<button type="button" class="' + btnGold + '" id="wtba-retry">🔁 Thử lại (−1 🎟️)</button>';
       btns += wtbaLeaveBtn();
       wtbaControls(W, btns, function(c){
         var a = c.querySelector('#wtba-claim'); if(a) a.onclick = function(){ a.disabled = true; wtbClaimAct().then(function(){ W.panelKey = ''; }); };
@@ -16272,8 +16322,8 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
     var room = wtRoom; if(!room || !room.boss) return '';
     var gold = 'background:var(--wt-gold);border-color:var(--wt-gold);color:var(--wt-ink)', ws = room.ws, att = wtbAttOf(room), f = wtbFight(room, att), tries = wtbTries(room);
     if(wtbWon(room)){
-      var got = wtClaims()[ws];
-      return got ? '<span class="wt-boss">🏆 Đã hạ Boss · ' + (got.got === 'frags' ? '🧩 đã đổi thành mảnh ghép' : (got.got === 'card' ? '🎁 đã nhận ' + uEsc(got.name || 'thẻ thưởng') : '✅ đã đóng dấu')) + '</span>'
+      var got = wtClaimLv(ws, wtStarOf(room));
+      return got ? '<span class="wt-boss">🏆 Đã hạ Boss · ' + (got.room && got.room !== wtCode ? '🔁 độ khó này đã nhận thưởng từ trước' : (got.got === 'frags' ? '🧩 đã đổi thành mảnh ghép' : (got.got === 'card' ? '🎁 đã nhận ' + uEsc(got.name || 'thẻ thưởng') : '✅ đã đóng dấu'))) + '</span>'
         : '<button type="button" class="wt-btn" style="' + gold + '" data-wt-act="claim">🎁 Nhận thẻ thưởng</button>';
     }
     if(f.res && !f.res.win && att >= tries) return '<span class="wt-boss">💪 Đã dùng hết ' + tries + ' lần thử tuần này</span>';
@@ -16301,7 +16351,9 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
     var W = wtb; if(!W) return;
     var room = await wtGetRoom(W.code); if(!room) return;
     var att = wtbAttOf(room);
-    if(att !== W.att || att >= wtbTries(room) || wtbWon(room)) return;   // chỉ tăng khi còn đang xem đúng lần vừa thua (tránh 3 bé bấm cùng lúc làm nhảy lần)
+    if(att !== W.att || att >= wtbTries(room) || wtbWon(room)) return;
+    if(!wtAttPay(W.code, att + 1)){ W.panelKey = ''; try{ if(typeof triggerToast === 'function') triggerToast('low', '⚠️ ' + wtNoTurn()); }catch(e){} return; }   // hết 🎟️ thì không thử lại được
+    // chỉ tăng khi còn đang xem đúng lần vừa thua (tránh 3 bé bấm cùng lúc làm nhảy lần)
     await wtbCas(W.code + '/att', att + 1, room.att === undefined ? null : room.att);
     await wtbTick();
   }
@@ -16311,17 +16363,66 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
      Chống nhận 2 lần: (1) claims theo tuần ở hồ sơ; (2) phòng ghi claimed/<mã hồ sơ> bằng ETag (máy ghi sau thấy đã có thì không nhận nữa). */
   var WT_CLAIM_KEY = 'kidchart_wtour_claims';
   function wtClaims(){ var c = safeGet(WT_CLAIM_KEY); return c && typeof c === 'object' && !Array.isArray(c) ? c : {}; }
+  /* Thưởng World Tour tính theo TỪNG ĐỘ KHÓ của mỗi chặng: claims[ws] = { …bản ghi đầu tiên…, lv:{ '1':{…}, '2':{…} } }.
+     Hồ sơ cũ (chưa có lv) coi như đã nhận ở độ khó rec.star (không có thì độ 1). Thi đấu lại thoải mái, chỉ lần thắng ĐẦU ở mỗi độ khó mới có thưởng. */
+  function wtStarOf(room){ return (room && room.boss && +room.boss.star) || (room && +room.diff) || 1; }
+  function wtClaimLv(ws, star){
+    var c = wtClaims()[ws]; if(!c) return null; star = +star || 1;
+    if(c.lv) return c.lv[star] || null;
+    return (c.star || 1) === star ? c : null;
+  }
+  function wtClaimedStars(ws){
+    var c = wtClaims()[ws]; if(!c) return [];
+    var a = c.lv ? Object.keys(c.lv).map(Number) : [c.star || 1];
+    return a.filter(function(x){ return x > 0; }).sort(function(x, y){ return x - y; });
+  }
+  function wtClaimPut(ws, star, rec){
+    var cl = wtClaims(), c = cl[ws]; rec.star = star;
+    if(!c){ c = Object.assign({}, rec); c.lv = {}; }
+    else if(!c.lv){ var old = Object.assign({}, c); c.lv = {}; c.lv[old.star || 1] = old; }
+    c.lv[star] = rec; cl[ws] = c; safeSet(WT_CLAIM_KEY, cl);
+  }
+  /* 🎟️ Lượt đấu dùng chung với Đấu Trường / Giao hữu: mỗi người trừ 1 lượt khi MỞ hoặc VÀO phòng World Tour (= lần thử Boss thứ 1); mỗi lần thử lại sau đó trừ thêm 1.
+     Rời phòng khi chưa chốt team thì được hoàn lại lượt. */
+  var WT_PAID_KEY = 'kidchart_wtour_paid';
+  function wtPaidMap(){ var m = safeGet(WT_PAID_KEY); return m && typeof m === 'object' && !Array.isArray(m) ? m : {}; }
+  function wtPay(code){
+    markBattlePlayedToday(); var m = wtPaidMap(), k; for(k in m){ if(m[k] !== battleTodayKey()) delete m[k]; }
+    m[code] = battleTodayKey(); safeSet(WT_PAID_KEY, m); try{ renderBattleQuota(); }catch(e){}
+  }
+  function wtRefund(code){
+    var m = wtPaidMap(); if(!code || m[code] !== battleTodayKey()) return;
+    delete m[code]; safeSet(WT_PAID_KEY, m);
+    var d = battleDailyState(), n = battlePlayedCount() - 1;
+    safeSet('kidchart_battle_daily', n > 0 ? { date: battleTodayKey(), count: n } : { date: '', count: 0 });
+    try{ renderBattleQuota(); }catch(e){}
+  }
+  /* Mỗi lần thử lại Boss (lần 2, 3…) trong cùng phòng cũng trừ thêm 1 🎟️ của MỖI người; trả về false nếu hết lượt. Lần 1 đã trừ lúc mở/vào phòng. */
+  function wtAttPay(code, att){
+    if(att <= 1) return true;
+    var m = wtPaidMap(), k = code + '#' + att, td = battleTodayKey(), x;
+    if(m[k] === td) return true;
+    if(battleLeftToday() <= 0) return false;
+    markBattlePlayedToday(); for(x in m){ if(m[x] !== td) delete m[x]; }
+    m[k] = td; safeSet(WT_PAID_KEY, m); try{ renderBattleQuota(); }catch(e){}
+    return true;
+  }
+  function wtNoTurn(){ return '🎟️ ' + battleOutOfTurnsText() + battleTail(' — mai quay lại nhé!'); }
+  function wtQuotaNote(){
+    var left = battleLeftToday();
+    return '<p class="wt-note" style="color:#6B5A31;padding:0 0 6px">' + (left > 0 ? '🎟️ Hôm nay còn <b>' + left + '/' + battleLimit() + '</b> lượt đấu · mở/vào phòng trừ 1 lượt, mỗi lần thử lại Boss trừ thêm 1 (dùng chung với Đấu Trường)' : wtNoTurn()) + '</p>';
+  }
   function wtDev(){ var d = ''; try{ d = localStorage.getItem('dbcd_dev') || ''; if(!d){ d = Math.random().toString(36).slice(2, 10); localStorage.setItem('dbcd_dev', d); } }catch(e){ d = 'x'; } return d; }
   async function wtbClaimAct(){
     var W = wtb, room = (W && W.room) || wtRoom; if(!room || !wtLive) return;
     var week = wtLive.weeks.filter(function(w){ return w.ws === room.ws; })[0], ws = room.ws, code = W ? W.code : wtCode;
-    var cl = wtClaims(); if(cl[ws]){ if(W) W.panelKey = ''; return; }
+    var star = wtStarOf(room), cl = wtClaims(); if(wtClaimLv(ws, star)){ if(W) W.panelKey = ''; return; }
     var won = wtbWon(room) || (W && W.b && W.b.finished && W.b.winner === 0); if(!won) return;
     var mark = await wtbCas(code + '/claimed/' + encodeURIComponent(syncId), { dev: wtDev(), at: { '.sv': 'timestamp' } });
     if(mark === null){ wtErr = 'Mất kết nối, bấm «Nhận thẻ thưởng» lại nhé.'; if(W) W.claimed = 0; return; }
     if(mark === false){   // đã có dấu nhận: của máy khác → thôi; của chính máy này (lần trước chưa kịp lưu) → nhận nốt
       var ex = null; try{ var r = await fetch(wtbUrl(code + '/claimed/' + encodeURIComponent(syncId))); ex = r.ok ? await r.json() : null; }catch(e){}
-      if(ex && ex.dev !== wtDev()){ cl[ws] = { at: Date.now(), room: code, got: 'none', other: 1 }; safeSet(WT_CLAIM_KEY, cl); if(W) W.panelKey = ''; return; }
+      if(ex && ex.dev !== wtDev()){ wtClaimPut(ws, star, { at: Date.now(), room: code, got: 'none', other: 1 }); if(W) W.panelKey = ''; return; }
     }
     var shown = null, rec = { at: Date.now(), room: code, got: 'none' }, base = week && week.rewardId ? PLAYER_DB_BY_ID[week.rewardId] : null;
     if(base){
@@ -16331,7 +16432,7 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
       if(savePlayers(players) === false){ alert('Chưa lưu được thẻ vào máy. Con bấm «Nhận thẻ thưởng» lại nhé!'); if(W) W.claimed = 0; return; }
       rec.got = 'card'; rec.plus = plus; rec.star = (room.boss && room.boss.star) || 0; rec.id = base.dbId; rec.name = base.name; shown = hydratePlayer(np);
     }
-    cl[ws] = rec; safeSet(WT_CLAIM_KEY, cl);
+    wtClaimPut(ws, star, rec);
     try{ renderBadges(); }catch(e){}
     if(W) W.panelKey = '';
     if(wtb === W && W) { W.panelKey = ""; wtbaResult(W); };
