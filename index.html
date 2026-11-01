@@ -1382,6 +1382,31 @@
   .wt-stage{ position:relative; display:flex; flex-direction:column; align-items:center; gap:8px; padding:8px 10px 10px; background:radial-gradient(120% 80% at 50% 0,#10375E,var(--wt-deep) 78%); }
   .wt-map{ --ar:2; --pin:clamp(26px,3.9vw,46px); min-height:0; aspect-ratio:var(--ar); width:min(100%, calc(var(--wt-h,58dvh) * var(--ar))); border:2px solid var(--wt-gold); border-radius:14px; box-shadow:0 0 0 3px var(--wt-sea), 0 12px 30px rgba(0,0,0,.5); }
   .wt-atlas{ width:100%; height:100%; border-radius:12px; }
+  /* ===== World Tour v4: chọn địa điểm → zoom bản đồ sang trái, thông tin chi tiết bên phải (tối ưu iPad) ===== */
+  .wt-body{ width:100%; display:flex; justify-content:center; align-items:flex-start; gap:12px; }
+  .wt-map{ --z:1; overflow:hidden; flex:none; transition:width .95s cubic-bezier(.65,0,.25,1), height .95s cubic-bezier(.65,0,.25,1); }
+  .wt-zoom{ position:absolute; left:0; top:0; width:100%; height:100%; transform-origin:0 0; transition:transform .95s cubic-bezier(.65,0,.25,1); will-change:transform; }
+  .wt-map::after{ content:''; position:absolute; inset:0; z-index:3; pointer-events:none; border-radius:12px; opacity:0; transition:opacity .9s; background:radial-gradient(ellipse at 50% 52%, transparent 42%, rgba(4,14,28,.6) 100%); }
+  .wt-stage.focus .wt-map::after{ opacity:1; }
+  .wt-pin2{ transform-origin:0 0; transition:transform .95s cubic-bezier(.65,0,.25,1); }
+  .wt-stage.focus .wt-pin2{ transform:scale(calc(1 / var(--z))); }
+  .wt-zout{ display:none; position:absolute; left:10px; top:10px; z-index:5; min-height:42px; padding:0 15px; border-radius:21px; border:2px solid var(--wt-gold); background:rgba(8,26,48,.9); color:#fff; font:800 13.5px/1 inherit; cursor:pointer; box-shadow:0 4px 12px rgba(0,0,0,.45); }
+  .wt-stage.focus .wt-zout{ display:block; animation:wtFade .4s .5s both; }
+  .wt-zout:focus-visible{ outline:3px solid #fff; outline-offset:2px; }
+  .wt-panel{ flex:none; min-width:0; animation:wtPanelIn .45s cubic-bezier(.2,1,.4,1) both; }
+  .wt-panel.late{ animation-delay:.4s; }
+  .wt-panel .wt-pop-in{ height:100%; display:flex; flex-direction:column; padding:16px 16px 14px; border-radius:16px; box-shadow:0 12px 34px rgba(0,0,0,.5); -webkit-overflow-scrolling:touch; }
+  .wt-panel .wt-pop-in > *{ flex:none; }
+  .wt-panel .wt-pop-h .wt-f{ width:58px; height:58px; font-size:28px; }
+  .wt-panel .wt-pop-n{ font-size:27px; }
+  .wt-panel .wt-pop-st{ font-size:15px; -webkit-line-clamp:3; }
+  .wt-panel .wt-pop-cards{ margin-top:12px; }
+  .wt-panel .wt-pc{ width:84px; } .wt-panel .wt-pc.rw{ width:106px; }
+  .wt-panel .wt-pop-go{ margin-top:auto; }
+  .wt-panel .wt-pop-cards + .wt-pop-go{ margin-top:auto; }
+  @keyframes wtPanelIn{ from{ opacity:0; transform:translateX(44px); } to{ opacity:1; transform:none; } }
+  @media (max-width:640px){ .wt-body{ flex-direction:column; align-items:stretch; } .wt-panel{ width:100% !important; height:auto !important; } .wt-panel .wt-pop-in{ height:auto; } .wt-panel .wt-pc{ width:64px; } .wt-panel .wt-pc.rw{ width:84px; } }
+  @media (prefers-reduced-motion:reduce){ .wt-map, .wt-zoom, .wt-pin2, .wt-panel{ transition:none !important; animation:none !important; } }
   .wt-stage.popping .wt-pin2:not(.show){ opacity:.5; transition:opacity .2s; }
   .wt-pin2.show .wt-pb{ box-shadow:0 0 0 3px #fff, 0 0 0 6px var(--wt-gold), 0 6px 14px rgba(0,0,0,.5); }
   .wt-pin2.show .wt-lab, .wt-pin2.show .wt-hi{ opacity:0; }
@@ -1527,6 +1552,10 @@
   .wtb-res h3{ margin:0; font:900 24px Georgia,serif; } .wtb-res.win h3{ color:var(--wt-gold); } .wtb-res p{ margin:0; font-size:15px; line-height:1.5; } .wtb-got{ font-weight:800; color:#4ADE80; }
   .wtb .wt-qwrap{ padding:4px 6px 6px; gap:7px; } .wtb .wt-q{ font-size:19px; margin:2px 0; } .wtb .wt-opt{ min-height:50px; font-size:16px; } .wtb .wt-fb{ min-height:34px; margin:0; font-size:14px; }
   .wtb.q .wtb-card, .wtb.q .wtb-tag{ display:none; } .wtb.q .wtb-u{ max-width:none; }
+  .wt-empty-slot{ display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; min-height:120px; border:2px dashed rgba(255,255,255,.28); border-radius:12px; color:#CBD5E1; font-size:28px; opacity:.8; }
+  .wt-empty-slot small{ font-size:11px; }
+  .wtba-dot{ font-size:10px; }
+  .bt-arena.wt-rage{ box-shadow:inset 0 0 0 2px rgba(244,63,94,.6), inset 0 0 60px rgba(244,63,94,.25); }
   .wtb{ position:relative; } .wtb.shake{ animation:wtbShake .45s; }
   .wtb-teams{ display:flex; align-items:center; gap:6px; padding:0 4px; } .wtb-vs{ font:900 12px Georgia,serif; color:var(--wt-gold); }
   .wtb-tb{ position:relative; flex:1; height:18px; border-radius:9px; background:#07131F; border:1px solid #35516E; overflow:hidden; }
@@ -15133,6 +15162,10 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
   /* Bản đồ = ảnh Atlas. Ảnh này không theo phép chiếu chuẩn nên vị trí ghim được hiệu chỉnh bằng bảng điểm chuẩn:
      [tên, vĩ độ, kinh độ, x, y] với x,y là pixel trên ảnh tham chiếu 1152×648 (tâm của nước đó trên ảnh).
      Muốn ghim chính xác hơn ở vùng nào, thêm 1 dòng điểm chuẩn ở vùng đó. Hệ thống tự nội suy phần còn lại. */
+  /* 📝 Bài 10 câu của World Tour (nút «Làm 10 câu»): WT_PLAN = môn của từng câu (được xáo trộn mỗi lần làm), WT_Q_SECS = số giây mỗi câu.
+     (Trước đây hai hằng số này CHƯA được khai báo → bấm «Làm 10 câu» báo lỗi ngầm, bảng phòng đóng mà không vào được bài.) */
+  var WT_PLAN = ['toan', 'toan', 'toan', 'tviet', 'tviet', 'anh', 'anh', 'tnxh', 'bongda', 'khac'];
+  var WT_Q_SECS = 20;
   var WT_REWARD_OVR = 3;   // thẻ thưởng World Tour: cầu thủ chỉ định được cộng sẵn +3 Overall (chỉnh số này nếu muốn đổi)
   var WT_MAP = { url:'https://res.cloudinary.com/tgvj8prc/image/upload/v1793011116/Colorful_World_Atlas_Map.png', W:1152, H:648, sig:28, lam:0.02 };
   var WT_CTRL = [
@@ -15190,7 +15223,7 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
       for(var k = 0; k < placed.length && guard < 12; k++){ if(Math.abs(placed[k][0] - p[0]) < 3.6 && Math.abs(placed[k][1] - p[1]) < 8){ p[0] += 3.8; k = -1; guard++; } }
       p[0] = Math.min(96, p[0]); placed.push(p); pts.push(p);
     });
-    var h = '<img class="wt-atlas" src="' + uEsc(WT_MAP.url) + '" alt="Bản đồ thế giới" decoding="async" draggable="false" onload="var m=this.parentNode;if(this.naturalHeight)m.style.setProperty(\'--ar\',this.naturalWidth/this.naturalHeight);m.classList.add(\'ready\')" onerror="this.style.display=\'none\';this.parentNode.classList.add(\'ready\',\'noimg\')">';
+    var h = '<div class="wt-zoom"><img class="wt-atlas" src="' + uEsc(WT_MAP.url) + '" alt="Bản đồ thế giới" decoding="async" draggable="false" onload="var m=this.closest(\'.wt-map\');if(this.naturalHeight)m.style.setProperty(\'--ar\',this.naturalWidth/this.naturalHeight);m.classList.add(\'ready\')" onerror="this.style.display=\'none\';this.parentNode.classList.add(\'ready\',\'noimg\')">';
     h += '<svg class="wt-routes" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">';
     for(var i = 1; i < ws.length; i++){
       var a = pts[i - 1], b = pts[i], mx = (a[0] + b[0]) / 2, my = Math.min(a[1], b[1]) - 8 - Math.abs(a[0] - b[0]) * .12;
@@ -15212,11 +15245,11 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
         + '<span class="wt-hi"><i class="wt-wave">👋</i> ' + (now ? 'Chào mừng!' : 'Xin chào!') + '</span>'
         + '<span class="wt-lab">' + uEsc(name) + '<small>' + uEsc(sub) + '</small></span></span></button>';
     });
-    return h + '</div>';
+    return h + '</div></div>';
   }
   function wtStageHTML(cfg){
     var ws = cfg.weeks.filter(function(w){ return w.ws; }), cl = wtClaims(), dw = wtDateWeek(cfg), n = ws.filter(function(w){ return cl[w.ws]; }).length;
-    return '<div class="wt-stage"><div class="wt-map">' + wtMapHTML(cfg) + '</div><div class="wt-dock"><span class="wt-pass" title="Hộ chiếu">🛂 ' + n + '/' + ws.length + '</span><div class="wt-dk-list" role="list">'
+    return '<div class="wt-stage"><div class="wt-body"><div class="wt-map">' + wtMapHTML(cfg) + '<button type="button" class="wt-zout" data-wt-close aria-label="Thu nhỏ bản đồ">⤺ Thu nhỏ bản đồ</button></div></div><div class="wt-dock"><span class="wt-pass" title="Hộ chiếu">🛂 ' + n + '/' + ws.length + '</span><div class="wt-dk-list" role="list">'
       + ws.map(function(w){ var won = !!cl[w.ws]; return '<button type="button" role="listitem" class="wt-dk' + (won ? ' won' : '') + (dw && dw.ws === w.ws ? ' now' : '') + '" data-wt-pin="' + uEsc(w.ws) + '">' + wtFaceHTML(w) + '<span>' + uEsc(w.nation || 'Điểm đến') + '</span>' + (won ? '<em>★</em>' : '') + '</button>'; }).join('')
       + '</div><span class="wt-chip-host" id="wt-chip-host"></span></div></div>';
   }
@@ -15258,6 +15291,7 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
   function wtPaintStub(){ var el = document.getElementById('wt-stub'); if(el) el.innerHTML = wtStubHTML(wtLive && wtCurWeek(wtLive)); wtPaintChip(); }
   function wtPaintChip(){ var h = document.getElementById('wt-chip-host'); if(h) h.innerHTML = (wtCode && wtRoom) ? '<button type="button" class="wt-room-chip" data-wt-act="sheet">🚪 Phòng ' + uEsc(wtCode) + (wtRoom.nation ? ' · ' + uEsc(wtRoom.nation) : '') + '</button>' : ''; }
   async function wtRender(){
+    if(wtb) wtbStop();
     wtbStop(); wtDropSheet(); wtPopClose();
     var v = document.getElementById('wtour-view'); if(!v) return;
     ['battle-road-view', 'battle-pick-view', 'season-view', 'season-subtabs'].forEach(function(id){ var e = document.getElementById(id); if(e) e.style.display = 'none'; });
@@ -15295,13 +15329,14 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
     else if(wtMembers(room).every(function(i){ return room.slots[i].id !== syncId; })){ wtCode = ''; wtRoom = null; wtErr = 'Con không còn trong phòng này.'; clearInterval(wtPoll); wtPoll = 0; }
     else {
       wtRoom = room;
-      if(room.state === 'locked' && !room.boss && room.host === syncId && wtAllDone(room) && wtLive){
-        var cw = wtLive.weeks.filter(function(w){ return w.ws === room.ws; })[0]; if(cw) wtPut(wtCode + '/boss', wtBossCalc(room, wtLive, cw)).catch(function(){});
+      if(room.state === 'locked' && !room.boss && wtLive){
+        var cw = wtLive.weeks.filter(function(w){ return w.ws === room.ws; })[0]; if(cw) wtPrepareBoss(wtCode, cw).catch(function(){});
       }
     }
     wtPaintStub();
   }
   function wtEnter(code, room){ wtCode = code; wtRoom = room; wtErr = ''; try{ localStorage.setItem(WT_ROOM_KEY, code); }catch(e){} if(room && room.ws && room.ws !== wtSel){ wtSel = room.ws; wtOpenSheet(); } else wtPaintStub(); if(!wtPoll) wtPoll = setInterval(wtTick, 2500); }
+  function wtToast(msg){ try{ if(typeof triggerToast === 'function') triggerToast('low', '⚠️ ' + msg); }catch(e){} }
   async function wtAct(act, el){
     var cur = wtLive && wtCurWeek(wtLive); wtErr = '';
     try{
@@ -15359,8 +15394,9 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
         wtCode = ''; wtRoom = null; try{ localStorage.removeItem(WT_ROOM_KEY); }catch(e){} if(wtPoll){ clearInterval(wtPoll); wtPoll = 0; }
       } else if(act === 'lock' && wtRoom && wtMembers(wtRoom).length >= 2){
         await wtPut(wtCode + '/diff', wtRoomStar(wtRoom, cur)); await wtPut(wtCode + '/state', 'locked'); wtRoom.state = 'locked';
+        try{ await wtPrepareBoss(wtCode, cur); wtRoom = (await wtGetRoom(wtCode)) || wtRoom; }catch(e){ /* wtTick sẽ thử lại */ }
       }
-    }catch(e){ wtErr = 'Mất kết nối, thử lại nhé.'; }
+    }catch(e){ try{ console.error('[WorldTour/' + act + ']', e); }catch(x){} wtErr = 'Mất kết nối, thử lại nhé.'; wtToast(wtErr + ' (' + ((e && e.message) || e) + ')'); }
     wtPaintStub();
   }
   document.addEventListener('click', function(e){
@@ -15384,43 +15420,64 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
       : same ? '<button type="button" class="wt-btn go" data-wt-act="go" data-ws="' + ws + '">Vào phòng của con</button>'
       : inRoom ? '<p class="wt-pop-note">Con đang ở phòng ' + uEsc(wtCode) + ' (' + uEsc(wtRoom.nation || '') + ').</p><button type="button" class="wt-btn alt" data-wt-act="leave-go" data-ws="' + ws + '">Rời phòng và đến đây</button>'
       : '<button type="button" class="wt-btn go" data-wt-act="go" data-ws="' + ws + '">Thi đấu ở đây</button>';
-    return '<i class="wt-tail"></i><div class="wt-pop-in"><button type="button" class="wt-pop-x" data-wt-close aria-label="Đóng">✕</button>'
+    return '<div class="wt-pop-in"><button type="button" class="wt-pop-x" data-wt-close aria-label="Đóng">✕</button>'
       + '<div class="wt-pop-h">' + wtFaceHTML(w) + '<div><h4 class="wt-pop-n">' + uEsc(w.nation || 'Điểm đến') + '</h4><p class="wt-pop-s' + (won ? ' won' : '') + '">' + (won ? '★ Đã chinh phục' : (now ? 'Đang mở tuần này' : 'Chưa chinh phục')) + '<small>' + wtFmt(w.ws) + ' – ' + wtFmt(wtAdd(w.ws, 6)) + '</small></p></div></div>'
       + (w.story ? '<p class="wt-pop-st">' + uEsc(w.story) + '</p><button type="button" class="wt-pop-more" data-wt-more aria-expanded="false" hidden>Xem thêm ▾</button>' : '')
       + '<div class="wt-pop-cards"><div><h5>Đội Boss</h5><div class="wt-pop-row">' + card(w.bossIds[0], 'lead') + card(w.bossIds[1], '') + card(w.bossIds[2], '') + '</div></div>'
       + '<div class="wt-pop-rw"><h5>Phần thưởng</h5>' + card(w.rewardId, 'rw', WT_REWARD_OVR) + '</div></div>'
       + '<div class="wt-pop-go">' + go + '</div></div>';
   }
-  function wtPopPlace(stage, pop, pin){
-    var inner = pop.querySelector('.wt-pop-in'), tail = pop.querySelector('.wt-tail'), map = stage.querySelector('.wt-map');
-    var sr = stage.getBoundingClientRect(), mr = map.getBoundingClientRect(), hr = pin.querySelector('.wt-pb').getBoundingClientRect();
-    if(window.innerWidth <= 640){ pop.style.transformOrigin = '50% 100%'; return; }
-    var mx0 = mr.left - sr.left, my0 = mr.top - sr.top, mw = mr.width, mh = mr.height;
-    inner.style.maxHeight = Math.max(160, mh - 12) + 'px';
-    var pw = pop.offsetWidth, ph = pop.offsetHeight, hx = hr.left + hr.width / 2 - sr.left, hy = hr.top + hr.height / 2 - sr.top, gap = hr.width * .55 + 12;
-    var side = (hx + gap + pw <= mx0 + mw - 6) ? 'r' : ((hx - gap - pw >= mx0 + 6) ? 'l' : (hx - mx0 < mw / 2 ? 'r' : 'l'));
-    var x = side === 'r' ? hx + gap : hx - gap - pw; x = Math.min(Math.max(x, mx0 + 6), mx0 + mw - pw - 6);
-    var y = Math.min(Math.max(hy - ph * .4, my0 + 6), my0 + mh - ph - 6);
-    pop.style.left = x + 'px'; pop.style.top = y + 'px'; pop.classList.add(side === 'r' ? 's-r' : 's-l');
-    tail.style.top = Math.min(Math.max(hy - y - 8, 18), ph - 34) + 'px';
-    pop.style.transformOrigin = (hx - x) + 'px ' + (hy - y) + 'px';
+  var WT_ZOOM = 2.4;   // mức phóng to khi chọn địa điểm (chỉnh số này nếu muốn zoom gần/xa hơn)
+  function wtFocusOn(stage, pin, pop){
+    var body = stage.querySelector('.wt-body'), map = stage.querySelector('.wt-map'), zoom = map.querySelector('.wt-zoom'), nar = window.innerWidth <= 640;
+    if(!stage.classList.contains('focus')){
+      if(stage._wtT){ clearTimeout(stage._wtT); stage._wtT = 0; }
+      else {
+        var r = map.getBoundingClientRect();
+        stage._wt = { bw: r.width, bh: r.height, w: map.clientWidth, h: map.clientHeight };
+        zoom.style.width = stage._wt.w + 'px'; zoom.style.height = stage._wt.h + 'px';
+        map.style.width = r.width + 'px'; map.style.height = r.height + 'px'; map.style.aspectRatio = 'auto';
+      }
+      void map.offsetWidth;
+      stage.classList.add('focus'); pop.classList.add('late');
+    }
+    var g = stage._wt, bw = body.clientWidth, vw, vh, pw;
+    if(nar){ vw = bw; vh = Math.round(Math.min(g.bh, Math.max(210, window.innerHeight * .36))); pw = 0; }
+    else { vw = Math.round(bw * .55); vh = Math.round(g.bh); pw = bw - vw - 12; }
+    body.appendChild(pop);
+    if(!nar){ pop.style.width = pw + 'px'; pop.style.height = vh + 'px'; }
+    map.style.width = vw + 'px'; map.style.height = vh + 'px';
+    var iw = vw - 4, ih = vh - 4, sc = Math.max(WT_ZOOM, iw / g.w, ih / g.h),
+        px = (parseFloat(pin.style.left) || 50) / 100 * g.w, py = (parseFloat(pin.style.top) || 50) / 100 * g.h,
+        tx = iw / 2 - px * sc, ty = ih * .6 - py * sc;
+    tx = Math.min(0, Math.max(iw - g.w * sc, tx)); ty = Math.min(0, Math.max(ih - g.h * sc, ty));
+    zoom.style.transform = 'translate(' + tx.toFixed(1) + 'px,' + ty.toFixed(1) + 'px) scale(' + sc.toFixed(3) + ')';
+    map.style.setProperty('--z', sc.toFixed(3));
+  }
+  function wtFocusOff(stage){
+    var g = stage._wt, map = stage.querySelector('.wt-map'), zoom = map && map.querySelector('.wt-zoom'); if(!map || !zoom) return;
+    stage.classList.remove('focus'); zoom.style.transform = ''; map.style.setProperty('--z', 1);
+    if(g){ map.style.width = g.bw + 'px'; map.style.height = g.bh + 'px'; }
+    clearTimeout(stage._wtT);
+    stage._wtT = setTimeout(function(){ stage._wtT = 0; map.style.width = map.style.height = map.style.aspectRatio = ''; zoom.style.width = zoom.style.height = ''; }, 1000);
   }
   function wtPopClose(){
     var p = document.getElementById('wt-pop'); if(p) p.remove();
     Array.prototype.forEach.call(document.querySelectorAll('#wtour-view .wt-pin2.show, #wtour-view .wt-dk.on'), function(n){ n.classList.remove('show', 'on'); });
-    var s = document.querySelector('#wtour-view .wt-stage'); if(s) s.classList.remove('popping');
+    var s = document.querySelector('#wtour-view .wt-stage'); if(s){ s.classList.remove('popping'); if(s.classList.contains('focus')) wtFocusOff(s); }
   }
   function wtPopOpen(ws){
     var v = document.getElementById('wtour-view'), stage = v && v.querySelector('.wt-stage'), pin = stage && stage.querySelector('.wt-pin2[data-ws="' + ws + '"]'),
         w = wtLive && wtLive.weeks.filter(function(q){ return q.ws === ws; })[0];
     if(!stage || !pin || !w) return;
-    wtPopClose();
-    var pop = document.createElement('div'); pop.id = 'wt-pop'; pop.className = 'wt-pop'; pop.setAttribute('role', 'dialog'); pop.setAttribute('aria-label', w.nation || 'Điểm đến'); pop.setAttribute('data-ws', ws);
-    pop.innerHTML = wtPopHTML(w); pop.style.visibility = 'hidden'; stage.appendChild(pop);
-    var stx = pop.querySelector('.wt-pop-st'), mbt = pop.querySelector('.wt-pop-more'); if(stx && mbt && stx.scrollHeight > stx.clientHeight + 1) mbt.hidden = false;
+    var old = document.getElementById('wt-pop'); if(old) old.remove();
+    Array.prototype.forEach.call(stage.querySelectorAll('.wt-pin2.show, .wt-dk.on'), function(n){ n.classList.remove('show', 'on'); });
+    var pop = document.createElement('aside'); pop.id = 'wt-pop'; pop.className = 'wt-panel'; pop.setAttribute('role', 'dialog'); pop.setAttribute('aria-label', w.nation || 'Điểm đến'); pop.setAttribute('data-ws', ws);
+    pop.innerHTML = wtPopHTML(w);
     pin.classList.add('show'); stage.classList.add('popping');
     Array.prototype.forEach.call(stage.querySelectorAll('.wt-dk'), function(n){ if(n.getAttribute('data-wt-pin') === ws){ n.classList.add('on'); try{ n.scrollIntoView({ block:'nearest', inline:'nearest' }); }catch(e){} } });
-    wtPopPlace(stage, pop, pin); pop.style.visibility = ''; pop.classList.add('in');
+    wtFocusOn(stage, pin, pop);
+    var stx = pop.querySelector('.wt-pop-st'), mbt = pop.querySelector('.wt-pop-more'); if(stx && mbt && stx.scrollHeight > stx.clientHeight + 1) mbt.hidden = false;
   }
   /* ---- phòng chơi (chọn cầu thủ, mở/vào phòng, làm quiz, đánh Boss) nổi giữa màn hình ---- */
   function wtDropSheet(){ var s = document.getElementById('wt-sheet'); if(s) s.remove(); }
@@ -15463,12 +15520,11 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
   document.addEventListener('click', function(e){
     var tg = e.target && e.target.closest ? e.target : null; if(!tg) return;
     if(tg.id === 'wt-sheet'){ wtCloseSheet(); return; }
-    if(tg.closest('#wt-pop [data-wt-close]')){ wtPopClose(); return; }
+    if(tg.closest('#wtour-view [data-wt-close]')){ wtPopClose(); return; }
     var more = tg.closest('#wt-pop [data-wt-more]');
     if(more){
-      var pp = document.getElementById('wt-pop'), st2 = pp.querySelector('.wt-pop-st'), open = st2.classList.toggle('open'), stg = document.querySelector('#wtour-view .wt-stage'), pn = stg && stg.querySelector('.wt-pin2[data-ws="' + pp.getAttribute('data-ws') + '"]');
+      var pp = document.getElementById('wt-pop'), st2 = pp.querySelector('.wt-pop-st'), open = st2.classList.toggle('open');
       more.textContent = open ? 'Thu gọn ▴' : 'Xem thêm ▾'; more.setAttribute('aria-expanded', open ? 'true' : 'false');
-      if(pn){ pp.classList.remove('s-r', 's-l'); wtPopPlace(stg, pp, pn); }
       return;
     }
     var ref = tg.closest('#wtour-view [data-wt-pin], #wtour-view .wt-pin2');
@@ -15489,15 +15545,31 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
     return '<small style="display:block">' + (r && r.done ? '✅ Đã nộp bài' : (r && r.a ? '✏️ Đang làm' : '⏳ Chưa làm')) + '</small>';
   }
   function wtLockedHTML(n){
-    var me = wtSlotOf(wtRoom), r = me !== undefined && wtRoom.res && wtRoom.res[me], done = !!(r && r.done), all = wtAllDone(wtRoom);
-    return '<p class="wt-boss">✅ Team đã chốt (' + n + ' người). Mỗi bé làm 10 câu riêng trên máy của mình.</p>'
-      + (done ? '<p class="wt-boss">Con đã nộp bài: ' + wtRight(r) + '/10 câu đúng. Kết quả không làm lại được.</p>' : '')
-      + '<div class="wt-row">' + (done ? '' : '<button type="button" class="wt-btn" data-wt-act="quiz">' + (r && r.a ? 'Làm tiếp 10 câu' : 'Làm 10 câu') + '</button>')
-      + (all ? (wtRoom.boss ? '<button type="button" class="wt-btn alt" data-wt-act="reveal">Hồ sơ Boss</button>' + wtFightBtns() : '<span class="wt-boss">Đang tính sức mạnh Boss…</span>') : (done ? '<span class="wt-boss">Đợi đồng đội nộp bài…</span>' : '')) + '</div>';
+    var boss = !!(wtRoom && wtRoom.boss);
+    return '<p class="wt-boss">✅ Team đã chốt (' + n + ' người). ' + (boss ? 'Boss của chặng này đã sẵn sàng — cả đội vào sân đấu 3v3 nào!' : 'Đang tính sức mạnh Boss…') + '</p>'
+      + '<div class="wt-row">' + (boss ? '<button type="button" class="wt-btn alt" data-wt-act="reveal">Hồ sơ Boss</button>' + wtFightBtns() : '<span class="wt-boss">⏳ Vài giây nữa là xong…</span>') + '</div>';
+  }
+  /* Chốt team xong: tính điểm tuần của từng bé (từ dữ liệu hồ sơ của bé đó) rồi ghi boss — không cần làm bài. Ai gọi cũng được (kết quả như nhau). */
+  var wtPrepBusy = false;
+  async function wtPrepareBoss(code, cur){
+    if(wtPrepBusy) return; wtPrepBusy = true;
+    try{
+      var room = await wtGetRoom(code); if(!room || room.state !== 'locked' || room.boss) return;
+      var start = wtEffortStart(wtLive);
+      for(var k = 0, mem = wtMembers(room); k < mem.length; k++){
+        var i = mem[k], r0 = (room.res && room.res[i]) || {};
+        if(r0.done) continue;
+        var pts = 0; try{ pts = (await wtWeekPoints(room.slots[i].id, start)).total | 0; }catch(e){ pts = 0; }
+        await wtPut(code + '/res/' + i, { id: room.slots[i].id, pts: pts, done: true });
+      }
+      room = await wtGetRoom(code); if(!room || room.boss) return;
+      await wtPut(code + '/boss', wtBossCalc(room, wtLive, cur));
+    }finally{ wtPrepBusy = false; }
   }
   function wtBossCalc(room, cfg, cur){
     var idx = wtMembers(room), pts = idx.map(function(i){ return room.res[i].pts | 0; }), right = 0;
     idx.forEach(function(i){ right += wtRight(room.res[i]); });
+    if(!idx.some(function(i){ return wtList(room.res[i] && room.res[i].a).length; })) right = idx.length * 10;   // không còn bài 10 câu: Thể lực Boss giữ nguyên gốc (w = 0)
     var star = wtRoomStar(room, cur), dd = wtDiffNorm(cfg.diff)[star - 1], total = idx.length * 10, w = (total - right) / total, ratio = wtRatio(pts, cfg.goal), bonus = wtOvrBonus(ratio, cfg) + dd.ovr;
     return { pts: pts, right: right, total: total, w: w, ratio: ratio, bonus: bonus, star: star, dOvr: dd.ovr, pct: dd.pct, plus: dd.plus, mult: wtStaMult(w, cfg), tries: cfg.tries || 3, at: Date.now(),
       boss: cur.bossIds.filter(Boolean).map(function(id){ var q = PLAYER_DB_BY_ID[id], b = q ? (q.ovr || q.overall || 0) : 0; return { id: id, base: b, ovr: b + bonus }; }) };
@@ -15522,8 +15594,8 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
   }
   async function wtQuiz(){
     var v = document.getElementById('wtour-view'), cur = wtLive && wtCurWeek(wtLive), room = await wtGetRoom(wtCode);
-    if(!v || !cur || !room || room.state !== 'locked') return;
-    var me = wtSlotOf(room); if(me === undefined) return;
+    if(!v || !cur || !room || room.state !== 'locked'){ wtToast(!room ? 'Không tải được phòng, thử lại nhé.' : 'Phòng chưa chốt team — chủ phòng bấm chốt trước nhé.'); return wtPaintStub(); }
+    var me = wtSlotOf(room); if(me === undefined){ wtToast('Con không còn trong phòng này.'); return wtPaintStub(); }
     var r0 = (room.res && room.res[me]) || {}; if(r0.done) return wtRender();
     var res = wtList(r0.a).map(function(x){ return x === 1 ? 1 : 0; }), plan = qzShuffle(WT_PLAN.slice()), used = {}, base = wtCode + '/res/' + me;
     try{
@@ -15567,8 +15639,8 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
       + '</div><button type="button" class="wt-btn" id="wt-open" style="background:var(--wt-gold);border-color:var(--wt-gold);color:var(--wt-ink)">Mở hồ sơ Boss</button>'
       + '<div class="wt-facts"><div class="wt-fact">Team hoàn thành <b>' + Math.round(b.ratio * 100) + '%</b> mốc ' + wtLive.goal + ' điểm tuần → Overall Boss <b>+' + (b.bonus - (b.dOvr | 0)) + '</b>.</div>'
       + '<div class="wt-fact">Mức độ <b>' + wtStarsTxt(b.star || 1) + '</b> → Boss thêm <b>+' + (b.dOvr | 0) + '</b> Overall và <b>+' + (b.pct | 0) + '%</b> sức mạnh; thắng sẽ nhận thẻ thưởng <b>+' + (b.plus | 0) + '</b> Overall.</div>'
-      + '<div class="wt-fact">Trả lời sai <b>' + (b.total - b.right) + '/' + b.total + '</b> câu (' + Math.round(b.w * 100) + '%) → Thể lực Boss <b>×' + b.mult.toFixed(2) + '</b>.</div>'
-      + idx.map(function(i, j){ var m = room.slots[i]; return '<div class="wt-fact">' + uEsc(m.name) + ' · ' + (b.pts[j] | 0) + '/' + wtLive.goal + ' điểm · ' + wtRight(room.res[i]) + '/10 đúng</div>'; }).join('')
+      + (b.total - b.right > 0 ? '<div class="wt-fact">Trả lời sai <b>' + (b.total - b.right) + '/' + b.total + '</b> câu (' + Math.round(b.w * 100) + '%) → Thể lực Boss <b>×' + b.mult.toFixed(2) + '</b>.</div>' : '')
+      + idx.map(function(i, j){ var m = room.slots[i]; return '<div class="wt-fact">' + uEsc(m.name) + ' · ' + (b.pts[j] | 0) + '/' + wtLive.goal + ' điểm' + (wtList(room.res[i] && room.res[i].a).length ? ' · ' + wtRight(room.res[i]) + '/10 đúng' : '') + '</div>'; }).join('')
       + '<div class="wt-row" style="justify-content:center">' + wtFightBtns() + '<button type="button" class="wt-btn" data-wt-act="home" style="background:var(--wt-sand);color:var(--wt-ink)">Về chuyến bay</button></div></div></div>';
     document.getElementById('wt-open').onclick = function(){
       var rv = document.getElementById('wt-rev'); rv.classList.remove('wt-hid'); this.style.display = 'none';
@@ -15594,7 +15666,7 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
   var WTB_TUNE = { bossDmg: 1.5, enrageBelow: 0.5, enrage: 1.25, combo: 1.15, duo: { score: 1.5, hp: 1.5, bossDmg: 0.6 } };
   var wtb = null, wtbIv = 0, wtbBeatIv = 0, wtbSkew = 0;
   function wtbNow(){ return Date.now() + wtbSkew; }
-  function wtbLive(){ return !!(wtb && document.getElementById('wtb')); }
+  function wtbLive(){ return !!(wtb && wtb.st && battleState === wtb.st); }
   function wtbSleep(ms){ return new Promise(function(r){ setTimeout(r, ms); }); }
   function wtbUrl(p){ return WTR + p + '.json'; }
   function wtbEvPath(W, k){ return W.code + '/fight/a' + W.att + '/ev/e' + k; }
@@ -15614,7 +15686,7 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
   function wtbStop(){
     if(wtbIv){ clearInterval(wtbIv); wtbIv = 0; }
     if(wtbBeatIv){ clearInterval(wtbBeatIv); wtbBeatIv = 0; }
-    if(wtb){ wtb.dead = true; if(wtb.tmr) clearInterval(wtb.tmr); }
+    if(wtb){ wtb.dead = true; if(wtb.tmr) clearInterval(wtb.tmr); try{ wtbaTeardown(wtb); }catch(e){} }
     wtb = null;
   }
   function wtbAttOf(room){ return Math.max(1, parseInt(room && room.att, 10) || 1); }
@@ -15738,11 +15810,10 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
     if(wtbWon(room)) return wtbFail('Đội đã hạ Boss tuần này rồi! 🏆');
     if(wtPoll){ clearInterval(wtPoll); wtPoll = 0; }
     wtbStop();
-    var W = wtb = { code: wtCode, seat: seat, att: wtbAttOf(room), room: room, f: {}, b: null, applied: 0, queue: [], playing: false, flowing: false, hold: false, since: Date.now(), panelKey: '', hp: [], cards: [], gone: 0, unitsOk: 0, duo: false, enraged: 0 };
-    v.innerHTML = '<div class="wtb" id="wtb"><div class="wtb-top"><b>⚔️ Đội chủ nhà ' + uEsc(room.nation || '') + '</b><span id="wtb-att"></span></div>'
-      + '<div class="wtb-teams"><div class="wtb-tb me"><i id="wtb-thp0"></i><b id="wtb-tht0"></b></div><span class="wtb-vs">VS</span><div class="wtb-tb boss"><i id="wtb-thp1"></i><b id="wtb-tht1"></b></div></div><p class="wtb-diag" id="wtb-diag" style="display:none" role="status"></p><div class="wtb-row" id="wtb-boss"></div><div class="wtb-mid" id="wtb-mid"><p class="wtb-l1" id="wtb-l1" aria-live="polite"></p><p class="wtb-l2" id="wtb-l2"></p></div>'
-      + '<div class="wtb-row" id="wtb-mine"></div><div class="wtb-panel" id="wtb-panel"></div><div class="wtb-banner" id="wtb-banner" aria-live="assertive"></div></div>';
-    document.getElementById('wtb-boss').onclick = function(e){ var u = e.target.closest ? e.target.closest('.wtb-u.tg') : null; if(u && W.pickCb) W.pickCb(+u.getAttribute('data-i')); };
+    var W = wtb = { code: wtCode, seat: seat, att: wtbAttOf(room), room: room, f: {}, b: null, applied: 0, queue: [], playing: false, flowing: false, hold: false, since: Date.now(), panelKey: '', hp: [], cards: [], gone: 0, unitsOk: 0, duo: false, enraged: 0, pre: false, entered: 0, entering: false, finVis: 0, st: null };
+    try{   // dựng sân đấu 3v3 ngay (đội các bé + đội Boss), chờ cả phòng vào rồi bắt đầu
+      wtbBuild(W, wtbMakeInit(room)); W.pre = true; wtbaRender(W); W.unitsOk = 1;
+    }catch(e){ try{ console.error('[WorldTour/arena]', e); }catch(x){} wtbStop(); return wtbFail('Chưa dựng được sân đấu: ' + ((e && e.message) || e)); }
     wtbBeat(W); wtbBeatIv = setInterval(function(){ wtbBeat(wtb); }, WTB_BEAT_MS); wtbIv = setInterval(wtbTick, 1000);
     wtbTick();
     return true;
@@ -15758,7 +15829,7 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
   async function wtbTick(){
     var W = wtb; if(!W || W.busy) return; W.busy = true;
     try{
-      if(!document.getElementById('wtb')){ wtbStop(); return; }
+      if(!W.st || battleState !== W.st){ wtbStop(); return; }   // sân đấu bị thay bằng màn khác → dừng
       var rx = await wtGetRoomX(W.code); if(wtb !== W) return;
       if(!rx.ok){ W.netFail = (W.netFail || 0) + 1; if(W.netFail >= 3) wtbDiag(W, '📶 Mạng chập chờn… đang kết nối lại, con cứ đợi nhé (không bị thoát đâu).'); return; }   // lỗi mạng ≠ phòng đã đóng
       if(W.netFail){ W.netFail = 0; wtbDiag(W, ''); }
@@ -15769,14 +15840,14 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
       W.room = room; wtRoom = room;
       var att = wtbAttOf(room);
       if(att !== W.att){   // có người bấm «Thử lại» → sang lần mới
-        W.att = att; W.unitsOk = 0; W.duo = false; W.enraged = 0; W.b = null; W.init = null; W.applied = 0; W.queue = []; W.flow = -1; W.autoSeq = -1; W.panelKey = ''; W.finished = 0; W.claimed = 0; W.flowing = false; W.hold = false; W.since = Date.now();
-        ['wtb-boss', 'wtb-mine'].forEach(function(id){ var e = document.getElementById(id); if(e) e.innerHTML = ''; });
+        W.att = att; W.unitsOk = 0; W.duo = false; W.enraged = 0; W.pre = false; W.entered = 0; W.entering = false; W.b = null; W.init = null; W.applied = 0; W.queue = []; W.flow = -1; W.autoSeq = -1; W.panelKey = ''; W.finished = 0; W.claimed = 0; W.flowing = false; W.hold = false; W.since = Date.now();
         wtbBeat(W);
       }
       var f = W.f = wtbFight(room, att);
-      if(f.init && !W.b){ wtbBuild(W, f.init); }
-      if(W.b && !W.unitsOk){ wtbUnits(W); W.unitsOk = 1; }   // vẽ thẻ lại được nếu lần trước lỗi giữa chừng
-      if(W.b){
+      if(f.init && (!W.b || W.pre)){ wtbBuild(W, f.init); W.pre = false; W.unitsOk = 0; W.entered = 0; }   // có người bấm «Bắt đầu» → dựng trận thật
+      else if(!f.init && !W.b){ wtbBuild(W, wtbMakeInit(room)); W.pre = true; W.unitsOk = 0; }   // lần thử mới: về phòng chờ
+      if(W.b && !W.unitsOk){ wtbaRender(W); W.unitsOk = 1; }
+      if(W.b && !W.pre){
         for(;;){
           var ev = f.ev && f.ev['e' + W.applied]; if(!ev) break;
           var evt = wtbApply(W.b, ev, W); W.applied++;
@@ -15791,60 +15862,76 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
     }catch(e){ wtbReport(W, e, 'tick'); }   // không nuốt lỗi im lặng nữa: báo ngay trên màn hình
     finally{ W.busy = false; }
   }
-  function wtbU(i){ return document.querySelector('#wtb .wtb-u[data-i="' + i + '"]'); }
-  function wtbUnitHTML(W, i){
-    var s = W.b.sides[i]; if(!s.hpMax) return '';
-    var c = W.cards[i], art = fcCardHTML(c) || '<span class="wtb-ini">' + uEsc(sn3(c)) + '</span>', mine = i < 3;
-    return '<button type="button" class="wtb-u' + (mine ? ' me' : ' boss') + '" data-i="' + i + '" disabled><span class="wtb-card">' + art + '</span>'
-      + '<span class="wtb-nm">' + (mine ? uEsc(wtbWho(W, i)) + ' <small id="wtb-dot' + i + '"></small>' : '👹 ' + uEsc(sn3(c))) + '</span>'
-      + '<span class="wtb-tag" id="wtb-tag' + i + '"></span>'
-      + '<span class="wtb-hp"><i id="wtb-hpb' + i + '"></i><b id="wtb-hpt' + i + '">' + s.hp + '/' + s.hpMax + '</b></span></button>';
+  /* ===== SÂN ĐẤU 3v3 CỦA WORLD TOUR — dùng lại đúng giao diện Đấu nhanh (#battle-arena-view): thẻ, thanh Thể lực, quay số Lucky Roll,
+     bảng tính sát thương, hiệu ứng đòn đánh, nhật ký. Phần đồng bộ nhiều máy (wtbTick / wtbMyTurn…) giữ nguyên, chỉ thay phần HIỂN THỊ. ===== */
+  function wtbaView(){ return document.getElementById('battle-arena-view'); }
+  function wtbaSay(l1, l2){ var a = document.getElementById('bt-turn'), b = document.getElementById('bt-dnote'); if(a) a.innerHTML = l1 || ''; if(b) b.innerHTML = l2 || ''; }
+  function wtbaHideQuiz(){
+    var box = document.getElementById('bt-quiz'), mid = document.querySelector('#bt-console .bt-mid'), v = wtbaView();
+    if(box){ box.style.display = 'none'; box.classList.remove('urgent'); } if(mid) mid.style.display = ''; if(v) v.classList.remove('bt-quizing');
   }
-  function wtbUnits(W){
-    var cnt = [0, 1, 2].filter(function(i){ return W.b.sides[i].hpMax > 0; }).length, rowM = document.getElementById('wtb-mine');
-    if(rowM){ rowM.classList.toggle('two', cnt === 2); rowM.classList.toggle('one', cnt === 1); }
-    document.getElementById('wtb-boss').innerHTML = [3, 4, 5].map(function(i){ return wtbUnitHTML(W, i); }).join('');
-    document.getElementById('wtb-mine').innerHTML = [0, 1, 2].map(function(i){ return wtbUnitHTML(W, i); }).join('');
-    for(var i = 0; i < 6; i++) wtbSetHp(W, i, W.hp[i]);
+  function wtbaTeardown(W){
+    var v = wtbaView(), wv = document.getElementById('wtour-view');
+    if(W && W.st){ W.st.dead = true; try{ btWake(W.st); }catch(e){} if(battleState === W.st) battleState = null; }
+    if(v){ v.style.display = 'none'; v.classList.remove('bt3-mode', 'bt3-done', 'bt-quizing'); }
+    var row = document.getElementById('battle-vs-row'); if(row){ row.onclick = null; row.onkeydown = null; row.classList.remove('bt3'); row.innerHTML = ''; }
+    ['battle-result-zone', 'battle-log', 'bt-fx', 'battle-controls', 'bt-calc'].forEach(function(id){ var e = document.getElementById(id); if(e) e.innerHTML = ''; });
+    var con = document.getElementById('bt-console'); if(con) con.style.display = '';
+    var ar = document.getElementById('bt-arena'); if(ar) ar.classList.remove('wt-rage');
+    wtbaHideQuiz();
+    if(wv) wv.style.display = '';
   }
-  function wtbTeamBars(W){   // thanh Thể lực tổng của 2 đội: nhìn là biết bên nào đang thắng thế
-    if(!W || !W.b) return;
-    [0, 1].forEach(function(t){
-      var cur = 0, mx = 0;
-      for(var k = 0; k < 3; k++){ var i = t * 3 + k, u = W.b.sides[i]; if(u && u.hpMax){ mx += u.hpMax; cur += Math.max(0, W.hp[i] == null ? u.hp : W.hp[i]); } }
-      var pct = mx ? Math.max(0, Math.min(100, cur / mx * 100)) : 0, bar = document.getElementById('wtb-thp' + t), tx = document.getElementById('wtb-tht' + t);
-      if(bar){ bar.style.width = pct + '%'; bar.className = pct <= 25 ? 'lo' : (pct <= 55 ? 'md' : ''); }
-      if(tx) tx.textContent = (t ? '👹 Boss ' : '🟦 Đội ') + Math.round(pct) + '%';
-    });
+  function wtbaUnit(W, st, i){
+    var u = st.b.sides[i];
+    if(!u.hpMax) return '<div class="battle-side bt3-unit ko wt-empty" data-side="' + i + '" data-team="' + u.team + '"><div class="bt3-cardwrap"><div class="wt-empty-slot">🪑<small>Chưa có bạn</small></div></div><div class="bt3-info"></div></div>';
+    return unit3HTML(st, i);
   }
-  function wtbBanner(txt, cls){
-    var b = document.getElementById('wtb-banner'); if(!b) return;
-    b.textContent = txt; b.className = 'wtb-banner ' + (cls || ''); void b.offsetWidth; b.classList.add('on');
-    clearTimeout(wtbBanner.t); wtbBanner.t = setTimeout(function(){ var e = document.getElementById('wtb-banner'); if(e) e.classList.remove('on'); }, 1150);
+  function wtbaControls(W, html, wire){
+    var c = document.getElementById('battle-controls'); if(!c) return;
+    c.innerHTML = html; if(wire) wire(c);
   }
-  function wtbShake(){
-    var b = document.getElementById('wtb'); if(!b || reducedMotion()) return;
-    b.classList.remove('shake'); void b.offsetWidth; b.classList.add('shake'); setTimeout(function(){ var e = document.getElementById('wtb'); if(e) e.classList.remove('shake'); }, 480);
-  }
-  function wtbSetHp(W, i, hp){
-    W.hp[i] = hp; wtbTeamBars(W);
-    var s = W.b && W.b.sides[i], bar = document.getElementById('wtb-hpb' + i), tx = document.getElementById('wtb-hpt' + i), u = wtbU(i);
-    if(!s || !bar) return;
-    var pct = Math.max(0, Math.min(100, hp / s.hpMax * 100));
-    bar.style.width = pct + '%'; bar.className = pct <= 25 ? 'lo' : (pct <= 55 ? 'md' : '');
-    tx.textContent = Math.max(0, Math.round(hp)) + '/' + s.hpMax;
-    if(u) u.classList.toggle('ko', hp <= 0);
-  }
-  function wtbSay(l1, l2){ var a = document.getElementById('wtb-l1'), b = document.getElementById('wtb-l2'); if(a) a.innerHTML = l1 || ''; if(b) b.innerHTML = l2 || ''; }
-  function wtbFloat(i, html, cls){
-    var u = wtbU(i); if(!u) return;
-    var e = document.createElement('span'); e.className = 'wtb-fl ' + (cls || ''); e.innerHTML = html; u.appendChild(e);
-    setTimeout(function(){ if(e.parentNode) e.remove(); }, 1300);
-  }
-  function wtbPanel(W, key, html){
-    if(W.panelKey === key) return false;
-    var p = document.getElementById('wtb-panel'); if(!p) return false;
-    W.panelKey = key; p.innerHTML = html; return true;
+  function wtbaLeaveBtn(){ return '<button type="button" class="btn-secondary" id="wtba-leave">🚪 Về chuyến bay</button>'; }
+  function wtbaHome(W){ wtbStop(); try{ wtRender(); }catch(e){} }
+  /* vẽ (hoặc vẽ lại) sân đấu từ W.b — gọi khi vào phòng chờ (xem trước) và khi trận thật bắt đầu */
+  function wtbaRender(W){
+    var b = W.b; if(!b) return;
+    if(W.st){ W.st.dead = true; try{ btWake(W.st); }catch(e){} }
+    var st = W.st = { b: b, is3: true, wt: true, mine: [], theirs: [], cardA: b.sides[0].card, cardB: b.sides[3].card, timer: null, revealed: 0, rewardApplied: true,
+      shown: b.sides.map(function(u){ return u.hp; }), speed: 1, skipping: false, dead: false, waiters: [], skillIdx: [0, 0, 0, 0, 0, 0], road: 0,
+      quizSeconds: settings.quizSeconds || 15, aiSkill: (W.init && W.init.sk) || 0.5, rnd: 0 };
+    battleState = st;
+    var v = wtbaView(), wv = document.getElementById('wtour-view'); if(!v) throw new Error('Không thấy khung sân đấu');
+    if(wv) wv.style.display = 'none';
+    ['battle-pick-view', 'battle-road-view'].forEach(function(id){ var e = document.getElementById(id); if(e) e.style.display = 'none'; });
+    v.style.display = ''; v.classList.add('bt3-mode'); v.classList.remove('bt3-done'); bt3Fit();
+    var row = document.getElementById('battle-vs-row'); row.classList.add('bt3');
+    row.innerHTML = '<p class="wtb-diag" id="wtb-diag" style="display:none" role="status"></p>'
+      + '<div class="bt3-midbar"><div class="bt3-round" id="bt3-round"></div><div class="bt3-order" id="bt3-order"></div></div>'
+      + '<div class="bt3-teamrow"><div class="bt3-team bt3-mine">' + [0, 1, 2].map(function(i){ return wtbaUnit(W, st, i); }).join('') + '</div>'
+      + '<div class="battle-vs-badge bt3-vs">VS</div>'
+      + '<div class="bt3-team bt3-enemy">' + [3, 4, 5].map(function(i){ return wtbaUnit(W, st, i); }).join('') + '</div></div>'
+      + '<div class="bt3-synrow"><div class="bt3-syn" id="bt3-syn-0"></div><div class="bt3-syn" id="bt3-syn-1"></div></div>';
+    for(var i = 0; i < 3; i++){   // tên bé điều khiển thẻ + chấm online
+      if(!b.sides[i].hpMax) continue;
+      var nm = row.querySelector('.bt3-unit[data-side="' + i + '"] .bt3-name');
+      if(nm) nm.innerHTML = '<span class="wtba-dot" id="wtba-dot' + i + '">' + (wtbFresh(W, i) ? '🟢' : '⚪') + '</span> ' + uEsc(wtbWho(W, i));
+    }
+    refresh3(st);
+    var ar = document.getElementById('bt-arena'); if(ar) ar.classList.toggle('wt-rage', !!W.enraged);
+    var con = document.getElementById('bt-console'); if(con){ con.style.display = ''; con.setAttribute('data-side', 0); }
+    wtbaHideQuiz();
+    ['battle-result-zone', 'battle-log', 'bt-fx', 'bt-calc'].forEach(function(id){ var e = document.getElementById(id); if(e) e.innerHTML = ''; });
+    var die = document.getElementById('bt-die'); if(die){ die.className = 'bt-die'; die.removeAttribute('data-v'); die.textContent = '?'; }
+    btSlotHide(true);
+    W.finVis = 0; W.panelKey = '';
+    try{ arenaBgChange(0); }catch(e){}
+    try{ v.scrollIntoView({ block: 'start' }); }catch(e){}
+    if(!W.pre && !W.entered){   // trận thật bắt đầu: màn giới thiệu 2 đội như Đấu nhanh
+      W.entered = 1; W.entering = true;
+      wtbaSay('⚔️ Vào trận 3v3 với Boss <b>' + uEsc(W.room.nation || '') + '</b>!', 'Đội con đánh trước · cả đội cùng trả lời câu hỏi để tung đòn mạnh');
+      var done = function(){ W.entering = false; };
+      try{ bt3Entrance(st).then(done, done); }catch(e){ done(); }
+    }
   }
 
   /* ---- phát lại từng đòn (hoạt cảnh) ---- */
@@ -15852,93 +15939,193 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
     if(W.playing) return; W.playing = true;
     try{
       while(W.queue.length && wtb === W){
-        while(W.hold && wtb === W) await wtbSleep(100);
+        while((W.hold || W.entering) && wtb === W) await wtbSleep(100);
         if(wtb !== W) return;
         await wtbPlay(W, W.queue.shift());
       }
     }finally{ if(wtb === W) W.playing = false; }
   }
-  function wtbSpinLR(S){
-    var el = document.getElementById('wtb-lr'); if(!el) return;
-    var bs = el.querySelectorAll('b'), dg = [Math.floor(S / 10), S % 10], n = 0;
-    if(reducedMotion()) return;
-    var iv = setInterval(function(){
-      if(!document.getElementById('wtb-lr') || ++n > 9){ clearInterval(iv); if(bs[0]){ bs[0].textContent = dg[0]; bs[1].textContent = dg[1]; } return; }
-      bs[0].textContent = Math.floor(Math.random() * 4); bs[1].textContent = Math.floor(Math.random() * 10);
-    }, 70);
-  }
-  async function wtbPlay(W, e){
-    var k = W.queue.length > 2 ? 0.3 : 1, ev = e.ev || {}, ai = e.atk, di = e.def, ua = wtbU(ai), ud = wtbU(di), A = W.cards[ai], D = W.cards[di];
-    var an = ai < 3 ? wtbWho(W, ai) + ' (' + sn3(A) + ')' : 'Boss ' + sn3(A), dn = di < 3 ? wtbWho(W, di) + ' (' + sn3(D) + ')' : 'Boss ' + sn3(D);
-    var roll, S0 = (ai < 3 && e.S2 != null) ? e.S2 : (ev.S != null ? ev.S : (ev.r | 0));
-    if(ai < 3){
-      var parts = wtMembers(W.room).map(function(i){ return uEsc(wtbWho(W, i)) + ' ' + ((wtList(ev.p)[i]) | 0); }).join(' + ');
-      roll = (ev.to ? (ev.a ? '🤖 Máy đánh thay' : '⏰ Hết giờ') : '🧮 ' + parts + ' =') + ' <span class="wt-lr" id="wtb-lr"><b>' + Math.floor(S0 / 10) + '</b><b>' + (S0 % 10) + '</b></span> <small>/ 30 điểm đòn · hệ số ×' + (+e.d10 || 0).toFixed(2) + '</small>' + (e.miss ? ' · 💨 <b>TRƯỢT!</b>' : '');
+  async function wtbPlay(W, evt){
+    var st = W.st; if(!st || !btAlive(st)) return;
+    st.speed = W.queue.length > 2 ? 3 : 1;
+    var b = st.b, ev = evt.ev || {}, fx = evt.fx || {}, c = evt.calc || {}, T = WTB_TUNE, ai = evt.atk, target = evt.def, A = b.sides[ai], D = b.sides[target], team = A.team, hero = team === 0;
+    var turnEl = btEl('bt-turn'), dnote = btEl('bt-dnote'), die = btEl('bt-die'), calc = btEl('bt-calc'), con = btEl('bt-console');
+    if(!turnEl || !dnote || !die || !calc || !con) return;
+    function w(ms){ return bwait(st, ms); }
+    function row(icon, label, val, cls){
+      var d = document.createElement('div'); d.className = 'bt-row ' + (cls || '');
+      d.innerHTML = '<span>' + icon + ' ' + label + '</span><b>' + val + '</b>'; calc.appendChild(d); calc.scrollTop = calc.scrollHeight; return d;
     }
-    else roll = '🎲 Boss ra <b>' + e.roll + ' điểm</b>';
-    if(e.crit) roll += ' · 🎯 <b>CHÍ MẠNG!</b>';
-    var fx = e.fx || {}, T = WTB_TUNE, c = e.calc || {}, chips = (fx.duo && ai < 3 ? ' · 🛡️ Thế đồng đội' : '') + (fx.combo ? ' · 🤝 COMBO ×' + T.combo : '') + (fx.enrage ? ' · 😡 Boss nổi giận ×' + T.enrage : '') + (c.elemM > 1 ? ' · ▲ Khắc Hệ' : (c.elemM < 1 ? ' · ▼ Bị khắc Hệ' : '')) + (c.special ? ' · 💥 Đòn tuyệt kỹ' : '');
-    wtbSay((ai < 3 ? '🟦 ' : '🟪 ') + '<b>' + uEsc(an) + '</b> ➜ <b>' + uEsc(dn) + '</b>', roll + chips);
-    if(ai < 3) wtbSpinLR(S0);
-    document.querySelectorAll('#wtb .wtb-u.act').forEach(function(x){ x.classList.remove('act'); });
-    if(ua) ua.classList.add('act');
-    await wtbSleep(850 * k); if(wtb !== W) return;
-    if(ud){ ud.classList.add('hit'); setTimeout(function(){ ud.classList.remove('hit'); }, 450); }
-    wtbSetHp(W, di, e.hpAfter); wtbFloat(di, e.miss ? '💨 Trượt' : '−' + e.dmg, e.crit ? 'crit' : '');
-    var dMax = (W.b && W.b.sides[di] && W.b.sides[di].hpMax) || 1, koD = (e.ko || []).indexOf(di) >= 0;
-    if(fx.enrage && !W.enraged){ W.enraged = 1; var wb = document.getElementById('wtb'); if(wb) wb.classList.add('rage'); wtbBanner('😡 BOSS NỔI GIẬN!', 'rage'); wtbShake(); }
-    else if(koD) { wtbBanner(di < 3 ? '💔 ' + wtbWho(W, di) + ' gục ngã!' : '💀 HẠ GỤC BOSS!', 'ko'); wtbShake(); }
-    else if(e.crit){ wtbBanner('🎯 CHÍ MẠNG!', 'crit'); wtbShake(); }
-    else if(fx.combo && !e.miss) wtbBanner('🤝 COMBO ĐỒNG ĐỘI!', 'combo');
-    else if(c.special) wtbBanner('💥 TUYỆT KỸ!', 'sp');
-    else if(!e.miss && e.dmg >= dMax * 0.3) wtbShake();
-    if(e.guard){ wtbSetHp(W, e.guard.i, e.guard.hpAfter); wtbFloat(e.guard.i, '🛡️−' + e.guard.dmg, ''); }
-    (e.splash || []).forEach(function(s){ wtbSetHp(W, s.i, s.hpAfter); wtbFloat(s.i, '−' + s.dmg, ''); });
-    if(e.heal){ wtbSetHp(W, e.heal.i, e.heal.hpAfter); wtbFloat(e.heal.i, '+' + e.heal.amt, 'heal'); }
-    (e.ticks || []).forEach(function(s){ wtbSetHp(W, s.i, s.hpAfter); wtbFloat(s.i, '🔥−' + s.dmg, ''); });
-    await wtbSleep(1050 * k);
-    if(ua) ua.classList.remove('act');
+    wtbaHideQuiz();
+    var who = hero ? wtbWho(W, ai) : '', aName = hero ? who : 'Boss ' + sn3(A.card), S0 = hero ? (evt.S2 != null ? evt.S2 : 0) : evt.roll;
+    con.setAttribute('data-side', team);
+    turnEl.innerHTML = 'Vòng <b>' + (st.rnd + 1) + '</b> · ' + (hero ? '🟦' : '🟪') + ' <b>' + escHtml(aName) + '</b> ra đòn!';
+    mark3(ai, -1); calc.innerHTML = ''; die.className = 'bt-die'; die.removeAttribute('data-v'); die.textContent = '?'; btSlotHide(true);
+    dnote.textContent = hero ? 'Điểm đòn của cả đội…' : 'Boss đang chọn mục tiêu…';
+    await w(550); if(!btAlive(st)) return;
+    mark3(ai, target);
+    turnEl.innerHTML = 'Vòng <b>' + (st.rnd + 1) + '</b> · <b>' + escHtml(hero ? who : sn3(A.card)) + '</b> ➜ <b>' + escHtml(sn3(D.card)) + '</b>';
+    if(hero){
+      var parts = wtMembers(W.room).map(function(i){ return escHtml(wtbWho(W, i)) + ' ' + ((wtList(ev.p)[i]) | 0); }).join(' + ');
+      evt.quiz = { ok: !!ev.o, secLeft: ev.l | 0, timeout: !!ev.to, skipped: !!(ev.to && ev.a) };
+      await btRollDice(st, S0); if(!btAlive(st)) return;
+      dnote.innerHTML = (ev.to ? (ev.a ? '🤖 Máy đánh thay' : '⏰ Hết giờ') : '🧮 ' + parts + (fx.duo ? ' <small>(Thế đồng đội ×' + T.duo.score + ')</small>' : '') + ' =')
+        + ' <b>' + S0 + '/30</b> điểm (×' + (+c.d10 || 0).toFixed(1) + ')' + (evt.miss ? '<br>💨 <b>TRƯỢT!</b>' : '') + (evt.crit ? '<br>🎯 <b>CHÍ MẠNG!</b>' : '');
+    } else {
+      await btRollDice(st, evt.roll); if(!btAlive(st)) return;
+      dnote.innerHTML = (evt.crit ? '🎯 <b>CHÍ MẠNG!</b> Boss đổ được ' + evt.roll : 'Boss đổ được <b>' + evt.roll + '</b>') + ' → ×' + (+c.d10 || 0).toFixed(1);
+    }
+    await w(evt.crit ? 800 : 500); if(!btAlive(st)) return;
+    if(evt.crit){ var cq = btCenter(ai); if(cq){ btRing(st, cq.x, cq.y, '#FDE047'); btBurst(st, cq.x, cq.y, '#FDE047', 10); } }
+    var el = A.battle.element, gap = 170;
+    row('⚔️', 'Sức đánh gốc <small>(Lực chiến ' + btF1(c.cp) + ')</small>', btF1(c.base)); await w(gap); if(!btAlive(st)) return;
+    row(hero ? '🧮' : '🎲', hero ? 'Điểm cả đội ' + S0 + '/30' : 'Xúc xắc Boss ' + evt.roll, '×' + (+c.d10 || 0).toFixed(1)); await w(gap); if(!btAlive(st)) return;
+    if(fx.combo){ row('🤝', 'COMBO ĐỒNG ĐỘI <small>(cả đội cùng đúng)</small>', '×' + T.combo, 'good'); await w(gap); if(!btAlive(st)) return; }
+    if(!hero){ row('👹', 'Boss mạnh hơn' + (fx.duo ? ' <small>(Thế đồng đội giảm bớt)</small>' : ''), '×' + (Math.round(T.bossDmg * (fx.duo ? T.duo.bossDmg : 1) * 100) / 100)); await w(gap); if(!btAlive(st)) return; }
+    if(fx.enrage){ row('😡', 'BOSS NỔI GIẬN <small>(dưới ' + Math.round(T.enrageBelow * 100) + '% Thể lực)</small>', '×' + T.enrage, 'bad'); await w(gap); if(!btAlive(st)) return; }
+    if(c.atkMod !== 1) row(elementIconInline(el), 'Hệ ' + escHtml(elementName(el)), '×' + c.atkMod);
+    if(c.elemM !== 1){ row('🌀', c.elemM > 1 ? 'KHẮC HỆ!' : 'Bị khắc hệ', '×' + c.elemM, c.elemM > 1 ? 'good' : 'bad'); await w(gap); if(!btAlive(st)) return; }
+    if(Math.abs(c.synM - 1) > 0.001){ row('🔗', 'Liên kết Ngũ hành', '×' + (Math.round(c.synM * 1000) / 1000), c.synM > 1 ? 'good' : 'bad'); await w(gap); if(!btAlive(st)) return; }
+    if(c.vengeM > 1){ row('🌍', 'Báo thù (đồng đội cùng QG bị loại)', '×' + c.vengeM.toFixed(2), 'good'); await w(gap); if(!btAlive(st)) return; }
+    if(c.passM > 1){ row('⚽', 'Chuyền 1-2 (dồn đòn)', '×' + c.passM.toFixed(2), 'good'); await w(gap); if(!btAlive(st)) return; }
+    if(c.bonusHit){ row('⏱️', 'Bù giờ (đánh sau)', '×' + c.bonusM.toFixed(2), 'good'); await w(gap); if(!btAlive(st)) return; }
+    if(c.slowM < 1){ row('🐌', 'Đang bị làm chậm', '×' + c.slowM, 'bad'); await w(gap); if(!btAlive(st)) return; }
+    if(c.special){ row('💥', 'CHIÊU ĐẶC BIỆT (Nộ khí đầy)', '×' + c.spM, 'good'); await w(gap); if(!btAlive(st)) return; }
+    var tot = row('💪', 'UY LỰC', '0', 'total'); btCount(st, tot.querySelector('b'), 0, c.raw, 450, Math.round);
+    await w(520); if(!btAlive(st)) return;
+    row('🛡️', 'Giáp ' + escHtml(sn3(D.card)) + (c.pierce ? ' (Kim xuyên giáp)' : ''), '−' + c.reducePct + '%'); await w(gap); if(!btAlive(st)) return;
+    if(c.takeRed > 0){ row('🎯', 'Trục xương sống (Trung lộ)', '−' + Math.round(c.takeRed * 100) + '%', 'bad'); await w(gap); if(!btAlive(st)) return; }
+    if(c.iconCut){ row('👑', 'Huyền Thoại đỡ đòn đầu', '−20%', 'bad'); await w(gap); if(!btAlive(st)) return; }
+    var dm = row('💥', 'SÁT THƯƠNG', '0', 'total dmg'); btCount(st, dm.querySelector('b'), 0, evt.dmg, 450, Math.round);
+    await w(520); if(!btAlive(st)) return;
+
+    var from = btCenter(ai), to = btCenter(target); if(!from || !to) return;
+    var rar = BT_RARITY[A.battle.rarity] || { c: '#E2E8F0', ic: '⚽' };
+    var sk = btPickSkill(st, ai, evt.crit || evt.special), skName = '', skGold = false;
+    if(sk){ var cfgS = BATTLE_CONFIG.skills && BATTLE_CONFIG.skills[sk.id]; skName = (cfgS && cfgS.vi) || sk.id; skGold = (sk.grade === 'G'); }
+    else skName = 'Cú sút ' + elementName(el);
+    var banner = btFx('<b>' + (evt.special ? '💥 ' : (skGold ? '🌟 ' : '✦ ')) + escHtml(skName) + '</b><small>' + rar.ic + ' ' + escHtml(rarityLabel(A.battle.rarity)) + ' · Hệ ' + escHtml(elementName(el)) + '</small>', 'bt-skill' + (sk && !skGold ? ' s' : ''));
+    banner.style.left = from.x + 'px'; banner.style.top = (from.top + 14) + 'px';
+    btAnim(st, banner, [{ transform: 'translate(-50%,6px) scale(.6)', opacity: 0 }, { transform: 'translate(-50%,0) scale(1.05)', opacity: 1, offset: .2 }, { transform: 'translate(-50%,0) scale(1)', opacity: 1, offset: .8 }, { transform: 'translate(-50%,-6px) scale(1)', opacity: 0 }], 900);
+    var cardEl = document.querySelector('#battle-vs-row .battle-side[data-side="' + ai + '"] .player-card');
+    var lvx = to.x - from.x, lvy = to.y - from.y, lvl = Math.sqrt(lvx * lvx + lvy * lvy) || 1;
+    if(cardEl && cardEl.animate) cardEl.animate([{ transform: 'none' }, { transform: 'translate(' + (lvx / lvl * 26) + 'px,' + (lvy / lvl * 26) + 'px) scale(1.1)', offset: .45 }, { transform: 'none' }], { duration: 520 / st.speed, easing: 'ease-in-out' });
+    btRing(st, from.x, from.y, rar.c, 0);
+    await w(420); if(!btAlive(st)) return;
+    btProjectile(st, from, to, el);
+    await w(420); if(!btAlive(st)) return;
+
+    var ec = (ELEMENT_COLORS[el] || ['#FFFFFF'])[0];
+    function hit(idx, dmg, big){
+      var cc = btCenter(idx); if(!cc) return;
+      btRing(st, cc.x, cc.y, ec, 0); btBurst(st, cc.x, cc.y, ec, big ? 14 : 8);
+      btFloat(st, cc.x, cc.y - 10, '−' + dmg, big && evt.crit ? 'crit' : '', big && evt.crit ? 70 : 50, 1100);
+      var sd = document.querySelector('#battle-vs-row .battle-side[data-side="' + idx + '"]');
+      if(sd){ sd.classList.remove('hit'); void sd.offsetWidth; sd.classList.add('hit'); }
+    }
+    if(evt.miss) btFloat(st, to.x, to.y - 10, '💨 TRƯỢT!', 'tag', 50, 1100); else hit(target, evt.dmg, true);
+    if(c.elemM > 1) btFloat(st, to.x, to.y + 34, 'KHẮC HỆ!', 'tag', 36, 1100);
+    if(c.iconCut) btFloat(st, to.x, to.y + 52, '👑 đỡ −20%', 'tag gold', 30, 1100);
+    if(fx.combo && !evt.miss) btFloat(st, from.x, from.y - 30, '🤝 COMBO!', 'tag gold', 44, 1300);
+    if(fx.enrage && !W.enraged){ W.enraged = 1; var ar0 = btEl('bt-arena'); if(ar0) ar0.classList.add('wt-rage'); btFloat(st, from.x, from.y - 30, '😡 BOSS NỔI GIẬN!', 'crit', 60, 1500); }
+    if(evt.crit){ var ar = btEl('bt-arena'); if(ar){ ar.classList.remove('bt-shake'); void ar.offsetWidth; ar.classList.add('bt-shake'); } }
+    btApplyHp(st, target, b.sides[target].hp > 0 || evt.ko.indexOf(target) < 0 ? evt.hpAfter : 0);
+    if(evt.guard){ hit(evt.guard.i, evt.guard.dmg, false); var gc = btCenter(evt.guard.i); if(gc) btFloat(st, gc.x, gc.y + 30, '🛡️ gánh đòn', 'tag', 30, 1100); btApplyHp(st, evt.guard.i, evt.guard.hpAfter); }
+    (evt.splash || []).forEach(function(sp){ hit(sp.i, sp.dmg, false); btApplyHp(st, sp.i, sp.hpAfter); });
+    if(evt.status){ var sc = btCenter(target); if(sc) btFloat(st, sc.x, sc.y + 28, evt.status === 'burn' ? '🔥 BỎNG' : '🐌 CHẬM', 'tag', 30, 1100); }
+    if(evt.heal){ var hc = btCenter(evt.heal.i); if(hc) btFloat(st, hc.x, hc.y, '+' + evt.heal.amt, 'tag', 40, 1100); btApplyHp(st, evt.heal.i, evt.heal.hpAfter); }
+    var logEl = btEl('battle-log');
+    if(logEl){ logEl.insertAdjacentHTML('beforeend', log3HTML(Object.assign({}, evt, { roll: S0, team: team }), st)); logEl.scrollTop = logEl.scrollHeight; }
+    await w(600); if(!btAlive(st)) return;
+    for(var ti = 0; ti < (evt.ticks || []).length; ti++){
+      var tk = evt.ticks[ti], tc = btCenter(tk.i);
+      if(tc) btFloat(st, tc.x, tc.y, '🔥 −' + tk.dmg, 'tag', 40, 1000);
+      btApplyHp(st, tk.i, tk.hpAfter);
+    }
+    if((evt.ticks || []).length){ await w(500); if(!btAlive(st)) return; }
+    (evt.ko || []).forEach(function(k){
+      var kc = btCenter(k); if(kc) btFloat(st, kc.x, kc.y, k >= 3 ? '💀 HẠ BOSS!' : 'K.O.', 'ko', 20, 1400);
+    });
+    b.sides.forEach(function(u, i){ if(u.hp <= 0) st.shown[i] = 0; });
+    refresh3(st); mark3(-1, -1);
+    if(!hero) st.rnd++;
+    await w((evt.ko || []).length ? 900 : 350);
   }
 
-  /* ---- vẽ trạng thái chờ / sảnh / kết quả ---- */
+  /* ---- vẽ trạng thái chờ / phòng chờ / kết quả ---- */
   function wtbPaint(W){
-    var room = W.room, mem = wtMembers(room), at = document.getElementById('wtb-att');
-    if(at) at.textContent = 'Lần ' + W.att + '/' + wtbTries(room);
-    mem.forEach(function(i){ var d = document.getElementById('wtb-dot' + i); if(d) d.textContent = wtbFresh(W, i) ? '🟢' : '⚪'; });
+    var room = W.room, mem = wtMembers(room), tries = wtbTries(room);
+    mem.forEach(function(i){ var d = document.getElementById('wtba-dot' + i); if(d) d.textContent = wtbFresh(W, i) ? '🟢' : '⚪'; });
     if(W.flowing) return;
-    if(!W.b){   // sảnh chờ: ai bấm «Bắt đầu» thì cả phòng vào trận
+    if(!W.b || W.pre){   // phòng chờ ngay trên sân đấu: ai bấm «Bắt đầu» thì cả phòng vào trận
       var pr = wtbPresent(W), all = pr.length >= mem.length, waited = (Date.now() - W.since) / 1000, can = all || (pr.length >= 2 && waited >= 25) || waited >= 45;
-      wtbPanel(W, 'lobby:' + pr.join('') + ':' + (can ? 1 : 0) + ':' + W.att, '<div class="wtb-lobby"><p class="wt-boss" style="color:var(--wt-sand)">Cả đội chuẩn bị vào trận! Các bạn lần lượt ra đòn, rồi đến lượt Boss phản công.</p>' + (mem.length === 2 ? '<p class="wt-note wtb-duo">🤝 Đội 2 bạn đấu 3 Boss nhận <b>Thế đồng đội</b>: Thể lực +' + Math.round((WTB_TUNE.duo.hp - 1) * 100) + '%, điểm đòn ×' + WTB_TUNE.duo.score + ', Boss yếu bớt ' + Math.round((1 - WTB_TUNE.duo.bossDmg) * 100) + '% sát thương. Cả hai cùng trả lời đúng = COMBO!</p>' : '<p class="wt-note wtb-duo">🔥 Cả 3 bạn cùng trả lời đúng = <b>COMBO ĐỒNG ĐỘI</b>. Boss còn dưới nửa Thể lực sẽ NỔI GIẬN!</p>') + '<div class="wtb-ppl">'
-        + mem.map(function(i){ return '<span class="wtb-pp' + (wtbFresh(W, i) ? ' on' : '') + '">' + (wtbFresh(W, i) ? '🟢 ' : '⚪ ') + uEsc(wtbWho(W, i)) + '</span>'; }).join('') + '</div>'
-        + '<div class="wt-row" style="justify-content:center"><button type="button" class="wt-btn" style="background:var(--wt-gold);border-color:var(--wt-gold);color:var(--wt-ink)" data-wt-act="wtb-start"' + (can ? '' : ' disabled') + '>⚔️ Bắt đầu trận</button>'
-        + '<button type="button" class="wt-btn alt" data-wt-act="home" style="color:var(--wt-sand);border-color:var(--wt-sand)">Về chuyến bay</button></div>'
-        + (can ? '' : '<p class="wt-note">Đợi đủ ' + mem.length + ' bạn vào phòng (hoặc đợi vài giây nếu có bạn chưa vào được).</p>') + '</div>');
-      wtbSay('', '');
+      var key = 'lobby:' + pr.join('') + ':' + (can ? 1 : 0) + ':' + W.att;
+      if(W.panelKey === key) return; W.panelKey = key;
+      var duo = mem.length === 2, T = WTB_TUNE;
+      wtbaSay('⚔️ Sân đấu World Tour · lần ' + W.att + '/' + tries,
+        mem.map(function(i){ return (wtbFresh(W, i) ? '🟢 ' : '⚪ ') + escHtml(wtbWho(W, i)); }).join(' &nbsp;·&nbsp; ') + '<br><small>'
+        + (duo ? '🤝 Đội 2 bạn đấu 3 Boss nhận <b>Thế đồng đội</b>: Thể lực +' + Math.round((T.duo.hp - 1) * 100) + '%, điểm đòn ×' + T.duo.score + ', Boss yếu bớt ' + Math.round((1 - T.duo.bossDmg) * 100) + '% sát thương. Cả hai cùng đúng = COMBO!'
+          : '🔥 Cả đội cùng trả lời đúng = <b>COMBO ĐỒNG ĐỘI</b>. Boss dưới nửa Thể lực sẽ NỔI GIẬN!')
+        + (can ? '' : '<br>Đợi đủ ' + mem.length + ' bạn vào sân (hoặc vài giây nếu có bạn chưa vào được)…') + '</small>');
+      wtbaControls(W, '<button type="button" class="btn-primary" id="wtba-start"' + (can ? '' : ' disabled') + '>⚔️ Bắt đầu trận</button>' + wtbaLeaveBtn(), function(c){
+        var sb = c.querySelector('#wtba-start'); if(sb) sb.onclick = function(){ sb.disabled = true; wtbStart(); };
+        var lb = c.querySelector('#wtba-leave'); if(lb) lb.onclick = function(){ wtbaHome(W); };
+      });
       return;
     }
     var b = W.b;
-    if(b.finished && !W.queue.length && !W.playing){ wtbResult(W); return; }
-    var nx = wtbNext(b), txt, key;
-    if(!nx){ return; }
-    document.querySelectorAll('#wtb .wtb-u.turn').forEach(function(x){ x.classList.remove('turn'); });
-    if(nx.k === 'h'){ var us = wtbU(nx.seat); if(us) us.classList.add('turn'); txt = nx.seat === W.seat ? '⏳ Sắp đến lượt con…' : '⏳ Đợi <b>' + uEsc(wtbWho(W, nx.seat)) + '</b> trả lời câu hỏi…'; key = 'w:h' + nx.seat + ':' + W.applied; }
-    else { var bi = peekAttacker3(b, 1), ub = wtbU(bi); if(ub) ub.classList.add('turn'); txt = '🟪 Boss đang chuẩn bị ra đòn…'; key = 'w:b:' + W.applied; }
-    wtbPanel(W, key, '<p class="wtb-wait">' + txt + '</p>');
+    if(b.finished && !W.queue.length && !W.playing){ wtbaResult(W); return; }
+    if(W.playing || W.queue.length || W.entering) return;
+    var nx = wtbNext(b), txt, key2;
+    if(!nx) return;
+    if(nx.k === 'h'){ mark3(nx.seat, -1); txt = nx.seat === W.seat ? '⏳ Sắp đến lượt con…' : '⏳ Đợi <b>' + escHtml(wtbWho(W, nx.seat)) + '</b> chọn mục tiêu…'; key2 = 'w:h' + nx.seat + ':' + W.applied; }
+    else { mark3(peekAttacker3(b, 1), -1); txt = '🟪 Boss đang chuẩn bị ra đòn…'; key2 = 'w:b:' + W.applied; }
+    if(W.panelKey !== key2){
+      W.panelKey = key2; wtbaSay('Vòng <b>' + ((W.st && W.st.rnd || 0) + 1) + '</b> · ' + txt, '');
+      wtbaControls(W, wtbaLeaveBtn(), function(c){ var lb = c.querySelector('#wtba-leave'); if(lb) lb.onclick = function(){ if(confirm('Rời sân đấu? Đồng đội vẫn đánh tiếp, máy sẽ đánh thay con.')) wtbaHome(W); }; });
+    }
   }
-  function wtbResult(W){
-    var b = W.b, win = b.winner === 0, room = W.room, f = W.f, tries = wtbTries(room), left = tries - W.att, cl = wtClaims(), got = cl[room.ws];
+  function wtbaResult(W){
+    var st = W.st, b = W.b, win = b.winner === 0, room = W.room, f = W.f, tries = wtbTries(room), left = tries - W.att, cl = wtClaims(), got = cl[room.ws];
     var week = wtLive && wtLive.weeks.filter(function(w){ return w.ws === room.ws; })[0];
     var key = 'res:' + W.att + ':' + (win ? 1 : 0) + ':' + (got ? 1 : 0) + ':' + (left > 0 ? 1 : 0);
-    if(win){
-      wtbPanel(W, key, '<div class="wtb-res win"><h3>🏆 Cả đội đã hạ gục Boss!</h3><p>Hoàn thành sau <b>' + b.turn + '</b> lượt đánh' + (W.att > 1 ? ' (lần thử thứ ' + W.att + ')' : '') + '.</p>'
-        + (got ? '<p class="wtb-got">' + (got.got === 'frags' ? '🧩 Đã đổi thẻ thưởng thành ' + (got.n | 0) + ' mảnh ghép' : (got.got === 'card' ? '🎁 Đã nhận thẻ thưởng ' + uEsc(got.name || '') : '✅ Đã ghi con dấu vào hộ chiếu')) + '</p>'
-          : (week && week.rewardId ? '<div class="wt-row" style="justify-content:center"><button type="button" class="wt-btn" style="background:var(--wt-gold);border-color:var(--wt-gold);color:var(--wt-ink)" data-wt-act="claim">🎁 Nhận thẻ thưởng</button></div>' : '<div class="wt-row" style="justify-content:center"><button type="button" class="wt-btn" data-wt-act="claim">🛂 Đóng dấu hộ chiếu</button></div>'))
-        + '<div class="wt-row" style="justify-content:center"><button type="button" class="wt-btn alt" data-wt-act="home" style="color:var(--wt-sand);border-color:var(--wt-sand)">Về chuyến bay</button></div></div>');
-      if(!got && !W.claimed){ W.claimed = 1; setTimeout(function(){ if(wtb === W) wtbClaimAct(); }, 900); }
-    } else {
-      wtbPanel(W, key, '<div class="wtb-res lose"><h3>💪 Chưa hạ được Boss lần này</h3><p>Boss giữ nguyên sức mạnh đã tiết lộ. ' + (left > 0 ? 'Cả đội còn <b>' + left + '</b> lần thử trong tuần này.' : 'Cả đội đã dùng hết lượt thử của tuần này — chặng sau gặp lại nhé!') + '</p>'
-        + '<div class="wt-row" style="justify-content:center">' + (left > 0 ? '<button type="button" class="wt-btn" style="background:var(--wt-gold);border-color:var(--wt-gold);color:var(--wt-ink)" data-wt-act="retry">🔁 Thử lại</button>' : '')
-        + '<button type="button" class="wt-btn alt" data-wt-act="home" style="color:var(--wt-sand);border-color:var(--wt-sand)">Về chuyến bay</button></div></div>');
+    if(!W.finVis){   // cảnh kết thúc giống Đấu nhanh
+      W.finVis = 1; mark3(-1, -1);
+      document.querySelectorAll('#battle-vs-row .battle-side').forEach(function(e){ var i = parseInt(e.getAttribute('data-side'), 10); if(b.sides[i] && b.sides[i].team === b.winner && b.sides[i].hp > 0) e.classList.add('win'); });
+      wtbaSay('🏁 HẾT TRẬN! <b>' + (win ? 'Đội con' : 'Boss') + '</b> thắng!', '');
+      var v = wtbaView(); if(v) v.classList.add('bt3-done'); var ce = btEl('bt-console'); if(ce) ce.style.display = 'none';
+      try{ renderOrder3(st); refresh3(st); }catch(e){}
+      if(win && !reducedMotion()){
+        var fx = btEl('bt-fx'), fxw = (fx && fx.getBoundingClientRect().width) || 300;
+        for(var i2 = 0; i2 < 22; i2++){
+          var cf = btFx(['⚽', '⭐', '✨'][i2 % 3], 'bt-confetti'); cf.style.left = Math.round(Math.random() * fxw) + 'px';
+          btAnim(st, cf, [{ transform: 'translateY(0) rotate(0deg)', opacity: 1 }, { transform: 'translateY(220px) rotate(' + (Math.random() * 360) + 'deg)', opacity: 0 }], 1500 + Math.random() * 700, { delay: (Math.random() * 500) / st.speed });
+        }
+      }
+    }
+    if(W.panelKey !== key){
+      W.panelKey = key;
+      var rz = btEl('battle-result-zone'), btnGold = 'btn-primary';
+      var html;
+      if(win){
+        html = '<div class="battle-result win"><h3>🏆 Cả đội đã hạ gục Boss!</h3><p>Hoàn thành sau <b>' + b.turn + '</b> lượt đánh' + (W.att > 1 ? ' (lần thử thứ ' + W.att + ')' : '') + '.</p>'
+          + (got ? '<p class="battle-reward">' + (got.got === 'frags' ? '🧩 Đã đổi thẻ thưởng thành ' + (got.n | 0) + ' mảnh ghép' : (got.got === 'card' ? '🎁 Đã nhận thẻ thưởng ' + escHtml(got.name || '') : '✅ Đã ghi con dấu vào hộ chiếu')) + '</p>' : '')
+          + '</div>';
+      } else {
+        html = '<div class="battle-result lose"><h3>💪 Chưa hạ được Boss lần này</h3><p>Boss giữ nguyên sức mạnh đã tiết lộ. ' + (left > 0 ? 'Cả đội còn <b>' + left + '</b> lần thử trong tuần này.' : 'Cả đội đã dùng hết lượt thử của tuần này — chặng sau gặp lại nhé!') + '</p></div>';
+      }
+      if(rz) rz.innerHTML = html;
+      var btns = '';
+      if(win && !got) btns += '<button type="button" class="' + btnGold + '" id="wtba-claim">🎁 ' + (week && week.rewardId ? 'Nhận thẻ thưởng' : 'Đóng dấu hộ chiếu') + '</button>';
+      if(!win && left > 0) btns += '<button type="button" class="' + btnGold + '" id="wtba-retry">🔁 Thử lại</button>';
+      btns += wtbaLeaveBtn();
+      wtbaControls(W, btns, function(c){
+        var a = c.querySelector('#wtba-claim'); if(a) a.onclick = function(){ a.disabled = true; wtbClaimAct().then(function(){ W.panelKey = ''; }); };
+        var r = c.querySelector('#wtba-retry'); if(r) r.onclick = function(){ r.disabled = true; wtbRetry(); };
+        var h = c.querySelector('#wtba-leave'); if(h) h.onclick = function(){ wtbaHome(W); };
+      });
+      try{ if(rz) rz.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }catch(e){}
+      if(win && !got && !W.claimed){ W.claimed = 1; setTimeout(function(){ if(wtb === W) wtbClaimAct().then(function(){ W.panelKey = ''; }); }, 900); }
     }
     if(!f.res && !W.finished){   // ghi kết quả một lần (ai thấy trước ghi)
       W.finished = 1;
@@ -15948,7 +16135,7 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
 
   /* ---- quyết định ai ghi đòn kế tiếp ---- */
   function wtbDecide(W){
-    if(!W.b || W.b.finished || W.queue.length || W.playing) return;
+    if(!W.b || W.pre || W.b.finished || W.queue.length || W.playing || W.entering) return;
     var nx = wtbNext(W.b); if(!nx) return;
     var qn = W.f && W.f.qs && W.f.qs['q' + W.applied], aKey = W.att + ':' + W.applied;
     if(qn && nx.k === 'h' && wtList(qn.need).indexOf(W.seat) >= 0 && W.ansKey !== aKey && !(W.f.ans && W.f.ans['q' + W.applied] && W.f.ans['q' + W.applied]['s' + W.seat])){ W.ansKey = aKey; wtbAnswer(W, W.applied, qn); }
@@ -16024,62 +16211,58 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
       await wtbSleep(res.ok ? 900 : 2300);
     }finally{ if(own){ W.flowing = false; W.panelKey = ''; } }
   }
-  function wtbClearTargets(){
-    document.querySelectorAll('#wtb .wtb-u.tg').forEach(function(u){ u.classList.remove('tg'); u.disabled = true; });
-    document.querySelectorAll('#wtb .wtb-tag').forEach(function(t){ t.innerHTML = ''; });
-    if(wtb) wtb.pickCb = null;
-  }
+  function wtbClearTargets(){ try{ if(wtb && wtb.st && wtb.st.pick) wtb.st.pick.abort(); }catch(e){} }
+  /* chọn mục tiêu: dùng lại btPickTarget3 của Đấu nhanh (xem trước sát thương, ≈ hạ gục, khắc hệ) — hết 20 giây máy chọn thay */
   function wtbPickTarget(W, seat, gone){
     return new Promise(function(resolve){
-      var b = W.b, foes = alive3(b, 1), avg = battleD30(b.cfg, Math.round(6 * Math.max(1, wtbPresent(W).length))), t0 = Date.now(), iv = 0, done = false;   // xem trước theo mức trung bình ≈ 60% điểm tối đa của đội
-      b.rot[0] = seat;
-      foes.forEach(function(di){
-        var c = calcHit3(b, seat, di, avg), D = b.sides[di], u = wtbU(di), tg = document.getElementById('wtb-tag' + di);
-        if(u){ u.classList.add('tg'); u.disabled = false; }
-        if(tg) tg.innerHTML = (c.elemM > 1 ? '<em class="g">▲ khắc</em>' : (c.elemM < 1 ? '<em class="r">▼ bị khắc</em>' : '')) + (c.main >= D.hp ? '<em class="k">💀 hạ gục</em>' : '<em>≈' + Math.round(c.main) + '</em>');
-      });
-      var us = wtbU(seat); document.querySelectorAll('#wtb .wtb-u.turn').forEach(function(x){ x.classList.remove('turn'); }); if(us) us.classList.add('turn');
-      W.panelKey = ''; try{ document.getElementById('wtb').scrollIntoView({block:'center'}); }catch(e){} wtbPanel(W, 'pick:' + W.applied, '<p class="wtb-wait pick">🎯 Đến lượt con! <b>Chạm vào một thẻ Boss</b> để chọn mục tiêu.</p><div class="wt-qbar"><i id="wtb-pb"></i></div>');
-      wtbSay('🟦 <b>' + uEsc(wtbWho(W, seat)) + '</b> chuẩn bị ra đòn', 'Sau đó con sẽ trả lời 1 câu hỏi — đúng và nhanh thì đòn càng mạnh!');
-      function end(i){ if(done) return; done = true; clearInterval(iv); W.pickCb = null; wtbClearTargets(); resolve(i); }
-      W.pickCb = function(i){ if(foes.indexOf(i) >= 0) end(i); };
+      var st = W.st, b = W.b, done = false, t0 = Date.now(), iv = 0;
+      b.rot[0] = seat; wtbaHideQuiz();
+      var A = b.sides[seat];
+      btEl('bt-turn').innerHTML = '🟦 <b>' + escHtml(wtbWho(W, seat)) + '</b> (' + escHtml(sn3(A.card)) + ') ra đòn!';
+      btEl('bt-dnote').innerHTML = '🎯 Đến lượt con! <b>Chạm vào một thẻ Boss</b> để chọn mục tiêu.';
+      mark3(seat, -1); try{ wtbaView().scrollIntoView({ block: 'start' }); }catch(e){}
+      function end(i){ if(done) return; done = true; clearInterval(iv); resolve(i); }
+      btPickTarget3(st, seat).then(function(i){ end(i); });
       iv = setInterval(function(){
-        if(gone()){ end(-1); return; }
-        var rem = WTB_PICK_MS - (Date.now() - t0), bar = document.getElementById('wtb-pb');
-        if(bar) bar.style.width = Math.max(0, rem / WTB_PICK_MS * 100) + '%';
-        if(rem <= 0){ b.rot[0] = seat; end(aiPickTarget3(b, 0, W.init.sk || 0.5)); }
-      }, 100);
+        if(gone()){ if(st.pick) st.pick.abort(); end(-1); return; }
+        if(Date.now() - t0 >= WTB_PICK_MS){ b.rot[0] = seat; var tg = aiPickTarget3(b, 0, W.init.sk || 0.5); if(st.pick) st.pick.abort(); end(tg); }
+      }, 200);
     });
   }
+  /* câu hỏi cả đội cùng trả lời: dùng lại khung câu hỏi của Đấu nhanh (#bt-quiz) */
   function wtbAsk(W, q, secs, gone){
     return new Promise(function(resolve){
-      var sj = QUIZ_SUBJECTS[q.subject] || QUIZ_SUBJECTS.khac, t0 = performance.now(), done = false;
-      W.panelKey = '';
-      wtbPanel(W, 'q:' + W.applied, '<div class="wt-qwrap wtb-q"><div class="wt-qhead"><span>' + sj.ic + ' ' + uEsc(sj.name) + ' · cả đội cùng trả lời</span><span id="wtb-qt">' + secs + '</span></div><div class="wt-qbar"><i id="wtb-qb"></i></div>'
-        + '<p class="wt-q">' + uEsc(q.question) + '</p><div class="wt-qo" id="wtb-qo">' + q.options.map(function(o, j){ return '<button type="button" class="wt-opt" data-i="' + j + '">' + uEsc(o) + '</button>'; }).join('') + '</div><p class="wt-fb" id="wtb-fb" aria-live="polite"></p></div>');
-      var qo = document.getElementById('wtb-qo'), box = document.getElementById('wtb'); if(box) box.classList.add('q');
+      var box = btEl('bt-quiz'), mid = document.querySelector('#bt-console .bt-mid'), optsEl = btEl('bt-quiz-opts'), timeEl = btEl('bt-quiz-time'), bar = btEl('bt-quiz-barfill'), fb = btEl('bt-quiz-fb'), chip = btEl('bt-quiz-subj'), v = wtbaView();
+      if(!box || !optsEl){ resolve({ gone: true }); return; }
+      var subj = QUIZ_SUBJECTS[q.subject] || QUIZ_SUBJECTS.khac, tp = QUIZ_TOPICS[q.topic];
+      if(tp){ chip.textContent = '🔬 Science · ' + tp.ic + ' ' + tp.en + ' · ' + tp.vi; chip.style.color = tp.c; chip.style.borderColor = tp.c; chip.style.background = tp.c + '26'; box.style.boxShadow = 'inset 0 0 0 2px ' + tp.c + '66, 0 0 14px ' + tp.c + '55'; }
+      else { chip.textContent = subj.ic + ' ' + subj.name; chip.style.color = ''; chip.style.borderColor = ''; chip.style.background = ''; box.style.boxShadow = ''; }
+      var stk = btEl('bt-quiz-streak'); if(stk) stk.textContent = '🤝 Cả đội cùng trả lời';
+      btEl('bt-quiz-q').textContent = q.question; fb.innerHTML = '';
+      optsEl.innerHTML = q.options.map(function(o, i){ return '<button type="button" class="bt-opt" data-i="' + i + '">' + escHtml(o) + '</button>'; }).join('');
+      box.classList.remove('urgent'); box.style.display = ''; if(mid) mid.style.display = 'none'; if(v) v.classList.add('bt-quizing');
+      btEl('bt-dnote').textContent = '';
+      try{ box.scrollIntoView({ block: 'nearest' }); }catch(e){}
+      var t0 = performance.now(), done = false, iv = 0;
+      function remaining(){ return secs - (performance.now() - t0) / 1000; }
       function fin(r){
-        if(done) return; done = true; clearInterval(W.tmr); W.tmr = 0; if(box) box.classList.remove('q');
-        if(qo) qo.onclick = null;
-        if(!r.gone){
-          var btns = document.querySelectorAll('#wtb-qo .wt-opt'); btns.forEach(function(b2, j){ b2.disabled = true; if(j === q.correct) b2.classList.add('ok'); else if(j === r.pick) b2.classList.add('bad'); });
-          var fb = document.getElementById('wtb-fb');
-          if(fb) fb.innerHTML = r.ok ? '🎉 Chính xác! Còn ' + r.secLeft + ' giây → <b>' + Math.min(10, Math.max(1, r.secLeft)) + ' điểm</b>'
-            : ((r.timeout ? '⏰ Hết giờ. ' : '💡 Chưa đúng. ') + '<b>0 điểm</b> · Đáp án: <b>' + uEsc(q.options[q.correct]) + '</b>' + (q.explain ? '<br><small>' + uEsc(q.explain) + '</small>' : ''));
-        }
+        if(done) return; done = true; clearInterval(iv); optsEl.onclick = null;
+        if(r.gone){ wtbaHideQuiz(); resolve(r); return; }
+        optsEl.querySelectorAll('.bt-opt').forEach(function(b2, j){ b2.disabled = true; if(j === q.correct) b2.classList.add('ok'); else if(j === r.pick) b2.classList.add('bad'); });
+        fb.innerHTML = r.ok ? '✅ <b>Chính xác!</b> Còn ' + r.secLeft + ' giây → <b>' + Math.min(10, Math.max(1, r.secLeft)) + ' điểm</b>'
+          : ((r.timeout ? '⏰ <b>Hết giờ!</b> ' : '❌ <b>Chưa đúng rồi.</b> ') + '<b>0 điểm</b> · Đáp án đúng: <b>' + escHtml(q.options[q.correct]) + '</b>' + (q.explain ? '<br><small>' + escHtml(q.explain) + '</small>' : ''));
         resolve(r);
       }
-      function remaining(){ return secs - (performance.now() - t0) / 1000; }
-      W.tmr = setInterval(function(){
+      iv = setInterval(function(){
         if(gone()){ fin({ gone: true }); return; }
-        var rem = remaining(), te = document.getElementById('wtb-qt'), be = document.getElementById('wtb-qb');
-        if(rem <= 0){ if(te) te.textContent = '0'; fin({ ok: false, timeout: true, pick: -1, secLeft: 0 }); return; }
-        if(te) te.textContent = Math.ceil(rem); if(be) be.style.width = (rem / secs * 100) + '%';
+        var rem = remaining();
+        if(rem <= 0){ timeEl.textContent = '0'; bar.style.width = '0%'; fin({ ok: false, timeout: true, pick: -1, secLeft: 0 }); return; }
+        timeEl.textContent = String(Math.ceil(rem)); bar.style.width = (rem / secs * 100) + '%'; box.classList.toggle('urgent', rem <= 5);
       }, 100);
-      if(qo) qo.onclick = function(e){
-        var bt = e.target.closest ? e.target.closest('.wt-opt') : null; if(!bt || done) return;
+      optsEl.onclick = function(e){
+        var bt = e.target.closest ? e.target.closest('.bt-opt') : null; if(!bt || done) return;
         var rem = remaining(); if(rem <= 0) return;
-        var i = +bt.getAttribute('data-i'); fin({ ok: i === q.correct, pick: i, secLeft: Math.ceil(rem) });
+        var i = parseInt(bt.getAttribute('data-i'), 10); fin({ ok: i === q.correct, pick: i, secLeft: Math.ceil(rem) });
       };
     });
   }
@@ -16151,7 +16334,7 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
     cl[ws] = rec; safeSet(WT_CLAIM_KEY, cl);
     try{ renderBadges(); }catch(e){}
     if(W) W.panelKey = '';
-    if(wtb === W && W) wtbResult(W);
+    if(wtb === W && W) { W.panelKey = ""; wtbaResult(W); };
     wtRewardReveal(shown || base, rec);
   }
   function wtRewardReveal(base, rec){
