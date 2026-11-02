@@ -4332,6 +4332,218 @@
   #season-match .in-grass.land .wx-img{ inset:auto; left:50%; top:50%; width:154.4%; height:64.76%; transform:translate(-50%,-50%) rotate(90deg); }   /* ảnh ngang → xoay 90° cho vừa sân dọc 68:105 */
   #season-match .mx-wx{ position:absolute; right:6px; top:5px; z-index:2; max-width:46%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:11px; font-weight:900; padding:2px 8px; border-radius:99px; background:rgba(15,23,42,.72); color:#fff; }
   /* =====================================================================
+     ƯU TIÊN TUYỆT ĐỐI CHO CÂU HỎI VÀ ĐÁP ÁN TRÊN IPHONE / IPAD KHI CÓ KEY MOMENT
+     ===================================================================== */
+  /* Ẩn thanh dock chính (.tab-bar) khi câu hỏi hiển thị để giải phóng toàn bộ màn hình */
+  body.is-quiz-active .tab-bar{
+    transform: translate(-50%, 160%) scale(0.95) !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    transition: transform .25s cubic-bezier(.34,1.56,.64,1), opacity .2s ease !important;
+  }
+  body.is-quiz-active #season-match{
+    padding-bottom: max(16px, env(safe-area-inset-bottom)) !important;
+  }
+
+  /* Thu gọn danh sách diễn biến: chỉ hiển thị 1 dòng KEY MOMENT làm tiêu đề ngữ cảnh */
+  body.is-quiz-active #season-match .mt-feedwrap{
+    flex: 0 0 auto !important;
+    margin: 2px 0 6px !important;
+  }
+  body.is-quiz-active #season-match .mt-feed{
+    max-height: 52px !important;
+    min-height: 0 !important;
+    flex: 0 0 auto !important;
+    overflow: hidden !important;
+    padding: 0 !important;
+    background: transparent !important;
+    border: none !important;
+    touch-action: pan-y;
+  }
+  body.is-quiz-active #season-match .mt-feed > :not(:last-child){
+    display: none !important;
+  }
+  body.is-quiz-active #season-match .mt-feed > :last-child{
+    margin: 0 !important;
+    padding: 7px 11px !important;
+    border-radius: 12px !important;
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.22), rgba(217, 119, 6, 0.12)) !important;
+    border: 1.5px solid rgba(251, 191, 36, 0.6) !important;
+    box-shadow: 0 4px 12px rgba(245, 158, 11, 0.2) !important;
+    font-size: 13.5px !important;
+    font-weight: 800 !important;
+    color: #FEF08A !important;
+    line-height: 1.35 !important;
+    animation: fcPulseKey 1.5s ease-in-out infinite alternate;
+  }
+  @keyframes fcPulseKey{
+    0%{ border-color: rgba(251, 191, 36, 0.45); box-shadow: 0 0 8px rgba(245, 158, 11, 0.2); }
+    100%{ border-color: rgba(254, 240, 138, 0.95); box-shadow: 0 0 16px rgba(250, 204, 21, 0.45); }
+  }
+
+  /* Ẩn chi tiết người tham gia pha bóng trong lúc làm bài để không chiếm diện tích */
+  body.is-quiz-active #season-match .mt-pdet{
+    display: none !important;
+  }
+
+  /* Hộp câu hỏi: thiết kế nổi bật, độ tương phản cao, ưu tiên hàng đầu */
+  #season-match .mt-q{
+    margin: 4px 0 8px;
+    padding: 12px 14px;
+    border-radius: 16px;
+    background: rgba(15, 23, 42, 0.94);
+    border: 1.5px solid rgba(250, 204, 21, 0.55);
+    box-shadow: 0 10px 28px -4px rgba(0, 0, 0, 0.75), 0 0 16px rgba(234, 179, 8, 0.25);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+  #season-match .mt-qchip{
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11.5px;
+    font-weight: 800;
+    color: #FEF08A;
+    background: rgba(234, 179, 8, 0.2);
+    border: 1px solid rgba(250, 204, 21, 0.55);
+    border-radius: 99px;
+    padding: 3px 9px;
+    margin-bottom: 6px;
+  }
+  #season-match .mt-qq{
+    font-size: 16px;
+    font-weight: 800;
+    line-height: 1.45;
+    color: #FFFFFF;
+    margin-bottom: 8px;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+  }
+  #season-match .mt-qtime{
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 900;
+    color: #FDE047;
+    margin-bottom: 8px;
+  }
+  #season-match .mt-qbar{
+    flex: 1;
+    height: 7px;
+    border-radius: 99px;
+    background: rgba(255, 255, 255, 0.15);
+    overflow: hidden;
+  }
+  #season-match .mt-qbar i{
+    display: block;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, #F59E0B, #FDE047, #34D399);
+    border-radius: 99px;
+    transition: width 0.1s linear;
+  }
+
+  /* Bố cục lựa chọn 2 cột tối ưu cho iPhone và iPad, nút to dễ bấm */
+  #season-match .mt-qopts{
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 8px !important;
+    margin-top: 6px !important;
+  }
+  #season-match .mt-qopts.long-opts{
+    grid-template-columns: 1fr !important;
+  }
+  #season-match .mt-opt{
+    min-height: 48px;
+    padding: 8px 12px;
+    border-radius: 12px;
+    border: 1.5px solid rgba(255, 255, 255, 0.22);
+    background: rgba(30, 41, 59, 0.88);
+    color: #F8FAFC;
+    font-size: 14.5px;
+    font-weight: 700;
+    line-height: 1.35;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+    -webkit-user-select: none;
+    transition: transform .1s, background .15s, border-color .15s, box-shadow .15s;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.35);
+  }
+  #season-match .mt-opt:active:not(:disabled){
+    transform: scale(0.97);
+    background: rgba(51, 65, 85, 1);
+  }
+  #season-match .mt-opt.ok{
+    background: linear-gradient(135deg, #059669, #10B981) !important;
+    border-color: #6EE7B7 !important;
+    color: #FFFFFF !important;
+    box-shadow: 0 0 14px rgba(16, 185, 129, 0.6) !important;
+  }
+  #season-match .mt-opt.bad{
+    background: linear-gradient(135deg, #DC2626, #EF4444) !important;
+    border-color: #FCA5A5 !important;
+    color: #FFFFFF !important;
+    opacity: 0.85;
+  }
+  #season-match .mt-qfb{
+    font-size: 13.5px;
+    line-height: 1.45;
+    margin-top: 8px;
+    text-align: center;
+  }
+
+  /* Khi iPhone xoay ngang (chiều cao hẹp < 520px) */
+  @media (orientation: landscape) and (max-height: 520px){
+    body.is-quiz-active #season-match .mt-feedwrap{
+      display: none !important;
+    }
+    body.is-quiz-active #season-match .mt-tabs{
+      display: none !important;
+    }
+    body.is-quiz-active #season-match .mt-hd{
+      padding: 2px 8px;
+      margin-bottom: 2px;
+    }
+    body.is-quiz-active #season-match .mt-hd .mt-sc em{
+      font-size: 18px;
+    }
+    body.is-quiz-active #season-match .mt-q{
+      padding: 8px 12px;
+      margin: 2px 0 4px;
+    }
+    body.is-quiz-active #season-match .mt-qq{
+      font-size: 14px;
+      margin-bottom: 4px;
+      line-height: 1.35;
+    }
+    body.is-quiz-active #season-match .mt-qtime{
+      margin-bottom: 6px;
+      font-size: 12px;
+    }
+    body.is-quiz-active #season-match .mt-qopts{
+      grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+      gap: 6px !important;
+    }
+    body.is-quiz-active #season-match .mt-opt{
+      min-height: 40px;
+      font-size: 13.5px;
+      padding: 4px 8px;
+    }
+  }
+
+  /* Đảm bảo đáy của #season-match luôn chừa đủ khoảng cách với thanh dock trên điện thoại khi thi đấu bình thường */
+  @media (max-width:640px){
+    #season-match{
+      padding-bottom: calc(var(--dock-h, 96px) + env(safe-area-inset-bottom, 20px) + 20px) !important;
+    }
+  }
+
+  /* =====================================================================
      Màn thi đấu · Mùa giải — vừa khít một màn hình iPad, không bị dock che
      Khối cao = khoảng giữa mép trên màn hình và mép trên dock (JS: mxAvail).
      Đầu trận (tỉ số, tab) cố định; bình luận co giãn lấp phần còn lại; nút hành động neo ở đáy.
@@ -20161,7 +20373,7 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
   function sModalClose(){
     lpPicking = false; lpSel = null;
     var m = sEl('season-modal'); if(m) m.hidden = true;
-    document.body.classList.remove('se-modal-open');
+    document.body.classList.remove('se-modal-open', 'is-quiz-active');
     if(!seEnteringMatch && (!sMC || sMC.m.introDone)){
       seAnthemStop();
     }
@@ -23583,14 +23795,18 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
   function sQuiz(m, tok){
     var q = quizPick(m.qT), secs = m.secs || 15, subj = QUIZ_SUBJECTS[q.subject] || QUIZ_SUBJECTS.khac, tp = QUIZ_TOPICS[q.topic], box = sEl('mt-q');
     if(!box) return Promise.resolve({ok:false, score:1});
+    document.body.classList.add('is-quiz-active');
+    var isLong = Array.isArray(q.options) && q.options.some(function(o){ return String(o).length > 28; });
     var chip = tp ? ('🔬 Science · ' + tp.ic + ' ' + tp.en + ' · ' + tp.vi) : (subj.ic + ' ' + subj.name);
-    box.innerHTML = '<div class="mt-qchip">' + escHtml(chip) + '</div><div class="mt-qq">' + escHtml(q.question) + '</div><div class="mt-qtime"><span id="mt-qt">' + secs + '</span>s<div class="mt-qbar"><i id="mt-qb"></i></div></div><div class="mt-qopts">'
+    box.style.display = '';
+    box.innerHTML = '<div class="mt-qchip">' + escHtml(chip) + '</div><div class="mt-qq">' + escHtml(q.question) + '</div><div class="mt-qtime"><span id="mt-qt">' + secs + '</span>s<div class="mt-qbar"><i id="mt-qb"></i></div></div><div class="mt-qopts' + (isLong ? ' long-opts' : '') + '">'
       + q.options.map(function(o, i){ return '<button type="button" class="mt-opt" data-i="' + i + '">' + escHtml(o) + '</button>'; }).join('') + '</div><div class="mt-qfb" id="mt-qfb"></div>';
     return new Promise(function(resolve){
       var t0 = performance.now(), done = false, iv = null, optsEl = box.querySelector('.mt-qopts');
       function rem(){ return secs - (performance.now() - t0) / 1000; }
       function finish(res){
         if(done) return; done = true; clearInterval(iv);
+        document.body.classList.remove('is-quiz-active');
         res.score = res.ok ? Math.min(10, Math.max(1, res.secLeft)) : 0; seSfx(res.ok ? 'right' : 'wrong');
         optsEl.querySelectorAll('.mt-opt').forEach(function(b, i){ b.disabled = true; if(i === q.correct) b.classList.add('ok'); else if(i === res.picked) b.classList.add('bad'); });
         var fb = sEl('mt-qfb');
@@ -23598,7 +23814,7 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
         setTimeout(function(){ resolve(res); }, res.ok ? 900 : 2300);
       }
       function tick(){
-        if(!sAlive(tok)){ done = true; clearInterval(iv); return; }
+        if(!sAlive(tok)){ done = true; clearInterval(iv); document.body.classList.remove('is-quiz-active'); return; }
         var r = rem(); if(r <= 0){ finish({ok:false, timeout:true, picked:-1}); return; }
         var te = sEl('mt-qt'), be = sEl('mt-qb'); if(te) te.textContent = String(Math.ceil(r)); if(be) be.style.width = (r / secs * 100) + '%';
       }
@@ -23644,9 +23860,18 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
     var fd = sEl('mt-feed'); if(fd) fd.classList.add('compact');
     await comPlay(m, [comKey(m, cur)], tok, true, function(){ mxDo('key'); }); if(!sAlive(tok)) return;      // 2) KEY MOMENT
     var sk = document.querySelector('#season-match .mt-skiprow'); if(sk) sk.style.display = 'none';
-    var qp = sQuiz(m, tok), qe = sEl('mt-q'); if(qe && qe.scrollIntoView) qe.scrollIntoView({block:'nearest', behavior:'smooth'});
+    var qp = sQuiz(m, tok), qe = sEl('mt-q');
+    if(qe){
+      try{
+        var topOff = qe.getBoundingClientRect().top + (window.pageYOffset || document.documentElement.scrollTop) - 12;
+        window.scrollTo({top: Math.max(0, topOff), behavior: 'smooth'});
+      }catch(e){
+        if(qe.scrollIntoView) qe.scrollIntoView({block:'start', behavior:'smooth'});
+      }
+    }
     var res = await qp; if(!sAlive(tok)) return; mxScroll();                                  // 3) bé trả lời
     if(qe) qe.style.display = 'none';
+    document.body.classList.remove('is-quiz-active');
     if(fd){ fd.classList.remove('compact'); if(fd.scrollIntoView) fd.scrollIntoView({block:'nearest'}); }
     await sSpin(res.score, tok); if(!sAlive(tok)) return; mxScroll();
     var rec = seResolve(m, res.score, !!res.ok); rec.q = {ok:!!res.ok, sec:res.secLeft || 0, timeout:!!res.timeout}; m.phase = 'break'; c.outPending = true;
@@ -25068,15 +25293,18 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
   function frlQuizUI(qd, tok){
     var q = qd.q, secs = qd.secs || 15, subj = QUIZ_SUBJECTS[q.subject] || QUIZ_SUBJECTS.khac, tp = QUIZ_TOPICS[q.topic], box = sEl('mt-q');
     if(!box) return Promise.resolve({ok:false, score:1, timeout:true, picked:-1, secLeft:0});
+    document.body.classList.add('is-quiz-active');
     var opts = Array.isArray(q.options) ? q.options : sArr(q.options), chip = tp ? ('🔬 Science · ' + tp.ic + ' ' + tp.en + ' · ' + tp.vi) : (subj.ic + ' ' + subj.name), plan = frlQuizPlan(qd, frnNow());
+    var isLong = opts.some(function(o){ return String(o).length > 28; });
     box.style.display = '';
-    box.innerHTML = '<div class="mt-qprep" id="mt-qprep">⏱ Chuẩn bị…</div><div class="mt-qchip" hidden>' + escHtml(chip) + '</div><div class="mt-qq" hidden>' + escHtml(q.question) + '</div><div class="mt-qtime" hidden><span id="mt-qt">' + secs + '</span>s<div class="mt-qbar"><i id="mt-qb"></i></div></div><div class="mt-qopts" hidden>'
+    box.innerHTML = '<div class="mt-qprep" id="mt-qprep">⏱ Chuẩn bị…</div><div class="mt-qchip" hidden>' + escHtml(chip) + '</div><div class="mt-qq" hidden>' + escHtml(q.question) + '</div><div class="mt-qtime" hidden><span id="mt-qt">' + secs + '</span>s<div class="mt-qbar"><i id="mt-qb"></i></div></div><div class="mt-qopts' + (isLong ? ' long-opts' : '') + '" hidden>'
       + opts.map(function(o, i){ return '<button type="button" class="mt-opt" data-i="' + i + '">' + escHtml(o) + '</button>'; }).join('') + '</div><div class="mt-qfb" id="mt-qfb"></div>';
     return new Promise(function(resolve){
       var done = false, iv = null, started = false, p0 = 0, optsEl = box.querySelector('.mt-qopts');
       function rem(){ return started ? (plan.budget - (performance.now() - p0)) / 1000 : secs; }   // đồng hồ đơn điệu từ lúc câu hỏi hiện trên màn hình mình
       function finish(res){
         if(done) return; done = true; clearInterval(iv);
+        document.body.classList.remove('is-quiz-active');
         res.score = res.ok ? Math.min(10, Math.max(1, res.secLeft)) : 0; seSfx(res.ok ? 'right' : 'wrong');
         optsEl.querySelectorAll('.mt-opt').forEach(function(b, i){ b.disabled = true; if(i === q.correct) b.classList.add('ok'); else if(i === res.picked) b.classList.add('bad'); });
         var fb = sEl('mt-qfb');
@@ -25089,7 +25317,7 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
         var pe = sEl('mt-qprep'); if(pe) pe.hidden = true;
       }
       function tick(){
-        if(!sAlive(tok)){ done = true; clearInterval(iv); return; }
+        if(!sAlive(tok)){ done = true; clearInterval(iv); document.body.classList.remove('is-quiz-active'); return; }
         if(!started){
           var w = qd.t0 - frnNow();
           if(w > 0){ var pe = sEl('mt-qprep'); if(pe) pe.textContent = '⏱ Chuẩn bị… ' + Math.ceil(w / 1000); return; }   // chưa tới giờ: chưa lộ câu hỏi (cả hai máy cùng mở)
