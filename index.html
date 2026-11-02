@@ -3853,7 +3853,11 @@
   #season-match .mx-d{ position:absolute; left:0; top:0; width:var(--cwp,12%); z-index:10; will-change:transform; transform:translate(-50%,-50%);
     transition:opacity .3s, transform var(--d,.9s) var(--e,cubic-bezier(.45,.05,.25,1)) var(--dl,0s); }
   /* Tối ưu phần cứng cho iOS/WebKit: khử bỏ drop-shadow lọc CPU, dùng box-shadow kết hợp viền neon phát sáng sống động */
-  #season-match .mx-d{ contain:layout style paint; -webkit-backface-visibility:hidden; backface-visibility:hidden; }
+  /* FIX thẻ bị cắt: bỏ `paint` khỏi contain (paint = cắt mọi thứ vượt khỏi hộp thẻ → lắc/phóng to/nhảy mừng/huy hiệu OVR/viền sáng bị gọt).
+     Vẫn giữ layout+style cho hiệu năng; để các lớp bao quanh không cắt nội dung. */
+  #season-match .mx-d{ contain:layout style; overflow:visible; -webkit-backface-visibility:hidden; backface-visibility:hidden; }
+  #season-match .mx-c{ overflow:visible; }
+  #season-match .mx-pitch,#season-match .mx-r,#season-match .mx{ overflow:visible; }
   #season-match .mx-c{ position:relative; width:100%; transform-origin:50% 60%; transition:transform .28s cubic-bezier(.2,.8,.3,1); will-change:transform; }
   #season-match .mx-c .fc-card{ display:block; box-shadow:0 3px 8px rgba(0,0,0,.65), 0 0 1px rgba(255,255,255,.4); border-radius:8% / 6%; }
   #season-match .mx-c .in-txt{ height:auto; aspect-ratio:var(--fc-ar,.74); border-radius:8% / 6%; border:1.5px solid var(--sc,#fff); }
