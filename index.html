@@ -838,6 +838,25 @@
   .pd-stat-box{ background:var(--deep-soft); border-radius:var(--radius-sm); padding:8px 4px; text-align:center; }
   .pd-stat-box b{ display:block; font-family:var(--font-display); font-size:19px; font-weight:800; }
   .pd-stat-box span{ display:block; font-size:9.5px; font-weight:700; color:var(--ink-soft); margin-top:1px; letter-spacing:.02em; }
+  /* Chi tiết Playstyle trong modal xem cầu thủ (Giai đoạn 6) */
+  .pd-ps-block{ margin-top:14px; display:flex; flex-direction:column; gap:8px; }
+  .pd-ps-card{ background:var(--glass-soft); border:1px solid var(--glass-line); border-radius:12px; padding:10px 12px; display:flex; flex-direction:column; gap:5px; }
+  .pd-ps-head{ display:flex; align-items:center; justify-content:space-between; gap:6px; flex-wrap:wrap; }
+  .pd-ps-name{ font-size:13.5px; font-weight:800; color:var(--ink); display:flex; align-items:center; gap:6px; }
+  .pd-ps-tier{ font-size:10.5px; font-weight:800; padding:2px 8px; border-radius:99px; }
+  .pd-ps-tier.tier-1{ background:rgba(148,163,184,.22); color:#CBD5E1; border:1px solid rgba(148,163,184,.45); }
+  .pd-ps-tier.tier-2{ background:rgba(245,158,11,.22); color:#FDE68A; border:1px solid rgba(245,158,11,.55); }
+  .pd-ps-tier.tier-3{ background:rgba(168,85,247,.25); color:#E9D5FF; border:1px solid rgba(168,85,247,.65); box-shadow:0 0 10px rgba(168,85,247,.35); }
+  .pd-ps-desc{ font-size:12px; color:var(--ink-soft); line-height:1.45; }
+  .pd-ps-fx{ font-size:11.5px; padding:6px 9px; border-radius:8px; background:rgba(15,23,42,.45); line-height:1.45; color:#F1F5F9; border-left:3px solid var(--gold); }
+  .pd-ps-fx b{ color:var(--gold); }
+  .pd-ps-next{ font-size:11px; color:#A78BFA; line-height:1.4; padding-left:2px; }
+
+  /* Huy hiệu Chiêu Sút Quyết Định (Giai đoạn 6) */
+  .shoot-ps-banner{ margin:8px auto 4px; padding:6px 12px; border-radius:12px; background:linear-gradient(135deg,rgba(168,85,247,.22),rgba(245,158,11,.18)); border:1px solid rgba(245,158,11,.5); font-size:12.5px; font-weight:800; color:#FDE68A; display:inline-flex; align-items:center; gap:6px; box-shadow:0 3px 10px rgba(0,0,0,.3); }
+  .shoot-ps-banner b{ color:#fff; }
+  .shoot-ps-banner.pen{ border-color:#38BDF8; background:linear-gradient(135deg,rgba(56,189,248,.22),rgba(168,85,247,.2)); color:#BAE6FD; }
+
   .pd-chips{ display:flex; gap:6px; flex-wrap:wrap; margin-top:12px; }
   .pd-chip{ background:var(--brand-soft); color:var(--brand-dark-text); font-size:11px; font-weight:700; padding:4px 10px; border-radius:999px; }
   .pd-section-title{ font-family:var(--font-display); font-size:14px; font-weight:800; color:var(--ink); margin:14px 0 4px; }
@@ -864,6 +883,98 @@
     position:relative; width:100%; aspect-ratio:var(--fc-ar);
     container-type:inline-size; isolation:isolate; user-select:none; -webkit-user-select:none;
   }
+  /* ===== MODAL CHỌN THẺ CHỈ ĐỊNH 5x5 (Thưởng Cú Sút Quyết Định) ===== */
+  .designated-modal{
+    width:min(660px, 96vw); max-height:92vh; max-height:92dvh; overflow-y:auto;
+    background:var(--night-card, #0B1224); border:1px solid var(--glass-line);
+    border-radius:20px; padding:16px 18px; color:var(--ink);
+  }
+  .des-head{ text-align:center; margin-bottom:10px; }
+  .des-title{ font-family:var(--font-display); font-size:20px; font-weight:900; color:var(--gold); margin:4px 0 6px; }
+  .des-desc{ font-size:12px; color:var(--ink-soft); line-height:1.45; margin:0 auto 10px; max-width:540px; }
+  .des-status-bar{ display:flex; justify-content:center; align-items:center; gap:12px; flex-wrap:wrap; margin-top:4px; }
+  .des-turns-badge{ display:inline-flex; align-items:center; gap:5px; padding:4px 14px; border-radius:99px; background:linear-gradient(135deg,rgba(245,158,11,.25),rgba(239,68,68,.2)); border:1.5px solid var(--gold); font-size:13px; font-weight:900; color:#FDE68A; }
+  .des-turns-badge b{ font-size:16px; color:#fff; }
+  .des-match-badge{ font-size:12px; font-weight:700; color:var(--ink-soft); }
+  .des-match-badge b{ color:#38BDF8; font-weight:900; }
+
+  .des-filters-card{
+    display:grid; grid-template-columns:1fr 1fr; gap:10px; padding:10px 12px;
+    border-radius:14px; background:var(--glass-soft); border:1px solid var(--glass-line);
+    margin-bottom:10px;
+  }
+  @media (max-width:560px){ .des-filters-card{ grid-template-columns:1fr; } }
+  .des-filter-col label{ display:block; font-size:11.5px; font-weight:800; color:var(--gold); margin-bottom:4px; }
+  .des-filter-col select{
+    width:100%; min-height:40px; padding:0 10px; border-radius:10px;
+    border:1px solid var(--glass-line); background:var(--night); color:var(--ink);
+    font:inherit; font-size:13px; font-weight:700; cursor:pointer;
+  }
+  .des-filter-col select:focus{ outline:2px solid var(--gold); border-color:var(--gold); }
+
+  .des-grid-wrap{ margin:8px 0; overflow-x:auto; padding-bottom:4px; }
+  .des-grid{
+    display:grid; grid-template-columns:repeat(5, minmax(0, 1fr)); gap:6px;
+    width:100%; max-width:580px; margin:0 auto;
+  }
+  .des-cell{
+    position:relative; width:100%; aspect-ratio:var(--fc-ar, 0.74);
+    perspective:700px; -webkit-perspective:700px;
+  }
+  .des-cell.empty{
+    border:1.5px dashed rgba(148,163,184,.25); border-radius:8% / 6%;
+    background:rgba(15,23,42,.35); opacity:.4; display:grid; place-items:center;
+    pointer-events:none;
+  }
+  .des-cell.empty::after{ content:'—'; color:rgba(148,163,184,.4); font-size:14px; }
+
+  .des-card{
+    position:relative; width:100%; height:100%;
+    transform-style:preserve-3d; transition:transform .65s cubic-bezier(.3,.7,.3,1);
+    cursor:pointer; -webkit-tap-highlight-color:transparent;
+  }
+  .des-card:hover:not(.flip){ transform:translateY(-3px) scale(1.04); }
+  .des-card.flip{ transform:rotateY(180deg); cursor:default; }
+  .des-grid.locked .des-card:not(.flip){ cursor:not-allowed; opacity:.6; }
+  .des-grid.locked .des-card:not(.flip):hover{ transform:none; }
+
+  .des-card-face, .des-card-back{
+    position:absolute; inset:0; backface-visibility:hidden; -webkit-backface-visibility:hidden;
+    border-radius:8% / 6%; overflow:hidden;
+  }
+  .des-card-back{
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px;
+    background:repeating-linear-gradient(45deg,#1E3A5F,#1E3A5F 5px,#173050 5px,#173050 10px);
+    border:2px solid var(--gold); box-shadow:0 3px 8px rgba(0,0,0,.5);
+  }
+  .des-card-back .des-back-ico{ font-size:clamp(16px, 4vw, 24px); filter:drop-shadow(0 2px 4px rgba(0,0,0,.6)); }
+  .des-card-back .des-back-lbl{ font-size:9.5px; font-weight:900; color:var(--gold); letter-spacing:.02em; }
+
+  .des-card-face{
+    transform:rotateY(180deg);
+    box-shadow:0 4px 12px rgba(0,0,0,.65);
+  }
+  .des-card-face .fc-card{ width:100%; height:100%; display:block; }
+  .des-card-face .des-card-got{
+    position:absolute; top:2px; right:2px; z-index:10;
+    font-size:9px; font-weight:900; padding:1px 5px; border-radius:99px;
+    background:#10B981; color:#fff; box-shadow:0 2px 5px rgba(0,0,0,.5);
+  }
+
+  .des-picked-wrap{
+    margin-top:10px; padding:10px 12px; border-radius:14px;
+    background:var(--glass-soft); border:1px solid var(--glass-line);
+  }
+  .des-picked-title{ font-size:12.5px; font-weight:800; color:var(--gold); margin-bottom:6px; }
+  .des-picked-list{ display:flex; gap:8px; flex-wrap:wrap; min-height:36px; align-items:center; }
+  .des-picked-item{
+    display:inline-flex; align-items:center; gap:6px; padding:4px 8px;
+    border-radius:8px; background:rgba(15,23,42,.6); border:1px solid rgba(245,158,11,.4);
+    font-size:12px; font-weight:700; color:var(--ink);
+  }
+  .des-picked-item b{ color:var(--gold); }
+  .des-picked-empty{ font-size:11.5px; color:var(--ink-soft); font-style:italic; }
+
   /* ===== HIỆU ỨNG THẺ THEO PHẨM CHẤT (TRÊN SÂN MÙA GIẢI, ĐẤU TRƯỜNG & ĐỘI HÌNH) ===== */
   
   /* 1. Thẻ LIVE (Phổ Thông): Tinh giản, sạch sẽ, không có hiệu ứng gì */
@@ -3364,6 +3475,15 @@
   .t3-tg.ps-tag.grp-move{ background:rgba(22,163,74,0.18); color:#86EFAC; border:1px solid rgba(22,163,74,0.45); }
   .t3-tg.ps-tag.grp-tackle{ background:rgba(147,51,234,0.18); color:#D8B4FE; border:1px solid rgba(147,51,234,0.45); }
 
+
+  /* Khoảnh Khắc Tím trong bản tin tường thuật Mùa giải */
+  .mt-line.mt-purple-moment{
+    background: linear-gradient(90deg, rgba(168,85,247,0.28), rgba(251,191,36,0.22));
+    border-left: 3px solid #C084FC; color: #FDE047; font-weight: 800;
+    padding: 5px 10px; border-radius: 6px; box-shadow: 0 0 12px rgba(192,132,252,0.4);
+    margin: 4px 0;
+  }
+
 </style>
 <style id="welcome-notice-css">
   /* ===== Thông báo chào mừng: popup cho User + tab soạn thảo trong Trang quản trị ===== */
@@ -3745,139 +3865,34 @@
   :is(#season-modal, #season-match) .fe-inj{ background:rgba(239,68,68,.12); color:#FCA5A5; }
   :is(#season-modal, #season-match) .fe-sub{ background:rgba(59,130,246,.16); }
   :is(#season-modal, #season-match) .fe-xt{ background:rgba(168,85,247,.2); font-weight:800; }
-  #season-match .mx-d.gone{ opacity:.3; filter:grayscale(1); }
-  :is(#season-modal, #season-match) .fe-ans{ background:rgba(139,92,246,.2); font-weight:800; }
-  :is(#season-modal, #season-match) .fe-fire{ background:rgba(249,115,22,.2); color:#FDBA74; font-weight:800; }
-  :is(#season-modal, #season-match) .fe-ht,:is(#season-modal, #season-match) .fe-ft{ background:rgba(148,163,184,.24); font-weight:900; }
-  :is(#season-modal, #season-match) .fe-in{ animation:feIn .35s ease both; }
-  @keyframes feIn{ from{ opacity:0; transform:translateY(8px); } to{ opacity:1; transform:none; } }
-  :is(#season-modal, #season-match) .fe-goal.fe-in{ animation:feGoal .6s cubic-bezier(.3,1.5,.5,1) both; }
-  @keyframes feGoal{ 0%{ transform:scale(.7); opacity:0; } 100%{ transform:scale(1); opacity:1; } }
-  :is(#season-modal, #season-match) .fe.typing .fe-t{ color:transparent; position:relative; } :is(#season-modal, #season-match) .fe.typing .fe-t b{ color:transparent; }
-  :is(#season-modal, #season-match) .fe.typing .fe-t::after{ content:'• • •'; color:var(--ink-soft); position:absolute; left:0; top:0; letter-spacing:2px; animation:mtLive 1s infinite; }
-  :is(#season-modal, #season-match) .mt-skiprow{ text-align:right; margin-top:4px; }
-  :is(#season-modal, #season-match) .mt-skip{ border:0; border-radius:9px; padding:5px 10px; font-size:12px; font-weight:800; background:rgba(148,163,184,.22); color:var(--ink); cursor:pointer; }
-  :is(#season-modal, #season-match) .mt-pdet{ margin:6px 0; } :is(#season-modal, #season-match) .mt-pdet summary{ font-size:12px; color:var(--ink-soft); cursor:pointer; margin-bottom:6px; }
-  :is(#season-modal, #season-match) .mt-words{ margin:10px 0 2px; } :is(#season-modal, #season-match) .mt-wt{ font-size:12.5px; font-weight:900; margin-bottom:6px; }
-  :is(#season-modal, #season-match) .mt-wc{ display:inline-block; margin:0 6px 6px 0; padding:4px 9px; border-radius:99px; border:1px solid var(--glass-line); background:var(--glass-soft); font-size:12.5px; }
-  :is(#season-modal, #season-match) .mt-wc b{ color:var(--gold); }
-  @media (prefers-reduced-motion:reduce){ :is(#season-modal, #season-match) .fe-in,:is(#season-modal, #season-match) .fe-goal.fe-in,:is(#season-modal, #season-match) .mt-live .lv,:is(#season-modal, #season-match) .fe.typing .fe-t::after{ animation:none; } :is(#season-modal, #season-match) .mt-feed{ scroll-behavior:auto; } }
-  #season-match{ scroll-margin-top:72px; padding:0 0 28px; }
-  /* ---- Màn ra sân (sân ngang, tối ưu iPad) ---- */
-  #season-match .in-head{ position:relative; padding-right:36px; margin-bottom:6px; }
-  #season-match .in-teams{ display:flex; align-items:center; justify-content:space-between; gap:8px; font-size:16px; }
-  #season-match .in-teams span{ color:var(--gold); font-weight:900; }
-  #season-match .in-meta{ font-size:12px; color:var(--ink-soft); text-align:center; margin-top:2px; }
-  #season-match .in-wxfx{ display:flex; flex-wrap:wrap; gap:4px; margin-top:5px; }
-  #season-match .wxc{ font-size:11px; font-weight:800; padding:2px 7px; border-radius:99px; border:1px solid var(--glass-line); }
-  #season-match .wxc.up{ color:#34D399; border-color:rgba(52,211,153,.55); background:rgba(16,185,129,.14); }
-  #season-match .wxc.dn{ color:#F87171; border-color:rgba(248,113,113,.55); background:rgba(239,68,68,.12); }
-  #season-match .in-wxsum{ font-size:11.5px; color:var(--ink-soft); margin-top:4px; line-height:1.45; }
-  :is(#season-modal, #season-match) .wx-b{ font-size:10px; font-weight:900; margin-left:3px; white-space:nowrap; }
-  :is(#season-modal, #season-match) .wx-b.up{ color:#34D399; } :is(#season-modal, #season-match) .wx-b.dn{ color:#F87171; }
-  #season-match .in-cap{ text-align:center; font-weight:900; font-size:16px; color:var(--gold); min-height:26px; margin:4px 0; }
-  #season-match .in-scroll{ overflow-x:auto; padding:6px 0 4px; }
-  #season-match .in-field{ margin:0 auto; position:relative; }
-  #season-match .in-pitch{ position:relative; width:100%; aspect-ratio:105/68; }
-  #season-match .in-grass{ position:absolute; inset:0; border-radius:14px; overflow:hidden; background:repeating-linear-gradient(90deg,#2E8B4A 0 8.333%,#277A40 8.333% 16.666%); box-shadow:0 10px 24px rgba(0,0,0,.45), inset 0 0 0 3px rgba(255,255,255,.18); }
-  #season-match .in-grass::after{ content:''; position:absolute; inset:0; background:linear-gradient(90deg,rgba(56,189,248,.16),transparent 38%,transparent 62%,rgba(239,68,68,.16)); }
-  #season-match .in-grass svg{ position:absolute; inset:0; width:100%; height:100%; }
-  #season-match .in-slot{ position:absolute; width:var(--cw,60px); transform:translate(-50%,-50%); }
-  #season-match .in-bench{ display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:20px; }
-  #season-match .in-bhalf{ position:relative; display:flex; justify-content:space-around; align-items:center; gap:4px; padding:8px 4px 6px; border-radius:12px; background:rgba(15,23,42,.55); border:1px solid var(--glass-line); min-height:calc(var(--bw,40px) / .74 + 14px); }
-  #season-match .in-bhalf::before{ content:attr(data-t); position:absolute; top:-15px; left:6px; font-size:11px; font-weight:800; color:var(--ink-soft); white-space:nowrap; }
-  #season-match .in-bslot{ width:var(--bw,40px); }
-  #season-match .in-card{ position:relative; width:100%; aspect-ratio:var(--fc-ar,.74); perspective:700px; opacity:0; will-change:transform; }
-  #season-match .in-inner{ position:absolute; inset:0; transform-style:preserve-3d; transition:transform .65s cubic-bezier(.3,.7,.3,1); }
-  #season-match .in-card.flip .in-inner{ transform:rotateY(180deg); }
-  #season-match .in-back,#season-match .in-face{ position:absolute; inset:0; backface-visibility:hidden; -webkit-backface-visibility:hidden; border-radius:8% / 6%; overflow:hidden; }
-  #season-match .in-back{ display:flex; align-items:center; justify-content:center; background:repeating-linear-gradient(45deg,#1E3A5F,#1E3A5F 6px,#173050 6px,#173050 12px); border:2px solid var(--gold); box-shadow:0 4px 10px rgba(0,0,0,.45); }
-  #season-match .in-back i{ font-style:normal; font-size:calc(var(--cw,60px) * .4); }
-  #season-match .in-face{ transform:rotateY(180deg); filter:drop-shadow(0 3px 5px rgba(0,0,0,.5)); }
-  #season-match .in-bslot .in-back i{ font-size:calc(var(--bw,40px) * .4); }
-  #season-match .in-txt{ display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%; text-align:center; background:#0B1B2A; font-size:10px; gap:2px; padding:3px; }
-  #season-match .in-txt em{ font-style:normal; font-weight:900; color:var(--gold); }
-  #season-match .in-btns{ display:flex; gap:10px; margin-top:12px; justify-content:center; align-items:center; }
-  #season-match .in-skipb{ flex:0 0 auto; padding:0 16px; }
-  #season-match .in-kick{ min-width:240px; min-height:56px; border:0; border-radius:16px; font-size:19px; font-weight:900; letter-spacing:.02em; cursor:pointer; color:#fff; background:linear-gradient(135deg,#EF4444,#F59E0B); box-shadow:0 6px 18px rgba(239,68,68,.35); }
-  #season-match .in-kick:disabled{ background:rgba(148,163,184,.25); color:var(--ink-soft); box-shadow:none; cursor:default; }
-  #season-match .in-kick.ready{ animation:inPulse 1.1s ease-in-out infinite; }
-  #season-match .in-kick.go{ background:#F8FAFC; color:#0F172A; }
-  @keyframes inPulse{ 0%,100%{ transform:scale(1); } 50%{ transform:scale(1.06); } }
-  @media (prefers-reduced-motion:reduce){ #season-match .in-kick.ready{ animation:none; } #season-match .in-inner{ transition:none; } }
+  /* Độ hiển thị thẻ thẻ đỏ / chấn thương rõ ràng hơn để dễ chọn thay / đổi vị trí */
+  #season-match .mx-d.gone{ opacity:.72; filter:grayscale(.35); border-radius:8% / 6%; box-shadow:0 0 12px rgba(239,68,68,.75); }
+  #season-match .mx-d.gone::after{ content:'🟥'; position:absolute; top:-6px; right:-6px; z-index:25; font-size:13px; line-height:1; filter:drop-shadow(0 2px 4px rgba(0,0,0,.8)); }
+  #season-match .mx-pitch.sub-on .mx-d.s0.gone{ cursor:pointer; }
+  #season-match .sb-t.off{ opacity:.68; filter:grayscale(.35); border:2px dashed #EF4444; cursor:pointer; }
+  #season-match .sb-t.inj{ opacity:.74; border-color:#F59E0B; }
 
-  /* ===== Bản tin Phong cách HLV ===== */
-  :is(#season-view,#season-modal,#season-match) .nw-wrap{ container-type:inline-size; margin-top:8px; }
-  :is(#season-view,#season-modal,#season-match) .nw{ display:grid; grid-template-columns:minmax(0,1.1fr) minmax(0,1fr); gap:14px; padding:12px; border-radius:16px; background:var(--glass-soft); border:1px solid var(--glass-line); }
-  :is(#season-view,#season-modal,#season-match) .nw-i{ display:flex; flex-direction:column; gap:9px; min-width:0; }
-  :is(#season-view,#season-modal,#season-match) .nw-h{ margin:0; font-family:var(--font-display); font-size:22px; line-height:1.1; }
-  :is(#season-view,#season-modal,#season-match) .nw-lead{ margin:0; font-size:13px; line-height:1.5; }
-  :is(#season-view,#season-modal,#season-match) .nw-sec b{ display:block; font-size:13px; margin-bottom:5px; color:var(--gold); }
-  :is(#season-view,#season-modal,#season-match) .nw-sec ol{ margin:0; padding:0; list-style:none; display:grid; gap:6px; }
-  :is(#season-view,#season-modal,#season-match) .nw-sec li{ display:grid; grid-template-columns:22px 1fr; gap:8px; font-size:12.5px; line-height:1.4; }
-  :is(#season-view,#season-modal,#season-match) .nw-sec li em{ width:20px; height:20px; border-radius:50%; display:grid; place-items:center; font-style:normal; font-weight:900; font-size:11px; background:#FBBF24; color:#1c1305; }
-  :is(#season-view,#season-modal,#season-match) .nw-coach{ display:flex; gap:10px; align-items:center; padding:8px 10px; border-radius:12px; background:rgba(15,23,42,.45); border:1px solid var(--glass-line); }
-  :is(#season-view,#season-modal,#season-match) .nw-av{ flex:none; width:44px; height:44px; border-radius:50%; display:grid; place-items:center; font-weight:900; background:linear-gradient(135deg,var(--gold),var(--gold-dark)); color:#1c1305; }
-  :is(#season-view,#season-modal,#season-match) .nw-coach > div:last-child{ display:grid; gap:1px; font-size:12px; min-width:0; }
-  :is(#season-view,#season-modal,#season-match) .nw-coach b{ font-size:14px; }
-  :is(#season-view,#season-modal,#season-match) .nw-coach small{ color:var(--ink-soft); }
-  :is(#season-view,#season-modal,#season-match) .nw-hn{ margin:0; padding-left:2px; list-style:none; font-size:12.5px; line-height:1.45; display:grid; gap:3px; }
-  :is(#season-view,#season-modal,#season-match) .nw-fx{ display:grid; gap:2px; }
-  :is(#season-view,#season-modal,#season-match) .nw-b{ margin:0; display:flex; flex-direction:column; gap:6px; min-width:0; }
-  :is(#season-view,#season-modal,#season-match) .nw-pitch{ position:relative; aspect-ratio:100/140; border-radius:12px; overflow:hidden; background:repeating-linear-gradient(0deg,#2E8B4A 0 12.5%,#277A40 12.5% 25%); box-shadow:inset 0 0 0 3px rgba(255,255,255,.16); }
-  :is(#season-view,#season-modal,#season-match) .nw-pitch svg{ position:absolute; inset:0; width:100%; height:100%; }
-  :is(#season-view,#season-modal,#season-match) .nw-b figcaption{ font-size:11px; color:var(--ink-soft); text-align:center; line-height:1.5; }
-  :is(#season-view,#season-modal,#season-match) .lg{ font-weight:800; white-space:nowrap; }
-  :is(#season-view,#season-modal,#season-match) .lg::before{ content:''; display:inline-block; width:14px; border-top:2px solid; margin-right:4px; vertical-align:middle; }
-  :is(#season-view,#season-modal,#season-match) .lg.p{ color:#FBBF24; } :is(#season-view,#season-modal,#season-match) .lg.p::before{ border-top-style:dashed; }
-  :is(#season-view,#season-modal,#season-match) .lg.m{ color:#F8FAFC; } :is(#season-view,#season-modal,#season-match) .lg.d{ color:#F87171; }
-  :is(#season-view,#season-modal,#season-match) .nw-d{ margin-top:8px; } :is(#season-view,#season-modal,#season-match) .nw-d summary{ cursor:pointer; font-weight:800; font-size:13px; min-height:36px; display:flex; align-items:center; }
-  @container (max-width:520px){ .nw{ grid-template-columns:1fr; } .nw-b{ order:-1; max-width:250px; width:100%; margin:0 auto; } }
-  /* ===== Ra sân + trận đấu: sân dọc bên TRÁI, thông tin bên PHẢI, vừa một màn hình iPad ===== */
-  #season-match .in-wrap,#season-match .mx{ display:grid; grid-template-columns:var(--pw,300px) minmax(0,1fr); gap:14px; }
-  #season-match .in-l,#season-match .mx-l{ display:flex; flex-direction:column; gap:6px; min-width:0; overflow-y:auto; overscroll-behavior:contain; scroll-behavior:smooth; padding-right:4px; }
-  #season-match .in-r,#season-match .mx-r{ position:relative; min-width:0; order:-1; }
-  #season-match .in-pitch,#season-match .mx-pitch{ position:relative; width:100%; aspect-ratio:68/105; }
-  #season-match .in-grass{ background:repeating-linear-gradient(0deg,#2E8B4A 0 8.333%,#277A40 8.333% 16.666%); }
-  #season-match .in-grass::after{ background:linear-gradient(0deg,rgba(56,189,248,.16),transparent 38%,transparent 62%,rgba(239,68,68,.16)); }
-  #season-match .in-teams{ flex-direction:column; align-items:flex-start; gap:2px; font-size:17px; }
-  #season-match .in-meta,#season-match .in-cap{ text-align:left; }
-  #season-match .in-tac{ display:grid; gap:2px; font-size:12px; color:var(--ink-soft); margin-top:4px; }
-  #season-match .in-bench{ grid-template-columns:1fr; gap:24px; margin-top:14px; }
-  #season-match .in-bhalf{ flex-wrap:wrap; justify-content:flex-start; gap:6px; }
-  #season-match .in-btns{ margin-top:auto; flex-direction:column; align-items:stretch; }
-  #season-match .in-kick{ min-width:0; width:100%; }
-  #season-match .mx-tag{ position:absolute; left:6px; max-width:58%; overflow:hidden; text-overflow:ellipsis; font-size:11px; font-weight:900; padding:2px 8px; border-radius:99px; background:rgba(15,23,42,.72); color:#fff; white-space:nowrap; z-index:2; }
-  #season-match .mx-tag.t1{ top:5px; } #season-match .mx-tag.t0{ bottom:5px; }
-  /* mỗi cầu thủ trên sân = chính thẻ cầu thủ (fcCardHTML); chuyển động bằng transform do mxPut đặt (đạo diễn trận đấu) */
-  #season-match .mx-d{ position:absolute; left:0; top:0; width:var(--cwp,12%); z-index:10; will-change:transform; transform:translate(-50%,-50%);
-    transition:opacity .3s, transform var(--d,.9s) var(--e,cubic-bezier(.45,.05,.25,1)) var(--dl,0s); }
-  /* Tối ưu phần cứng cho iOS/WebKit: khử bỏ drop-shadow lọc CPU, dùng box-shadow kết hợp viền neon phát sáng sống động */
-  /* FIX thẻ bị cắt: bỏ `paint` khỏi contain (paint = cắt mọi thứ vượt khỏi hộp thẻ → lắc/phóng to/nhảy mừng/huy hiệu OVR/viền sáng bị gọt).
-     Vẫn giữ layout+style cho hiệu năng; để các lớp bao quanh không cắt nội dung. */
-  #season-match .mx-d{ contain:layout style; overflow:visible; -webkit-backface-visibility:hidden; backface-visibility:hidden; }
-  #season-match .mx-c{ overflow:visible; }
-  #season-match .mx-pitch,#season-match .mx-r,#season-match .mx{ overflow:visible; }
-  #season-match .mx-c{ position:relative; width:100%; transform-origin:50% 60%; transition:transform .28s cubic-bezier(.2,.8,.3,1); will-change:transform; }
-  #season-match .mx-c .fc-card{ display:block; box-shadow:0 3px 8px rgba(0,0,0,.65), 0 0 1px rgba(255,255,255,.4); border-radius:8% / 6%; }
-  #season-match .mx-c .in-txt{ height:auto; aspect-ratio:var(--fc-ar,.74); border-radius:8% / 6%; border:1.5px solid var(--sc,#fff); }
-  #season-match .mx-o{ position:absolute; z-index:5; right:-14%; bottom:7%; display:grid; place-items:center; min-width:calc(var(--cw,50px) * .46); height:calc(var(--cw,50px) * .3); padding:0 calc(var(--cw,50px) * .06); border-radius:99px; font-size:max(9px, calc(var(--cw,50px) * .2)); font-weight:900; line-height:1; font-variant-numeric:tabular-nums; color:#fff; background:#2563EB; border:2px solid var(--sc,#fff); box-shadow:0 2px 5px rgba(0,0,0,.6); }
-  #season-match .mx-d.s1 .mx-o{ background:#DC2626; }
-  #season-match .mx-pitch.act .mx-d:not(.on){ opacity:.74; }
-  #season-match .mx-d.on{ z-index:45 !important; }
+  /* Thứ tự hiển thị z-index: thẻ tham gia pha bóng (.on) LUÔN NẰM TRÊN thẻ không tham gia; thẻ user (s0) LUÔN NẰM TRÊN thẻ đối thủ (s1) */
+  #season-match .mx-d.s1{ z-index:10; }
+  #season-match .mx-d.s0{ z-index:16; }
+  #season-match .mx-d.s1.on{ z-index:50 !important; }
+  #season-match .mx-d.s0.on{ z-index:60 !important; }
   #season-match .mx-d.on .mx-c{ transform:scale(1.15); }
   #season-match .mx-d.on .mx-c .fc-card{ box-shadow:0 0 0 2px #fff, 0 0 16px 4px #FBBF24, 0 6px 14px rgba(0,0,0,.7); }
   #season-match .mx-d.mv .mx-c .fc-card{ box-shadow:0 6px 14px rgba(0,0,0,.65); }
   #season-match .mx-d.mv:not(.on) .mx-c{ transform:translateY(-4%) scale(1.05); }
   #season-match .mx-pitch.key .mx-d.on .mx-c{ animation:mxPulse 1.1s ease-in-out infinite; }
-  #season-match .mx-d.cele{ z-index:60 !important; }
+  #season-match .mx-d.s1.hero{ z-index:70 !important; }
+  #season-match .mx-d.s0.hero{ z-index:76 !important; }
+  #season-match .mx-d.s1.cele{ z-index:80 !important; }
+  #season-match .mx-d.s0.cele{ z-index:86 !important; }
   #season-match .mx-d.cele .mx-c{ animation:mxCele .55s ease-in-out infinite; }
   #season-match .mx-d.cele .mx-c .fc-card{ box-shadow:0 0 0 2.5px #fff, 0 0 24px 6px #FACC15, 0 8px 18px rgba(0,0,0,.8); }
   #season-match .mx-d.sad .mx-c{ transform:translateY(3%) scale(.96); opacity:.8; }
   #season-match .mx-d.sad .mx-c .fc-card{ filter:grayscale(.75); box-shadow:0 2px 4px rgba(0,0,0,.5); }
   #season-match .mx-d.shk .mx-c{ animation:mxShake .5s ease-in-out 2; }
   #season-match .mx-d.shk .mx-c .fc-card{ filter:grayscale(.45); }
-  #season-match .mx-d.hero{ z-index:55 !important; }
+  #season-match .mx-d.hero{ z-index:72 !important; }
   #season-match .mx-d.hero .mx-c{ transform:scale(1.12); }
   #season-match .mx-d.hero .mx-c .fc-card{ box-shadow:0 0 0 2px #fff, 0 0 18px 5px #22D3EE, 0 6px 14px rgba(0,0,0,.7); }
   #season-match .mx-ball{ position:absolute; left:0; top:0; z-index:90; font-size:calc(var(--dw,26px) * .9); line-height:1; pointer-events:none; transform:translate(-50%,-50%); transition:transform var(--d,.9s) var(--e,cubic-bezier(.3,.1,.3,1)); }
@@ -4203,7 +4218,7 @@
 #season-match .sb-t .sb-num{ top:-8px; right:-6px; z-index:3 }
 #season-match .sb-sum.sb-fix{ position:sticky; bottom:0; z-index:6; background:#0F172A; border:1px solid var(--gold); box-shadow:0 -8px 18px rgba(0,0,0,.35) }
 #season-match .mx-pitch .mx-fx{ pointer-events:none }
-#season-match .mx-pitch.sub-on .mx-d.s0:not(.gone){ cursor:pointer }
+#season-match .mx-pitch.sub-on .mx-d.s0{ cursor:pointer }
 #season-match .mx-d.sub-sel .mx-c{ transform:scale(1.12); filter:drop-shadow(0 0 3px #FBBF24) drop-shadow(0 0 10px #FBBF24) }
 #season-match .mx-d.sub-out .mx-c{ filter:drop-shadow(0 0 3px #F87171) drop-shadow(0 0 9px #F87171) }
 /* 4.4b chip cầu thủ trên sân (chỉ chữ), người đã rút mờ đi, đổi chỗ */
@@ -4826,6 +4841,36 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
       <p class="hint-text" id="quiz-mix-total" style="margin:6px 0 6px"></p>
       <button type="button" id="btn-quiz-mix-reset" class="btn-secondary">↺ Về mặc định (50% Toán · 40% Tiếng Anh · 10% Tiếng Việt)</button>
       </div>
+      <div class="ap-card" data-save="1" id="psfx-admin">
+        <h4>🌟 Chiêu sở trường (Playstyle FX)</h4>
+        <p class="hint-text" style="margin:0 0 8px">Toàn bộ hệ số cân bằng chiến đấu (1v1, 3v3) và khoảnh khắc mùa giải. Bấm <b>💾 Lưu cài đặt</b> ở dưới cùng sau khi sửa.</p>
+        <label>⚡ Trạng thái Playstyle
+          <select id="settings-psfx-enabled">
+            <option value="1">Bật — kích hoạt hiệu ứng Playstyle toàn diện (1v1, 3v3, Mùa giải)</option>
+            <option value="0">Tắt — về chế độ chiến đấu nguyên bản (không Playstyle)</option>
+          </select>
+        </label>
+        <div class="quiz-mix-grid" style="margin-top:8px">
+          <label>🎲 Điểm câu hỏi / xúc xắc tối thiểu kích hoạt (1–10)<input type="number" id="settings-psfx-minroll" min="1" max="10" step="1" value="7"></label>
+          <label>⏳ Hồi chiêu sau khi ra chiêu (số lượt)<input type="number" id="settings-psfx-cd" min="0" max="5" step="1" value="1"></label>
+          <label>💥 Trần buff sát thương cơ bản (%)<input type="number" id="settings-psfx-buff" min="10" max="100" step="5" value="30"></label>
+          <label>🟣 Trần buff khi có Tuyệt kỹ tím (%)<input type="number" id="settings-psfx-ultbuff" min="20" max="100" step="5" value="50"></label>
+          <label>🛡️ Trần giảm thương tối đa (%)<input type="number" id="settings-psfx-mitig" min="10" max="90" step="5" value="50"></label>
+          <label>🩸 Trần sát thương theo % Máu tối đa (%)<input type="number" id="settings-psfx-maxhit" min="20" max="100" step="5" value="50"></label>
+          <label>🗡️ Trần xuyên giáp tối đa (%)<input type="number" id="settings-psfx-pierce" min="10" max="100" step="5" value="50"></label>
+          <label>🔋 Số điểm tích nạp Tuyệt kỹ tím (charges)<input type="number" id="settings-psfx-ultcharges" min="1" max="5" step="1" value="3"></label>
+          <label>👑 Điểm câu hỏi Khoảnh Khắc Tím (Mùa giải)<input type="number" id="settings-psfx-purpleminscore" min="5" max="10" step="1" value="8"></label>
+          <label>⚡ Sức mạnh Khoảnh Khắc Tím (+power)<input type="number" id="settings-psfx-purpleboost" min="1" max="10" step="0.5" value="3.5"></label>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
+          <button type="button" id="btn-psfx-export" class="btn-secondary">📤 Xuất file cấu hình JSON</button>
+          <label class="btn-secondary" style="margin:0;cursor:pointer;display:inline-flex;align-items:center">
+            📥 Nhập cấu hình JSON
+            <input type="file" id="file-psfx-import" accept=".json,application/json" style="display:none">
+          </label>
+          <button type="button" id="btn-psfx-reset" class="btn-secondary">↺ Khôi phục mặc định</button>
+        </div>
+      </div>
       <div class="ap-card" data-save="1" id="fr-admin">
         <h4>🤝 Giao hữu PvP (Mùa giải)</h4>
     <label>Bật tính năng giao hữu
@@ -5061,6 +5106,11 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
       <div class="pr-ico" id="pr-ico">🎁</div>
       <p class="pr-name" id="pr-name"></p>
       <p class="pr-note">Phần thưởng của tháng — nhớ nhắc bố mẹ thực hiện nhé!</p>
+      <div id="prize-designated-draft-box" style="margin-top:14px">
+        <button type="button" id="btn-open-designated-draft" class="btn-gold" style="width:100%;font-size:15px;font-weight:900;padding:12px 16px;border-radius:14px;box-shadow:0 6px 18px rgba(245,158,11,.4);cursor:pointer">
+          🎯 Nhận 5 Lượt Chọn Thẻ Chỉ Định ›
+        </button>
+      </div>
     </div>
     <div class="modal-actions center">
       <button type="button" id="prize-spin" class="btn-gold">🎡 QUAY THƯỞNG!</button>
@@ -5068,6 +5118,106 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
     </div>
   </div>
 </div>
+
+
+<!-- ========== MODAL CHỌN THẺ CHỈ ĐỊNH (5 LƯỢT) ========== -->
+<div id="designated-card-modal" class="modal">
+  <div id="designated-card-backdrop" class="modal-backdrop"></div>
+  <div class="modal-box designated-modal">
+    <div class="des-head">
+      <span class="prize-kicker">THƯỞNG CHIẾN THẮNG QUYẾT ĐỊNH</span>
+      <h3 class="des-title">🎯 Chọn Thẻ Chỉ Định (5 Lượt)</h3>
+      <p class="des-desc">Lựa chọn tiêu chí vị trí thi đấu &amp; quốc gia/CLB để hệ thống hiển thị lưới tối đa 5x5 ô thẻ phù hợp. Con được lật mở 5 thẻ vào bộ sưu tập (có thể đổi tiêu chí bất cứ lúc nào nếu chưa hết lượt mở)!</p>
+      <div class="des-status-bar">
+        <span class="des-turns-badge" id="des-turns-badge">🎁 Còn lại: <b id="des-turns-count">5</b> / 5 lượt lật</span>
+        <span class="des-match-badge" id="des-match-badge">Tìm thấy: <b id="des-match-count">0</b> thẻ phù hợp</span>
+      </div>
+    </div>
+
+    <!-- Tiêu chí lọc -->
+    <div class="des-filters-card">
+      <div class="des-filter-col">
+        <label for="des-pos-filter">⚽ Tuyến / Vị trí thi đấu:</label>
+        <select id="des-pos-filter">
+          <option value="all">🌟 Tất cả vị trí (Toàn đội)</option>
+          <optgroup label="Tuyến thi đấu">
+            <option value="FW">⚡ Tiền đạo (ST, LW, RW, CF)</option>
+            <option value="MID">🎼 Tiền vệ (CAM, CM, CDM, LM, RM)</option>
+            <option value="DEF">🛡️ Hậu vệ (CB, LB, RB, LWB, RWB)</option>
+            <option value="GK">🧤 Thủ môn (GK)</option>
+          </optgroup>
+          <optgroup label="Vị trí chi tiết">
+            <option value="ST">ST · Tiền đạo cắm</option>
+            <option value="LW">LW · Tiền đạo cánh trái</option>
+            <option value="RW">RW · Tiền đạo cánh phải</option>
+            <option value="CAM">CAM · Tiền vệ tấn công</option>
+            <option value="CM">CM · Tiền vệ trung tâm</option>
+            <option value="CDM">CDM · Tiền vệ phòng ngự</option>
+            <option value="CB">CB · Trung vệ</option>
+            <option value="LB">LB · Hậu vệ cánh trái</option>
+            <option value="RB">RB · Hậu vệ cánh phải</option>
+            <option value="GK">GK · Thủ môn</option>
+          </optgroup>
+        </select>
+      </div>
+
+      <div class="des-filter-col">
+        <label for="des-team-filter">🌍 Quốc gia / 🛡️ CLB:</label>
+        <select id="des-team-filter">
+          <option value="all">🌟 Tất cả Quốc gia &amp; CLB</option>
+          <optgroup label="🌍 Theo Quốc gia">
+            <option value="nat:Argentina">🇦🇷 Argentina</option>
+            <option value="nat:Brazil">🇧🇷 Brazil</option>
+            <option value="nat:England">🏴󠁧󠁢󠁥󠁮󠁧󠁿 Anh (England)</option>
+            <option value="nat:France">🇫🇷 Pháp (France)</option>
+            <option value="nat:Germany">🇩🇪 Đức (Germany)</option>
+            <option value="nat:Netherlands">🇳🇱 Hà Lan (Netherlands)</option>
+            <option value="nat:Portugal">🇵🇹 Bồ Đào Nha (Portugal)</option>
+            <option value="nat:Spain">🇪🇸 Tây Ban Nha (Spain)</option>
+            <option value="nat:Italy">🇮🇹 Ý (Italy)</option>
+            <option value="nat:Belgium">🇧🇪 Bỉ (Belgium)</option>
+            <option value="nat:Croatia">🇭🇷 Croatia</option>
+            <option value="nat:Uruguay">🇺🇾 Uruguay</option>
+          </optgroup>
+          <optgroup label="🛡️ Theo CLB / Đội bóng">
+            <option value="club:club_23_243.png">⚪ Real Madrid</option>
+            <option value="club:club_23_241.png">🔵🔴 FC Barcelona</option>
+            <option value="club:club_23_10.png">🩵 Manchester City</option>
+            <option value="club:club_23_1.png">🔴 Arsenal</option>
+            <option value="club:club_23_9.png">🔴 Liverpool</option>
+            <option value="club:club_23_11.png">🔴 Manchester United</option>
+            <option value="club:club_23_5.png">🔵 Chelsea</option>
+            <option value="club:club_23_21.png">🔴 Bayern Munich</option>
+            <option value="club:club_23_73.png">🔵🔴 Paris Saint-Germain</option>
+            <option value="club:club_23_45.png">⚪⚫ Juventus</option>
+            <option value="club:club_23_22.png">🟡 Borussia Dortmund</option>
+            <option value="club:club_23_240.png">🔴⚪ Atlético Madrid</option>
+            <option value="club:club_23_112893.png">🩷 Inter Miami</option>
+            <option value="club:club_23_112139.png">💛 Al Nassr</option>
+            <option value="rarity:icon">👑 Huyền Thoại (Icons)</option>
+            <option value="rarity:rare">🌟 Đặc Biệt Hiếm (Heroes)</option>
+          </optgroup>
+        </select>
+      </div>
+    </div>
+
+    <!-- Lưới 5x5 ô thẻ -->
+    <div class="des-grid-wrap">
+      <div class="des-grid" id="des-grid"></div>
+    </div>
+
+    <!-- Thẻ đã nhận trong đợt này -->
+    <div class="des-picked-wrap" id="des-picked-wrap">
+      <div class="des-picked-title">🗂️ Thẻ đã lật trong đợt này (<span id="des-picked-num">0</span>/5):</div>
+      <div class="des-picked-list" id="des-picked-list"></div>
+    </div>
+
+    <div class="modal-actions center" style="margin-top:14px">
+      <button type="button" id="des-finish-btn" class="btn-primary" style="min-width:140px">Hoàn tất</button>
+    </div>
+  </div>
+</div>
+
 
 <div id="daily-box-modal" class="modal">
   <div id="daily-box-backdrop" class="modal-backdrop"></div>
@@ -6714,7 +6864,8 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
     if(newTotal > oldTotal){
       var crossed = null;
       thresholds.forEach(function(th){ if(oldTotal<th && newTotal>=th) crossed = th; });
-      if(crossed===100){ triggerCelebration('perfect', 'Trọn vẹn 100 điểm! Nâng Cúp Vô Địch! 🏆', 3); playGoalAnimation(); unlockBadge('perfect'); }
+      if(crossed===100){ triggerCelebration('perfect', 'Trọn vẹn 100 điểm! Nâng Cúp Vô Địch! 🏆', 3); playGoalAnimation(); unlockBadge('perfect');
+      updateDesignatedDraftButton(monthKey); }
       else if(crossed===90){
         triggerCelebration('excellent', 'Phong độ đỉnh cao, ăn mừng thôi! 🏃', 2); unlockBadge('excellent');
       }
@@ -8308,6 +8459,91 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
     return String(code).replace(/^PLAYSTYLE_/,'').replace(/_/g,' ').toLowerCase()
       .replace(/\b\w/g, function(c){ return c.toUpperCase(); });
   }
+  
+  /* ===== MÔ TẢ CHI TIẾT PLAYSTYLE (TÊN VIỆT, HIỆU QUẢ THEO CẤP BẠC/VÀNG/TÍM) - Giai đoạn 6 ===== */
+  function playerPlaystyleDetailsHTML(p){
+    if(!p || !Array.isArray(p.playstyles) || !p.playstyles.filter(Boolean).length) return '';
+    var lv = typeof psLevelOf === 'function' ? psLevelOf(p) : 1;
+    var tierCls = 'tier-' + lv;
+    var tierName = lv === 3 ? '🟣 Cấp Tím (Chữ ký Siêu hiếm)' : (lv === 2 ? '🟡 Cấp Vàng (Đặc biệt Hiếm / Huyền Thoại)' : '⚪ Cấp Bạc (Phổ Thông)');
+    
+    var cards = p.playstyles.filter(Boolean).map(function(s){
+      var code = psCanon(s);
+      var meta = (PLAYSTYLES || []).find(function(it){ return it.code === code; }) || {
+        code: code, emoji: '⚡', name: playstyleLabel(s), desc: ''
+      };
+      var grp = (PLAYSTYLE_EFFECT_MAP && (PLAYSTYLE_EFFECT_MAP['PLAYSTYLE_' + code] || PLAYSTYLE_EFFECT_MAP[code])) || 'move';
+      
+      var fxText = '', nextText = '';
+      if(code === 'POWER_SHOT'){
+        var v = lv === 3 ? '+20%' : (lv === 2 ? '+15%' : '+10%');
+        fxText = 'Tăng <b>' + v + '</b> sát thương đòn đánh khi điểm xúc xắc/câu hỏi ≥ 7. Mùa giải: tăng <b>±' + (lv*0.6).toFixed(1) + '</b> sức mạnh khi dứt điểm sút xa.';
+        if(lv < 3) nextText = '⚡ Nâng lên ' + (lv === 1 ? 'Cấp Vàng (+15% dmg)' : 'Cấp Tím (+20% dmg & mở Tuyệt Kỹ Sút Quyết Định +40% dmg)');
+      } else if(code === 'POWER_FINESSE'){
+        var v = lv === 3 ? '40%' : (lv === 2 ? '30%' : '20%');
+        fxText = 'Xuyên <b>' + v + '</b> Giáp đối thủ khi ra đòn. Mùa giải: tăng <b>±' + (lv*0.6).toFixed(1) + '</b> sức mạnh khi dứt điểm góc xa.';
+        if(lv < 3) nextText = '⚡ Nâng lên ' + (lv === 1 ? 'Cấp Vàng (xuyên 30% Giáp)' : 'Cấp Tím (xuyên 40% Giáp)');
+      } else if(code === 'CLINICAL_FINISHER'){
+        var v = lv === 3 ? '+20%' : (lv === 2 ? '+15%' : '+10%');
+        fxText = 'Tăng <b>' + v + '</b> sát thương đối mặt, giảm ' + (lv === 3 ? '100%' : (lv === 2 ? '75%' : '50%')) + ' tỷ lệ đánh trượt. Mùa giải: tăng <b>±' + (lv*0.6).toFixed(1) + '</b> sức mạnh đối mặt thủ môn.';
+      } else if(code === 'CHIP_MASTER'){
+        var v = lv === 3 ? '10%' : (lv === 2 ? '8%' : '5%');
+        fxText = 'Hồi phục lại <b>' + v + '</b> sát thương thành Thể lực cho bản thân. Mùa giải: tăng <b>±' + (lv*0.6).toFixed(1) + '</b> sức mạnh lốp bóng.';
+      } else if(code === 'BULLET_PASS'){
+        var v = lv === 3 ? '+10%' : (lv === 2 ? '+8%' : '+5%');
+        fxText = 'Chuyền bóng tốc hành: tăng <b>' + v + '</b> sát thương cho đòn đánh kế tiếp của đồng đội. Mùa giải: tăng <b>±' + (lv*0.6).toFixed(1) + '</b> đẩy bóng.';
+      } else if(code === 'TIKI_TAKA'){
+        var v = lv === 3 ? '+20%' : (lv === 2 ? '+15%' : '+10%');
+        fxText = 'Phối hợp Tiki-Taka: tăng <b>' + v + '</b> sát thương khi đồng đội vừa chuyền bóng (3v3 combo). Mùa giải: tăng <b>±' + (lv*0.6).toFixed(1) + '</b> khâu đẩy bóng.';
+      } else if(code === 'WHIPPED_CROSSER'){
+        var v = lv === 3 ? '+10%' : (lv === 2 ? '+8%' : '+5%');
+        var sp = lv === 3 ? '20%' : (lv === 2 ? '15%' : '10%');
+        fxText = 'Tạt bóng chuẩn xác: tăng <b>' + v + '</b> sát thương đòn đánh kế, gây lan <b>' + sp + '</b> sát thương cho 2 mục tiêu cạnh (3v3). Ưu tiên tạt bóng & phạt góc Mùa giải.';
+      } else if(code === 'INCISIVE_THROUGH'){
+        var v = lv === 3 ? '40%' : (lv === 2 ? '30%' : '20%');
+        fxText = 'Chọc khe xé toang phòng ngự: đòn đánh tiếp theo bỏ qua <b>' + v + '</b> Giáp đối thủ. Mùa giải: tăng <b>±' + (lv*0.6).toFixed(1) + '</b> sức mạnh đẩy bóng phản công.';
+      } else if(code === 'DEAD_BALL'){
+        var v = lv === 3 ? '100%' : (lv === 2 ? '50%' : '25%');
+        fxText = 'Đá phạt hiểm hóc: đòn đánh sau có <b>' + v + '</b> tỷ lệ tung thêm 1 đòn sút bồi uy lực. Ưu tiên sút phạt Mùa giải (+1.8 sức mạnh) & Tăng <b>+' + (lv === 3 ? 12 : (lv === 2 ? 8 : 4)) + '%</b> tỉ lệ ghi bàn Sút Quyết Định!';
+      } else if(code === 'PENALTY_EXPERT'){
+        fxText = 'Bản lĩnh chấm 11m: sút phạt đền trượt có thể tung sút bồi ngay lập tức. Ưu tiên sút phạt đền Mùa giải (+1.8 sức mạnh) & Tăng <b>+' + (lv === 3 ? 15 : (lv === 2 ? 10 : 5)) + '%</b> tỉ lệ ghi bàn Sút Quyết Định!';
+      } else if(code === 'AERIAL_MASTER' || code === 'AERIAL_DEFENSE'){
+        var v = lv === 3 ? '60%' : (lv === 2 ? '45%' : '30%');
+        fxText = 'Pháo đài không chiến: giảm <b>' + v + '</b> sát thương nhận vào từ các pha bóng bổng / đá phạt / phạt góc.';
+      } else if(code === 'DEFLECTOR'){
+        var v = lv === 3 ? '50%' : (lv === 2 ? '35%' : '25%');
+        fxText = 'Lá chắn thép: làm chệch hướng và giảm <b>' + v + '</b> sát thương từ các cú sút xa của đối thủ.';
+      } else if(code === 'STAND_TACKLE_MASTER' || code === 'HARD_TACKLE_MASTER'){
+        var v = lv === 3 ? '+20%' : (lv === 2 ? '+15%' : '+10%');
+        fxText = 'Bậc thầy đánh chặn: tăng <b>' + v + '</b> khả năng cướp bóng và phản công nhanh. Mùa giải: giảm <b>±' + (lv*0.6).toFixed(1) + '</b> sức mạnh tấn công của đối thủ.';
+      } else if(code === 'INTIMIDATOR'){
+        var v = lv === 3 ? '-20%' : (lv === 2 ? '-15%' : '-10%');
+        fxText = 'Uy lực áp đảo: giảm <b>' + v + '</b> sát thương đòn đánh kế tiếp của đối thủ khi áp sát.';
+      } else if(code === 'RELENTLESS_STAMINA'){
+        fxText = 'Động cơ không mệt: giảm <b>' + (lv === 3 ? '50%' : (lv === 2 ? '35%' : '20%')) + '</b> hao hụt Thể lực trong suốt trận đấu Mùa giải.';
+      } else {
+        var v = lv === 3 ? '+20%' : (lv === 2 ? '+15%' : '+10%');
+        fxText = 'Kích hoạt hiệu ứng đặc trưng nhóm ' + grp + ' (<b>' + v + '</b> chỉ số chiến đấu) khi điểm xúc xắc/câu hỏi ≥ 7.';
+      }
+
+      if(lv === 3){
+        fxText += '<br>👑 <b>Khoảnh Khắc Tím:</b> Tích lũy 3 điểm nạp mở Tuyệt Kỹ Tối Thượng (1v1/3v3) & Tăng +3.5 sức mạnh tình huống Mùa giải (≥8 điểm).';
+      }
+
+      return '<div class="pd-ps-card">'
+        + '<div class="pd-ps-head">'
+        + '<span class="pd-ps-name">' + (meta.emoji || '⚡') + ' ' + escHtml(meta.name || code) + '</span>'
+        + '<span class="pd-ps-tier ' + tierCls + '">' + tierName + '</span>'
+        + '</div>'
+        + (meta.desc ? '<div class="pd-ps-desc">' + escHtml(meta.desc) + '</div>' : '')
+        + '<div class="pd-ps-fx">' + fxText + '</div>'
+        + (nextText ? '<div class="pd-ps-next">' + nextText + '</div>' : '')
+        + '</div>';
+    }).join('');
+
+    return '<div class="pd-ps-block"><div class="pd-mini-title">⚡ Chiêu sở trường (Playstyles)</div>' + cards + '</div>';
+  }
+
   function playerDetailHTML(p){
     var art = fcCardHTML(p);
     var ovrVal = p.ovr || p.realOvr || 0;
@@ -8352,7 +8588,7 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
       + '</div>'
       + '</div>'
       + statsBlock
-      + (styleChips ? '<div class="pd-chips">'+styleChips+'</div>' : '')
+      + playerPlaystyleDetailsHTML(p)
       + battleDetailHTML(p)
       + (art ? '' : fuseDetailButtonHTML(p));   // thẻ không có ảnh: nút nâng cấp xuống cuối
   }
@@ -11219,7 +11455,14 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
       armor: armor,
       armorPct: Math.round(armor / (armor + K) * 1000) / 10
     });
-    return Object.assign({}, c, {battle: battle, stats: c.realStats, ovr: (c.realOvr || 0) + def.ovrBoost});   // Boss: OVR hiển thị được tăng
+    // Boss ải 10, 20, 30... sở hữu đặc điểm Thẻ Chữ Ký Tím (Giai đoạn 6)
+    if(def.boss === 2){
+      battle.rarity = 'sig';
+      if(Array.isArray(c.playstyles) && c.playstyles.length && !c.playstyleIcons){
+        c.playstyleIcons = c.playstyles.slice(0, 3).map(function(s){ return typeof playstyleIconUrl === 'function' ? playstyleIconUrl(s, {battle:{rarity:'sig'}}) : ''; });
+      }
+    }
+    return Object.assign({}, c, {battle: battle, stats: c.realStats, ovr: (c.realOvr || 0) + def.ovrBoost, rarity: def.boss === 2 ? 'sig' : (c.rarity || battle.rarity)});
   }
   function roadmapIcon(def, locked){
     if(locked && !def.boss) return '🔒';
@@ -14519,6 +14762,47 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
   }
 
   window.appShootFxStart = shootFxStart;   // switchTab nằm ở phạm vi khác nên gọi qua window
+  
+  /* ===== NỐI PENALTY_EXPERT & DEAD_BALL VỚI MENU SÚT QUYẾT ĐỊNH (Giai đoạn 6) ===== */
+  function getShootDecisionPlaystyleBonus(){
+    var squad = typeof loadSquad === 'function' ? loadSquad() : null;
+    if(!squad) return null;
+    var allIds = (squad.pitch || []).concat(squad.bench || []).filter(Boolean);
+    if(!allIds.length) return null;
+    
+    var bestTaker = null, bestBonus = 0, bestStyle = '', bestLevel = 1;
+    allIds.forEach(function(id){
+      var p = (typeof PLAYER_DB_BY_ID !== 'undefined' && PLAYER_DB_BY_ID[id]) || null;
+      if(!p || !Array.isArray(p.playstyles)) return;
+      var lv = typeof psLevelOf === 'function' ? psLevelOf(p) : 1;
+      var hasPen = p.playstyles.some(function(s){ return psCanon(s) === 'PENALTY_EXPERT'; });
+      var hasDead = p.playstyles.some(function(s){ return psCanon(s) === 'DEAD_BALL'; });
+      
+      if(hasPen){
+        var bonus = (lv === 3 ? 15 : (lv === 2 ? 10 : 5));
+        if(bonus > bestBonus || bestStyle !== 'PENALTY_EXPERT'){
+          bestBonus = bonus; bestTaker = p; bestStyle = 'PENALTY_EXPERT'; bestLevel = lv;
+        }
+      } else if(hasDead && bestStyle !== 'PENALTY_EXPERT'){
+        var bonus = (lv === 3 ? 12 : (lv === 2 ? 8 : 4));
+        if(bonus > bestBonus){
+          bestBonus = bonus; bestTaker = p; bestStyle = 'DEAD_BALL'; bestLevel = lv;
+        }
+      }
+    });
+    
+    if(!bestTaker) return null;
+    return {
+      player: bestTaker,
+      style: bestStyle,
+      styleName: bestStyle === 'PENALTY_EXPERT' ? 'Chuyên Gia Phạt Đền' : 'Chuyên Gia Đá Phạt',
+      emoji: bestStyle === 'PENALTY_EXPERT' ? '🥅' : '☄️',
+      level: bestLevel,
+      tierLabel: bestLevel === 3 ? 'Cấp Tím' : (bestLevel === 2 ? 'Cấp Vàng' : 'Cấp Bạc'),
+      bonusPct: bestBonus
+    };
+  }
+
   function renderMonthly(){
     var period = currentPeriod;
     var monthKey = period.key;
@@ -14568,6 +14852,19 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
       hintTxt = 'Hoàn thành nhiệm vụ mỗi ngày để bóng đầy dần nhé!';
     }
     document.getElementById('month-ball-hint').textContent = hintTxt;
+    var psDec = getShootDecisionPlaystyleBonus();
+    var oldBanner = document.getElementById('shoot-ps-banner');
+    if(oldBanner && oldBanner.parentNode) oldBanner.parentNode.removeChild(oldBanner);
+    if(psDec && isOpen && !isWon && !isLost){
+      var sb = document.getElementById('shot-board');
+      if(sb){
+        var bDiv = document.createElement('div');
+        bDiv.id = 'shoot-ps-banner';
+        bDiv.className = 'shoot-ps-banner ' + (psDec.style === 'PENALTY_EXPERT' ? 'pen' : 'dead');
+        bDiv.innerHTML = psDec.emoji + ' Người sút phạt: <b>' + escHtml(psDec.player.name) + '</b> (' + psDec.styleName + ' · ' + psDec.tierLabel + ') — <b>+' + psDec.bonusPct + '%</b> tỉ lệ ghi bàn!';
+        sb.parentNode.insertBefore(bDiv, sb.nextSibling);
+      }
+    }
 
     renderSkills();
 
@@ -15150,6 +15447,259 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
     void g.offsetWidth;
     g.style.transition = '';
   }
+  
+  /* ===== HỆ THỐNG CHỌN THẺ CHỈ ĐỊNH 5 LƯỢT (THƯỞNG CÚ SÚT QUYẾT ĐỊNH) ===== */
+  var desCurrentMonthKey = null;
+  var desGridCards = []; // Danh sách thẻ hiện đang hiển thị trong lưới 5x5 (tối đa 25)
+
+  function updateDesignatedDraftButton(monthKey){
+    var btn = document.getElementById('btn-open-designated-draft');
+    if(!btn) return;
+    var month = loadMonth(monthKey || prizeMonth || currentPeriod.key);
+    var picks = (month && month.designatedPicks) || [];
+    var left = Math.max(0, 5 - picks.length);
+    if(left <= 0){
+      btn.innerHTML = '✅ Đã hoàn thành 5 lượt chọn thẻ chỉ định';
+      btn.className = 'btn-secondary';
+    } else {
+      btn.innerHTML = '🎯 Chọn Thẻ Chỉ Định (' + left + '/5 lượt còn lại) ›';
+      btn.className = 'btn-gold';
+    }
+  }
+
+  function getMatchingDesignatedCards(posFilter, teamFilter, month){
+    var picks = (month && month.designatedPicks) || [];
+    var pickedDbIds = picks.map(function(x){ return x.dbId; });
+
+    return (PLAYER_DB || []).filter(function(p){
+      if(!p || !p.dbId) return false;
+      if(pickedDbIds.indexOf(p.dbId) >= 0) return false; // Không lặp thẻ đã nhận trong đợt này
+
+      // 1. Tuyến / Vị trí thi đấu
+      if(posFilter && posFilter !== 'all'){
+        var pPos = p.pos || '';
+        var pAlts = p.altPositions || '';
+        if(posFilter === 'FW'){
+          if(['ST','LW','RW','CF'].indexOf(pPos) < 0 && !(['ST','LW','RW','CF'].some(function(x){ return pAlts.indexOf(x)>=0; }))) return false;
+        } else if(posFilter === 'MID'){
+          if(['CAM','CM','CDM','LM','RM'].indexOf(pPos) < 0 && !(['CAM','CM','CDM','LM','RM'].some(function(x){ return pAlts.indexOf(x)>=0; }))) return false;
+        } else if(posFilter === 'DEF'){
+          if(['CB','LB','RB','LWB','RWB'].indexOf(pPos) < 0 && !(['CB','LB','RB','LWB','RWB'].some(function(x){ return pAlts.indexOf(x)>=0; }))) return false;
+        } else if(posFilter === 'GK'){
+          if(pPos !== 'GK') return false;
+        } else {
+          if(pPos !== posFilter && pAlts.indexOf(posFilter) < 0) return false;
+        }
+      }
+
+      // 2. Quốc gia / CLB
+      if(teamFilter && teamFilter !== 'all'){
+        if(teamFilter.indexOf('nat:') === 0){
+          var nat = teamFilter.slice(4);
+          if(p.nation !== nat && (!p.battle || p.battle.nationName !== nat)) return false;
+        } else if(teamFilter.indexOf('club:') === 0){
+          var cl = teamFilter.slice(5);
+          if(p.clubLogo !== cl && p.club !== cl) return false;
+        } else if(teamFilter === 'rarity:icon'){
+          if(String(p.rarity).toLowerCase() !== 'icon' && (!p.battle || !p.battle.isLegend)) return false;
+        } else if(teamFilter === 'rarity:rare'){
+          if(String(p.rarity).toLowerCase() !== 'rare') return false;
+        }
+      }
+
+      return true;
+    });
+  }
+
+  function renderDesignatedGrid(){
+    var month = loadMonth(desCurrentMonthKey || currentPeriod.key);
+    var picks = (month && month.designatedPicks) || [];
+    var left = Math.max(0, 5 - picks.length);
+
+    var posFilter = (document.getElementById('des-pos-filter') && document.getElementById('des-pos-filter').value) || 'all';
+    var teamFilter = (document.getElementById('des-team-filter') && document.getElementById('des-team-filter').value) || 'all';
+
+    var pool = getMatchingDesignatedCards(posFilter, teamFilter, month);
+
+    // Xáo trộn ngẫu nhiên để tăng tính may mắn / thú vị
+    pool = pool.slice().sort(function(){ return Math.random() - 0.5; });
+    var displayCards = pool.slice(0, 25);
+    desGridCards = displayCards;
+
+    var elMatch = document.getElementById('des-match-count');
+    if(elMatch) elMatch.textContent = pool.length;
+
+    var elTurns = document.getElementById('des-turns-count');
+    if(elTurns) elTurns.textContent = left;
+
+    var grid = document.getElementById('des-grid');
+    if(!grid) return;
+    grid.classList.toggle('locked', left <= 0);
+
+    var html = '';
+    for(var i = 0; i < 25; i++){
+      if(i < displayCards.length){
+        var card = displayCards[i];
+        html += '<div class="des-cell" data-slot="' + i + '">'
+          + '<div class="des-card" id="des-card-' + i + '">'
+          + '<div class="des-card-back"><span class="des-back-ico">⚽</span><span class="des-back-lbl">LẬT THẺ</span></div>'
+          + '<div class="des-card-face">'
+          + (typeof fcCardHTML === 'function' ? fcCardHTML(card) : '')
+          + '<span class="des-card-got">✔ ĐÃ NHẬN</span>'
+          + '</div>'
+          + '</div>'
+          + '</div>';
+      } else {
+        // Ô thừa bỏ trống theo đúng yêu cầu
+        html += '<div class="des-cell empty"></div>';
+      }
+    }
+    grid.innerHTML = html;
+
+    renderDesignatedPickedList(picks);
+  }
+
+  function renderDesignatedPickedList(picks){
+    var listEl = document.getElementById('des-picked-list');
+    var numEl = document.getElementById('des-picked-num');
+    if(numEl) numEl.textContent = (picks || []).length;
+    if(!listEl) return;
+    if(!picks || !picks.length){
+      listEl.innerHTML = '<span class="des-picked-empty">Chưa có thẻ nào được lật mở. Hãy chạm vào một ô thẻ úp để nhận nhé!</span>';
+      return;
+    }
+    listEl.innerHTML = picks.map(function(p){
+      return '<div class="des-picked-item">'
+        + '<b>' + (p.ovr ? ('OVR ' + p.ovr) : '') + '</b>'
+        + '<span>' + escHtml(p.name || '') + ' (' + escHtml(p.pos || '') + ')</span>'
+        + '</div>';
+    }).join('');
+  }
+
+  function handleDesignatedCardClick(slotIdx){
+    var monthKey = desCurrentMonthKey || currentPeriod.key;
+    var month = loadMonth(monthKey);
+    var picks = (month && month.designatedPicks) || [];
+    var left = Math.max(0, 5 - picks.length);
+    if(left <= 0){
+      if(typeof triggerToast === 'function') triggerToast('low', 'Con đã dùng hết 5 lượt chọn thẻ của kỳ này rồi!');
+      return;
+    }
+
+    var card = desGridCards[slotIdx];
+    if(!card) return;
+
+    var cardEl = document.getElementById('des-card-' + slotIdx);
+    if(!cardEl || cardEl.classList.contains('flip')) return;
+
+    // Lật thẻ
+    cardEl.classList.add('flip');
+    if(typeof beep === 'function') beep(600, 0.08, 'sine', 0, 0.1);
+
+    // Lưu thẻ vào kho cầu thủ của user
+    var owned = (typeof ownedPlayerFromBase === 'function') ? ownedPlayerFromBase(card) : {
+      id: 'pl_' + Date.now() + '_' + Math.floor(Math.random()*1000),
+      dbId: card.dbId || '',
+      acquiredAt: Date.now(),
+      ovrBonus: 0,
+      energy: 0
+    };
+
+    try{
+      var players = (typeof loadPlayers === 'function') ? loadPlayers() : [];
+      players.push(owned);
+      if(typeof savePlayers === 'function') savePlayers(players);
+    }catch(err){ console.warn('Lỗi lưu thẻ chỉ định', err); }
+
+    // Ghi nhận lượt mở
+    month.designatedPicks = month.designatedPicks || [];
+    month.designatedPicks.push({
+      id: owned.id,
+      dbId: card.dbId,
+      name: card.name,
+      pos: card.pos,
+      ovr: card.realOvr || card.ovr,
+      image: card.image,
+      background: card.background,
+      rarity: card.rarity,
+      date: typeof ymd === 'function' ? ymd(new Date()) : ''
+    });
+    saveMonth(monthKey);
+
+    var newLeft = Math.max(0, 5 - month.designatedPicks.length);
+    var elTurns = document.getElementById('des-turns-count');
+    if(elTurns) elTurns.textContent = newLeft;
+
+    renderDesignatedPickedList(month.designatedPicks);
+    updateDesignatedDraftButton(monthKey);
+
+    if(typeof triggerCelebration === 'function'){
+      triggerCelebration('excellent', '🎉 Nhận được ' + card.name + ' (OVR ' + (card.realOvr || card.ovr || '') + ')!');
+    }
+    if(typeof bigExplosion === 'function'){
+      bigExplosion(window.innerWidth/2, window.innerHeight*0.35);
+    }
+
+    if(newLeft <= 0){
+      var grid = document.getElementById('des-grid');
+      if(grid) grid.classList.add('locked');
+      setTimeout(function(){
+        if(typeof triggerToast === 'function') triggerToast('okay', '🏆 Chúc mừng con đã hoàn thành đủ 5 lượt chọn thẻ chỉ định!');
+      }, 800);
+    }
+  }
+
+  function openDesignatedCardModal(monthKey){
+    desCurrentMonthKey = monthKey || prizeMonth || currentPeriod.key;
+    var month = loadMonth(desCurrentMonthKey);
+    month.designatedPicks = month.designatedPicks || [];
+    saveMonth(desCurrentMonthKey);
+
+    renderDesignatedGrid();
+    if(typeof openModalTop === 'function'){
+      openModalTop('designated-card-modal');
+    } else {
+      var m = document.getElementById('designated-card-modal');
+      if(m) m.classList.add('open');
+    }
+  }
+
+  function closeDesignatedCardModal(){
+    var m = document.getElementById('designated-card-modal');
+    if(m) m.classList.remove('open');
+  }
+
+  function initDesignatedDraftListeners(){
+    var btnOpen = document.getElementById('btn-open-designated-draft');
+    if(btnOpen){
+      btnOpen.addEventListener('click', function(){
+        openDesignatedCardModal(prizeMonth || currentPeriod.key);
+      });
+    }
+
+    var btnClose = document.getElementById('des-finish-btn');
+    if(btnClose) btnClose.addEventListener('click', closeDesignatedCardModal);
+
+    var backdrop = document.getElementById('designated-card-backdrop');
+    if(backdrop) backdrop.addEventListener('click', closeDesignatedCardModal);
+
+    var selPos = document.getElementById('des-pos-filter');
+    if(selPos) selPos.addEventListener('change', renderDesignatedGrid);
+
+    var selTeam = document.getElementById('des-team-filter');
+    if(selTeam) selTeam.addEventListener('change', renderDesignatedGrid);
+
+    var grid = document.getElementById('des-grid');
+    if(grid){
+      grid.addEventListener('click', function(e){
+        var cell = e.target.closest('.des-cell');
+        if(!cell || cell.classList.contains('empty')) return;
+        var idx = parseInt(cell.getAttribute('data-slot'), 10);
+        if(!isNaN(idx)) handleDesignatedCardClick(idx);
+      });
+    }
+  }
+
   function openPrizeModal(monthKey){
     prizeMonth = monthKey;
     var month = loadMonth(monthKey);
@@ -15168,6 +15718,7 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
       vic.style.display = 'none'; lead.style.display = '';
       zone.style.display = 'none';
       res.style.display = 'block';
+      updateDesignatedDraftButton(monthKey);
       document.getElementById('pr-ico').textContent = month.prize.icon;
       document.getElementById('pr-name').textContent = month.prize.name;
       spinBtn.style.display = 'none';
@@ -15281,6 +15832,7 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
     document.getElementById('settings-quiz-on').value = settings.quizEnabled ? '1' : '0';
     document.getElementById('settings-quiz-seconds').value = settings.quizSeconds;
     friendlyFill(settings.friendly);
+    fillPsfxAdminFields();
     document.getElementById('settings-bg-mode').value = settings.bgMode;
     fillQuizMixInputs();
     document.getElementById('settings-admin-pin').value = settings.adminPin;
@@ -15306,6 +15858,115 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
     var body = document.getElementById('ap-body'); if(body) body.scrollTop = 0;
     if(key === 'stats' && typeof stOpen === 'function') stOpen();
   }
+  
+  /* ===== CẤU HÌNH PLAYSTYLE FX TRONG TAB ADMIN (Giai đoạn 6) ===== */
+  function fillPsfxAdminFields(){
+    var cfg = getPlaystyleFxConfig(settings);
+    var elEn = document.getElementById('settings-psfx-enabled'); if(elEn) elEn.value = cfg.enabled ? '1' : '0';
+    var elMr = document.getElementById('settings-psfx-minroll'); if(elMr) elMr.value = cfg.triggerMinRoll || 7;
+    var elCd = document.getElementById('settings-psfx-cd'); if(elCd) elCd.value = (typeof cfg.cooldownTurns === 'number') ? cfg.cooldownTurns : 1;
+    var elBf = document.getElementById('settings-psfx-buff'); if(elBf) elBf.value = Math.round((cfg.caps && cfg.caps.buffPerHit || 0.30) * 100);
+    var elUb = document.getElementById('settings-psfx-ultbuff'); if(elUb) elUb.value = Math.round((cfg.caps && cfg.caps.withUltimate || 0.50) * 100);
+    var elMg = document.getElementById('settings-psfx-mitig'); if(elMg) elMg.value = Math.round((cfg.caps && cfg.caps.mitigation || 0.50) * 100);
+    var elMh = document.getElementById('settings-psfx-maxhit'); if(elMh) elMh.value = Math.round((cfg.caps && cfg.caps.maxHitPctOfMaxHp || 0.50) * 100);
+    var elPc = document.getElementById('settings-psfx-pierce'); if(elPc) elPc.value = Math.round((cfg.caps && cfg.caps.pierceTotal || 0.50) * 100);
+    var elUc = document.getElementById('settings-psfx-ultcharges'); if(elUc) elUc.value = (cfg.ultimate && cfg.ultimate.charges) || 3;
+    var elPms = document.getElementById('settings-psfx-purpleminscore'); if(elPms) elPms.value = (cfg.season && cfg.season.purpleMinScore) || 8;
+    var elPpb = document.getElementById('settings-psfx-purpleboost'); if(elPpb) elPpb.value = (cfg.season && cfg.season.purplePowerBoost) || 3.5;
+  }
+
+  function savePsfxAdminFields(){
+    var current = getPlaystyleFxConfig(settings);
+    var elEn = document.getElementById('settings-psfx-enabled');
+    var elMr = document.getElementById('settings-psfx-minroll');
+    var elCd = document.getElementById('settings-psfx-cd');
+    var elBf = document.getElementById('settings-psfx-buff');
+    var elUb = document.getElementById('settings-psfx-ultbuff');
+    var elMg = document.getElementById('settings-psfx-mitig');
+    var elMh = document.getElementById('settings-psfx-maxhit');
+    var elPc = document.getElementById('settings-psfx-pierce');
+    var elUc = document.getElementById('settings-psfx-ultcharges');
+    var elPms = document.getElementById('settings-psfx-purpleminscore');
+    var elPpb = document.getElementById('settings-psfx-purpleboost');
+
+    current.enabled = elEn ? (elEn.value === '1') : true;
+    if(elMr){ var mr = parseInt(elMr.value, 10); if(mr >= 1 && mr <= 10) current.triggerMinRoll = mr; }
+    if(elCd){ var cd = parseInt(elCd.value, 10); if(cd >= 0 && cd <= 5) current.cooldownTurns = cd; }
+    current.caps = current.caps || {};
+    if(elBf){ var bf = parseFloat(elBf.value); if(bf >= 10 && bf <= 100) current.caps.buffPerHit = bf / 100; }
+    if(elUb){ var ub = parseFloat(elUb.value); if(ub >= 20 && ub <= 100) current.caps.withUltimate = ub / 100; }
+    if(elMg){ var mg = parseFloat(elMg.value); if(mg >= 10 && mg <= 90) current.caps.mitigation = mg / 100; }
+    if(elMh){ var mh = parseFloat(elMh.value); if(mh >= 20 && mh <= 100) current.caps.maxHitPctOfMaxHp = mh / 100; }
+    if(elPc){ var pc = parseFloat(elPc.value); if(pc >= 10 && pc <= 100) current.caps.pierceTotal = pc / 100; }
+    current.ultimate = current.ultimate || {};
+    if(elUc){ var uc = parseInt(elUc.value, 10); if(uc >= 1 && uc <= 5) current.ultimate.charges = uc; }
+    current.season = current.season || {};
+    if(elPms){ var pms = parseInt(elPms.value, 10); if(pms >= 5 && pms <= 10) current.season.purpleMinScore = pms; }
+    if(elPpb){ var ppb = parseFloat(elPpb.value); if(ppb >= 1 && ppb <= 10) current.season.purplePowerBoost = ppb; }
+
+    settings.playstyleFx = current;
+  }
+
+  function initPsfxAdminListeners(){
+    var expBtn = document.getElementById('btn-psfx-export');
+    if(expBtn){
+      expBtn.addEventListener('click', function(){
+        var cfg = getPlaystyleFxConfig(settings);
+        var blob = new Blob([JSON.stringify(cfg, null, 2)], { type: 'application/json' });
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement('a');
+        a.href = url;
+        a.download = 'playstyleFx_config.json';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        if(typeof triggerToast === 'function') triggerToast('okay', '📤 Đã xuất file playstyleFx_config.json thành công!');
+      });
+    }
+
+    var impInput = document.getElementById('file-psfx-import');
+    if(impInput){
+      impInput.addEventListener('change', function(e){
+        var file = e.target.files && e.target.files[0];
+        if(!file) return;
+        var reader = new FileReader();
+        reader.onload = function(evt){
+          try{
+            var parsed = JSON.parse(evt.target.result);
+            if(!parsed || typeof parsed !== 'object') throw new Error('File JSON không hợp lệ');
+            settings.playstyleFx = getPlaystyleFxConfig({ playstyleFx: parsed });
+            fillPsfxAdminFields();
+            if(typeof apSetDirty === 'function') apSetDirty(true);
+            if(typeof triggerToast === 'function') triggerToast('okay', '📥 Đã nạp cấu hình Playstyle JSON! Hãy bấm Lưu cài đặt.');
+          }catch(err){
+            alert('Lỗi đọc file JSON: ' + (err.message || err));
+          }
+        };
+        reader.readAsText(file);
+        impInput.value = '';
+      });
+    }
+
+    var rstBtn = document.getElementById('btn-psfx-reset');
+    if(rstBtn){
+      rstBtn.addEventListener('click', function(){
+        if(!confirm('Khôi phục toàn bộ cài đặt Playstyle FX về mặc định ban đầu?')) return;
+        settings.playstyleFx = JSON.parse(JSON.stringify(DEFAULT_PLAYSTYLE_FX));
+        fillPsfxAdminFields();
+        if(typeof apSetDirty === 'function') apSetDirty(true);
+        if(typeof triggerToast === 'function') triggerToast('okay', '↺ Đã khôi phục cài đặt Playstyle FX về mặc định!');
+      });
+    }
+
+    // Mark dirty on changes
+    var host = document.getElementById('psfx-admin');
+    if(host){
+      host.addEventListener('change', function(){ if(typeof apSetDirty === 'function') apSetDirty(true); });
+      host.addEventListener('input', function(){ if(typeof apSetDirty === 'function') apSetDirty(true); });
+    }
+  }
+
   function openAdminPage(tab){
     if(authRole !== 'admin') return;   // chỉ Quản trị viên
     var page = document.getElementById('admin-page');
@@ -15318,6 +15979,7 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
     renderUserPanel();
     refreshQuestionBankStatus();
     refreshPlayerDbStatus();
+    initPsfxAdminListeners();
     wnInit();
     wtInit();
     apOpener = document.activeElement;
@@ -16066,11 +16728,20 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
     var rawPct = reached ? 100 : monthRawPct(period);
     if(!reached && rawPct <= 0) return;
     var chance = shotChance(rawPct);
+    var psDec = getShootDecisionPlaystyleBonus();
+    var effChance = chance;
+    if(psDec){ effChance = Math.min(99, chance + psDec.bonusPct); }
     if(!reached && st.shots.length === 0){
       var shownPct = Math.min(99, rawPct);
-      if(!confirm('Bóng mới bơm ' + shownPct + '%, mỗi cú sút vào ' + chance + '%.\nMỗi kỳ có ' + SHOOT_SHOTS + ' lượt sút, sút đủ hết lượt và ghi từ ' + SHOOT_WIN_GOALS + ' bàn trở lên để thắng, được quay thưởng. Sút luôn nhé?')) return;
+      var msg = 'Bóng mới bơm ' + shownPct + '%, mỗi cú sút vào ' + chance + '%';
+      if(psDec){ msg += ' (+' + psDec.bonusPct + '% từ ' + psDec.player.name + ' [' + psDec.styleName + '] = ' + effChance + '%)'; }
+      msg += '.\nMỗi kỳ có ' + SHOOT_SHOTS + ' lượt sút, sút đủ hết lượt và ghi từ ' + SHOOT_WIN_GOALS + ' bàn trở lên để thắng, được quay thưởng. Sút luôn nhé?';
+      if(!confirm(msg)) return;
     }
-    var isGoal = reached || (Math.random()*100 < chance);
+    var isGoal = reached || (Math.random()*100 < effChance);
+    if(psDec && typeof triggerToast === 'function'){
+      triggerToast('okay', psDec.emoji + ' ' + psDec.player.name + ' kích hoạt ' + psDec.styleName + ' (+' + psDec.bonusPct + '% tỉ lệ)!');
+    }
     month.shots.push({pct: Math.min(100, rawPct), chance: chance, goal: isGoal, date: ymd(new Date())});
     saveMonth(key);
     shootMonthBall(isGoal);
@@ -16399,6 +17070,7 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
     var qs = parseInt(document.getElementById('settings-quiz-seconds').value, 10);
     if(!isNaN(qs) && qs>=5 && qs<=60) settings.quizSeconds = qs;
     settings.friendly = friendlyClean(friendlyRead());
+    savePsfxAdminFields();
     var bgBefore = settings.bgMode, bgSel = document.getElementById('settings-bg-mode').value;
     if(['tab','visit','off'].indexOf(bgSel) >= 0) settings.bgMode = bgSel;
     var mixIn = readQuizMixInputs();
@@ -16498,6 +17170,7 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
   document.getElementById('sk-stage').addEventListener('click', function(){ if(CE && CE.phase === 'idle') ceStart(); });
   window.addEventListener('resize', function(){ if(CE) skResizeCanvas(); });
   document.getElementById('prize-spin').addEventListener('click', spinWheel);
+  initDesignatedDraftListeners();
   document.getElementById('prize-victory-go').addEventListener('click', function(){   // từ thông báo chiến thắng sang vòng quay
     document.getElementById('prize-victory').style.display = 'none';
     document.getElementById('prize-lead').style.display = '';
@@ -17635,7 +18308,9 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
     var lv = Math.max(0, (o.ovr | 0) - (o.base | 0));
     var b = effectiveBattleStats(Object.assign({}, q, { ovrBase: q.realOvr, ovrBonus: lv, statsBase: q.realStats })) || q.battle || {};
     var pm = 1 + (+pct || 0) / 100;   // % sức mạnh theo mức độ khó: nhân cả lực chiến lẫn máu
-    return { el: b.element || '', ra: b.rarity || '', cp: Math.round((+b.cp || 0) * pm), hp: Math.max(1, Math.round((+b.hp || 1) * (+mult || 1) * pm)), ar: +b.armor || 0 };
+    // Boss World Tour luôn mang phẩm chất Chữ ký Siêu hiếm Tím (Giai đoạn 6)
+    var bossRarity = (b.rarity === 'icon') ? 'icon' : 'sig';
+    return { el: b.element || '', ra: bossRarity, cp: Math.round((+b.cp || 0) * pm), hp: Math.max(1, Math.round((+b.hp || 1) * (+mult || 1) * pm)), ar: +b.armor || 0 };
   }
   function wtbSlotSnap(m){   // phòng cũ chưa có ảnh chụp chỉ số → lấy chỉ số gốc trong CSDL
     var c = m.card || {}; if(c.bt) return c.bt;
@@ -19091,6 +19766,9 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
     lpPicking = false; lpSel = null;
     var m = sEl('season-modal'); if(m) m.hidden = true;
     document.body.classList.remove('se-modal-open');
+    if(!seEnteringMatch && (!sMC || sMC.m.introDone)){
+      seAnthemStop();
+    }
   }
   function sCardFace(x, fm, mystery){
     var p = x.p, ovr = p.ovr || p.realOvr || 0, eff = Math.round(ovr * (x.slot ? posFit(p, x.slot) : 1) * (1 + fm.pct / 100));   // đã trừ lệch vị trí
@@ -19306,7 +19984,42 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
       if(oi >= 0) lpMove('pitch', oi, b.getAttribute('data-in'));
     }
   });
+    /* ===== NHẠC NỀN UEFA CHAMPIONS LEAGUE (MÙA GIẢI & GIAO HỮU) =====
+     Bật khi xem đội hình / chuẩn bị trận đấu, lặp lại cho đến khi ấn KICK OFF */
+  var seAnthemAudio = null;
+  var seEnteringMatch = false;
+  var SE_ANTHEM_URL = 'https://res.cloudinary.com/tgvj8prc/video/upload/v1793612257/Uefa_Champions_League_Anthem_-_24_25.mp3';
+
+  function seAnthemPlay(){
+    try{
+      if(!seAnthemAudio){
+        seAnthemAudio = new Audio(SE_ANTHEM_URL);
+        seAnthemAudio.preload = 'auto';
+      }
+      seAnthemAudio.loop = true;
+      seAnthemAudio.volume = 0.8;
+      // Chỉ phát lại từ đầu nếu đang dừng hoặc chưa chạy
+      if(seAnthemAudio.paused){
+        seAnthemAudio.currentTime = 0;
+        var pr = seAnthemAudio.play();
+        if(pr && pr.catch){
+          pr.catch(function(err){ console.warn('Anthem play blocked:', err); });
+        }
+      }
+    }catch(e){ console.warn('Không thể phát nhạc nền Champions League', e); }
+  }
+
+  function seAnthemStop(){
+    try{
+      if(seAnthemAudio && !seAnthemAudio.paused){
+        seAnthemAudio.pause();
+        seAnthemAudio.currentTime = 0;
+      }
+    }catch(e){}
+  }
+
   function sOpenLineup(r, keep){
+    if(!keep) seAnthemPlay();
     var cfg = sCfg(), st = sLoad(), se = sCurrent(st, cfg);
     if(!se) return;
     if(se.rounds[r] && se.rounds[r].live){ sMatchOpen(r); return; }
@@ -19365,7 +20078,9 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
       rd.live = sBuildMatch(st, se, r, lu); sQuotaUse(st); sSave(st);
     }
     seasonPrep = null; sPrepBanner();
+    seEnteringMatch = true;
     sModalClose();
+    seEnteringMatch = false;
     sMatchOpen(r);
   }
   function sPrepBanner(){
@@ -19689,10 +20404,23 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
     var prevA = L ? (L.att === att ? L.partA : L.partD) : [], prevD = L ? (L.att === def ? L.partA : L.partD) : [];
     var ia = sePick(tA.pitch.map(function(p, i){ return i; }), weights(tA, SE_ATT_W, sA.attMod, nA, prevA), nA, rng);
     var id = sePick(tD.pitch.map(function(p, i){ return i; }), weights(tD, SE_DEF_W, sD.defMod, nD, prevD), nD, rng);
-    var taker = -1;   // người đá phạt đền / đá phạt / phạt góc
+    var taker = -1;   // người đá phạt đền / đá phạt / phạt góc (Giai đoạn 5: ưu tiên thẻ có Playstyle chuyên biệt)
     if(kind === 'penalty' || kind === 'freekick' || kind === 'corner' || kind === 'cross' || kind === 'longshot' || kind === 'blunder'){
       var bk = -1;
-      ia.forEach(function(i){ var p = tA.pitch[i]; if(tA.slots[i] === 'GK') return; var v = (p.st && p.st[(kind === 'corner' || kind === 'cross' || (kind === 'freekick' && fz === 'wide')) ? 2 : 1]) || p.o; if(v > bk){ bk = v; taker = i; } });
+      ia.forEach(function(i){
+        var p = tA.pitch[i]; if(tA.slots[i] === 'GK') return;
+        var pstyles = p.playstyles || [];
+        var bonus = 0;
+        if(kind === 'corner' || kind === 'cross'){
+          if(pstyles.some(function(s){ return psCanon(s) === 'WHIPPED_CROSSER'; })) bonus = 18;
+        } else if(kind === 'freekick'){
+          if(pstyles.some(function(s){ return psCanon(s) === 'DEAD_BALL'; })) bonus = 22;
+        } else if(kind === 'penalty'){
+          if(pstyles.some(function(s){ return psCanon(s) === 'PENALTY_EXPERT'; })) bonus = 28;
+        }
+        var v = ((p.st && p.st[(kind === 'corner' || kind === 'cross' || (kind === 'freekick' && fz === 'wide')) ? 2 : 1]) || p.o) + bonus;
+        if(v > bk){ bk = v; taker = i; }
+      });
       if(taker < 0) taker = ia[0];
     }
     m.cur = {i:m.i, min:seMinute(m, m.i), att:att, counter:counter, kind:kind, fz:fz, restart:restart, from:from, xr:xr, taker:taker, ia:ia, id:id, nA:nA, nD:nD, baseA:sA.attN, baseD:sD.defN};
@@ -19740,7 +20468,98 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
       if(k === 2 && kind === 'blunder') D -= SE_P.blD;      // thủ môn/hậu vệ mắc lỗi → dễ ghi bàn
       if(k > 0) A += SE_TB[Math.min(11, Math.floor(m.i * 12 / m.N))];   // bàn thắng dồn về cuối trận như thực tế
       if(c.counter) D -= SE_P.cntD * (1 + SE_P.cntX2 * Math.max(-0.5, c.xr || 0));   // đội dâng cao càng hở sau lưng
-      var sOk = (A + seGauss(rng) * sgA) > (D + seGauss(rng) * sgD) + SE_P.thr[k];   // (đổi tên: trước đây ghi đè tham số ok của câu trả lời)
+
+      // Tích hợp Playstyle cho từng khâu trong trận Mùa giải (Giai đoạn 5)
+      var psA = 0, psD = 0;
+      var psCfg = (typeof DEFAULT_PLAYSTYLE_FX !== 'undefined') ? DEFAULT_PLAYSTYLE_FX : null;
+      if(psCfg && psCfg.enabled){
+        if(k === 0){
+          c.ia.forEach(function(i){
+            var p = tA.pitch[i]; if(!p) return;
+            (p.playstyles || []).forEach(function(ps){
+              var sc = psCanon(ps);
+              if(sc === 'BULLET_PASS' || sc === 'TIKI_TAKA' || sc === 'INCISIVE_THROUGH'){
+                var lvl = psLevelOf(p, sc); psA += (lvl === 3 ? 1.8 : (lvl === 2 ? 1.2 : 0.6));
+              } else if(c.counter && (sc === 'ACCELERATOR' || sc === 'SPEED_DRIBBLER' || sc === 'SUPER_RUSH')){
+                var lvl2 = psLevelOf(p, sc); psA += (lvl2 === 3 ? 1.8 : (lvl2 === 2 ? 1.2 : 0.6));
+              }
+            });
+          });
+          c.id.forEach(function(i){
+            var p = tD.pitch[i]; if(!p) return;
+            (p.playstyles || []).forEach(function(ps){
+              var sc = psCanon(ps);
+              if(sc === 'STAND_TACKLE_MASTER' || sc === 'HARD_TACKLE_MASTER'){
+                var lvl = psLevelOf(p, sc); psD += (lvl === 3 ? 1.8 : (lvl === 2 ? 1.2 : 0.6));
+              }
+            });
+          });
+        } else if(k === 1){
+          c.ia.forEach(function(i){
+            var p = tA.pitch[i]; if(!p) return;
+            (p.playstyles || []).forEach(function(ps){
+              var sc = psCanon(ps);
+              if(sc === 'TRICKSTER'){ var lvl = psLevelOf(p, sc); psA += (lvl === 3 ? 1.8 : (lvl === 2 ? 1.2 : 0.6)); }
+            });
+          });
+          if(kind === 'corner' || kind === 'cross'){
+            var pTaker = tA.pitch[c.taker];
+            if(pTaker && (pTaker.playstyles || []).some(function(x){ return psCanon(x) === 'WHIPPED_CROSSER'; })){
+              var lvl3 = psLevelOf(pTaker, 'WHIPPED_CROSSER'); psA += (lvl3 === 3 ? 1.8 : (lvl3 === 2 ? 1.2 : 0.6));
+            }
+          }
+          c.id.forEach(function(i){
+            var p = tD.pitch[i]; if(!p) return;
+            (p.playstyles || []).forEach(function(ps){
+              var sc = psCanon(ps);
+              if((kind === 'corner' || kind === 'cross') && sc === 'AERIAL_MASTER'){
+                var lvl = psLevelOf(p, sc); psD += (lvl === 3 ? 1.8 : (lvl === 2 ? 1.2 : 0.6));
+              } else if(sc === 'INTIMIDATOR'){
+                var lvl2 = psLevelOf(p, sc); psD += (lvl2 === 3 ? 1.8 : (lvl2 === 2 ? 1.2 : 0.6));
+              }
+            });
+          });
+        } else if(k === 2){
+          var pShooter = tA.pitch[shI];
+          if(pShooter){
+            (pShooter.playstyles || []).forEach(function(ps){
+              var sc = psCanon(ps);
+              var lvl = psLevelOf(pShooter, sc);
+              var val = lvl === 3 ? 1.8 : (lvl === 2 ? 1.2 : 0.6);
+              if(kind === 'freekick' && sc === 'DEAD_BALL') psA += val;
+              else if(kind === 'penalty' && sc === 'PENALTY_EXPERT') psA += val;
+              else if(kind === 'longshot' && (sc === 'POWER_SHOT' || sc === 'POWER_FINESSE')) psA += val;
+              else if((kind === 'open' || kind === 'counter') && (sc === 'CLINICAL_FINISHER' || sc === 'CHIP_MASTER')) psA += val;
+
+              // Khoảnh Khắc Tím (Purple Moment - mỗi trận 1 lần cho thẻ Tím)
+              if(lvl === 3 && !m.purpleMomentUsed && (score == null || score >= 8)){
+                var pDef = (typeof PLAYSTYLES !== 'undefined') ? PLAYSTYLES.find(function(x){ return x.code === sc; }) : null;
+                m.purpleMomentUsed = true;
+                psA += 3.5; // +12 điểm phần trăm xác suất
+                if(!c.purpleMoment){
+                  c.purpleMoment = { hero: pShooter.name, skill: (pDef ? pDef.name : sc), code: sc };
+                }
+              }
+            });
+          }
+          c.id.forEach(function(i){
+            var p = tD.pitch[i]; if(!p) return;
+            (p.playstyles || []).forEach(function(ps){
+              var sc = psCanon(ps);
+              if(sc === 'DEFLECTOR' || ((kind === 'corner' || kind === 'cross') && sc === 'AERIAL_MASTER')){
+                var lvl = psLevelOf(p, sc); psD += (lvl === 3 ? 1.8 : (lvl === 2 ? 1.2 : 0.6));
+              }
+            });
+          });
+        }
+        // Áp dụng trần capPerSide (±3.0 tương đương ±10% xác suất mỗi tình huống)
+        psA = Math.min(3.0, psA);
+        psD = Math.min(3.0, psD);
+        A += psA;
+        D += psD;
+      }
+
+      var sOk = (A + seGauss(rng) * sgA) > (D + seGauss(rng) * sgD) + SE_P.thr[k];
       stages.push(sOk);
       if(!sOk){ failK = k; res = (k === 0) ? 'lost_early' : (k === 1 ? 'cleared' : 'saved'); break; }
     }
@@ -19761,6 +20580,40 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
       if(fi >= 0){
         var fp = tD.pitch[fi], fb = (res === 'lost_early') ? (c.counter ? 0.36 : 0.20) : (inBox ? 0.12 : 0.28);
         fb *= (SE_FOUL[tD.style] || 1) * SE_P.foulK * (fp.stam < 45 ? 1.3 : 1) * (seDown(tD) > 0 ? 1.2 : 1) * (1 + Math.max(-0.3, Math.min(0.5, (mA - mD) / 25))) * scM;   // mệt, thiếu người, bị đối thủ lấn lướt → hay phạm lỗi
+
+        // Phương pháp luận cân bằng: Hậu vệ chỉ số cao & playstyle cướp bóng sẽ cướp bóng sạch không lỗi; Tiền đạo kỹ thuật/tốc độ cao sẽ câu lỗi (Yêu cầu 5)
+        var defClean = 0, attDraw = 0;
+        // 1. Defender clean tackle rate (giảm phạm lỗi)
+        var fpDefStat = (fp.realStats && fp.realStats.defending) || (fp.st && fp.st[3]) || fp.o || 70;
+        if(fpDefStat > 100) defClean += Math.min(0.25, (fpDefStat - 100) / 200);
+        (fp.playstyles || []).forEach(function(ps){
+          var sc = typeof psCanon === 'function' ? psCanon(ps) : ps;
+          var lvl = typeof psLevelOf === 'function' ? psLevelOf(fp, sc) : 1;
+          if(sc === 'STAND_TACKLE_MASTER') defClean += (lvl === 3 ? 0.35 : (lvl === 2 ? 0.25 : 0.15));
+          else if(sc === 'HARD_TACKLE_MASTER') defClean += (lvl === 3 ? 0.25 : (lvl === 2 ? 0.18 : 0.10));
+          else if(sc === 'INTIMIDATOR' || sc === 'DEFLECTOR') defClean += (lvl === 3 ? 0.18 : (lvl === 2 ? 0.12 : 0.08));
+        });
+        defClean = Math.min(0.65, defClean);
+
+        // 2. Attacker trickery & speed draw foul rate (khiến hậu vệ lỡ đà phạm lỗi)
+        var ap = tA.pitch[c.ia[0]];
+        if(ap){
+          var apDriStat = (ap.realStats && ap.realStats.dribbling) || (ap.st && ap.st[2]) || ap.o || 70;
+          if(apDriStat > 100) attDraw += Math.min(0.20, (apDriStat - 100) / 250);
+          (ap.playstyles || []).forEach(function(ps){
+            var sc = typeof psCanon === 'function' ? psCanon(ps) : ps;
+            var lvl = typeof psLevelOf === 'function' ? psLevelOf(ap, sc) : 1;
+            if(sc === 'TRICKSTER') attDraw += (lvl === 3 ? 0.35 : (lvl === 2 ? 0.25 : 0.15));
+            else if(sc === 'ACCELERATOR') attDraw += (lvl === 3 ? 0.25 : (lvl === 2 ? 0.18 : 0.10));
+            else if(sc === 'SPEED_DRIBBLER') attDraw += (lvl === 3 ? 0.20 : (lvl === 2 ? 0.14 : 0.08));
+            else if(sc === 'POWER_FINESSE' && inBox) attDraw += (lvl === 3 ? 0.20 : (lvl === 2 ? 0.12 : 0.06));
+          });
+          attDraw = Math.min(0.65, attDraw);
+        }
+
+        fb *= (1 - defClean) * (1 + attDraw);
+        fb = Math.max(0.04, Math.min(0.80, fb));
+
         if(ev() < fb){
           var zr = ev(), z, sr = ev(), sev = 'normal';
           if(res === 'lost_early') z = c.counter ? (zr < 0.8 ? 'mid' : (zr < 0.92 ? 'wide' : 'direct')) : (zr < 0.68 ? 'mid' : (zr < 0.88 ? 'wide' : 'direct'));
@@ -19802,7 +20655,13 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
       var st = SE_STYLE[t.style], idx = which === 0 ? c.ia : c.id, pd = which === 0 ? 5.5 : 5.0;
       t.pitch.forEach(function(p, i){
         var g = (p.pos === 'GK' && t.slots[i] === 'GK') ? 'GK' : SE_GROUP[t.slots[i]];
-        p.stam = Math.max(0, p.stam - (gb[g] * st.drain * per + (idx.indexOf(i) >= 0 ? pd * st.drain * (which === 0 && c.counter ? 1.3 : 1) : 0)));
+        var dLoss = (gb[g] * st.drain * per + (idx.indexOf(i) >= 0 ? pd * st.drain * (which === 0 && c.counter ? 1.3 : 1) : 0));
+        var pStyles = p.playstyles || [];
+        if(pStyles.some(function(s){ return psCanon(s) === 'RELENTLESS_STAMINA'; })){
+          var sLvl = psLevelOf(p, 'RELENTLESS_STAMINA');
+          dLoss *= (sLvl === 3 ? 0.40 : (sLvl === 2 ? 0.55 : 0.70));
+        }
+        p.stam = Math.max(0, p.stam - dLoss);
         p.mins += 90 / m.N;
       });
       t.bench.forEach(function(p){ p.stam = Math.min(100, p.stam + 1.5); });
@@ -19850,6 +20709,7 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
       var eo = seRng(seHash(m.seed + ':oo' + m.i)); if(eo() < (kind === 'blunder' ? 0.6 : 0.5)) rec.oo = 1;   // tiền đạo thoát xuống đối mặt thủ môn → thủ môn mới băng ra khép góc (RNG riêng: không làm lệch các kết quả khác)
     }
     rec.varChk = varChk; rec.card = card; rec.sup = !!(supAct && res === 'goal'); rec.miss = miss; rec.nx = nxt; rec.from = c.from || null;
+    if(c.purpleMoment) rec.purpleMoment = c.purpleMoment;
     m.last = {att:att, res:res, partA:rec.pa, partD:rec.pd};
     m.log.push(rec); m.i++; m.cur = null;
     if(m.i === m.N && !m.xtDecided){ m.xtDecided = true; if(Math.abs(m.goals[0] - m.goals[1]) <= 1) m.xt = true; }   // phút bù giờ: chỉ khi hai đội chênh ≤ 1 bàn
@@ -20321,6 +21181,7 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
     var lines = ['<div class="mt-line"><b>' + rec.min + '’</b> · ' + escHtml(A.name) + (rec.counter ? ' phản công nhanh' : ' tấn công') + ': ' + names + '</div>'];
     var K = rec.failK, ok = function(k){ return K < 0 || k < K ? '✅' : (k === K ? '❌' : '·'); };
     lines.push('<div class="mt-stg"><span>🏃 Đẩy bóng ' + ok(0) + '</span><span>🎯 Tạo cơ hội ' + ok(1) + '</span><span>🥅 Dứt điểm ' + ok(2) + '</span></div>');
+    if(rec.purpleMoment) lines.push('<div class="mt-line mt-purple-moment">👑 <b>KHOẢNH KHẮC HOÀNG KIM!</b> ' + escHtml(rec.purpleMoment.hero) + ' bùng nổ kỹ năng <b>' + escHtml(rec.purpleMoment.skill) + '</b> (+12% Cơ hội)!</div>');
     if(rec.res === 'goal') lines.push('<div class="mt-line mt-goal">⚽ <b>' + sNm(A, rec.shooter) + '</b> ghi bàn cho ' + escHtml(A.name) + '!</div>');
     else if(rec.res === 'saved' && rec.miss) lines.push('<div class="mt-line">😮 ' + sNm(A, rec.shooter) + ' dứt điểm chệch khung thành.</div>');
     else if(rec.res === 'saved') lines.push('<div class="mt-line">🧤 ' + sNm(A, rec.shooter) + ' dứt điểm nhưng <b>' + sNm(D, rec.keeper) + '</b> cản phá!</div>');
@@ -20792,13 +21653,25 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
      key: có key moment (tiếng ồn sân vận động) · right / wrong: trả lời đúng (tiếng cổ vũ) / sai (hết giờ tính là sai) · whistle: trọng tài thổi còi phạt (lỗi, việt vị, chạm tay, phạt đền)
      max = số mili-giây tối đa cho tiếng khán giả dài (cắt để không đè lên câu hỏi). Tắt tiếng: localStorage se_sfx = '0'. */
   var SE_SFX = {
-    goal:{u:'https://res.cloudinary.com/tgvj8prc/video/upload/v1793163785/Am_thanh_sut_vao_da_bong-www_tiengdong_com.mp3'},
+    // 5. Âm thanh khi sút vào gôn ghi bàn (thay thế âm thanh cũ)
+    kick:{u:'https://res.cloudinary.com/tgvj8prc/video/upload/v1793613660/forza1903-a-football-hits-the-net-goal-313216.mp3'},
+    goal:{u:'https://res.cloudinary.com/tgvj8prc/video/upload/v1793613660/forza1903-a-football-hits-the-net-goal-313216.mp3'},
+    // 3. Âm thanh khán giả khi có bàn thắng
+    crowd_goal:{u:'https://res.cloudinary.com/tgvj8prc/video/upload/v1793613653/u_xg7ssi08yr-crowd-cheering-379666.mp3', max:6500},
+    // 1. Âm thanh trọng tài thổi còi kết thúc trận đấu
+    fulltime:{u:'https://res.cloudinary.com/tgvj8prc/video/upload/v1793613650/charlesheffley009-referee-whistle-568615.mp3'},
+    // 2. Âm thanh khán giả khi trận đấu đang diễn ra cân bằng
+    crowd_balanced:{u:'https://res.cloudinary.com/tgvj8prc/video/upload/v1793613652/freesound_community-football-crowd-3-69245.mp3', max:6000},
+    // 6. Âm thanh khi có một đội dẫn trước
+    crowd_leading:{u:'https://res.cloudinary.com/tgvj8prc/video/upload/v1793613665/freesound_community-soccer-stadium-10-6709.mp3', max:6000},
+    // 4. Âm thanh khi có đường chuyền bóng
+    pass:{u:'https://res.cloudinary.com/tgvj8prc/video/upload/v1793613657/freesound_community-soccer-kick-6235.mp3'},
+    // Các âm thanh khác
     miss:{u:'https://res.cloudinary.com/tgvj8prc/video/upload/v1793163786/Am_thanh_khong_vao_da_bong-www_tiengdong_com.mp3'},
-    key:{u:'https://res.cloudinary.com/tgvj8prc/video/upload/v1793163786/tieng_on_san_van_dong_da_bong-www_tiengdong_com.mp3', max:5000},
+    key:{u:'https://res.cloudinary.com/tgvj8prc/video/upload/v1793613652/freesound_community-football-crowd-3-69245.mp3', max:5000},
     wrong:{u:'https://res.cloudinary.com/tgvj8prc/video/upload/v1793163785/Am_thanh_tieng_O_o_cua_khan_gia-www_tiengdong_com.mp3', max:4000},
     right:{u:'https://res.cloudinary.com/tgvj8prc/video/upload/v1793163785/Am_thanh_tieng_co_vu_tran_bong_da-www_tiengdong_com.mp3', max:4000},
-    whistle:{u:'https://res.cloudinary.com/tgvj8prc/video/upload/v1793163785/tieng_thoi_coi_nhac_nho-www_tiengdong_com.mp3'},
-    kick:{u:'https://res.cloudinary.com/tgvj8prc/video/upload/v1793163785/tieng_sut_bong_sut_bong_vao_gon8230_khi_da_bong-www_tiengdong_com.mp3'}
+    whistle:{u:'https://res.cloudinary.com/tgvj8prc/video/upload/v1793163785/tieng_thoi_coi_nhac_nho-www_tiengdong_com.mp3'}
   };
   var seSfxEl = {}, seSfxWhistleAt = 0;
   function seSfxWarm(){
@@ -20829,12 +21702,44 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
   function comSfx(l){   // một dòng tường thuật vừa hiện → âm thanh tương ứng
     if(!l) return;
     var k = l.k, w = l.w || '', t = String(l.t || '');
-    if(k === 'key'){ seSfx('key'); return; }
-    if(k === 'goal' || k === 'goalx'){ seSfx('goal'); return; }
+    var c = sMC, m = c && c.m;
+    var g0 = (m && m.goals && m.goals[0]) || 0;
+    var g1 = (m && m.goals && m.goals[1]) || 0;
+    var isTied = (g0 === g1);
+
+    // 1. Âm thanh trọng tài thổi còi kết thúc trận đấu (Yêu cầu 1)
+    if(k === 'ft'){
+      seSfx('fulltime');
+      return;
+    }
+
+    // 2 & 6. Âm thanh khán giả khi trận đấu cân bằng vs có đội dẫn trước (Yêu cầu 2 & 6)
+    if(k === 'key'){
+      seSfx(isTied ? 'crowd_balanced' : 'crowd_leading');
+      return;
+    }
+
+    // 3 & 5. Bàn thắng: sút vào gôn bóng chạm lưới (Yêu cầu 5) + khán giả reo hò cuồng nhiệt (Yêu cầu 3)
+    if(k === 'goal' || k === 'goalx'){
+      seSfx('kick');       // Bóng sút trúng lưới ghi bàn (URL mới)
+      seSfx('crowd_goal'); // Khán giả reo hò bàn thắng
+      return;
+    }
+
     if(k === 'save' || k === 'miss'){ seSfx('miss'); return; }
+
+    // 4. Âm thanh khi có đường chuyền bóng (Yêu cầu 4)
+    if(w === 'pass' || (k === 'play' && /chuyền|tạt|ném bóng|passes|crosses|throws/i.test(t))){
+      seSfx('pass');
+      return;
+    }
+
+    // Cú sút
     if(k === 'play' && (l.sf || SE_SHOT_RE.test(t))){ seSfx('kick'); return; }
-    if(w === 'foul' || w === 'offside' || w === 'handball' || w === 'penalty' || (k === 'play' && /^(\*\*)?(Foul|Handball)!/.test(t)) || (k === 'warn' && /^Offside!/.test(t))){
-      var now = Date.now(); if(now - seSfxWhistleAt < 3500) return;   // một pha phạt chỉ thổi còi một lần
+
+    // Tiếng còi trọng tài khi phạm lỗi, việt vị, phạt đền hoặc rút thẻ
+    if(w === 'foul' || w === 'offside' || w === 'handball' || w === 'penalty' || k === 'card' || k === 'red' || (k === 'play' && /^(\*\*)?(Foul|Handball)!/i.test(t)) || (k === 'warn' && /^Offside!/i.test(t)) || /thẻ vàng|thẻ đỏ|phạm lỗi|phạt đền|yellow card|red card/i.test(t)){
+      var now = Date.now(); if(now - seSfxWhistleAt < 2200) return;
       seSfxWhistleAt = now; seSfx('whistle');
     }
   }
@@ -20850,6 +21755,8 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
       box.appendChild(row); box.scrollTop = box.scrollHeight;
       if(hook){ try{ hook(lines[i], i, lines); }catch(e){} }
       if(!(sMC && sMC.skip)) comSfx(lines[i]);
+      var isCardLine = (lines[i].k === 'card' || lines[i].k === 'red' || lines[i].w === 'foul');
+      if(isCardLine && !(sMC && sMC.skip)){ seSfx('whistle'); await comWait(400, tok); }
       await comWait(reducedMotion() || (sMC && sMC.skip) ? 0 : (lines[i].fx ? 250 : 450), tok);
       row.classList.remove('typing');
       if(c){ c.shownN = base + i + 1; if(c.busy && c.tab === 'log') sTabBusy('log'); }
@@ -21092,6 +21999,7 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
     }catch(e){}
   }
   async function sKickOff(){
+    seAnthemStop();
     var c = sMC; if(!c || c.kicking) return; c.kicking = true; var tok = c.tok, m = c.m;
     var kb = sEl('in-kick'); if(kb){ kb.disabled = true; kb.classList.remove('ready'); kb.classList.add('go'); kb.textContent = '📣 Pííí!'; }
     sWhistle();
@@ -21179,7 +22087,7 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
     var o = D.pos[s][i], d = Math.sqrt(Math.pow((x - o.x) * 0.68, 2) + Math.pow((y - o.y) * 1.05, 2)), rm = reducedMotion();
     var du = rm ? 0 : (dur != null ? dur : Math.max(0.55, Math.min(1.7, d / 26 + 0.4)));
     o.x = x; o.y = y;
-    e.style.setProperty('--d', du + 's'); e.style.setProperty('--dl', (rm ? 0 : (dl || 0)) + 's'); e.style.transform = mxPx(D, x, y); e.style.zIndex = 10 + Math.round(y / 5);
+    e.style.setProperty('--d', du + 's'); e.style.setProperty('--dl', (rm ? 0 : (dl || 0)) + 's'); e.style.transform = mxPx(D, x, y); var isPart = e.classList.contains('on'), baseZ = (s === 0 ? 16 : 10) + (isPart ? 44 : 0) + Math.round(y / 25); if(s === 0 && isPart) baseZ += 6; e.style.zIndex = baseZ;
     if(d > 1 && !rm && !soft){ e.classList.add('mv'); clearTimeout(e._mt); e._mt = setTimeout(function(){ e.classList.remove('mv'); }, (du + (dl || 0)) * 1000 + 80); }
   }
   var MX_EASE = {pass:'cubic-bezier(.2,.65,.35,1)', shot:'cubic-bezier(.04,.8,.2,1)', goal:'cubic-bezier(.05,.75,.25,1)', lob:'cubic-bezier(.4,0,.3,1)', roll:'cubic-bezier(.3,.1,.3,1)'};
@@ -21252,7 +22160,12 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
   function mxFlash(D, att, cls){ var n = document.createElement('div'); n.className = 'mx-flash ' + cls; n.style.setProperty('--fy', att === MX_ME ? '4%' : '96%'); n.addEventListener('animationend', function(){ if(n.parentNode) n.parentNode.removeChild(n); }); D.el.appendChild(n); }
   function mxNet(D, att){ var n = D.nets[att]; if(!n) return; n.classList.remove('hit'); requestAnimationFrame(function(){ n.classList.add('hit'); }); }
   function mxLunge(D, s, i){ var c = D.pl[s][i] && D.pl[s][i].firstChild; if(c && c.animate && !reducedMotion()) c.animate([{transform:'translateY(0)'}, {transform:'translateY(' + (s === MX_ME ? -10 : 10) + '%) scale(1.14)', offset:0.4}, {transform:'translateY(0)'}], {duration:380, easing:'ease-out'}); }
-  function mxKick(D, s, i, x, y, strong){ mxLunge(D, s, i); mxRing(D, x, y, strong ? 'o' : 'w'); mxPart(D, x, y, strong ? 10 : 6, strong ? ['#FDBA74', '#FB923C', '#fff'] : ['#fff', '#E2E8F0'], strong ? 5 : 3.5, 450); }
+  function mxKick(D, s, i, x, y, strong){
+    mxLunge(D, s, i);
+    mxRing(D, x, y, strong ? 'o' : 'w');
+    mxPart(D, x, y, strong ? 10 : 6, strong ? ['#FDBA74', '#FB923C', '#fff'] : ['#fff', '#E2E8F0'], strong ? 5 : 3.5, 450);
+    try{ seSfx(strong ? 'kick' : 'pass'); }catch(e){}
+  }
   function mxConfetti(D, att){   // mưa giấy màu rơi từ phía khung thành vừa bị thủng lưới
     if(reducedMotion()) return; var cols = ['#FDE047', '#F97316', '#38BDF8', '#F472B6', '#4ADE80', '#fff'], y0 = att === MX_ME ? 3 : 97, dir = att === MX_ME ? 1 : -1;
     for(var i = 0; i < 30; i++){
@@ -21300,8 +22213,9 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
     [0, 1].forEach(function(s){
       var fwd = s === MX_ME ? -1 : 1, p = s === MX_ME ? (100 - o.by) / 100 : o.by / 100, mine = o.att === s, dfn = o.att >= 0 && !mine;
       D.base[s].forEach(function(b, i){
-        var g = D.grp[s][i], gf = MX_GF[g], ty = fwd * (p - 0.5) * (mine ? 32 : 14) * gf, tx = (o.bx - b.x) * MX_KX[g];
-        if(mine) ty += fwd * 2.5 * gf; else if(dfn) ty -= fwd * 2 * gf;
+        var g = D.grp[s][i], gf = MX_GF[g], ty = fwd * (p - 0.5) * (mine ? 42 : 18) * gf, tx = (o.bx - b.x) * MX_KX[g];
+        // Đội tấn công dâng cao đội hình sang sân đối phương; tiền đạo và tiền vệ không đứng sân nhà
+        if(mine) ty += fwd * (g === 'F' ? 14 : (g === 'M' ? 10 : 5)) * gf; else if(dfn) ty -= fwd * 3 * gf;
         if(o.cnt && dfn && (g === 'M' || g === 'F')) ty += fwd * 9;   // phản công: đội vừa tấn công còn đang dâng cao
         if(g === 'GK') tx = Math.max(-6, Math.min(6, tx));
         pts.push({s:s, i:i, x:b.x + tx, y:b.y + ty, g:g});
@@ -21545,7 +22459,7 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
   function mxCtx(D, cur){
     var m = D.c.m, att = cur.att, fwd = att === MX_ME ? -1 : 1, r = seRng(seHash(m.seed + ':mx' + cur.i)), tD = m.teams[1 - att], gk = 0;
     tD.slots.forEach(function(p, i){ if(p === 'GK') gk = i; });
-    var X = {cur:cur, att:att, def:1 - att, fwd:fwd, ia:cur.ia.slice(), id:cur.id.slice(), gk:gk, side:r() < 0.5 ? -1 : 1, dirX:r() < 0.5 ? -1 : 1, kind:cur.kind || (cur.counter ? 'counter' : 'open'), tk:cur.taker, sh:null,
+    var X = {cur:cur, att:att, def:1 - att, fwd:fwd, ia:cur.ia.slice(), id:cur.id.slice(), gk:gk, side:r() < 0.5 ? -1 : 1, dirX:r() < 0.5 ? -1 : 1, kind:((cur.from && cur.from.type === 'throw') || cur.kind === 'throwin' || cur.kind === 'throw') ? 'throwin' : (cur.kind || (cur.counter ? 'counter' : 'open')), tk:cur.taker, sh:null,
       restart:(m.i === 0 || (m.last && m.last.res === 'goal') || !!(cur.from && cur.from.type === 'kickoff'))};
     X.Y = function(dy){ return (att === MX_ME ? 0 : 100) - fwd * dy; };   // toạ độ y cách vạch cầu môn đang bị tấn công dy%
     X.a = function(k){ var v = X.ia[k]; return v != null ? v : X.ia[X.ia.length - 1]; };
@@ -21583,23 +22497,65 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
     var f = mxFeetAt(D, X.att, pb.x, pb.y); mxBall(D, f.x, f.y, 0.9, 0, 'pass');
   }
   var MX_ST = {
+    throwin:[
+      function(D, X){   // 0 · NÉM BIÊN: cầu thủ ném đứng SÁT BIÊN DỌC, đồng đội di chuyển xin bóng
+        var S = X.side < 0 ? -1 : 1, touchX = S < 0 ? 3.5 : 96.5;
+        var touchY = X.Y(X.cur && X.cur.from && X.cur.from.zone === 'high' ? 30 : 52);
+        var thrower = X.a(0), receiver = X.a(1), pins = {};
+        mxPin(pins, X.att, thrower, touchX, touchY);
+        var rx = touchX + (S < 0 ? 14 : -14), ry = touchY - X.fwd * 4;
+        if(receiver !== thrower) mxPin(pins, X.att, receiver, rx, ry);
+        if(X.id[0] != null) mxPin(pins, X.def, X.id[0], rx + (S < 0 ? 6 : -6), ry + X.fwd * 3);
+        mxScene(D, {bx:touchX, by:touchY, att:X.att, pins:pins, dur:0.9});
+        mxBall(D, touchX, touchY, 0.9);
+        mxLabel(D, touchX, touchY + X.fwd * 8, 'throwin');
+      },
+      function(D, X){   // 1 · ném bóng vào sân cho đồng đội
+        var S = X.side < 0 ? -1 : 1, touchX = S < 0 ? 3.5 : 96.5;
+        var touchY = X.Y(X.cur && X.cur.from && X.cur.from.zone === 'high' ? 30 : 52);
+        var thrower = X.a(0), receiver = X.a(1), rx = touchX + (S < 0 ? 14 : -14), ry = touchY - X.fwd * 4, pins = {};
+        mxPin(pins, X.att, thrower, touchX + (S < 0 ? 4 : -4), touchY + X.fwd * 2);
+        if(receiver !== thrower) mxPin(pins, X.att, receiver, rx, ry);
+        if(X.id[0] != null) mxPin(pins, X.def, X.id[0], rx + (S < 0 ? 6 : -6), ry + X.fwd * 3);
+        mxTrail(D, touchX, touchY, rx, ry, 'pass');
+        mxKick(D, X.att, thrower, touchX, touchY, false);
+        mxScene(D, {bx:rx, by:ry, att:X.att, pins:pins, dur:0.85});
+        mxBall(D, rx, ry, 0.85, 0, 'pass');
+      },
+      function(D, X){   // 2 · nhận bóng, xoay người phát triển tấn công
+        var S = X.side < 0 ? -1 : 1, receiver = X.a(1), targetX = 50 + S * 10, targetY = X.Y(26), pins = {};
+        mxPin(pins, X.att, receiver, targetX, targetY);
+        if(X.a(2) != null) mxPin(pins, X.att, X.a(2), 50 - S * 14, X.Y(20));
+        if(X.id[0] != null) mxPin(pins, X.def, X.id[0], targetX + S * 5, targetY + X.fwd * 4);
+        if(X.id[1] != null) mxPin(pins, X.def, X.id[1], 50, X.Y(14));
+        mxScene(D, {bx:targetX, by:targetY, att:X.att, pins:pins, dur:1.0});
+        mxBall(D, targetX, targetY, 0.8);
+      },
+      mxFinal
+    ],
     open:[
       function(D, X){   // 0 · bóng ở giữa sân, người cầm bóng nhận bóng
         var i = X.a(0), b = D.base[X.att][i], P = X.restart ? {x:50, y:50} : {x:b.x, y:Math.max(25, Math.min(75, b.y + X.fwd * 6))}, pins = {};
         mxPin(pins, X.att, i, P.x, P.y); mxScene(D, {bx:P.x, by:P.y, att:X.restart ? -1 : X.att, pins:pins});
         var f = mxFeetAt(D, X.att, P.x, P.y); mxBall(D, f.x, f.y, 0.9);
       },
-      function(D, X){   // 1 · chuyền cho đồng đội, đồng đội chạy lên
-        var a = X.a(0), b = X.a(1), pa = D.pos[X.att][a], pb = D.pos[X.att][b], T = {x:pb.x + (50 - pb.x) * 0.15, y:pb.y + X.fwd * 11}, pins = {};
-        mxPin(pins, X.att, a, pa.x, pa.y + X.fwd * 3); mxPin(pins, X.att, b, T.x, T.y);
+      function(D, X){   // 1 · chuyền cho đồng đội, đồng đội chạy dâng cao sang phần sân đối phương
+        var a = X.a(0), b = X.a(1), pa = D.pos[X.att][a], pb = D.pos[X.att][b];
+        var targetY = X.Y(36), T = {x:pb.x + (50 - pb.x) * 0.25, y:targetY}, pins = {};
+        mxPin(pins, X.att, a, pa.x, X.Y(48)); mxPin(pins, X.att, b, T.x, T.y);
+        // Hậu vệ áp sát ngay cự ly gần tranh chấp, không đứng xa ở sân nhà
+        if(X.id[0] != null) mxPin(pins, X.def, X.id[0], T.x + X.side * 4, T.y + X.fwd * 6);
+        // Đẩy toàn bộ cầu thủ tham gia tấn công dâng cao sang sân đối thủ
+        X.ia.forEach(function(attI, rk){ if(rk >= 2) mxPin(pins, X.att, attI, 50 + (rk%2===0?1:-1)*(12 + rk*6), X.Y(26 + rk*5)); });
         var f0 = mxFeetAt(D, X.att, pa.x, pa.y), f = mxFeetAt(D, X.att, T.x, T.y);
         mxTrail(D, f0.x, f0.y, f.x, f.y, 'pass'); mxScene(D, {bx:T.x, by:T.y, att:X.att, pins:pins}); mxKick(D, X.att, a, f0.x, f0.y, false); mxBall(D, f.x, f.y, 0.85, 0, 'pass');
       },
-      function(D, X){   // 2 · hậu vệ lao ra đóng khoảng trống
-        var b = X.a(1), c = X.a(2), pb = D.pos[X.att][b], pc = D.pos[X.att][c], nb = {x:pb.x, y:pb.y + X.fwd * 3}, nc = {x:pc.x, y:pc.y + X.fwd * 9}, pins = {};
+      function(D, X){   // 2 · tiếp cận vòng cấm, hậu vệ áp sát cự ly gần
+        var b = X.a(1), c = X.a(2), pb = D.pos[X.att][b], pc = D.pos[X.att][c], nb = {x:pb.x, y:X.Y(24)}, nc = {x:pc.x, y:X.Y(18)}, pins = {};
         mxPin(pins, X.att, b, nb.x, nb.y); if(c !== b) mxPin(pins, X.att, c, nc.x, nc.y);
-        if(X.id[0] != null) mxPin(pins, X.def, X.id[0], nb.x, nb.y + X.fwd * D.ch * 0.95);
-        if(X.id[1] != null) mxPin(pins, X.def, X.id[1], nc.x, nc.y + X.fwd * D.ch * 0.95);
+        if(X.id[0] != null) mxPin(pins, X.def, X.id[0], nb.x + X.side * 3.5, nb.y + X.fwd * 5);
+        if(X.id[1] != null) mxPin(pins, X.def, X.id[1], nc.x - X.side * 3.5, nc.y + X.fwd * 5);
+        X.ia.forEach(function(attI, rk){ if(rk >= 3) mxPin(pins, X.att, attI, 50 + (rk%2===0?1:-1)*(14 + rk*5), X.Y(20 + rk*4)); });
         if(c !== b) mxTrail(D, pc.x, pc.y, nc.x, nc.y, 'run');
         mxScene(D, {bx:nb.x, by:nb.y, att:X.att, pins:pins}); var f = mxFeetAt(D, X.att, nb.x, nb.y); mxBall(D, f.x, f.y, 0.7);
       },
@@ -21645,10 +22601,13 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
       }
     ],
     freekick:[
-      function(D, X){   // 0 · hậu vệ phạm lỗi, đội bạn được đá phạt
-        var sp = {x:50 + X.side * 16, y:X.Y(25)}, pins = {}; if(X.tk >= 0) mxPin(pins, X.att, X.tk, sp.x - X.side * 5, sp.y - X.fwd * 3);
-        if(X.id[0] != null) mxPin(pins, X.def, X.id[0], sp.x + X.side * 9, sp.y + X.fwd * 4);
-        mxScene(D, {bx:sp.x, by:sp.y, att:X.att, pins:pins}); mxBall(D, sp.x, sp.y, 0.9); mxLabel(D, sp.x, sp.y - X.fwd * 9, 'foul');
+      function(D, X){   // 0 · hậu vệ phạm lỗi ngay tại chỗ va chạm
+        var a = X.a(0), pa = D.pos[X.att][a] || {x:50 + X.side * 16, y:X.Y(25)}, pins = {};
+        mxPin(pins, X.att, a, pa.x, pa.y);
+        // Hậu vệ phạm lỗi đứng ngay sát cạnh phân bua với trọng tài (cự ly 3-4%)
+        if(X.id[0] != null) mxPin(pins, X.def, X.id[0], pa.x + X.side * 4, pa.y + X.fwd * 4.5);
+        if(X.tk >= 0 && X.tk !== a) mxPin(pins, X.att, X.tk, pa.x - X.side * 5, pa.y - X.fwd * 3);
+        mxScene(D, {bx:pa.x, by:pa.y, att:X.att, pins:pins}); mxBall(D, pa.x, pa.y, 0.9); mxLabel(D, pa.x, pa.y - X.fwd * 9, 'foul');
       },
       function(D, X){   // 1 · đặt bóng, đội bạn dựng hàng rào
         var sp = {x:50 + X.side * 16, y:X.Y(25)}, pins = {}; if(X.tk >= 0) mxPin(pins, X.att, X.tk, sp.x - X.side * 5, sp.y - X.fwd * 3);
@@ -21749,7 +22708,8 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
     mxKick(D, X.att, X.sh, from.x, from.y, true); mxTrail(D, from.x, from.y, tx, gy, 'shot'); mxBall(D, tx, gy, dur, 0, 'goal');
     mxPut(D, X.def, X.gk, 50 - X.dirX * 11, gkp.y, dur * 0.95); mxAnim(D, X.def, X.gk, [{transform:'rotate(0deg)'}, {transform:'rotate(' + (-X.dirX * 26) + 'deg) scale(1.08)'}], 380);
     mxLater(D, dur * 1000 - 40, function(){   // chạm lưới
-      mxNet(D, X.att); mxRing(D, tx, X.Y(2.5), 'g'); mxPart(D, tx, X.Y(3), 24, ['#FDE047', '#FACC15', '#fff', '#FB923C'], 17, 950); mxFlash(D, X.att, mine ? 'g' : 'x'); mxShake(D, 1.4);
+      mxNet(D, X.att);
+      try{ seSfx('kick'); seSfx('crowd_goal'); }catch(e){} mxRing(D, tx, X.Y(2.5), 'g'); mxPart(D, tx, X.Y(3), 24, ['#FDE047', '#FACC15', '#fff', '#FB923C'], 17, 950); mxFlash(D, X.att, mine ? 'g' : 'x'); mxShake(D, 1.4);
       mxBall(D, tx + X.dirX * 1.5, X.Y(5.8), 0.55, 0, 'roll'); mxHops(D, 760, 3, 150);   // bóng rơi xuống trong lưới, nảy nhỏ dần
     });
     mxLater(D, dur * 1000 + 450, function(){
@@ -21793,7 +22753,7 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
   }
   function mxTackle(D, rec){   // CƯỚP BÓNG: chân hậu vệ chạm bóng → bụi + va chạm → bóng nảy về phía hậu vệ
     var X = mxPrep(D, rec), a = X.a(0), pa = D.pos[X.att][a];
-    D.el.classList.remove('key'); mxPut(D, X.def, X.stI, pa.x + X.side * D.cw * 0.45, pa.y + X.fwd * D.ch * 0.8, 0.45);
+    D.el.classList.remove('key'); mxPut(D, X.def, X.stI, pa.x + X.side * D.cw * 0.35, pa.y + X.fwd * D.ch * 0.55, 0.22);
     D.pl[X.def][X.stI].classList.add('hero'); mxLabel(D, pa.x, pa.y - X.fwd * 13, 'tackle');
     mxLater(D, 420, function(){
       D.pl[X.att][a].classList.add('shk'); mxPop(D, pa.x, pa.y + X.fwd * 4, '💥'); mxRing(D, D.bx, D.by, 'w'); mxPart(D, D.bx, D.by, 12, ['#D6B88A', '#A8895C', '#E7D3A7'], 7, 650); mxLunge(D, X.def, X.stI); mxSquash(D);
@@ -21990,7 +22950,7 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
   document.addEventListener('click', function(e){
     var d = e.target && e.target.closest ? e.target.closest('#season-match .mx-pitch.sub-on .mx-d.s0') : null; if(!d) return;
     var c = sMC; if(!c || c.busy || c.m.phase !== 'break' || seDone(c.m) || c.m.stage === 'pso') return;
-    var i = parseInt(d.getAttribute('data-i'), 10), p = mT(c.m).pitch[i]; if(!p || (p.gone && p.gone !== 'inj')) return;
+    var i = parseInt(d.getAttribute('data-i'), 10), p = mT(c.m).pitch[i]; if(!p) return;
     if(c.tab !== 'xi'){ c.tab = 'xi'; c.focusSub = true; }
     sSelPlayer('p', i);
   });
@@ -22009,14 +22969,21 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
       if(kind === 'b'){ c.sel = {k:'b', id:X.id}; sMatchRender(); return; }
       /* hai cầu thủ cùng trên sân: đổi chỗ cho nhau (không mất lượt thay) */
       var ai = sIdxOf(t.pitch, c.sel.id), A = t.pitch[ai];
-      if(ai < 0 || !A || A.gone || X.gone){ m.note = 'Cầu thủ bị chấn thương hoặc bị đuổi thì không đổi chỗ được. Hãy thay người.'; c.sel = null; sMatchRender(); return; }
+      if(ai < 0 || !A){ c.sel = null; sMatchRender(); return; }
+      // Chấn thương (inj) bắt buộc phải thay ra từ ghế dự bị
+      if(A.gone === 'inj' || X.gone === 'inj'){ m.note = 'Cầu thủ bị chấn thương cần được thay ra bằng người từ ghế dự bị.'; c.sel = null; sMatchRender(); return; }
       if(t.slots[ai] === 'GK' || t.slots[i] === 'GK'){ m.note = 'Thủ môn giữ nguyên khung thành. Chỉ thay được bằng thủ môn dự bị.'; c.sel = null; sMatchRender(); return; }
+      // Cho phép cầu thủ trên sân (kể cả vừa thay vào) hoán đổi vị trí với cầu thủ bị thẻ đỏ để tái cơ cấu chiến thuật (Yêu cầu 4)
       c.pend = c.pend.filter(function(q){ return !(q.o === A.id || q.o === X.id || (q.sw && (q.b === A.id || q.b === X.id))); });
-      c.pend.push({sw:1, o:A.id, b:X.id}); c.sel = null; sMatchRender(); return;
+      c.pend.push({sw:1, o:A.id, b:X.id});
+      m.note = '✓ Đã xếp hoán đổi vị trí giữa ' + comShort(A) + ' và ' + comShort(X) + (A.gone === 'red' || X.gone === 'red' ? ' (bọc lót vị trí thẻ đỏ).' : '.');
+      c.sel = null; sMatchRender(); return;
     }
     var oId = kind === 'p' ? X.id : c.sel.id, bId = kind === 'b' ? X.id : c.sel.id, pi = sIdxOf(t.pitch, oId), bi = sIdxOf(t.bench, bId);
     var rest = c.pend.filter(function(q){ return !(q.o === oId || (q.sw && q.b === oId) || (!q.sw && q.b === bId)); });
-    if(pi < 0 || bi < 0 || t.pitch[pi].gone === 'red' || (t.slots[pi] === 'GK') !== (t.bench[bi].pos === 'GK')){ m.note = 'Thủ môn chỉ thay bằng thủ môn.'; c.sel = null; sMatchRender(); return; }
+    if(pi < 0 || bi < 0){ c.sel = null; sMatchRender(); return; }
+    if(t.pitch[pi].gone === 'red'){ m.note = '⛔ Thẻ đỏ: không thể thay người từ ghế dự bị. Chỉ các cầu thủ trên sân mới có thể hoán đổi vị trí.'; c.sel = null; sMatchRender(); return; }
+    if((t.slots[pi] === 'GK') !== (t.bench[bi].pos === 'GK')){ m.note = 'Thủ môn chỉ thay bằng thủ môn.'; c.sel = null; sMatchRender(); return; }
     if(t.subs + rest.filter(function(q){ return !q.sw; }).length >= seMaxSubs(t)){ m.note = 'Đã dùng đủ số lượt thay còn lại.'; c.sel = null; sMatchRender(); return; }
     rest.push({o:oId, b:bId}); c.pend = rest; c.sel = null; sMatchRender();
   }
@@ -22091,11 +23058,13 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
     var rd = se.rounds[r]; if(!rd || !rd.live){ seasonRender(); return; }
     var m = sFixLive(rd.live); try{ sWxProbe(sWx(m).url, function(){}); }catch(e){} sTok++; sMC = {st:st, se:se, rd:rd, m:m, r:r, tok:sTok, sel:null}; MX_ME = mMe(m);
     document.body.classList.add('se-match');
+    if(!m.introDone && m.i === 0 && !m.cur) seAnthemPlay();
     if(m.cur && m.phase === 'q'){ var rec = seResolve(m, 1, false); rec.skipped = true; comEnsure(m); comPush(m, comOutcome(m, rec)); m.phase = 'break'; m.note = 'Câu hỏi đang dở đã bị bỏ lỡ (1 điểm).'; sSave(st); }
-    if(!m.introDone && m.i === 0 && !m.cur) sIntroRender(); else sMatchRender();   // trận mới: màn ra sân + kick off
+    if(!m.introDone && m.i === 0 && !m.cur){ seAnthemPlay(); sIntroRender(); } else sMatchRender();   // trận mới: màn ra sân + kick off
   }
   function sAlive(tok){ return !!sMC && sMC.tok === tok; }
   function sMExit(){
+    seAnthemStop();
     if(sMC && sMC.lv) return frlExit();
     if(sMC) sBrkStop(sMC);
     if(sMC && sMC.m.phase === 'q' && !confirm('Thoát lúc đang trả lời câu hỏi sẽ tính 1 điểm cho tình huống này. Thoát?')) return;
@@ -22447,7 +23416,7 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
     var fl; try{ fl = await sFrLoadFriend(code); }catch(e){ frMsg('🤝 Giao hữu', 'Không tải được đội hình của đội bạn (mạng có vấn đề?). Thử lại sau nhé.'); return; }
     if(!fl.ok){ frMsg('🤝 ' + escHtml(name), escHtml(fl.msg)); return; }
     st = sLoad(); f = frState(st); if(f.live){ sFrOpen(); return; }
-    f.live = sFrBuildMatch(st, lu, fl, code, name); frUse(st); sSave(st); sModalClose(); sFrOpen();
+    f.live = sFrBuildMatch(st, lu, fl, code, name); frUse(st); sSave(st); seEnteringMatch = true; sModalClose(); seEnteringMatch = false; seAnthemPlay(); sFrOpen();
   }
   function sFrOpen(){
     var st = sLoad(), f = frState(st); if(!f.live){ seasonRender(); return; }
