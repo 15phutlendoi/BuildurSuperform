@@ -1084,44 +1084,149 @@
     }
   }
 
-  /* 4. Thẻ SIG (Chữ ký Siêu hiếm): Hiệu ứng phát sáng theo nhịp thở đa sắc + Vệt chữ ký lấp lánh */
+  /* 4. Thẻ SIG (Chữ ký Siêu hiếm): Hiệu ứng các line màu trắng vàng neon tỏa ra từ đáy và chạy từ dưới lên trên ở 2 bên cạnh trái phải như ngọn lửa bốc cháy */
   .fc-card.sig{
-    animation: fcSigBreath 2.8s ease-in-out infinite alternate;
+    animation: fcSigFlameBreath 2.6s ease-in-out infinite alternate;
     will-change: filter;
   }
-  @keyframes fcSigBreath{
+  @keyframes fcSigFlameBreath{
     0%{
-      filter: drop-shadow(0 0 6px rgba(232, 121, 249, 0.45)) drop-shadow(0 2px 6px rgba(0,0,0,.6));
+      filter: drop-shadow(0 0 6px rgba(254, 240, 138, 0.5)) drop-shadow(0 2px 8px rgba(0,0,0,.6));
     }
     50%{
-      filter: drop-shadow(0 0 14px rgba(232, 121, 249, 0.85)) drop-shadow(0 0 22px rgba(244, 63, 94, 0.55));
+      filter: drop-shadow(0 0 14px rgba(254, 240, 138, 0.85)) drop-shadow(0 -2px 18px rgba(250, 204, 21, 0.65));
     }
     100%{
-      filter: drop-shadow(0 0 20px rgba(232, 121, 249, 1)) drop-shadow(0 0 32px rgba(253, 224, 71, 0.7));
+      filter: drop-shadow(0 0 22px rgba(255, 255, 255, 0.95)) drop-shadow(0 -4px 26px rgba(245, 158, 11, 0.85));
     }
   }
+
+  /* Quầng sáng trắng vàng neo tỏa ra từ đáy thẻ */
   .fc-card.sig::before{
-    content: ''; position: absolute; inset: -2px; z-index: 0; pointer-events: none; border-radius: 9% / 6.5%;
-    background: radial-gradient(circle at 10% 12%, #FFFBEB 0%, rgba(232,121,249,0.85) 10%, transparent 22%),
-                radial-gradient(circle at 90% 88%, #FFFBEB 0%, rgba(244,63,94,0.85) 10%, transparent 22%);
-    opacity: .85;
-    animation: fcSigSparkle 2.4s ease-in-out infinite alternate;
+    content: ''; position: absolute; inset: -3px; z-index: 0; pointer-events: none; border-radius: 9% / 6.5%;
+    background:
+      /* Tâm đáy bốc lửa trắng vàng tỏa ra */
+      radial-gradient(ellipse at 50% 102%, #FFFFFF 0%, #FEF08A 25%, #FACC15 50%, #F59E0B 72%, transparent 88%),
+      /* Viền lửa bốc ngược lên dọc 2 mép cạnh trái & phải */
+      linear-gradient(to top, rgba(255,255,255,.9) 0%, rgba(254,240,138,.8) 25%, rgba(250,204,21,.55) 55%, rgba(245,158,11,.2) 80%, transparent 100%),
+      linear-gradient(to top, rgba(255,255,255,.9) 0%, rgba(254,240,138,.8) 25%, rgba(250,204,21,.55) 55%, rgba(245,158,11,.2) 80%, transparent 100%);
+    background-size: 100% 45%, 4px 100%, 4px 100%;
+    background-position: bottom center, left center, right center;
+    background-repeat: no-repeat;
+    opacity: .92;
+    animation: fcSigFlameGlow 1.8s ease-in-out infinite alternate;
   }
-  @keyframes fcSigSparkle{
-    0%,100%{ opacity: .4; transform: scale(.98); }
-    50%{ opacity: 1; transform: scale(1.02); }
+  @keyframes fcSigFlameGlow{
+    0%{ opacity: .7; transform: scale(.99); filter: drop-shadow(0 0 6px rgba(250,204,21,.6)); }
+    100%{ opacity: 1; transform: scale(1.015); filter: drop-shadow(0 0 15px rgba(255,255,255,.9)) drop-shadow(0 -4px 20px rgba(245,158,11,.75)); }
   }
+
+  /* Luồng sóng lửa trắng vàng bốc từ đáy lên bề mặt thẻ */
   .fc-card.sig::after{
     content: ''; position: absolute; inset: 1.2% 2.4%; z-index: 5; pointer-events: none; border-radius: 8% / 5.5%;
-    background: linear-gradient(115deg, transparent 32%, rgba(232, 121, 249, 0.4) 45%, rgba(255, 255, 255, 0.9) 50%, rgba(253, 224, 71, 0.75) 54%, transparent 68%);
-    background-size: 280% 100%; background-position: 180% 0; background-repeat: no-repeat;
-    animation: fcSigShine 3.2s ease-in-out infinite;
-    border: 1px solid rgba(232, 121, 249, 0.65);
+    background: linear-gradient(0deg, transparent 0%, rgba(255,255,255,.18) 25%, rgba(254,240,138,.8) 48%, rgba(255,255,255,.95) 52%, rgba(245,158,11,.4) 65%, transparent 85%);
+    background-size: 100% 260%; background-position: 0 180%; background-repeat: no-repeat;
+    animation: fcSigFlameRise 2.4s cubic-bezier(.25,.8,.25,1) infinite;
+    border: 1px solid rgba(254, 240, 138, 0.45);
   }
-  @keyframes fcSigShine{
-    0%{ background-position: 180% 0; opacity: 0; }
-    15%{ opacity: 1; }
-    55%,100%{ background-position: -80% 0; opacity: 0; }
+  @keyframes fcSigFlameRise{
+    0%{ background-position: 0 180%; opacity: 0; }
+    20%{ opacity: .85; }
+    75%{ opacity: .65; }
+    100%{ background-position: 0 -80%; opacity: 0; }
+  }
+
+  /* Hệ thống SVG các line trắng vàng neo tỏa từ đáy chạy ngược lên trên ở 2 bên mép thẻ */
+  .fc-card.sig .fc-sig-fire{
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    pointer-events: none; z-index: 6; overflow: visible;
+  }
+  .fc-card.sig .fc-fire-base{
+    fill: url(#sigGradCore);
+    filter: drop-shadow(0 0 6px #FFFFFF) drop-shadow(0 0 12px #FDE047);
+    animation: fcFireBasePulse 1.2s ease-in-out infinite alternate;
+  }
+  @keyframes fcFireBasePulse{
+    0%{ transform: scaleY(.85); opacity: .75; }
+    100%{ transform: scaleY(1.35); opacity: 1; filter: drop-shadow(0 0 10px #FFFFFF) drop-shadow(0 0 22px #F59E0B); }
+  }
+  .fc-card.sig .fc-fire-line{
+    fill: none;
+    stroke: url(#sigGradUp);
+    stroke-linecap: round;
+    stroke-dasharray: 45 45;
+    will-change: stroke-dashoffset, opacity;
+  }
+  .fc-card.sig .fc-fl-l1{
+    stroke-width: 2.6px;
+    filter: drop-shadow(0 0 3px #FFFFFF) drop-shadow(0 0 8px #FACC15);
+    animation: fcFireRiseL1 1.35s ease-out infinite;
+  }
+  .fc-card.sig .fc-fl-l2{
+    stroke-width: 1.9px;
+    stroke: url(#sigGradCore);
+    filter: drop-shadow(0 0 4px #FEF08A);
+    animation: fcFireRiseL2 1.1s ease-out infinite .25s;
+  }
+  .fc-card.sig .fc-fl-l3{
+    stroke-width: 1.4px;
+    stroke: url(#sigGradUp);
+    filter: drop-shadow(0 0 3px #F59E0B);
+    animation: fcFireRiseL3 1.55s ease-out infinite .55s;
+  }
+  .fc-card.sig .fc-fl-r1{
+    stroke-width: 2.6px;
+    filter: drop-shadow(0 0 3px #FFFFFF) drop-shadow(0 0 8px #FACC15);
+    animation: fcFireRiseR1 1.35s ease-out infinite .15s;
+  }
+  .fc-card.sig .fc-fl-r2{
+    stroke-width: 1.9px;
+    stroke: url(#sigGradCore);
+    filter: drop-shadow(0 0 4px #FEF08A);
+    animation: fcFireRiseR2 1.1s ease-out infinite .45s;
+  }
+  .fc-card.sig .fc-fl-r3{
+    stroke-width: 1.4px;
+    stroke: url(#sigGradUp);
+    filter: drop-shadow(0 0 3px #F59E0B);
+    animation: fcFireRiseR3 1.55s ease-out infinite .75s;
+  }
+
+  @keyframes fcFireRiseL1{
+    0%{ stroke-dashoffset: 120; opacity: 0; }
+    20%{ opacity: 1; }
+    80%{ opacity: .8; }
+    100%{ stroke-dashoffset: -60; opacity: 0; }
+  }
+  @keyframes fcFireRiseL2{
+    0%{ stroke-dashoffset: 100; opacity: 0; }
+    25%{ opacity: 1; }
+    80%{ opacity: .7; }
+    100%{ stroke-dashoffset: -50; opacity: 0; }
+  }
+  @keyframes fcFireRiseL3{
+    0%{ stroke-dashoffset: 90; opacity: 0; }
+    30%{ opacity: .9; }
+    85%{ opacity: .6; }
+    100%{ stroke-dashoffset: -40; opacity: 0; }
+  }
+  @keyframes fcFireRiseR1{
+    0%{ stroke-dashoffset: 120; opacity: 0; }
+    20%{ opacity: 1; }
+    80%{ opacity: .8; }
+    100%{ stroke-dashoffset: -60; opacity: 0; }
+  }
+  @keyframes fcFireRiseR2{
+    0%{ stroke-dashoffset: 100; opacity: 0; }
+    25%{ opacity: 1; }
+    80%{ opacity: .7; }
+    100%{ stroke-dashoffset: -50; opacity: 0; }
+  }
+  @keyframes fcFireRiseR3{
+    0%{ stroke-dashoffset: 90; opacity: 0; }
+    30%{ opacity: .9; }
+    85%{ opacity: .6; }
+    100%{ stroke-dashoffset: -40; opacity: 0; }
   }
 
   @media (prefers-reduced-motion: reduce){
@@ -1129,7 +1234,9 @@
     .fc-card.icon::before,
     .fc-card.sig,
     .fc-card.sig::before,
-    .fc-card.sig::after{
+    .fc-card.sig::after,
+    .fc-card.sig .fc-fire-base,
+    .fc-card.sig .fc-fire-line{
       animation: none !important;
     }
   }
@@ -10528,9 +10635,35 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
     if(!rCode && (b_rar.isLegend || (p.background && /icon/i.test(String(p.background))))) rCode = 'icon';
     if(!rCode && (p.background && /sig/i.test(String(p.background)))) rCode = 'sig';
     var rarCls = rCode ? ' ' + rCode : ' live';
-    var beamSvg = (rCode === 'icon')
-      ? '<svg class="fc-icon-beam" viewBox="0 0 100 135" preserveAspectRatio="none" aria-hidden="true"><rect class="fc-beam-track" x="1.5" y="1.5" width="97" height="132" rx="7.5" ry="6.5"/><rect class="fc-beam-line fc-beam-gold" x="1.5" y="1.5" width="97" height="132" rx="7.5" ry="6.5"/><rect class="fc-beam-line fc-beam-diamond" x="1.5" y="1.5" width="97" height="132" rx="7.5" ry="6.5"/></svg>'
-      : '';
+    var beamSvg = '';
+    if(rCode === 'icon'){
+      beamSvg = '<svg class="fc-icon-beam" viewBox="0 0 100 135" preserveAspectRatio="none" aria-hidden="true"><rect class="fc-beam-track" x="1.5" y="1.5" width="97" height="132" rx="7.5" ry="6.5"/><rect class="fc-beam-line fc-beam-gold" x="1.5" y="1.5" width="97" height="132" rx="7.5" ry="6.5"/><rect class="fc-beam-line fc-beam-diamond" x="1.5" y="1.5" width="97" height="132" rx="7.5" ry="6.5"/></svg>';
+    } else if(rCode === 'sig'){
+      beamSvg = '<svg class="fc-sig-fire" viewBox="0 0 100 135" preserveAspectRatio="none" aria-hidden="true">'
+        + '<defs>'
+        + '<linearGradient id="sigGradUp" x1="0" y1="1" x2="0" y2="0">'
+        + '<stop offset="0%" stop-color="#FFFFFF" stop-opacity="1"/>'
+        + '<stop offset="25%" stop-color="#FEF08A" stop-opacity="0.95"/>'
+        + '<stop offset="60%" stop-color="#FACC15" stop-opacity="0.85"/>'
+        + '<stop offset="90%" stop-color="#F59E0B" stop-opacity="0.3"/>'
+        + '<stop offset="100%" stop-color="#F59E0B" stop-opacity="0"/>'
+        + '</linearGradient>'
+        + '<linearGradient id="sigGradCore" x1="0" y1="1" x2="0" y2="0">'
+        + '<stop offset="0%" stop-color="#FFFFFF" stop-opacity="1"/>'
+        + '<stop offset="35%" stop-color="#FEF9C3" stop-opacity="0.95"/>'
+        + '<stop offset="75%" stop-color="#FDE047" stop-opacity="0.6"/>'
+        + '<stop offset="100%" stop-color="#F59E0B" stop-opacity="0"/>'
+        + '</linearGradient>'
+        + '</defs>'
+        + '<ellipse class="fc-fire-base" cx="50" cy="133" rx="42" ry="5"/>'
+        + '<path class="fc-fire-line fc-fl-l1" d="M 45 133 C 25 133, 2 125, 2 95 L 2 12 C 2 6, 6 2, 12 2"/>'
+        + '<path class="fc-fire-line fc-fl-l2" d="M 40 133 C 20 132, 4.5 120, 4.5 80 L 4.5 20"/>'
+        + '<path class="fc-fire-line fc-fl-l3" d="M 35 134 C 15 133, 7 110, 7 65 L 7 30"/>'
+        + '<path class="fc-fire-line fc-fl-r1" d="M 55 133 C 75 133, 98 125, 98 95 L 98 12 C 98 6, 94 2, 88 2"/>'
+        + '<path class="fc-fire-line fc-fl-r2" d="M 60 133 C 80 132, 95.5 120, 95.5 80 L 95.5 20"/>'
+        + '<path class="fc-fire-line fc-fl-r3" d="M 65 134 C 85 133, 93 110, 93 65 L 93 30"/>'
+        + '</svg>';
+    }
     return '<div class="fc-card'+(p.background ? '' : ' no-bg')+upCls+rarCls+(extraCls ? ' '+extraCls : '')+'">'
       + bg
       + beamSvg
@@ -22377,40 +22510,107 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
   }
   var MX_EASE = {pass:'cubic-bezier(.2,.65,.35,1)', shot:'cubic-bezier(.04,.8,.2,1)', goal:'cubic-bezier(.05,.75,.25,1)', lob:'cubic-bezier(.4,0,.3,1)', roll:'cubic-bezier(.3,.1,.3,1)'};
   /* Bóng: fx = pass (lăn mặt cỏ, vệt trắng) · lob (bay bổng, bóng đổ nhỏ lại) · shot (sút mạnh, vệt lửa) · goal (vào lưới, vệt vàng) · roll (lăn nhẹ). */
-  function mxBall(D, x, y, dur, arc, fx){
+  /* Hàm kiểm tra Playstyle chủ động: CHỈ kích hoạt hiệu ứng bóng khi cầu thủ chạm bóng sở hữu Playstyle tương ứng và tình huống đó kích hoạt chiêu */
+  function mxActiveBallPlaystyle(D, fx, kickerIdx){
+    var c = D.c, m = c && c.m, cur = m && m.cur, X = D.X;
+    if(!cur || !m || !X) return null;
+
+    var attTeam = m.teams[X.att];
+    if(!attTeam || !attTeam.pitch) return null;
+
+    // 1. Khoảnh Khắc Tím (Purple Moment): Chỉ kích hoạt khi có chiêu Tím bùng nổ
+    if(cur.purpleMoment){
+      return 'bl-purple';
+    }
+
+    // Xác định cầu thủ thực hiện cú chạm bóng
+    var pIdx = kickerIdx;
+    if(pIdx == null){
+      if(fx === 'shot' || fx === 'goal'){
+        pIdx = (X.sh != null ? X.sh : (X.tk != null ? X.tk : X.a(0)));
+      } else if(fx === 'lob'){
+        pIdx = (X.tk != null ? X.tk : X.a(0));
+      } else if(fx === 'pass'){
+        pIdx = (D.stIdx > 0 ? X.a(1) : X.a(0));
+      }
+    }
+
+    var player = (pIdx != null && attTeam.pitch[pIdx]) ? attTeam.pitch[pIdx] : null;
+    if(!player || !Array.isArray(player.playstyles) || !player.playstyles.length){
+      // Cầu thủ không có Playstyle -> Bóng bình thường!
+      return null;
+    }
+
+    var canonStyles = player.playstyles.map(function(s){
+      return typeof psCanon === 'function' ? psCanon(s) : String(s).replace(/^PLAYSTYLE_/, '');
+    });
+
+    var isTier3 = (typeof psLevelOf === 'function' ? psLevelOf(player) : 1) === 3;
+    if(isTier3 && m.purpleMomentUsed && (fx === 'shot' || fx === 'goal')){
+      return 'bl-purple';
+    }
+
+    // 2. Dứt điểm (Sút / Bàn thắng): CHỈ kích hoạt nếu cầu thủ sút có Playstyle dứt điểm
+    if(fx === 'shot' || fx === 'goal'){
+      if(canonStyles.indexOf('POWER_SHOT') >= 0 || canonStyles.indexOf('POWER_FINESSE') >= 0){
+        return 'bl-fire'; // Barou Lightning / Đại Bác Sấm Sét
+      }
+      if(canonStyles.indexOf('CLINICAL_FINISHER') >= 0 || canonStyles.indexOf('CHIP_MASTER') >= 0 || canonStyles.indexOf('DEAD_BALL') >= 0){
+        return 'bl-curve'; // Rin Itoshi Curved Spiral / Sút xoáy góc chết
+      }
+      if(canonStyles.indexOf('PENALTY_EXPERT') >= 0 && (X.kind === 'penalty' || (cur.from && cur.from.type === 'penalty'))){
+        return 'bl-fire';
+      }
+      // Không có Playstyle sút bóng -> Bóng bình thường, không có hiệu ứng!
+      return null;
+    }
+
+    // 3. Tạt bóng / Lốp bóng: CHỈ kích hoạt nếu cầu thủ tạt có Playstyle tạt xoáy
+    if(fx === 'lob'){
+      if(canonStyles.indexOf('WHIPPED_CROSSER') >= 0){
+        return 'bl-curve'; // Tạt bóng xoáy cong vút
+      }
+      if(canonStyles.indexOf('CHIP_MASTER') >= 0){
+        return 'bl-curve'; // Lốp bóng qua đầu
+      }
+      return null;
+    }
+
+    // 4. Đường chuyền: CHỈ kích hoạt nếu cầu thủ chuyền có Playstyle chuyền/phản công
+    if(fx === 'pass'){
+      if(canonStyles.indexOf('INCISIVE_THROUGH') >= 0 || canonStyles.indexOf('BULLET_PASS') >= 0){
+        return 'bl-speed'; // Chọc khe xé toang phòng ngự / Chuyền tốc hành
+      }
+      if(canonStyles.indexOf('TIKI_TAKA') >= 0){
+        return 'bl-pass';  // Tiki-Taka phối hợp ma thuật
+      }
+      if(X.kind === 'counter' && (canonStyles.indexOf('ACCELERATOR') >= 0 || canonStyles.indexOf('SPEED_DRIBBLER') >= 0 || canonStyles.indexOf('SUPER_RUSH') >= 0)){
+        return 'bl-speed'; // Bứt tốc phản công chớp nhoáng
+      }
+      // Chuyền bóng thông thường không có Playstyle -> Bóng bình thường!
+      return null;
+    }
+
+    return null;
+  }
+
+  function mxBall(D, x, y, dur, arc, fx, kickerIdx){
     x = Math.max(1.5, Math.min(98.5, x)); y = Math.max(1.5, Math.min(98.5, y));
     var dx = x - D.bx, dy = y - D.by;
     var d = Math.sqrt(Math.pow(dx * 0.68, 2) + Math.pow(dy * 1.05, 2)), rm = reducedMotion();
     var du = rm ? 0 : (dur != null ? dur : Math.max(0.35, Math.min(1.4, d / 55 + 0.25)));
 
-    // Hiệu ứng Blue Lock gắn trực tiếp trên quả bóng (đồng bộ 100% cùng di chuyển của bóng)
+    // Xoay đuôi hào quang năng lượng ngược hướng di chuyển của bóng
     var deg = (Math.atan2(dy * 1.05, dx * 0.68) * 180 / Math.PI) + 180;
     D.ball.style.setProperty('--bl-deg', deg.toFixed(1) + 'deg');
     var tailLen = Math.max(1.4, Math.min(3.8, d / 14 + 1.2));
     D.ball.style.setProperty('--bl-tail-len', tailLen.toFixed(2));
 
-    // Xác định kiểu Playstyle Blue Lock theo bối cảnh pha bóng
-    var c = D.c, m = c && c.m, cur = m && m.cur, X = D.X;
-    var isPurple = !!(cur && (cur.purpleMoment || (m && m.purpleMomentUsed && cur.ia && cur.ia.some(function(i){ var p = m.teams[cur.att].pitch[i]; return (typeof psLevelOf === 'function' ? psLevelOf(p) : 1) === 3; }))));
-    var blClass = 'bl-pass';
-    if(isPurple){
-      blClass = 'bl-purple'; // Khoảnh khắc Tím / Tuyệt kỹ tối thượng Ego Awakening
-    } else if(fx === 'goal'){
-      blClass = 'bl-goal';   // Isagi Direct Shot - Găm thẳng vào lưới
-    } else if(fx === 'shot'){
-      var shooter = (X && X.sh != null && m && m.teams[X.att]) ? m.teams[X.att].pitch[X.sh] : null;
-      var hasFire = shooter && (shooter.playstyles || []).some(function(ps){ var s = typeof psCanon === 'function' ? psCanon(ps) : ps; return s === 'POWER_SHOT' || s === 'POWER_FINESSE'; });
-      var hasCurve = shooter && (shooter.playstyles || []).some(function(ps){ var s = typeof psCanon === 'function' ? psCanon(ps) : ps; return s === 'CLINICAL_FINISHER' || s === 'CHIP_MASTER' || s === 'DEAD_BALL'; });
-      blClass = hasFire ? 'bl-fire' : (hasCurve ? 'bl-curve' : 'bl-fire');
-    } else if(fx === 'lob'){
-      blClass = 'bl-curve';  // Lốp bóng / tạt bóng xoáy
-    } else if(fx === 'pass'){
-      var isSpeed = (X && X.kind === 'counter') || (cur && (cur.kind === 'counter' || cur.kind === 'cross'));
-      blClass = isSpeed ? 'bl-speed' : 'bl-pass';
-    }
+    // CHỈ kích hoạt hiệu ứng quả bóng khi cầu thủ có Playstyle tương ứng và chiêu đó xảy ra
+    var blClass = mxActiveBallPlaystyle(D, fx, kickerIdx);
 
     D.ball.classList.remove('bl-active', 'bl-purple', 'bl-fire', 'bl-curve', 'bl-goal', 'bl-speed', 'bl-pass');
-    if(!rm && fx && fx !== 'roll' && d > 2){
+    if(!rm && blClass && d > 2){
       D.ball.classList.add('bl-active', blClass);
       clearTimeout(D.ball._blTimer);
       D.ball._blTimer = setTimeout(function(){
