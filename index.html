@@ -1084,71 +1084,68 @@
     }
   }
 
-  /* 4. Thẻ SIG (Chữ ký Siêu hiếm): Hiệu ứng các line màu trắng vàng neon tỏa ra từ đáy và chạy từ dưới lên trên ở 2 bên cạnh trái phải như ngọn lửa bốc cháy */
+  /* 4. Thẻ SIG (Chữ ký Siêu hiếm): Luồng bóng loáng chạy từ dưới lên trên + các line trắng vàng neon chạy dọc 2 bên mép thẻ như ngọn lửa bốc cháy (bỏ phần elip đáy) */
   .fc-card.sig{
     animation: fcSigFlameBreath 2.6s ease-in-out infinite alternate;
     will-change: filter;
   }
   @keyframes fcSigFlameBreath{
     0%{
-      filter: drop-shadow(0 0 6px rgba(254, 240, 138, 0.5)) drop-shadow(0 2px 8px rgba(0,0,0,.6));
+      filter: drop-shadow(0 2px 8px rgba(0,0,0,.6)) drop-shadow(0 0 8px rgba(254, 240, 138, 0.45));
     }
     50%{
-      filter: drop-shadow(0 0 14px rgba(254, 240, 138, 0.85)) drop-shadow(0 -2px 18px rgba(250, 204, 21, 0.65));
+      filter: drop-shadow(0 2px 8px rgba(0,0,0,.6)) drop-shadow(0 0 14px rgba(250, 204, 21, 0.65)) drop-shadow(0 0 22px rgba(254, 240, 138, 0.45));
     }
     100%{
-      filter: drop-shadow(0 0 22px rgba(255, 255, 255, 0.95)) drop-shadow(0 -4px 26px rgba(245, 158, 11, 0.85));
+      filter: drop-shadow(0 2px 8px rgba(0,0,0,.6)) drop-shadow(0 0 20px rgba(255, 255, 255, 0.85)) drop-shadow(0 0 28px rgba(245, 158, 11, 0.65));
     }
   }
 
-  /* Quầng sáng trắng vàng neo tỏa ra từ đáy thẻ */
+  /* Viền lửa trắng vàng neo bốc ngược lên dọc 2 mép cạnh trái & phải (không tràn bóng elip đáy) */
   .fc-card.sig::before{
-    content: ''; position: absolute; inset: -3px; z-index: 0; pointer-events: none; border-radius: 9% / 6.5%;
+    content: ''; position: absolute; inset: -2px; z-index: 0; pointer-events: none; border-radius: 9% / 6.5%;
     background:
-      /* Tâm đáy bốc lửa trắng vàng tỏa ra */
-      radial-gradient(ellipse at 50% 102%, #FFFFFF 0%, #FEF08A 25%, #FACC15 50%, #F59E0B 72%, transparent 88%),
-      /* Viền lửa bốc ngược lên dọc 2 mép cạnh trái & phải */
-      linear-gradient(to top, rgba(255,255,255,.9) 0%, rgba(254,240,138,.8) 25%, rgba(250,204,21,.55) 55%, rgba(245,158,11,.2) 80%, transparent 100%),
-      linear-gradient(to top, rgba(255,255,255,.9) 0%, rgba(254,240,138,.8) 25%, rgba(250,204,21,.55) 55%, rgba(245,158,11,.2) 80%, transparent 100%);
-    background-size: 100% 45%, 4px 100%, 4px 100%;
-    background-position: bottom center, left center, right center;
+      linear-gradient(to top, rgba(255,255,255,.95) 0%, rgba(254,240,138,.85) 25%, rgba(250,204,21,.55) 55%, rgba(245,158,11,.2) 80%, transparent 100%),
+      linear-gradient(to top, rgba(255,255,255,.95) 0%, rgba(254,240,138,.85) 25%, rgba(250,204,21,.55) 55%, rgba(245,158,11,.2) 80%, transparent 100%);
+    background-size: 3.5px 100%, 3.5px 100%;
+    background-position: left center, right center;
     background-repeat: no-repeat;
     opacity: .92;
     animation: fcSigFlameGlow 1.8s ease-in-out infinite alternate;
   }
   @keyframes fcSigFlameGlow{
-    0%{ opacity: .7; transform: scale(.99); filter: drop-shadow(0 0 6px rgba(250,204,21,.6)); }
-    100%{ opacity: 1; transform: scale(1.015); filter: drop-shadow(0 0 15px rgba(255,255,255,.9)) drop-shadow(0 -4px 20px rgba(245,158,11,.75)); }
+    0%{ opacity: .7; filter: drop-shadow(0 0 6px rgba(250,204,21,.5)); }
+    100%{ opacity: 1; filter: drop-shadow(0 0 14px rgba(255,255,255,.9)) drop-shadow(0 0 20px rgba(245,158,11,.7)); }
   }
 
-  /* Luồng sóng lửa trắng vàng bốc từ đáy lên bề mặt thẻ */
+  /* Luồng bóng loáng trắng vàng neo chạy mượt mà từ dưới lên trên trên toàn bề mặt thẻ */
   .fc-card.sig::after{
     content: ''; position: absolute; inset: 1.2% 2.4%; z-index: 5; pointer-events: none; border-radius: 8% / 5.5%;
-    background: linear-gradient(0deg, transparent 0%, rgba(255,255,255,.18) 25%, rgba(254,240,138,.8) 48%, rgba(255,255,255,.95) 52%, rgba(245,158,11,.4) 65%, transparent 85%);
-    background-size: 100% 260%; background-position: 0 180%; background-repeat: no-repeat;
-    animation: fcSigFlameRise 2.4s cubic-bezier(.25,.8,.25,1) infinite;
-    border: 1px solid rgba(254, 240, 138, 0.45);
+    background: linear-gradient(0deg,
+      transparent 20%,
+      rgba(254, 240, 138, 0.2) 36%,
+      rgba(255, 255, 255, 0.95) 48%,
+      rgba(254, 240, 138, 0.75) 52%,
+      rgba(250, 204, 21, 0.25) 62%,
+      transparent 76%
+    );
+    background-size: 100% 300%;
+    background-position: 0 180%;
+    background-repeat: no-repeat;
+    animation: fcSigGlossRise 2.8s cubic-bezier(.22,.8,.25,1) infinite;
+    border: 1px solid rgba(254, 240, 138, 0.5);
   }
-  @keyframes fcSigFlameRise{
+  @keyframes fcSigGlossRise{
     0%{ background-position: 0 180%; opacity: 0; }
-    20%{ opacity: .85; }
-    75%{ opacity: .65; }
-    100%{ background-position: 0 -80%; opacity: 0; }
+    15%{ opacity: 1; }
+    60%{ opacity: .9; }
+    100%{ background-position: 0 -90%; opacity: 0; }
   }
 
   /* Hệ thống SVG các line trắng vàng neo tỏa từ đáy chạy ngược lên trên ở 2 bên mép thẻ */
   .fc-card.sig .fc-sig-fire{
     position: absolute; inset: 0; width: 100%; height: 100%;
     pointer-events: none; z-index: 6; overflow: visible;
-  }
-  .fc-card.sig .fc-fire-base{
-    fill: url(#sigGradCore);
-    filter: drop-shadow(0 0 6px #FFFFFF) drop-shadow(0 0 12px #FDE047);
-    animation: fcFireBasePulse 1.2s ease-in-out infinite alternate;
-  }
-  @keyframes fcFireBasePulse{
-    0%{ transform: scaleY(.85); opacity: .75; }
-    100%{ transform: scaleY(1.35); opacity: 1; filter: drop-shadow(0 0 10px #FFFFFF) drop-shadow(0 0 22px #F59E0B); }
   }
   .fc-card.sig .fc-fire-line{
     fill: none;
@@ -10655,13 +10652,12 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
         + '<stop offset="100%" stop-color="#F59E0B" stop-opacity="0"/>'
         + '</linearGradient>'
         + '</defs>'
-        + '<ellipse class="fc-fire-base" cx="50" cy="133" rx="42" ry="5"/>'
-        + '<path class="fc-fire-line fc-fl-l1" d="M 45 133 C 25 133, 2 125, 2 95 L 2 12 C 2 6, 6 2, 12 2"/>'
-        + '<path class="fc-fire-line fc-fl-l2" d="M 40 133 C 20 132, 4.5 120, 4.5 80 L 4.5 20"/>'
-        + '<path class="fc-fire-line fc-fl-l3" d="M 35 134 C 15 133, 7 110, 7 65 L 7 30"/>'
-        + '<path class="fc-fire-line fc-fl-r1" d="M 55 133 C 75 133, 98 125, 98 95 L 98 12 C 98 6, 94 2, 88 2"/>'
-        + '<path class="fc-fire-line fc-fl-r2" d="M 60 133 C 80 132, 95.5 120, 95.5 80 L 95.5 20"/>'
-        + '<path class="fc-fire-line fc-fl-r3" d="M 65 134 C 85 133, 93 110, 93 65 L 93 30"/>'
+        + '<path class="fc-fire-line fc-fl-l1" d="M 22 133 C 10 133, 2 125, 2 95 L 2 12 C 2 6, 6 2, 12 2"/>'
+        + '<path class="fc-fire-line fc-fl-l2" d="M 18 132 C 8 131, 4.5 120, 4.5 80 L 4.5 20"/>'
+        + '<path class="fc-fire-line fc-fl-l3" d="M 15 131 C 8 128, 7 110, 7 65 L 7 30"/>'
+        + '<path class="fc-fire-line fc-fl-r1" d="M 78 133 C 90 133, 98 125, 98 95 L 98 12 C 98 6, 94 2, 88 2"/>'
+        + '<path class="fc-fire-line fc-fl-r2" d="M 82 132 C 92 131, 95.5 120, 95.5 80 L 95.5 20"/>'
+        + '<path class="fc-fire-line fc-fl-r3" d="M 85 131 C 92 128, 93 110, 93 65 L 93 30"/>'
         + '</svg>';
     }
     return '<div class="fc-card'+(p.background ? '' : ' no-bg')+upCls+rarCls+(extraCls ? ' '+extraCls : '')+'">'
