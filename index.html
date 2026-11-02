@@ -871,28 +871,34 @@
     /* Thẻ mùa giải tiêu chuẩn - giữ nguyên phong cách tự nhiên */
   }
 
-  /* 2. Thẻ RARE (Siêu hiếm Đặc biệt): Hiệu ứng vệt sáng bóng loáng quét chéo thẻ */
+  /* 2. Thẻ RARE (Đặc biệt Hiếm): Hiệu ứng vệt sáng bóng loáng quét chéo thẻ */
+  /* 2. Thẻ ĐẶC BIỆT HIẾM (RARE): Hiệu ứng bóng loáng nhẹ nhàng thanh lịch chỉ với màu trắng thuần khiết */
   .fc-card.rare{
-    --rare-shine-dur: 3.6s;
-    --rare-shine-op: .85;
-    filter: drop-shadow(0 2px 8px rgba(0,0,0,.6)) drop-shadow(0 0 10px rgba(245, 158, 11, .45));
+    --rare-shine-dur: 4.0s;
+    --rare-shine-op: .75;
+    filter: drop-shadow(0 2px 8px rgba(0,0,0,.6)) drop-shadow(0 0 8px rgba(255, 255, 255, .32));
   }
   .fc-card.rare::after{
     content: ''; position: absolute; inset: 1.2% 2.4%; z-index: 5; pointer-events: none; border-radius: 8% / 5.5%;
-    background: linear-gradient(112deg, transparent 35%, rgba(255,255,255,.7) 47%, rgba(254,240,138,.85) 51%, rgba(255,255,255,.7) 55%, transparent 65%);
+    background: linear-gradient(112deg, transparent 38%, rgba(255,255,255,.25) 48%, rgba(255,255,255,.85) 51%, rgba(255,255,255,.25) 54%, transparent 64%);
     background-size: 260% 100%; background-position: 170% 0; background-repeat: no-repeat; opacity: var(--rare-shine-op);
-    animation: fcRareShine var(--rare-shine-dur) ease-in-out infinite;
+    animation: fcRareWhiteShine var(--rare-shine-dur) ease-in-out infinite;
   }
-  @keyframes fcRareShine{ 0%{ background-position: 170% 0; } 55%,100%{ background-position: -70% 0; } }
+  @keyframes fcRareWhiteShine{ 0%{ background-position: 170% 0; } 55%,100%{ background-position: -70% 0; } }
 
   /* 3. Thẻ ICON (Huyền Thoại): Viền line ánh sáng chạy vòng quanh thẻ, xuất hiện lần lượt và chuyển sắc huyền ảo từ Vàng Hoàng Gia đến Xanh Kim Cương */
   .fc-card.icon{
     filter: drop-shadow(0 2px 8px rgba(0,0,0,.65)) drop-shadow(0 0 8px rgba(251, 191, 36, .45));
   }
-  .fc-card.icon::before,
+  /* Thẻ ICON (Huyền Thoại): Bổ sung hiệu ứng bóng loáng vàng hoàng gia (Golden Gloss Sheen) */
+  .fc-card.icon::before{ display: none !important; }
   .fc-card.icon::after{
-    display: none !important; /* Gỡ bỏ hoàn toàn hiệu ứng xoay tròn cũ */
+    content: ''; position: absolute; inset: 1.2% 2.4%; z-index: 5; pointer-events: none; border-radius: 8% / 5.5%;
+    background: linear-gradient(115deg, transparent 36%, rgba(251,191,36,.25) 47%, rgba(254,240,138,.85) 51%, rgba(245,158,11,.35) 55%, transparent 66%);
+    background-size: 260% 100%; background-position: 170% 0; background-repeat: no-repeat; opacity: .82;
+    animation: fcIconGoldenShine 3.8s ease-in-out infinite;
   }
+  @keyframes fcIconGoldenShine{ 0%{ background-position: 170% 0; } 55%,100%{ background-position: -70% 0; } }
 
   .fc-card.icon .fc-icon-beam{
     position: absolute; inset: 0; width: 100%; height: 100%;
@@ -3236,6 +3242,128 @@
     .pitch-side .bench-slot{ width:100%; min-width:0; }
     .pitch-side .bench-slot .slot-label{ font-size:clamp(9px,calc(var(--pw,300px) * .026),11px); white-space:nowrap; }
   }
+
+  /* ===== GIAI ĐOẠN 3: HIỆU ỨNG CHIÊU THỨC, THANH TUYỆT KỸ & CẮT CẢNH (.bt-ps-*) ===== */
+  /* Thanh Tuyệt Kỹ 3 vạch */
+  .bt-ps-ult-bar{
+    display: flex; align-items: center; gap: 3px; margin: 5px auto 0;
+    max-width: 140px; background: rgba(15, 23, 42, 0.85); padding: 3px 6px;
+    border-radius: 6px; border: 1px solid rgba(148, 163, 184, 0.3);
+    position: relative; transition: all .3s ease;
+  }
+  .bt-ps-ult-seg{
+    flex: 1; height: 6px; border-radius: 3px;
+    background: rgba(71, 85, 105, 0.45); transition: all .3s ease;
+  }
+  .bt-ps-ult-seg.filled{
+    background: linear-gradient(90deg, #A855F7, #C084FC);
+    box-shadow: 0 0 6px rgba(168, 85, 247, 0.7);
+  }
+  .bt-ps-ult-bar.ready{
+    border-color: #C084FC;
+    box-shadow: 0 0 12px rgba(192, 132, 252, 0.6);
+    animation: btPsUltPulse 1.2s ease-in-out infinite alternate;
+  }
+  .bt-ps-ult-bar.ready .bt-ps-ult-seg.filled{
+    background: linear-gradient(90deg, #E879F9, #FDE047);
+    box-shadow: 0 0 8px rgba(232, 121, 249, 0.9);
+  }
+  .bt-ps-ult-label{
+    font-size: 8.5px; font-weight: 800; color: #C084FC; margin-left: 3px;
+    white-space: nowrap; text-shadow: 0 1px 2px #000;
+  }
+  @keyframes btPsUltPulse{
+    0%{ box-shadow: 0 0 4px rgba(192, 132, 252, 0.3); transform: scale(1); }
+    100%{ box-shadow: 0 0 14px rgba(232, 121, 249, 0.85); transform: scale(1.02); }
+  }
+
+  /* Banner Gọi Chiêu 4 nhịp */
+  .bt-ps-callout{
+    position: absolute; z-index: 8; transform: translate(-50%, 0); text-align: center;
+    padding: 6px 14px; border-radius: 12px; pointer-events: none;
+    background: linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(30, 41, 59, 0.95));
+    border: 1.5px solid var(--ps-col, #38BDF8);
+    box-shadow: 0 4px 16px rgba(0,0,0,.6), 0 0 14px var(--ps-col, rgba(56, 189, 248, 0.5));
+    color: #F8FAFC; min-width: 140px;
+  }
+  .bt-ps-callout .ps-hdr{ display: flex; align-items: center; justify-content: center; gap: 5px; font-size: 13px; font-weight: 900; }
+  .bt-ps-callout .ps-badge{
+    font-size: 9px; font-weight: 800; padding: 1px 6px; border-radius: 999px;
+    background: var(--ps-col, #38BDF8); color: #0F172A; text-transform: uppercase;
+  }
+  .bt-ps-callout .ps-desc{ font-size: 10px; font-weight: 700; opacity: .88; margin-top: 2px; }
+
+  /* Rung màn hình theo cấp độ chiêu */
+  .bt-shake-tier-1{ animation: btShakeT1 0.4s ease-in-out; }
+  .bt-shake-tier-2{ animation: btShakeT2 0.5s ease-in-out; }
+  .bt-shake-tier-3{ animation: btShakeT3 0.65s ease-in-out; }
+  @keyframes btShakeT1{
+    0%,100%{ transform: none; }
+    20%,60%{ transform: translate(-3px, 2px); }
+    40%,80%{ transform: translate(3px, -2px); }
+  }
+  @keyframes btShakeT2{
+    0%,100%{ transform: none; }
+    20%,60%{ transform: translate(-6px, 4px) rotate(-0.5deg); }
+    40%,80%{ transform: translate(6px, -4px) rotate(0.5deg); }
+  }
+  @keyframes btShakeT3{
+    0%,100%{ transform: none; }
+    15%,45%,75%{ transform: translate(-10px, 6px) scale(1.02); }
+    30%,60%,90%{ transform: translate(10px, -6px) scale(0.99); }
+  }
+
+  /* Cắt cảnh Tuyệt Kỹ Tím (Cinematic Ultimate Overlay) */
+  .bt-ps-cutscene{
+    position: absolute; inset: 0; z-index: 25; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; pointer-events: auto;
+    background: radial-gradient(circle at center, rgba(15, 23, 42, 0.88) 0%, rgba(2, 6, 23, 0.98) 100%);
+    animation: btPsFadeIn .25s ease-out forwards;
+  }
+  .bt-ps-cutscene-card{
+    max-width: 170px; margin-bottom: 12px;
+    animation: btPsCardZoom 1.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    filter: drop-shadow(0 0 25px rgba(168, 85, 247, 0.9)) drop-shadow(0 0 45px rgba(253, 224, 71, 0.6));
+  }
+  .bt-ps-cutscene-title{
+    font-size: 22px; font-weight: 900; text-align: center; text-transform: uppercase;
+    background: linear-gradient(90deg, #FDE047, #C084FC, #F43F5E, #FDE047);
+    background-size: 300% 100%;
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    text-shadow: 0 0 16px rgba(192, 132, 252, 0.8);
+    animation: btPsShine 2s linear infinite, btPsTitlePop .4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  }
+  .bt-ps-cutscene-sub{
+    font-size: 12px; font-weight: 800; color: #E2E8F0; margin-top: 4px;
+    text-shadow: 0 2px 4px #000;
+  }
+  .bt-ps-cutscene-skip{
+    position: absolute; top: 12px; right: 14px; z-index: 30;
+    padding: 5px 12px; font-size: 11px; font-weight: 800; color: #E2E8F0;
+    background: rgba(30, 41, 59, 0.85); border: 1px solid rgba(148, 163, 184, 0.4);
+    border-radius: 999px; cursor: pointer; backdrop-filter: blur(4px);
+  }
+  @keyframes btPsFadeIn{ from{ opacity: 0; } to{ opacity: 1; } }
+  @keyframes btPsCardZoom{
+    0%{ transform: scale(0.65) translateY(20px); opacity: 0; }
+    25%{ transform: scale(1.08) translateY(-4px); opacity: 1; }
+    100%{ transform: scale(1) translateY(0); opacity: 1; }
+  }
+  @keyframes btPsTitlePop{
+    0%{ transform: scale(0.5); opacity: 0; }
+    70%{ transform: scale(1.15); opacity: 1; }
+    100%{ transform: scale(1); opacity: 1; }
+  }
+  @keyframes btPsShine{ 0%{ background-position: 0% 0; } 100%{ background-position: 300% 0; } }
+
+
+  /* Chiêu sở trường trên thẻ ở màn chọn đội 3v3 */
+  .t3-tg.ps-tag{ font-weight:800; border-radius:6px; padding:1px 5px; font-size:9.5px; }
+  .t3-tg.ps-tag.grp-shoot{ background:rgba(249,115,22,0.18); color:#FDBA74; border:1px solid rgba(249,115,22,0.45); }
+  .t3-tg.ps-tag.grp-pass{ background:rgba(2,132,199,0.18); color:#7DD3FC; border:1px solid rgba(2,132,199,0.45); }
+  .t3-tg.ps-tag.grp-move{ background:rgba(22,163,74,0.18); color:#86EFAC; border:1px solid rgba(22,163,74,0.45); }
+  .t3-tg.ps-tag.grp-tackle{ background:rgba(147,51,234,0.18); color:#D8B4FE; border:1px solid rgba(147,51,234,0.45); }
+
 </style>
 <style id="welcome-notice-css">
   /* ===== Thông báo chào mừng: popup cho User + tab soạn thảo trong Trang quản trị ===== */
@@ -5110,7 +5238,10 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
     {code:'SUPER_RUSH',          gold:false, emoji:'🚀', name:'Siêu Xung Phong',        desc:'Bứt lên hỗ trợ tấn công như một cơn lốc.'},
     {code:'TIKI_TAKA',           gold:true,  emoji:'🎼', name:'Chuyền Ngắn Tiki-Taka',  desc:'Chuyền ngắn liên tục, phối hợp ăn ý như một dải lụa.'},
     {code:'TRICKSTER',           gold:true,  emoji:'🎩', name:'Phù Thủy Rê Bóng',       desc:'Tung chiêu độc lạ, hậu vệ dính bẫy hết lượt này đến lượt khác.'},
-    {code:'WHIPPED_CROSSER',     gold:true,  emoji:'🪃', name:'Tạt Bóng Xoáy',          desc:'Những quả tạt bóng cong vút, rơi đúng đầu tiền đạo.'}
+    {code:'WHIPPED_CROSSER',     gold:true,  emoji:'🪃', name:'Tạt Bóng Xoáy',          desc:'Những quả tạt bóng cong vút, rơi đúng đầu tiền đạo.'},
+    {code:'INCISIVE_THROUGH',    gold:true,  emoji:'🎯', name:'Chọc Khe Sắc Bén',       desc:'Đường chọc khe xé toang hàng phòng ngự, đặt đồng đội vào thế đối mặt.'},
+    {code:'DEAD_BALL',           gold:true,  emoji:'☄️', name:'Chuyên Gia Đá Phạt',      desc:'Đường bóng cong hiểm hóc từ chấm đá phạt cố định, bóng găm thẳng góc chết.'},
+    {code:'PENALTY_EXPERT',      gold:true,  emoji:'🥅', name:'Chuyên Gia Phạt Đền',     desc:'Bản lĩnh thép trên chấm 11m, đánh lừa hoàn toàn thủ môn đối phương.'}
   ];
 
   /* Lời khích lệ (hạng dưới 7/10) */
@@ -6776,8 +6907,43 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
     if(fresh.length) pool = fresh;
     return pool[randInt(pool.length)].code;
   }
+  /* ===== PLAYSTYLE HELPERS (Giai đoạn 0 - Kế hoạch nâng cấp Playstyle) ===== */
+  function psCanon(code){
+    if(!code) return '';
+    var s = String(code).trim().replace(/^PLAYSTYLE_/, '');
+    if(s === 'FINESSE_SHOT') return 'POWER_FINESSE';
+    if(s === 'AERIAL_DEFENSE') return 'AERIAL_MASTER';
+    return s;
+  }
+  function psLevelOf(card, code){
+    if(!card) return 1;
+    var target = psCanon(code);
+    var pstyles = card.playstyles || [];
+    var picons = card.playstyleIcons || [];
+    for(var i = 0; i < pstyles.length; i++){
+      if(psCanon(pstyles[i]) === target){
+        var iconStr = picons[i] || '';
+        var m = iconStr.match(/_([123])\.png$/i);
+        if(m) return parseInt(m[1], 10);
+        break;
+      }
+    }
+    var skills = (card.battle && card.battle.skills) || [];
+    for(var j = 0; j < skills.length; j++){
+      if(psCanon(skills[j].id) === target){
+        if(skills[j].grade === 'P' || skills[j].grade === 'PURPLE') return 3;
+        if(skills[j].grade === 'G' || skills[j].grade === 'GOLD') return 2;
+        return 1;
+      }
+    }
+    return 1;
+  }
   function playstyleIconUrl(code, tier){
-    return cdnUrl('playstyle_256_PLAYSTYLE_' + code + '_' + (tier==='gold' ? 2 : 1) + '.png');
+    var c = psCanon(code);
+    var tNum = 1;
+    if(tier === 3 || tier === 'purple' || tier === 'P') tNum = 3;
+    else if(tier === 2 || tier === 'gold' || tier === 'G') tNum = 2;
+    return cdnUrl('playstyle_256_PLAYSTYLE_' + c + '_' + tNum + '.png');
   }
 
   /* Dữ liệu kiểu cũ (skill cố định "Chuyền Siêu Cấp"… đã kích hoạt + điểm chung) -> đổi sang kiểu mới:
@@ -6977,25 +7143,34 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
     PLAYSTYLE_SPEED_DRIBBLER: 'move',
     PLAYSTYLE_TRICKSTER: 'move',
     PLAYSTYLE_RELENTLESS_STAMINA: 'move',
+    PLAYSTYLE_SUPER_RUSH: 'move',
     PLAYSTYLE_BULLET_PASS: 'pass',
     PLAYSTYLE_TIKI_TAKA: 'pass',
     PLAYSTYLE_WHIPPED_CROSSER: 'pass',
+    PLAYSTYLE_INCISIVE_THROUGH: 'pass',
     PLAYSTYLE_POWER_SHOT: 'shoot',
+    PLAYSTYLE_POWER_FINESSE: 'shoot',
     PLAYSTYLE_FINESSE_SHOT: 'shoot',
     PLAYSTYLE_CLINICAL_FINISHER: 'shoot',
     PLAYSTYLE_CHIP_MASTER: 'shoot',
+    PLAYSTYLE_DEAD_BALL: 'shoot',
+    PLAYSTYLE_PENALTY_EXPERT: 'shoot',
+    PLAYSTYLE_AERIAL_MASTER: 'tackle',
     PLAYSTYLE_AERIAL_DEFENSE: 'tackle',
     PLAYSTYLE_STAND_TACKLE_MASTER: 'tackle',
     PLAYSTYLE_HARD_TACKLE_MASTER: 'tackle',
     PLAYSTYLE_INTIMIDATOR: 'tackle',
-    PLAYSTYLE_DEFLECTOR: 'tackle',
-    PLAYSTYLE_SUPER_RUSH: 'tackle'
+    PLAYSTYLE_DEFLECTOR: 'tackle'
   };
   var FX_ORDER = ['shoot','pass','move','tackle'];
   function playerFx(p){
     if(!p || !Array.isArray(p.playstyles)) return [];
     var set = {};
-    p.playstyles.forEach(function(code){ var fx = PLAYSTYLE_EFFECT_MAP[code]; if(fx) set[fx] = true; });
+    p.playstyles.forEach(function(code){
+      var c = psCanon(code);
+      var fx = PLAYSTYLE_EFFECT_MAP['PLAYSTYLE_' + c] || PLAYSTYLE_EFFECT_MAP[c];
+      if(fx) set[fx] = true;
+    });
     return FX_ORDER.filter(function(fx){ return set[fx]; });
   }
 
@@ -7116,8 +7291,364 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
      Nếu chưa từng đẩy config lên Firebase, hoặc offline lần đầu, BATTLE_CONFIG sẽ là null —
      mọi chỗ dùng nó phải tự kiểm tra null và ẩn tính năng, KHÔNG được throw lỗi. */
   var BATTLE_CONFIG = null;
+  /* ===== CẤU HÌNH HIỆU ỨNG PLAYSTYLE (Giai đoạn 1 - Kế hoạch nâng cấp Playstyle) ===== */
+  var DEFAULT_PLAYSTYLE_FX = {
+    enabled: true,
+    triggerMinRoll: 7,
+    cooldownTurns: 1,
+    caps: {
+      buffPerHit: 0.30,
+      withUltimate: 0.50,
+      mitigation: 0.50,
+      maxHitPctOfMaxHp: 0.50,
+      pierceTotal: 0.50
+    },
+    ultimate: {
+      charges: 3,
+      minRoll: 7,
+      perMatch: 1
+    },
+    styles: {
+      POWER_SHOT:          { group: 'shoot', effect: 'dmgUp',       v: [0.10, 0.15, 0.20] },
+      POWER_FINESSE:       { group: 'shoot', effect: 'pierce',      v: [0.20, 0.30, 0.40] },
+      CLINICAL_FINISHER:   { group: 'shoot', effect: 'finisher',    v: [0.10, 0.15, 0.20], missRed: [0.50, 0.75, 1.00] },
+      CHIP_MASTER:         { group: 'shoot', effect: 'chip',        v: [0.05, 0.08, 0.10] },
+      BULLET_PASS:         { group: 'pass',  effect: 'passBuff',    v: [0.05, 0.08, 0.10] },
+      TIKI_TAKA:           { group: 'pass',  effect: 'tikiTaka',    v: [0.10, 0.15, 0.20] },
+      WHIPPED_CROSSER:     { group: 'pass',  effect: 'crossBuff',   v: [0.05, 0.08, 0.10], splash: [0.10, 0.15, 0.20] },
+      INCISIVE_THROUGH:    { group: 'pass',  effect: 'incisive',    v: [0.20, 0.30, 0.40] },
+      DEAD_BALL:           { group: 'shoot', effect: 'followUp',    v: [0.20, 0.30, 0.40] },
+      PENALTY_EXPERT:      { group: 'shoot', effect: 'followUp',    v: [0.20, 0.30, 0.40] },
+      ACCELERATOR:         { group: 'move',  effect: 'accelerator', mult: [1.50, 1.75, 2.00] },
+      SPEED_DRIBBLER:      { group: 'move',  effect: 'dodge',       v: [0.08, 0.12, 0.16] },
+      TRICKSTER:           { group: 'move',  effect: 'trickster',   v: [0.10, 0.15, 0.20] },
+      RELENTLESS_STAMINA:  { group: 'move',  effect: 'regen',       v: [0.02, 0.03, 0.04] },
+      SUPER_RUSH:          { group: 'move',  effect: 'rush',        v: [0.20, 0.30, 0.40] },
+      STAND_TACKLE_MASTER: { group: 'tackle',effect: 'standTackle', v: [0.10, 0.15, 0.20] },
+      HARD_TACKLE_MASTER:  { group: 'tackle',effect: 'hardTackle',  v: [0.10, 0.15, 0.20] },
+      AERIAL_MASTER:       { group: 'tackle',effect: 'aerial',      v: [0.20, 0.30, 0.40] },
+      INTIMIDATOR:         { group: 'tackle',effect: 'intimidate',  v: [0.10, 0.15, 0.20] },
+      DEFLECTOR:           { group: 'tackle',effect: 'deflector',   red: [0.20, 0.30, 0.40], reflect: [0.10, 0.15, 0.20] }
+    },
+    season: {
+      pts: [2, 4, 6],
+      capPerSide: 10,
+      purpleMoment: 12,
+      purpleMomentMinScore: 8
+    }
+  };
+
+  function getPlaystyleFxConfig(cfg){
+    var base = JSON.parse(JSON.stringify(DEFAULT_PLAYSTYLE_FX));
+    if(cfg && cfg.playstyleFx && typeof cfg.playstyleFx === 'object'){
+      Object.keys(cfg.playstyleFx).forEach(function(k){
+        if(k === 'caps' || k === 'ultimate' || k === 'season'){
+          base[k] = Object.assign({}, base[k], cfg.playstyleFx[k]);
+        } else if(k === 'styles'){
+          base.styles = Object.assign({}, base.styles, cfg.playstyleFx.styles);
+        } else {
+          base[k] = cfg.playstyleFx[k];
+        }
+      });
+    }
+    return base;
+  }
+
+  function initSidePlaystyleState(side){
+    if(!side) return;
+    side.cooldowns = side.cooldowns || {};
+    side.ultCharges = side.ultCharges || 0;
+    side.ultUsed = side.ultUsed || false;
+    side.ultStance = side.ultStance || 0;
+    side.ultOrchestra = side.ultOrchestra || 0;
+    side.dodgeNext = side.dodgeNext || false;
+    side.nextDmgBuff = side.nextDmgBuff || 0;
+    side.nextWeaken = side.nextWeaken || 0;
+    side.deflectorUsed = side.deflectorUsed || false;
+    side.lastHitTaken = side.lastHitTaken || false;
+    side.lastRollHigh = side.lastRollHigh || false;
+    side.hitsMade = side.hitsMade || 0;
+  }
+
+  function psResolve(A, D, shownRoll, ctx){
+    var cfg = ctx.cfg || {};
+    var psFx = (cfg.playstyleFx && typeof cfg.playstyleFx === 'object') ? cfg.playstyleFx : DEFAULT_PLAYSTYLE_FX;
+    if(!psFx || !psFx.enabled) return null;
+
+    initSidePlaystyleState(A);
+    initSidePlaystyleState(D);
+
+    var caps = psFx.caps || DEFAULT_PLAYSTYLE_FX.caps;
+    var stylesCfg = psFx.styles || DEFAULT_PLAYSTYLE_FX.styles;
+    var ultCfg = psFx.ultimate || DEFAULT_PLAYSTYLE_FX.ultimate;
+    var rng = ctx.rng || Math.random;
+
+    var res = {
+      attackerEvents: [],
+      defenderEvents: [],
+      ultimate: null,
+      dmgBuff: 0,
+      weakenDebuff: 0,
+      pierce: 0,
+      mitigation: 0,
+      dodged: false,
+      reflectPct: 0,
+      bypassIconCut: false,
+      followUpPct: 0,
+      healed: 0
+    };
+
+    // 1. Kiểm tra né đòn từ lượt trước
+    if(D.dodgeNext){
+      res.dodged = true;
+      D.dodgeNext = false;
+      res.defenderEvents.push({code: 'DODGE', kind: 'dodge', label: 'Né Đòn Thành Công'});
+      return res;
+    }
+
+    // 2. Kích hoạt chiêu thức của bên tấn công (điểm hiển thị >= triggerMinRoll)
+    var aStyles = (A.card && A.card.playstyles) || [];
+    var validRoll = (shownRoll >= (psFx.triggerMinRoll || 7)) && !ctx.missed && !ctx.zero;
+
+    // Kiểm tra Tuyệt Kỹ Tím
+    var hasPurple = false;
+    var purpleCode = null;
+    aStyles.forEach(function(code){
+      if(psLevelOf(A.card, code) === 3){
+        hasPurple = true;
+        purpleCode = psCanon(code);
+      }
+    });
+
+    if(hasPurple && validRoll && A.ultCharges >= (ultCfg.charges || 3) && !A.ultUsed){
+      A.ultUsed = true;
+      A.ultCharges = 0;
+      res.ultimate = {code: purpleCode, name: ''};
+
+      if(purpleCode === 'POWER_SHOT'){
+        res.ultimate.name = 'Sấm Sét Tối Thượng';
+        res.dmgBuff += 0.40;
+        res.pierce = Math.max(res.pierce, 0.40);
+      } else if(purpleCode === 'CLINICAL_FINISHER'){
+        var isLow = D.hp < D.hpMax * 0.40;
+        res.ultimate.name = 'Nhát Kết Liễu';
+        res.dmgBuff += (isLow ? 0.45 : 0.30);
+        res.ultimate.onKillHeal = 0.10;
+      } else if(purpleCode === 'HARD_TACKLE_MASTER'){
+        res.ultimate.name = 'Bức Tường Hoàng Đế';
+        A.ultStance = 2;
+      } else {
+        var grp = (stylesCfg[purpleCode] && stylesCfg[purpleCode].group) || 'shoot';
+        if(grp === 'shoot'){
+          res.ultimate.name = 'Tuyệt Kỹ Sút Quyết Định';
+          res.dmgBuff += 0.40;
+        } else if(grp === 'pass'){
+          res.ultimate.name = 'Dàn Nhạc Bất Tận';
+          A.ultOrchestra = 2;
+        } else if(grp === 'move'){
+          res.ultimate.name = 'Cơn Lốc Tối Thượng';
+          res.dmgBuff += 0.30;
+          A.dodgeNext = true;
+        } else {
+          res.ultimate.name = 'Thế Thủ Hoàng Kim';
+          A.ultStance = 2;
+        }
+      }
+    }
+
+    // Kích hoạt Playstyle thông thường (Điểm 10 kích hoạt cả 2; Điểm 7-9 kích hoạt 1 chiêu)
+    if(validRoll){
+      var triggeredCount = 0;
+      var maxToTrigger = (shownRoll === 10) ? 2 : 1;
+
+      for(var i = 0; i < aStyles.length; i++){
+        if(triggeredCount >= maxToTrigger) break;
+        var rawCode = aStyles[i];
+        var canon = psCanon(rawCode);
+        var scfg = stylesCfg[canon];
+        if(!scfg) continue;
+        if((A.cooldowns[canon] || 0) > 0) continue;
+
+        var lvl = psLevelOf(A.card, canon);
+        var vIdx = Math.max(0, Math.min(2, lvl - 1));
+        var effectApplied = false;
+
+        switch(canon){
+          case 'POWER_SHOT':
+            res.dmgBuff += (scfg.v[vIdx] || 0.10);
+            effectApplied = true;
+            break;
+          case 'POWER_FINESSE':
+            res.pierce = Math.max(res.pierce, scfg.v[vIdx] || 0.20);
+            effectApplied = true;
+            break;
+          case 'CLINICAL_FINISHER':
+            if(D.hp < D.hpMax * 0.40){
+              res.dmgBuff += (scfg.v[vIdx] || 0.10);
+            }
+            effectApplied = true;
+            break;
+          case 'CHIP_MASTER':
+            res.bypassIconCut = true;
+            res.dmgBuff += (scfg.v[vIdx] || 0.05);
+            effectApplied = true;
+            break;
+          case 'BULLET_PASS':
+            A.nextDmgBuff = Math.max(A.nextDmgBuff || 0, scfg.v[vIdx] || 0.05);
+            effectApplied = true;
+            break;
+          case 'TIKI_TAKA':
+            if(A.lastRollHigh){
+              res.dmgBuff += (scfg.v[vIdx] || 0.10);
+            }
+            effectApplied = true;
+            break;
+          case 'WHIPPED_CROSSER':
+            A.nextDmgBuff = Math.max(A.nextDmgBuff || 0, scfg.v[vIdx] || 0.05);
+            effectApplied = true;
+            break;
+          case 'INCISIVE_THROUGH':
+            if(D.lastHitTaken){
+              res.pierce = Math.max(res.pierce, scfg.v[vIdx] || 0.20);
+            }
+            effectApplied = true;
+            break;
+          case 'DEAD_BALL':
+          case 'PENALTY_EXPERT':
+            if(shownRoll === 10){
+              res.followUpPct = (scfg.v[vIdx] || 0.20);
+              effectApplied = true;
+            }
+            break;
+          case 'ACCELERATOR':
+            if(ctx.bonusHit){
+              var mult = (scfg.mult && scfg.mult[vIdx]) || 1.5;
+              res.acceleratorMult = mult;
+              effectApplied = true;
+            }
+            break;
+          case 'SPEED_DRIBBLER':
+            var dodgeProb = scfg.v[vIdx] || 0.08;
+            if(rng() < dodgeProb){
+              A.dodgeNext = true;
+            }
+            effectApplied = true;
+            break;
+          case 'TRICKSTER':
+            D.nextWeaken = Math.max(D.nextWeaken || 0, scfg.v[vIdx] || 0.10);
+            effectApplied = true;
+            break;
+          case 'RELENTLESS_STAMINA':
+            if(A.hp < A.hpMax * 0.50){
+              var healAmt = Math.round(A.hpMax * (scfg.v[vIdx] || 0.02));
+              A.hp = Math.min(A.hpMax, A.hp + healAmt);
+              res.healed += healAmt;
+            }
+            effectApplied = true;
+            break;
+          case 'SUPER_RUSH':
+            if((A.hitsMade || 0) === 0){
+              res.dmgBuff += (scfg.v[vIdx] || 0.20);
+              effectApplied = true;
+            }
+            break;
+          case 'INTIMIDATOR':
+            D.nextWeaken = Math.max(D.nextWeaken || 0, scfg.v[vIdx] || 0.10);
+            effectApplied = true;
+            break;
+        }
+
+        if(effectApplied){
+          triggeredCount++;
+          A.cooldowns[canon] = (psFx.cooldownTurns || 1) + 1;
+          A.ultCharges = Math.min(ultCfg.charges || 3, (A.ultCharges || 0) + 1);
+          res.attackerEvents.push({code: canon, level: lvl, val: scfg.v ? scfg.v[vIdx] : null});
+        }
+      }
+    }
+
+    if(A.nextDmgBuff > 0){
+      res.dmgBuff += A.nextDmgBuff;
+      A.nextDmgBuff = 0;
+    }
+    if((A.ultOrchestra || 0) > 0){
+      res.dmgBuff += 0.25;
+    }
+    if(A.nextWeaken > 0){
+      res.weakenDebuff = A.nextWeaken;
+      A.nextWeaken = 0;
+    }
+
+    var maxBuff = res.ultimate ? (caps.withUltimate || 0.50) : (caps.buffPerHit || 0.30);
+    res.dmgBuff = Math.min(maxBuff, res.dmgBuff);
+
+    // 3. Phản ứng phòng ngự của bên bị tấn công
+    D.ultCharges = Math.min(ultCfg.charges || 3, (D.ultCharges || 0) + 1);
+
+    if((D.ultStance || 0) > 0){
+      res.mitigation += 0.40;
+      res.reflectPct += 0.25;
+      res.defenderEvents.push({code: 'ULT_STANCE', kind: 'stance', label: 'Bức Tường Hoàng Đế'});
+    }
+
+    var dStyles = (D.card && D.card.playstyles) || [];
+    for(var j = 0; j < dStyles.length; j++){
+      var dRaw = dStyles[j];
+      var dCanon = psCanon(dRaw);
+      var dCfg = stylesCfg[dCanon];
+      if(!dCfg) continue;
+      if((D.cooldowns[dCanon] || 0) > 0) continue;
+
+      var dLvl = psLevelOf(D.card, dCanon);
+      var dvIdx = Math.max(0, Math.min(2, dLvl - 1));
+      var defApplied = false;
+
+      switch(dCanon){
+        case 'HARD_TACKLE_MASTER':
+          if(shownRoll >= 7){
+            res.mitigation += (dCfg.v[dvIdx] || 0.10);
+            A.nextWeaken = Math.max(A.nextWeaken || 0, (dCfg.v[dvIdx] || 0.10) * 0.5);
+            defApplied = true;
+          }
+          break;
+        case 'AERIAL_MASTER':
+          if(shownRoll >= 9){
+            res.mitigation += (dCfg.v[dvIdx] || 0.20);
+            defApplied = true;
+          }
+          break;
+        case 'DEFLECTOR':
+          if(!D.deflectorUsed && shownRoll >= 7){
+            D.deflectorUsed = true;
+            res.mitigation += (dCfg.red[dvIdx] || 0.20);
+            res.reflectPct += (dCfg.reflect[dvIdx] || 0.10);
+            defApplied = true;
+          }
+          break;
+        case 'STAND_TACKLE_MASTER':
+          if(shownRoll <= 5 && !ctx.missed){
+            res.reflectPct += (dCfg.v[dvIdx] || 0.10);
+            defApplied = true;
+          }
+          break;
+      }
+
+      if(defApplied){
+        D.cooldowns[dCanon] = (psFx.cooldownTurns || 1) + 1;
+        res.defenderEvents.push({code: dCanon, level: dLvl});
+      }
+    }
+
+    res.mitigation = Math.min(caps.mitigation || 0.50, res.mitigation);
+    res.pierce = Math.min(caps.pierceTotal || 0.50, res.pierce);
+
+    return res;
+  }
+
   function normalizeBattleConfig(raw){
-    return (raw && typeof raw === 'object' && raw.elements && raw.skills) ? raw : null;
+    if(!raw || typeof raw !== 'object' || !raw.elements || !raw.skills) return null;
+    raw.playstyleFx = getPlaystyleFxConfig(raw);
+    return raw;
   }
   async function loadBattleConfig(){
     var cfg = null;
@@ -7176,8 +7707,8 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
     var c = ELEMENT_COLORS[code] || ['#8a8f9c', '#2a2e38'];
     return '--el-c1:'+c[0]+';--el-c2:'+c[1]+';';
   }
-  var RARITY_LABEL = {LIVE:'Phổ Thông', ICON:'Huyền Thoại', SIG:'Chữ ký Siêu hiếm', RARE:'Siêu hiếm Đặc biệt'};
-  var BT_RARITY = { LIVE:{c:'#38BDF8', ic:'🔵', label:'Phổ Thông'}, ICON:{c:'#FBBF24', ic:'👑', label:'Huyền Thoại'}, SIG:{c:'#E879F9', ic:'✍️', label:'Chữ ký Siêu hiếm'}, RARE:{c:'#F59E0B', ic:'🌟', label:'Siêu hiếm Đặc biệt'} };
+  var RARITY_LABEL = {LIVE:'Phổ Thông', ICON:'Huyền Thoại', SIG:'Chữ ký Siêu hiếm', RARE:'Đặc biệt Hiếm'};
+  var BT_RARITY = { LIVE:{c:'#38BDF8', ic:'🔵', label:'Phổ Thông'}, ICON:{c:'#FBBF24', ic:'👑', label:'Huyền Thoại'}, SIG:{c:'#E2E8F0', ic:'✍️', label:'Chữ ký Siêu hiếm'}, RARE:{c:'#F59E0B', ic:'🌟', label:'Đặc biệt Hiếm'} };
   function rarityLabel(code){
     var up = String(code || '').toUpperCase();
     return RARITY_LABEL[up] || RARITY_LABEL[code] || code || '';
@@ -8070,7 +8601,7 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
       + '<canvas class="dbx-fx"></canvas>';
   }
 
-  /* ===== PHÂN LOẠI THẺ: SPOTLIGHT (Huyền Thoại & Siêu hiếm Đặc biệt) VS CHÚC MỪNG LẬT THẺ (Các loại khác) ===== */
+  /* ===== PHÂN LOẠI THẺ: SPOTLIGHT (Huyền Thoại & Đặc biệt Hiếm) VS CHÚC MỪNG LẬT THẺ (Các loại khác) ===== */
   function cardRarityCode(base){
     if(!base) return 'LIVE';
     var b = base.battle || {};
@@ -8084,7 +8615,7 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
 
   /* Hiệu ứng spotlight zoom-in áp dụng cho:
      1. Thẻ Huyền Thoại (ICON)
-     2. Thẻ Siêu hiếm Đặc biệt (RARE / SIG)
+     2. Thẻ Đặc biệt Hiếm (RARE / SIG)
      3. Thẻ đạt chỉ số overall tối đa (Max OVR cấu hình trong Trang quản trị, mặc định 124) */
   function isSpotlightRare(base){
     if(!base) return false;
@@ -10258,7 +10789,7 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
     var cfg = BATTLE_CONFIG;
     var battleA = effectiveBattleStats(cardA);   // thẻ của mình — có thể đã nâng cấp OVR
     var battleB = cardB.battle;                  // đối thủ random từ CSDL chung — luôn ★0
-    return {
+    var b = {
       cfg: cfg, mode: cfg.modes['1v1'],
       sides: [
         {card:cardA, battle:battleA, hp:battleA.hp, hpMax:battleA.hp, firstHitTaken:false},
@@ -10267,6 +10798,9 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
       side:firstSide, firstSide:firstSide, secondMoverBonusUsed:false,
       turn:0, finished:false, winner:null, log:[]
     };
+    initSidePlaystyleState(b.sides[0]);
+    initSidePlaystyleState(b.sides[1]);
+    return b;
   }
   /* Đánh 1 lượt: bên `side` hiện tại tấn công bên còn lại, trả về sự kiện vừa xảy ra
      (hoặc null nếu trận đã kết thúc). Đây là hàm thuần — không đụng DOM. */
@@ -10292,6 +10826,9 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
     var ai=b.side, di=1-b.side;
     var A=b.sides[ai], D=b.sides[di];
     var ab=A.battle, db=D.battle;
+    initSidePlaystyleState(A);
+    initSidePlaystyleState(D);
+
     var canReroll = ab.rarity === 'LIVE';
     var r, rollInfo;
     if(typeof forcedRoll === 'number'){            // điểm do câu hỏi quyết định (lượt của người chơi)
@@ -10314,24 +10851,115 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
     var elemM = battleElemMult(cfg, ab.element, db.element);
     var base = ab.cp * cfg.formula.atkK * mode.tempo;
     var raw = base * atkMod * elemM * mult * (missed ? 0 : d10);
-    var reduce = db.armor / (db.armor + cfg.formula.armorK);
-    var dmg = raw * (1-reduce);
-    var iconCut = (db.rarity === 'ICON' && !D.firstHitTaken);
+    var shown = (opt && opt.zero) ? 0 : r;
+
+    // Tích hợp hệ thống Playstyle (Giai đoạn 1)
+    var psFx = (cfg && cfg.playstyleFx && typeof cfg.playstyleFx === 'object') ? cfg.playstyleFx : (typeof DEFAULT_PLAYSTYLE_FX !== 'undefined' ? DEFAULT_PLAYSTYLE_FX : null);
+    var psRes = null;
+    var psDmgMult = 1.0, armorPierce = 0, psMitigation = 0, bypassIconCut = false;
+
+    if(psFx && psFx.enabled){
+      psRes = psResolve(A, D, shown, {
+        b: b, cfg: cfg, mode: mode, missed: missed, zero: (opt && opt.zero),
+        bonusHit: bonusHit, d10: d10, rawDmg: raw
+      });
+
+      if(psRes){
+        if(psRes.dodged){
+          D.firstHitTaken = true;
+          var evtDodge = {turn:++b.turn, atkSide:ai, defSide:di, roll:r, d10:d10, crit:(r===10),
+            dmg:0, hpAfter:D.hp, hpMax:D.hpMax, bonusHit:bonusHit, reroll:canReroll,
+            firstRoll:rollInfo.first, rerolled:rollInfo.rerolled,
+            calc:{cp:ab.cp, base:base, atkMod:atkMod, elemM:elemM, bonusM:mult, d10:d10, raw:Math.round(raw),
+                  reducePct:0, iconCut:false, rareGuard:false, sigBoost:false, ps:psRes},
+            ps:psRes, dodged:true, miss:missed, shown:shown, team:(opt && opt.team != null) ? opt.team : null};
+          b.log.push(evtDodge);
+          b.side = di;
+          return evtDodge;
+        }
+
+        if(psRes.acceleratorMult && bonusHit){
+          raw *= psRes.acceleratorMult;
+        }
+
+        psDmgMult = (1 + psRes.dmgBuff) * (1 - psRes.weakenDebuff);
+        armorPierce = psRes.pierce;
+        psMitigation = psRes.mitigation;
+        bypassIconCut = psRes.bypassIconCut;
+      }
+    }
+
+    // Tính giáp thực tế sau xuyên giáp
+    var effArmor = db.armor * (1 - armorPierce);
+    var reduce = effArmor / (effArmor + cfg.formula.armorK);
+    var dmg = raw * psDmgMult * (1 - reduce);
+
+    var iconCut = (db.rarity === 'ICON' && !D.firstHitTaken && !bypassIconCut);
     if(iconCut) dmg *= 0.8;
     var rareGuard = (db.rarity === 'RARE' && elemM > 1);
     if(rareGuard) dmg *= 0.85;
     var sigBoost = (ab.rarity === 'SIG' && r >= 8);
     if(sigBoost) dmg *= 1.15;
+
+    // Giảm sát thương từ Playstyle phòng thủ
+    if(psMitigation > 0){
+      dmg *= (1 - psMitigation);
+    }
+
     D.firstHitTaken = true;
     dmg = missed ? 0 : Math.max(1, Math.round(dmg));
+
+    // Áp dụng trần tối đa 35% Thể lực tối đa của mục tiêu
+    if(psFx && psFx.enabled && psFx.caps && psFx.caps.maxHitPctOfMaxHp){
+      var maxHit = Math.round(D.hpMax * psFx.caps.maxHitPctOfMaxHp);
+      dmg = Math.min(dmg, maxHit);
+    }
+
+    // Sút bồi (DEAD_BALL hoặc PENALTY_EXPERT khi điểm 10)
+    if(psRes && psRes.followUpPct > 0){
+      dmg += Math.round(dmg * psRes.followUpPct);
+    }
+
     D.hp = Math.max(0, D.hp - dmg);
+
+    // Phản sát thương (Bức tường Hoàng Đế, Lá Chắn Thép, Bậc Thầy Đánh Chặn)
+    if(psRes && psRes.reflectPct > 0){
+      var reflDmg = Math.max(1, Math.round(dmg * psRes.reflectPct));
+      A.hp = Math.max(0, A.hp - reflDmg);
+      psRes.reflectedDmg = reflDmg;
+    }
+
+    // Hồi máu khi dứt điểm hạ gục (Tuyệt Kỹ van Basten)
+    if(D.hp <= 0 && psRes && psRes.ultimate && psRes.ultimate.onKillHeal){
+      var healAmt = Math.round(A.hpMax * psRes.ultimate.onKillHeal);
+      A.hp = Math.min(A.hpMax, A.hp + healAmt);
+      psRes.ultimate.healed = healAmt;
+    }
+
+    // Cập nhật trạng thái cuối lượt
+    A.hitsMade = (A.hitsMade || 0) + 1;
+    A.lastRollHigh = (shown >= 7);
+    D.lastHitTaken = (dmg > 0);
+
+    for(var k in A.cooldowns){ if(A.cooldowns[k] > 0) A.cooldowns[k]--; }
+    for(var kd in D.cooldowns){ if(D.cooldowns[kd] > 0) D.cooldowns[kd]--; }
+    if((A.ultStance || 0) > 0) A.ultStance--;
+    if((A.ultOrchestra || 0) > 0) A.ultOrchestra--;
+
     var evt = {turn:++b.turn, atkSide:ai, defSide:di, roll:r, d10:d10, crit:(r===10),
       dmg:dmg, hpAfter:D.hp, hpMax:D.hpMax, bonusHit:bonusHit, reroll:canReroll,
       firstRoll:rollInfo.first, rerolled:rollInfo.rerolled,
+      ps:psRes,
       calc:{cp:ab.cp, base:base, atkMod:atkMod, elemM:elemM, bonusM:mult, d10:d10, raw:Math.round(raw),
-            reducePct:Math.round(reduce*1000)/10, iconCut:iconCut, rareGuard:rareGuard, sigBoost:sigBoost}};
-    evt.miss = missed; evt.shown = (opt && opt.zero) ? 0 : r; evt.team = (opt && opt.team != null) ? opt.team : null; b.log.push(evt);
-    if(D.hp <= 0){ b.finished = true; b.winner = ai; } else { b.side = di; }
+            reducePct:Math.round(reduce*1000)/10, iconCut:iconCut, rareGuard:rareGuard, sigBoost:sigBoost, ps:psRes}};
+    evt.miss = missed; evt.shown = shown; evt.team = (opt && opt.team != null) ? opt.team : null; b.log.push(evt);
+    if(D.hp <= 0 || A.hp <= 0){
+      b.finished = true;
+      if(D.hp <= 0 && A.hp <= 0) b.winner = ai;
+      else b.winner = (D.hp <= 0) ? ai : di;
+    } else {
+      b.side = di;
+    }
     return evt;
   }
   function battleOwnedCards(){
@@ -11274,7 +11902,7 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
      (5) trúng đòn: số sát thương bay lên, thanh Thể lực tụt dần. Kết quả trận do battleStep quyết định như cũ —
      phần này chỉ là trình diễn. Dùng "Tăng tốc ×2" hoặc "Bỏ qua" để rút ngắn. */
   var BT_DICE_SEQ = [60,60,60,65,75,90,110,140,180,230];   // nhịp đổi số khi xúc xắc quay (ms) — chậm dần rồi dừng
-  var BT_RARITY = { LIVE:{c:'#38BDF8', ic:'🔵', label:'Phổ Thông'}, ICON:{c:'#FBBF24', ic:'👑', label:'Huyền Thoại'}, SIG:{c:'#E879F9', ic:'✍️', label:'Chữ ký Siêu hiếm'}, RARE:{c:'#F59E0B', ic:'🌟', label:'Siêu hiếm Đặc biệt'} };
+  var BT_RARITY = { LIVE:{c:'#38BDF8', ic:'🔵', label:'Phổ Thông'}, ICON:{c:'#FBBF24', ic:'👑', label:'Huyền Thoại'}, SIG:{c:'#E2E8F0', ic:'✍️', label:'Chữ ký Siêu hiếm'}, RARE:{c:'#F59E0B', ic:'🌟', label:'Đặc biệt Hiếm'} };
   function btEl(id){ return document.getElementById(id); }
   function btAlive(st){ return battleState === st && !st.dead && !st.skipping; }
   function btWake(st){ (st.waiters || []).slice().forEach(function(w){ clearTimeout(w.t); w.res(); }); st.waiters = []; if(st.quiz) st.quiz.abort(); if(st.pick) st.pick.abort(); }
@@ -11549,8 +12177,29 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
     await w(780); if(!btAlive(st)) return;
     row('🛡️', 'Giáp '+escHtml(names[Dn]), '−'+c.reducePct+'%'); await w(240); if(!btAlive(st)) return;
     if(c.iconCut){ row('👑', 'Huyền Thoại đỡ đòn đầu', '−20%', 'bad'); await w(260); if(!btAlive(st)) return; }
-    if(c.rareGuard){ row('🌟', 'Siêu hiếm giảm khắc Hệ', '−15%', 'bad'); await w(260); if(!btAlive(st)) return; }
+    if(c.rareGuard){ row('🌟', 'Đặc biệt Hiếm giảm khắc Hệ', '−15%', 'bad'); await w(260); if(!btAlive(st)) return; }
     if(c.sigBoost){ row('✍️', 'Khoảnh khắc Chữ ký', '+15%', 'ok'); await w(260); if(!btAlive(st)) return; }
+    if(c.ps){
+      if(c.ps.ultimate){
+        row('⚡', 'Tuyệt Kỹ ' + escHtml(c.ps.ultimate.name || 'Hoàng Kim'), '+' + Math.round((c.ps.dmgBuff || 0.4)*100) + '%', 'ok');
+        await w(240); if(!btAlive(st)) return;
+      } else if(c.ps.dmgBuff > 0){
+        row('⚡', 'Playstyle tăng uy lực', '+' + Math.round(c.ps.dmgBuff * 100) + '%', 'ok');
+        await w(240); if(!btAlive(st)) return;
+      }
+      if(c.ps.pierce > 0){
+        row('🌀', 'Xuyên giáp Playstyle', Math.round(c.ps.pierce * 100) + '%', 'good');
+        await w(240); if(!btAlive(st)) return;
+      }
+      if(c.ps.mitigation > 0){
+        row('🛡️', 'Giảm sát thương (Playstyle)', '−' + Math.round(c.ps.mitigation * 100) + '%', 'bad');
+        await w(240); if(!btAlive(st)) return;
+      }
+      if(c.ps.followUpPct > 0){
+        row('☄️', 'Sút bồi Playstyle (Điểm 10)', '+' + Math.round(c.ps.followUpPct * 100) + '%', 'ok');
+        await w(240); if(!btAlive(st)) return;
+      }
+    }
     var dm = row('💥', 'SÁT THƯƠNG', '0', 'total dmg'); btCount(st, dm.querySelector('b'), 0, evt.dmg, 600, Math.round);
     await w(700); if(!btAlive(st)) return;
 
@@ -11561,9 +12210,50 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
     var sk = btPickSkill(st, A, evt.crit), skName = '', skGold = false;
     if(sk){ var cfgS = BATTLE_CONFIG.skills && BATTLE_CONFIG.skills[sk.id]; skName = (cfgS && cfgS.vi) || sk.id; skGold = (sk.grade === 'G'); }
     else { skName = 'Cú sút '+elementName(el); }
-    var banner = btFx('<b>'+(skGold ? '🌟 ' : '✦ ')+escHtml(skName)+'</b><small>'+rar.ic+' '+escHtml(rarityLabel(sa.battle.rarity))+' · Hệ '+escHtml(elementName(el))+'</small>', 'bt-skill'+(sk && !skGold ? ' s' : ''));
+
+    // Nhịp 1 Giai đoạn 3: Kích hoạt Tuyệt Kỹ Tím nếu có
+    if(evt.ps && evt.ps.ultimate){
+      await btPlayUltimateCutscene(st, A, evt.ps.ultimate);
+      if(!btAlive(st)) return;
+    }
+
+    var psCalloutText = '', psGroupCol = rar.c;
+    if(evt.ps && evt.ps.ultimate){
+      psCalloutText = '⚡ ' + evt.ps.ultimate.name;
+      psGroupCol = '#C084FC';
+    } else if(evt.ps && evt.ps.attackerEvents && evt.ps.attackerEvents.length){
+      var ev0 = evt.ps.attackerEvents[0];
+      var pDef = (typeof PLAYSTYLES !== 'undefined') ? PLAYSTYLES.find(function(x){ return x.code === ev0.code; }) : null;
+      var psName = pDef ? pDef.name : ev0.code;
+      var tierTag = ev0.level === 3 ? '👑 Tím' : (ev0.level === 2 ? '🌟 Vàng' : '✦ Bạc');
+      psCalloutText = (pDef ? pDef.emoji + ' ' : '') + psName + ' (' + tierTag + ')';
+      var grpMap = { shoot:'#F97316', pass:'#0284C7', move:'#16A34A', tackle:'#9333EA' };
+      var grp = (typeof PLAYSTYLE_EFFECT_MAP !== 'undefined') ? (PLAYSTYLE_EFFECT_MAP['PLAYSTYLE_' + ev0.code] || 'shoot') : 'shoot';
+      psGroupCol = grpMap[grp] || '#38BDF8';
+    }
+
+    var banner = btFx('<b>'+(psCalloutText ? psCalloutText : (skGold ? '🌟 ' : '✦ ') + escHtml(skName))+'</b><small>'+rar.ic+' '+escHtml(rarityLabel(sa.battle.rarity))+' · Hệ '+escHtml(elementName(el))+'</small>', 'bt-skill'+(sk && !skGold ? ' s' : ''));
     banner.style.left = from.x+'px'; banner.style.top = (from.top + 14)+'px';
+    if(psCalloutText){
+      banner.style.borderColor = psGroupCol;
+      banner.style.boxShadow = '0 0 14px ' + psGroupCol;
+    }
     btAnim(st, banner, [{transform:'translate(-50%,6px) scale(.6)', opacity:0}, {transform:'translate(-50%,0) scale(1.05)', opacity:1, offset:.2}, {transform:'translate(-50%,0) scale(1)', opacity:1, offset:.8}, {transform:'translate(-50%,-6px) scale(1)', opacity:0}], 1100);
+
+    // Rung sân đấu theo cấp độ chiêu
+    if(evt.ps && evt.ps.ultimate){
+      var ar = btEl('bt-arena');
+      if(ar){ ar.classList.remove('bt-shake-tier-3'); void ar.offsetWidth; ar.classList.add('bt-shake-tier-3'); }
+    } else if(evt.ps && evt.ps.attackerEvents && evt.ps.attackerEvents.length){
+      var lvlMax = Math.max.apply(null, evt.ps.attackerEvents.map(function(e){ return e.level || 1; }));
+      var ar2 = btEl('bt-arena');
+      if(ar2){
+        var shkClass = lvlMax === 3 ? 'bt-shake-tier-3' : (lvlMax === 2 ? 'bt-shake-tier-2' : 'bt-shake-tier-1');
+        ar2.classList.remove('bt-shake-tier-1', 'bt-shake-tier-2', 'bt-shake-tier-3');
+        void ar2.offsetWidth;
+        ar2.classList.add(shkClass);
+      }
+    }
     var cardEl = document.querySelector('#battle-vs-row .battle-side[data-side="'+A+'"] .player-card');
     if(cardEl) cardEl.animate([{transform:'none'}, {transform:'translateX('+(A === 0 ? 28 : -28)+'px) scale(1.1)', offset:.45}, {transform:'none'}], {duration:620 / st.speed, easing:'ease-in-out'});
     btRing(st, from.x, from.y, rar.c, 0);
@@ -11579,6 +12269,8 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
     if(defSide){ defSide.classList.remove('hit'); void defSide.offsetWidth; defSide.classList.add('hit'); }
     if(evt.crit){ var ar = btEl('bt-arena'); ar.classList.remove('bt-shake'); void ar.offsetWidth; ar.classList.add('bt-shake'); }
     btFloat(st, to.x, to.y - 10, evt.miss ? '💨 TRƯỢT' : '−'+evt.dmg, evt.crit ? 'crit' : '', evt.crit ? 70 : 56, 1200);
+    btUpdateUltBar(0, b.sides[0].ultCharges || 0);
+    btUpdateUltBar(1, b.sides[1].ultCharges || 0);
     if(c.elemM > 1) btFloat(st, to.x, to.y + 34, 'KHẮC HỆ!', 'tag', 36, 1200);
     if(c.iconCut) btFloat(st, to.x, to.y + 52, '👑 đỡ −20%', 'tag gold', 30, 1200);
     if(c.rareGuard) btFloat(st, to.x, to.y + 52, '🌟 giảm −15%', 'tag gold', 30, 1200);
@@ -11744,37 +12436,224 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
   /* Tính 1 đòn (hàm thuần, không đổi trạng thái). d10v = hệ số xúc xắc; truyền avgD10 để xem trước kỳ vọng. */
   function calcHit3(b, ai, di, d10v){
     var cfg = b.cfg, A = b.sides[ai], D = b.sides[di], ab = A.battle, db = D.battle;
+    initSidePlaystyleState(A);
+    initSidePlaystyleState(D);
+
     var syn = synergy3(b, A.team), synM = syn.per[ai] || 1, exA = syn.ex[ai] || {passUp:0, splashUp:0, takeRed:0};
     var exD = synergy3(b, D.team).ex[di] || {passUp:0, splashUp:0, takeRed:0};
     var vengeM = 1 + T3.vengeUp * (A.venge || 0);
     var atkMod = (cfg.elements[ab.element] || {}).atkMod || 1;
     var elemM = battleElemMult(cfg, ab.element, db.element);
+
+    // Chuyền 1-2
     var lh = b.lastHit[A.team];
     var passM = (lh && lh.tgt === di && lh.att !== ai) ? 1 + T3.pass + exA.passUp : 1;
+
+    // Combo Chuyền ➜ Sút (Giai đoạn 4: thẻ Chuyền ra đòn trước rồi thẻ Sút ra đòn lượt kế -> +15% uy lực)
+    var isCombo = false;
+    var aStyles = (A.card && A.card.playstyles) || [];
+    var aCode0 = aStyles[0] ? psCanon(aStyles[0]) : '';
+    var aGrp = (typeof PLAYSTYLE_EFFECT_MAP !== 'undefined') ? (PLAYSTYLE_EFFECT_MAP['PLAYSTYLE_' + aCode0] || 'shoot') : 'shoot';
+    if(lh && lh.attTeam === A.team && lh.psGroup === 'pass' && aGrp === 'shoot'){
+      isCombo = true;
+    }
+    var comboM = isCombo ? 1.15 : 1.0;
+
     var bonusHit = (A.team !== b.firstSide && !b.secondMoverBonusUsed);
     var bonusM = bonusHit ? 1 + (b.mode.secondMoverBonus || 0) : 1;
     var slowM = A.slow ? T3.slowMult : 1;
+
+    // Chiêu đặc biệt Nộ khí vs Tuyệt Kỹ Tím
     var special = A.rage >= T3.rageMax;
     var spM = special ? T3.specialMult : 1;
+
+    // Tích hợp Playstyle trong 3v3 (Giai đoạn 4)
+    var psFx = (cfg && cfg.playstyleFx && typeof cfg.playstyleFx === 'object') ? cfg.playstyleFx : (typeof DEFAULT_PLAYSTYLE_FX !== 'undefined' ? DEFAULT_PLAYSTYLE_FX : null);
+    var psDmgBuff = 0, psPierce = 0, psMitigation = 0, bypassIconCut = false, followUpPct = 0;
+    var isUlt = false, ultName = '', activePsName = '', activePsLevel = 1;
+
+    if(psFx && psFx.enabled){
+      // Kiểm tra Tuyệt Kỹ Tím (thay thế chiêu đặc biệt Nộ khí)
+      var hasPurple = false, purpleCode = null;
+      aStyles.forEach(function(code){
+        if(psLevelOf(A.card, code) === 3){
+          hasPurple = true;
+          purpleCode = psCanon(code);
+        }
+      });
+
+      if(special && hasPurple && !A.ultUsed){
+        isUlt = true;
+        A.ultUsed = true;
+        spM = 1.0; // Tuyệt Kỹ thay thế chiêu Nộ khí thường
+        if(purpleCode === 'POWER_SHOT'){
+          ultName = 'Sấm Sét Tối Thượng';
+          psDmgBuff += 0.40;
+          psPierce = Math.max(psPierce, 0.40);
+        } else if(purpleCode === 'CLINICAL_FINISHER'){
+          ultName = 'Nhát Kết Liễu';
+          psDmgBuff += (D.hp < D.hpMax * 0.40 ? 0.45 : 0.30);
+        } else if(purpleCode === 'HARD_TACKLE_MASTER'){
+          ultName = 'Bức Tường Hoàng Đế';
+          A.ultStance = 2;
+        } else {
+          ultName = 'Tuyệt Kỹ ' + purpleCode;
+          psDmgBuff += 0.35;
+        }
+      }
+
+      // Kích hoạt Playstyle tấn công khi xúc xắc/điểm cao (d10v >= 1.0)
+      if(d10v >= 1.0){
+        for(var sIdx = 0; sIdx < aStyles.length; sIdx++){
+          var sc = psCanon(aStyles[sIdx]);
+          var scfg = psFx.styles && psFx.styles[sc];
+          if(!scfg) continue;
+          if((A.cooldowns[sc] || 0) > 0) continue;
+          var lvl = psLevelOf(A.card, sc);
+          var vIdx = Math.max(0, Math.min(2, lvl - 1));
+
+          switch(sc){
+            case 'POWER_SHOT':
+              psDmgBuff += (scfg.v[vIdx] || 0.10);
+              break;
+            case 'POWER_FINESSE':
+              psPierce = Math.max(psPierce, scfg.v[vIdx] || 0.20);
+              break;
+            case 'CLINICAL_FINISHER':
+              if(D.hp < D.hpMax * 0.40) psDmgBuff += (scfg.v[vIdx] || 0.10);
+              break;
+            case 'CHIP_MASTER':
+              bypassIconCut = true;
+              psDmgBuff += (scfg.v[vIdx] || 0.05);
+              break;
+            case 'TIKI_TAKA':
+              passM += (scfg.v[vIdx] || 0.10);
+              break;
+            case 'WHIPPED_CROSSER':
+              exA.splashUp = Math.min(0.10, exA.splashUp + (scfg.splash ? scfg.splash[vIdx] : 0.10));
+              break;
+            case 'INCISIVE_THROUGH':
+              if(D.lastHitTaken) psPierce = Math.max(psPierce, scfg.v[vIdx] || 0.20);
+              break;
+            case 'DEAD_BALL':
+            case 'PENALTY_EXPERT':
+              if(d10v >= 1.35) followUpPct = (scfg.v[vIdx] || 0.20);
+              break;
+            case 'ACCELERATOR':
+              if(bonusHit && scfg.mult) bonusM *= scfg.mult[vIdx];
+              break;
+            case 'SPEED_DRIBBLER':
+              if(Math.random() < (scfg.v[vIdx] || 0.08)) A.dodgeNext = true;
+              break;
+            case 'TRICKSTER':
+              D.nextWeaken = Math.max(D.nextWeaken || 0, scfg.v[vIdx] || 0.10);
+              if(lvl >= 2) D.rage = Math.max(0, D.rage - 1);
+              break;
+            case 'RELENTLESS_STAMINA':
+              if(A.hp < A.hpMax * 0.50){
+                var healAmt = Math.round(A.hpMax * (scfg.v[vIdx] || 0.02));
+                A.hp = Math.min(A.hpMax, A.hp + healAmt);
+              }
+              break;
+            case 'SUPER_RUSH':
+              if((A.hitsMade || 0) === 0) psDmgBuff += (scfg.v[vIdx] || 0.20);
+              break;
+            case 'BULLET_PASS':
+              A.rage = Math.min(T3.rageMax, A.rage + 1);
+              if(lvl === 3){
+                alive3(b, A.team).forEach(function(mIdx){ b.sides[mIdx].rage = Math.min(T3.rageMax, b.sides[mIdx].rage + 1); });
+              }
+              break;
+            case 'INTIMIDATOR':
+              D.nextWeaken = Math.max(D.nextWeaken || 0, scfg.v[vIdx] || 0.10);
+              if(lvl >= 2) D.rage = Math.max(0, D.rage - 1);
+              break;
+          }
+
+          A.cooldowns[sc] = (psFx.cooldownTurns || 1) + 1;
+          activePsName = sc;
+          activePsLevel = lvl;
+          break; // Mỗi đòn kích hoạt 1 chiêu tấn công chính
+        }
+      }
+
+      // Phản ứng phòng ngự của thẻ bị đánh
+      var dStyles = (D.card && D.card.playstyles) || [];
+      for(var dj = 0; dj < dStyles.length; dj++){
+        var dsc = psCanon(dStyles[dj]);
+        var dscfg = psFx.styles && psFx.styles[dsc];
+        if(!dscfg) continue;
+        if((D.cooldowns[dsc] || 0) > 0) continue;
+        var dlvl = psLevelOf(D.card, dsc);
+        var dvIdx = Math.max(0, Math.min(2, dlvl - 1));
+
+        switch(dsc){
+          case 'HARD_TACKLE_MASTER':
+            if(d10v >= 1.0){
+              psMitigation += (dscfg.v[dvIdx] || 0.10);
+              D.cooldowns[dsc] = (psFx.cooldownTurns || 1) + 1;
+            }
+            break;
+          case 'AERIAL_MASTER':
+            if(d10v >= 1.35){
+              psMitigation += (dscfg.v[dvIdx] || 0.20);
+              D.cooldowns[dsc] = (psFx.cooldownTurns || 1) + 1;
+            }
+            break;
+          case 'DEFLECTOR':
+            if(!D.deflectorUsed && d10v >= 1.0){
+              D.deflectorUsed = true;
+              psMitigation += (dscfg.red ? dscfg.red[dvIdx] : 0.20);
+            }
+            break;
+        }
+      }
+
+      // Hào quang thủ thế của Beckenbauer cho đồng đội
+      alive3(b, D.team).forEach(function(mIdx){
+        var mate = b.sides[mIdx];
+        if((mate.ultStance || 0) > 0){
+          psMitigation += (mIdx === di ? 0.40 : 0.15);
+        }
+      });
+    }
+
+    // Áp dụng trần cân bằng
+    var maxBuff = isUlt ? (psFx && psFx.caps ? psFx.caps.withUltimate : 0.50) : (psFx && psFx.caps ? psFx.caps.buffPerHit : 0.30);
+    psDmgBuff = Math.min(maxBuff, psDmgBuff);
+    psPierce = Math.min(0.50, psPierce);
+    psMitigation = Math.min(0.50, psMitigation);
+
     var base = ab.cp * cfg.formula.atkK * b.mode.tempo;
-    var raw = base * atkMod * elemM * synM * vengeM * passM * bonusM * slowM * spM * d10v;
-    var armor = db.armor * (ab.element === 'kim' ? 1 - T3.pierce : 1);
+    var psMult = (1 + psDmgBuff) * comboM;
+    var raw = base * atkMod * elemM * synM * vengeM * passM * bonusM * slowM * spM * psMult * d10v;
+
+    var armorPierce = Math.max(ab.element === 'kim' ? T3.pierce : 0, psPierce);
+    var armor = db.armor * (1 - armorPierce);
     var reduce = armor / (armor + cfg.formula.armorK);
-    var dmg = raw * (1 - reduce) * (1 - exD.takeRed);
-    var iconCut = (db.rarity === 'ICON' && !D.firstHitTaken);
+
+    var dmg = raw * (1 - reduce) * (1 - exD.takeRed) * (1 - psMitigation);
+
+    var iconCut = (db.rarity === 'ICON' && !D.firstHitTaken && !bypassIconCut);
     if(iconCut) dmg *= 0.8;
     var rareGuard = (db.rarity === 'RARE' && elemM > 1);
     if(rareGuard) dmg *= 0.85;
-    var sigBoost = (ab.rarity === 'SIG' && (special || d10v >= 1.2));
+    var sigBoost = (ab.rarity === 'SIG' && (special || isUlt || d10v >= 1.2));
     if(sigBoost) dmg *= 1.15;
+
+    // Thổ gánh đòn
     var guard = -1;
-    if(db.element !== 'tho'){
+    if(db.element !== 'tho' && !bypassIconCut){
       alive3(b, D.team).forEach(function(k){ if(guard < 0 && k !== di && el3(b, k) === 'tho') guard = k; });
     }
     var guardPart = guard >= 0 ? dmg * T3.guardShare : 0;
+
     return {cp:ab.cp, base:base, atkMod:atkMod, elemM:elemM, synM:synM, passM:passM, bonusM:bonusM, bonusHit:bonusHit,
-            slowM:slowM, vengeM:vengeM, takeRed:exD.takeRed, splashUp:exA.splashUp, special:special, spM:spM, d10:d10v, raw:Math.round(raw), reducePct:Math.round(reduce*1000)/10,
-            iconCut:iconCut, rareGuard:rareGuard, sigBoost:sigBoost, guard:guard, total:dmg, main:dmg - guardPart, guardDmg:guardPart, pierce:(ab.element === 'kim')};
+            slowM:slowM, vengeM:vengeM, takeRed:exD.takeRed, splashUp:exA.splashUp, special:special, isUlt:isUlt, ultName:ultName,
+            isCombo:isCombo, psDmgBuff:psDmgBuff, psPierce:psPierce, psMitigation:psMitigation, followUpPct:followUpPct,
+            activePsName:activePsName, activePsLevel:activePsLevel, spM:spM, d10:d10v,
+            raw:Math.round(raw), reducePct:Math.round(reduce*1000)/10, iconCut:iconCut, rareGuard:rareGuard, sigBoost:sigBoost,
+            guard:guard, total:dmg, main:dmg - guardPart, guardDmg:guardPart, pierce:(armorPierce > 0)};
   }
   /* Tự cân tempo: mỗi bên cần ≈ T3.targetHits đòn để quét sạch đội kia (cùng 1 hệ số cho cả hai bên → không đổi thế trận) */
   function autoTempo3(b, t1){
@@ -11889,7 +12768,10 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
         if(hu.hp > before) heal = {i:low, amt:hu.hp - before, hpAfter:hu.hp};
       }
     }
-    b.lastHit[team] = {att:ai, tgt:di};
+    var aStyles = A.card.playstyles || [];
+    var aCode0 = aStyles[0] ? psCanon(aStyles[0]) : '';
+    var aGrp = (typeof PLAYSTYLE_EFFECT_MAP !== 'undefined') ? (PLAYSTYLE_EFFECT_MAP['PLAYSTYLE_' + aCode0] || 'shoot') : 'shoot';
+    b.lastHit[team] = {att:ai, tgt:di, attTeam:team, psGroup:aGrp, time:Date.now()};
     b.rot[team] = (A.slot + 1) % 3;
     var evt = {turn:++b.turn, round:b.round + 1, team:team, atk:ai, def:di, roll:r, d10:d10, crit:(r === 10),
       dmg:mainDmg, hpAfter:D.hp, hpMax:D.hpMax, guard:(c.guard >= 0 ? {i:c.guard, dmg:guardDmg, hpAfter:b.sides[c.guard].hp} : null),
@@ -12003,6 +12885,18 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
   var LANE_LABEL3 = {left:'Cánh trái', right:'Cánh phải', center:'Trung lộ'};
   function tagsHTML3(card){
     var t = traits3(card), out = '';
+    // Chiêu sở trường (Playstyle Badge trong màn chọn đội 3v3 - Giai đoạn 4)
+    var pstyles = card.playstyles || [];
+    if(pstyles.length){
+      var sc0 = psCanon(pstyles[0]);
+      var pDef = (typeof PLAYSTYLES !== 'undefined') ? PLAYSTYLES.find(function(x){ return x.code === sc0; }) : null;
+      var lvl0 = psLevelOf(card, sc0);
+      var tierIcon = lvl0 === 3 ? '👑' : (lvl0 === 2 ? '🌟' : '✦');
+      var psName = pDef ? pDef.name : sc0;
+      var psEmoji = pDef ? pDef.emoji : '⚡';
+      var grp = (typeof PLAYSTYLE_EFFECT_MAP !== 'undefined') ? (PLAYSTYLE_EFFECT_MAP['PLAYSTYLE_' + sc0] || 'shoot') : 'shoot';
+      out += '<span class="t3-tg ps-tag grp-'+grp+'" title="Chiêu sở trường: '+escHtml(psName)+'">'+psEmoji+' '+escHtml(psName)+' '+tierIcon+'</span>';
+    }
     if(t.lane) out += '<span class="t3-tg">'+(t.lane === 'left' ? '⬅️ Trái' : (t.lane === 'right' ? 'Phải ➡️' : '🎯 Trung lộ'))+'</span>';
     function chipImg3(v, alt, emo){
       v = String(v || '');
@@ -12630,6 +13524,11 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
     if(Math.abs(c.synM - 1) > 0.001){ row('🔗', 'Liên kết Ngũ hành', '×'+(Math.round(c.synM*1000)/1000), c.synM > 1 ? 'good' : 'bad'); await w(gap); if(!btAlive(st)) return; }
     if(c.vengeM > 1){ row('🌍', 'Báo thù (đồng đội cùng QG bị loại)', '×'+c.vengeM.toFixed(2), 'good'); await w(gap); if(!btAlive(st)) return; }
     if(c.passM > 1){ row('⚽', 'Chuyền 1-2 (dồn đòn)', '×'+c.passM.toFixed(2), 'good'); await w(gap); if(!btAlive(st)) return; }
+    if(c.isCombo){ row('🤝', 'Combo Chuyền ➜ Sút', '+15%', 'ok'); await w(gap); if(!btAlive(st)) return; }
+    if(c.isUlt){ row('⚡', 'Tuyệt Kỹ ' + escHtml(c.ultName), '+40%', 'ok'); await w(gap); if(!btAlive(st)) return; }
+    else if(c.psDmgBuff > 0){ row('💥', 'Playstyle tăng uy lực', '+' + Math.round(c.psDmgBuff * 100) + '%', 'ok'); await w(gap); if(!btAlive(st)) return; }
+    if(c.psPierce > 0){ row('🌀', 'Xuyên giáp Playstyle', Math.round(c.psPierce * 100) + '%', 'good'); await w(gap); if(!btAlive(st)) return; }
+    if(c.psMitigation > 0){ row('🛡️', 'Giảm sát thương (Playstyle)', '−' + Math.round(c.psMitigation * 100) + '%', 'bad'); await w(gap); if(!btAlive(st)) return; }
     if(c.bonusHit){ row('⏱️', 'Bù giờ (đánh sau)', '×'+c.bonusM.toFixed(2), 'good'); await w(gap); if(!btAlive(st)) return; }
     if(c.slowM < 1){ row('🐌', 'Đang bị làm chậm', '×'+c.slowM, 'bad'); await w(gap); if(!btAlive(st)) return; }
     if(c.special){ row('💥', 'CHIÊU ĐẶC BIỆT (Nộ khí đầy)', '×'+c.spM, 'good'); await w(gap); if(!btAlive(st)) return; }
@@ -12648,8 +13547,35 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
     var sk = btPickSkill(st, ai, evt.crit || evt.special), skName = '', skGold = false;
     if(sk){ var cfgS = BATTLE_CONFIG.skills && BATTLE_CONFIG.skills[sk.id]; skName = (cfgS && cfgS.vi) || sk.id; skGold = (sk.grade === 'G'); }
     else skName = 'Cú sút '+elementName(el);
-    var banner = btFx('<b>'+(evt.special ? '💥 ' : (skGold ? '🌟 ' : '✦ '))+escHtml(skName)+'</b><small>'+rar.ic+' '+escHtml(rarityLabel(A.battle.rarity))+' · Hệ '+escHtml(elementName(el))+'</small>', 'bt-skill'+(sk && !skGold ? ' s' : ''));
+    // Nhịp 1 Giai đoạn 4: Kích hoạt Tuyệt Kỹ Tím hoặc Combo trong 3v3
+    if(c.isUlt){
+      await btPlayUltimateCutscene(st, ai, { name: c.ultName });
+      if(!btAlive(st)) return;
+    }
+
+    var psCallout3 = '', psCol3 = rar.c;
+    if(c.isUlt){
+      psCallout3 = '⚡ ' + c.ultName;
+      psCol3 = '#C084FC';
+    } else if(c.isCombo){
+      psCallout3 = '🤝 COMBO CHUYỀN ➜ SÚT (+15%)';
+      psCol3 = '#F59E0B';
+    } else if(c.activePsName){
+      var pDef3 = (typeof PLAYSTYLES !== 'undefined') ? PLAYSTYLES.find(function(x){ return x.code === c.activePsName; }) : null;
+      var psName3 = pDef3 ? pDef3.name : c.activePsName;
+      var tierIcon3 = c.activePsLevel === 3 ? '👑 Tím' : (c.activePsLevel === 2 ? '🌟 Vàng' : '✦ Bạc');
+      psCallout3 = (pDef3 ? pDef3.emoji + ' ' : '') + psName3 + ' (' + tierIcon3 + ')';
+      var grpMap3 = { shoot:'#F97316', pass:'#0284C7', move:'#16A34A', tackle:'#9333EA' };
+      var grp3 = (typeof PLAYSTYLE_EFFECT_MAP !== 'undefined') ? (PLAYSTYLE_EFFECT_MAP['PLAYSTYLE_' + c.activePsName] || 'shoot') : 'shoot';
+      psCol3 = grpMap3[grp3] || '#38BDF8';
+    }
+
+    var banner = btFx('<b>'+(psCallout3 ? psCallout3 : (evt.special ? '💥 ' : (skGold ? '🌟 ' : '✦ ')) + escHtml(skName))+'</b><small>'+rar.ic+' '+escHtml(rarityLabel(A.battle.rarity))+' · Hệ '+escHtml(elementName(el))+'</small>', 'bt-skill'+(sk && !skGold ? ' s' : ''));
     banner.style.left = from.x+'px'; banner.style.top = (from.top + 14)+'px';
+    if(psCallout3){
+      banner.style.borderColor = psCol3;
+      banner.style.boxShadow = '0 0 14px ' + psCol3;
+    }
     btAnim(st, banner, [{transform:'translate(-50%,6px) scale(.6)', opacity:0}, {transform:'translate(-50%,0) scale(1.05)', opacity:1, offset:.2}, {transform:'translate(-50%,0) scale(1)', opacity:1, offset:.8}, {transform:'translate(-50%,-6px) scale(1)', opacity:0}], 900);
     var cardEl = document.querySelector('#battle-vs-row .battle-side[data-side="'+ai+'"] .player-card');
     var lvx = to.x - from.x, lvy = to.y - from.y, lvl = Math.sqrt(lvx*lvx + lvy*lvy) || 1;
@@ -12848,17 +13774,71 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
     return {gain:gain, levels:levels, won:won, oldOvr:oldOvr, newOvr:(fresh && fresh.ovr) || (oldOvr+levels), bonus:raw.ovrBonus, energy:raw.energy, road:road, fz:fz, frac:frac};
   }
   function hpBarClass(pct){ return pct > 0.5 ? '' : (pct > 0.2 ? 'mid' : 'low'); }
+  /* ===== GIAI ĐOẠN 3: THANH TUYỆT KỸ & CẮT CẢNH ĐIỆN ẢNH ===== */
+  function btUltBarHTML(idx, charges){
+    charges = Math.max(0, Math.min(3, charges || 0));
+    var isReady = (charges >= 3);
+    return '<div class="bt-ps-ult-bar'+(isReady?' ready':'')+'" id="bt-ps-ult-'+idx+'" title="Nộ khí Tuyệt Kỹ (3 vạch)">'
+      + '<div class="bt-ps-ult-seg s1'+(charges>=1?' filled':'')+'"></div>'
+      + '<div class="bt-ps-ult-seg s2'+(charges>=2?' filled':'')+'"></div>'
+      + '<div class="bt-ps-ult-seg s3'+(charges>=3?' filled':'')+'"></div>'
+      + '<span class="bt-ps-ult-label">'+(isReady ? '⚡ TUYỆT KỸ!' : 'NỘ '+charges+'/3')+'</span>'
+      + '</div>';
+  }
+  function btUpdateUltBar(idx, charges){
+    var el = document.getElementById('bt-ps-ult-' + idx);
+    if(!el) return;
+    charges = Math.max(0, Math.min(3, charges || 0));
+    var isReady = (charges >= 3);
+    el.className = 'bt-ps-ult-bar' + (isReady ? ' ready' : '');
+    var s1 = el.querySelector('.s1'), s2 = el.querySelector('.s2'), s3 = el.querySelector('.s3');
+    var lbl = el.querySelector('.bt-ps-ult-label');
+    if(s1) s1.classList.toggle('filled', charges >= 1);
+    if(s2) s2.classList.toggle('filled', charges >= 2);
+    if(s3) s3.classList.toggle('filled', charges >= 3);
+    if(lbl) lbl.textContent = isReady ? '⚡ TUYỆT KỸ!' : 'NỘ ' + charges + '/3';
+  }
+  function btPlayUltimateCutscene(st, side, ultInfo){
+    return new Promise(function(resolve){
+      if(!st || st.dead || st.skipping || (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches)){
+        resolve(); return;
+      }
+      var arena = btEl('bt-arena');
+      if(!arena){ resolve(); return; }
+      var card = (side === 0 ? st.cardA : st.cardB);
+      var cut = document.createElement('div');
+      cut.className = 'bt-ps-cutscene';
+      cut.innerHTML = '<button class="bt-ps-cutscene-skip">Bỏ qua ✕</button>'
+        + '<div class="bt-ps-cutscene-card">' + playerCardHTML(card, false) + '</div>'
+        + '<div class="bt-ps-cutscene-title">⚡ ' + escHtml(ultInfo.name || 'TUYỆT KỸ HOÀNG KIM') + ' ⚡</div>'
+        + '<div class="bt-ps-cutscene-sub">Đẳng cấp Huyền thoại thức tỉnh!</div>';
+      arena.appendChild(cut);
+
+      var done = false;
+      function finish(){
+        if(done) return;
+        done = true;
+        cut.remove();
+        resolve();
+      }
+      cut.querySelector('.bt-ps-cutscene-skip').onclick = finish;
+      setTimeout(finish, 1800 / st.speed);
+    });
+  }
+
   function battleCombatantHTML(card, sideState, label, idx){
     var pct = Math.max(0, sideState.hp / sideState.hpMax);
     var starTag = card.ovrBonus ? ' <span class="battle-star-tag">'+escHtml(battleBonusLabel(card.ovrBonus))+'</span>' : '';
     var el = card.battle && card.battle.element;
     var glow = (ELEMENT_COLORS[el] || ['#FDE047'])[0];
+    var ultCharges = (sideState && sideState.ultCharges) || 0;
     return '<div class="battle-side'+(sideState.hp<=0?' ko':'')+'" data-side="'+idx+'" style="--bt-glow:'+glow+'">'
       + playerCardHTML(card, false)
       + '<div class="battle-name">'+escHtml(label)+starTag+'</div>'
       + '<div class="battle-hp-track"><div class="battle-hp-ghost" id="bt-hp-ghost-'+idx+'" style="width:'+Math.round(pct*100)+'%"></div>'
       +   '<div class="battle-hp-fill '+hpBarClass(pct)+'" id="bt-hp-fill-'+idx+'" style="width:'+Math.round(pct*100)+'%"></div></div>'
       + '<div class="battle-hp-text" id="bt-hp-text-'+idx+'">'+Math.round(sideState.hp)+' / '+sideState.hpMax+' Thể lực</div>'
+      + btUltBarHTML(idx, ultCharges)
       + '</div>';
   }
   function battleLogRowHTML(evt, names){
