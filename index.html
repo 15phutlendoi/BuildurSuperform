@@ -3865,14 +3865,124 @@
   :is(#season-modal, #season-match) .fe-inj{ background:rgba(239,68,68,.12); color:#FCA5A5; }
   :is(#season-modal, #season-match) .fe-sub{ background:rgba(59,130,246,.16); }
   :is(#season-modal, #season-match) .fe-xt{ background:rgba(168,85,247,.2); font-weight:800; }
-  /* Độ hiển thị thẻ thẻ đỏ / chấn thương rõ ràng hơn để dễ chọn thay / đổi vị trí */
   #season-match .mx-d.gone{ opacity:.72; filter:grayscale(.35); border-radius:8% / 6%; box-shadow:0 0 12px rgba(239,68,68,.75); }
   #season-match .mx-d.gone::after{ content:'🟥'; position:absolute; top:-6px; right:-6px; z-index:25; font-size:13px; line-height:1; filter:drop-shadow(0 2px 4px rgba(0,0,0,.8)); }
   #season-match .mx-pitch.sub-on .mx-d.s0.gone{ cursor:pointer; }
-  #season-match .sb-t.off{ opacity:.68; filter:grayscale(.35); border:2px dashed #EF4444; cursor:pointer; }
-  #season-match .sb-t.inj{ opacity:.74; border-color:#F59E0B; }
+  :is(#season-modal, #season-match) .fe-ans{ background:rgba(139,92,246,.2); font-weight:800; }
+  :is(#season-modal, #season-match) .fe-fire{ background:rgba(249,115,22,.2); color:#FDBA74; font-weight:800; }
+  :is(#season-modal, #season-match) .fe-ht,:is(#season-modal, #season-match) .fe-ft{ background:rgba(148,163,184,.24); font-weight:900; }
+  :is(#season-modal, #season-match) .fe-in{ animation:feIn .35s ease both; }
+  @keyframes feIn{ from{ opacity:0; transform:translateY(8px); } to{ opacity:1; transform:none; } }
+  :is(#season-modal, #season-match) .fe-goal.fe-in{ animation:feGoal .6s cubic-bezier(.3,1.5,.5,1) both; }
+  @keyframes feGoal{ 0%{ transform:scale(.7); opacity:0; } 100%{ transform:scale(1); opacity:1; } }
+  :is(#season-modal, #season-match) .fe.typing .fe-t{ color:transparent; position:relative; } :is(#season-modal, #season-match) .fe.typing .fe-t b{ color:transparent; }
+  :is(#season-modal, #season-match) .fe.typing .fe-t::after{ content:'• • •'; color:var(--ink-soft); position:absolute; left:0; top:0; letter-spacing:2px; animation:mtLive 1s infinite; }
+  :is(#season-modal, #season-match) .mt-skiprow{ text-align:right; margin-top:4px; }
+  :is(#season-modal, #season-match) .mt-skip{ border:0; border-radius:9px; padding:5px 10px; font-size:12px; font-weight:800; background:rgba(148,163,184,.22); color:var(--ink); cursor:pointer; }
+  :is(#season-modal, #season-match) .mt-pdet{ margin:6px 0; } :is(#season-modal, #season-match) .mt-pdet summary{ font-size:12px; color:var(--ink-soft); cursor:pointer; margin-bottom:6px; }
+  :is(#season-modal, #season-match) .mt-words{ margin:10px 0 2px; } :is(#season-modal, #season-match) .mt-wt{ font-size:12.5px; font-weight:900; margin-bottom:6px; }
+  :is(#season-modal, #season-match) .mt-wc{ display:inline-block; margin:0 6px 6px 0; padding:4px 9px; border-radius:99px; border:1px solid var(--glass-line); background:var(--glass-soft); font-size:12.5px; }
+  :is(#season-modal, #season-match) .mt-wc b{ color:var(--gold); }
+  @media (prefers-reduced-motion:reduce){ :is(#season-modal, #season-match) .fe-in,:is(#season-modal, #season-match) .fe-goal.fe-in,:is(#season-modal, #season-match) .mt-live .lv,:is(#season-modal, #season-match) .fe.typing .fe-t::after{ animation:none; } :is(#season-modal, #season-match) .mt-feed{ scroll-behavior:auto; } }
+  #season-match{ scroll-margin-top:72px; padding:0 0 28px; }
+  /* ---- Màn ra sân (sân ngang, tối ưu iPad) ---- */
+  #season-match .in-head{ position:relative; padding-right:36px; margin-bottom:6px; }
+  #season-match .in-teams{ display:flex; align-items:center; justify-content:space-between; gap:8px; font-size:16px; }
+  #season-match .in-teams span{ color:var(--gold); font-weight:900; }
+  #season-match .in-meta{ font-size:12px; color:var(--ink-soft); text-align:center; margin-top:2px; }
+  #season-match .in-wxfx{ display:flex; flex-wrap:wrap; gap:4px; margin-top:5px; }
+  #season-match .wxc{ font-size:11px; font-weight:800; padding:2px 7px; border-radius:99px; border:1px solid var(--glass-line); }
+  #season-match .wxc.up{ color:#34D399; border-color:rgba(52,211,153,.55); background:rgba(16,185,129,.14); }
+  #season-match .wxc.dn{ color:#F87171; border-color:rgba(248,113,113,.55); background:rgba(239,68,68,.12); }
+  #season-match .in-wxsum{ font-size:11.5px; color:var(--ink-soft); margin-top:4px; line-height:1.45; }
+  :is(#season-modal, #season-match) .wx-b{ font-size:10px; font-weight:900; margin-left:3px; white-space:nowrap; }
+  :is(#season-modal, #season-match) .wx-b.up{ color:#34D399; } :is(#season-modal, #season-match) .wx-b.dn{ color:#F87171; }
+  #season-match .in-cap{ text-align:center; font-weight:900; font-size:16px; color:var(--gold); min-height:26px; margin:4px 0; }
+  #season-match .in-scroll{ overflow-x:auto; padding:6px 0 4px; }
+  #season-match .in-field{ margin:0 auto; position:relative; }
+  #season-match .in-pitch{ position:relative; width:100%; aspect-ratio:105/68; }
+  #season-match .in-grass{ position:absolute; inset:0; border-radius:14px; overflow:hidden; background:repeating-linear-gradient(90deg,#2E8B4A 0 8.333%,#277A40 8.333% 16.666%); box-shadow:0 10px 24px rgba(0,0,0,.45), inset 0 0 0 3px rgba(255,255,255,.18); }
+  #season-match .in-grass::after{ content:''; position:absolute; inset:0; background:linear-gradient(90deg,rgba(56,189,248,.16),transparent 38%,transparent 62%,rgba(239,68,68,.16)); }
+  #season-match .in-grass svg{ position:absolute; inset:0; width:100%; height:100%; }
+  #season-match .in-slot{ position:absolute; width:var(--cw,60px); transform:translate(-50%,-50%); }
+  #season-match .in-bench{ display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:20px; }
+  #season-match .in-bhalf{ position:relative; display:flex; justify-content:space-around; align-items:center; gap:4px; padding:8px 4px 6px; border-radius:12px; background:rgba(15,23,42,.55); border:1px solid var(--glass-line); min-height:calc(var(--bw,40px) / .74 + 14px); }
+  #season-match .in-bhalf::before{ content:attr(data-t); position:absolute; top:-15px; left:6px; font-size:11px; font-weight:800; color:var(--ink-soft); white-space:nowrap; }
+  #season-match .in-bslot{ width:var(--bw,40px); }
+  #season-match .in-card{ position:relative; width:100%; aspect-ratio:var(--fc-ar,.74); perspective:700px; opacity:0; will-change:transform; }
+  #season-match .in-inner{ position:absolute; inset:0; transform-style:preserve-3d; transition:transform .65s cubic-bezier(.3,.7,.3,1); }
+  #season-match .in-card.flip .in-inner{ transform:rotateY(180deg); }
+  #season-match .in-back,#season-match .in-face{ position:absolute; inset:0; backface-visibility:hidden; -webkit-backface-visibility:hidden; border-radius:8% / 6%; overflow:hidden; }
+  #season-match .in-back{ display:flex; align-items:center; justify-content:center; background:repeating-linear-gradient(45deg,#1E3A5F,#1E3A5F 6px,#173050 6px,#173050 12px); border:2px solid var(--gold); box-shadow:0 4px 10px rgba(0,0,0,.45); }
+  #season-match .in-back i{ font-style:normal; font-size:calc(var(--cw,60px) * .4); }
+  #season-match .in-face{ transform:rotateY(180deg); filter:drop-shadow(0 3px 5px rgba(0,0,0,.5)); }
+  #season-match .in-bslot .in-back i{ font-size:calc(var(--bw,40px) * .4); }
+  #season-match .in-txt{ display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%; text-align:center; background:#0B1B2A; font-size:10px; gap:2px; padding:3px; }
+  #season-match .in-txt em{ font-style:normal; font-weight:900; color:var(--gold); }
+  #season-match .in-btns{ display:flex; gap:10px; margin-top:12px; justify-content:center; align-items:center; }
+  #season-match .in-skipb{ flex:0 0 auto; padding:0 16px; }
+  #season-match .in-kick{ min-width:240px; min-height:56px; border:0; border-radius:16px; font-size:19px; font-weight:900; letter-spacing:.02em; cursor:pointer; color:#fff; background:linear-gradient(135deg,#EF4444,#F59E0B); box-shadow:0 6px 18px rgba(239,68,68,.35); }
+  #season-match .in-kick:disabled{ background:rgba(148,163,184,.25); color:var(--ink-soft); box-shadow:none; cursor:default; }
+  #season-match .in-kick.ready{ animation:inPulse 1.1s ease-in-out infinite; }
+  #season-match .in-kick.go{ background:#F8FAFC; color:#0F172A; }
+  @keyframes inPulse{ 0%,100%{ transform:scale(1); } 50%{ transform:scale(1.06); } }
+  @media (prefers-reduced-motion:reduce){ #season-match .in-kick.ready{ animation:none; } #season-match .in-inner{ transition:none; } }
 
-  /* Thứ tự hiển thị z-index: thẻ tham gia pha bóng (.on) LUÔN NẰM TRÊN thẻ không tham gia; thẻ user (s0) LUÔN NẰM TRÊN thẻ đối thủ (s1) */
+  /* ===== Bản tin Phong cách HLV ===== */
+  :is(#season-view,#season-modal,#season-match) .nw-wrap{ container-type:inline-size; margin-top:8px; }
+  :is(#season-view,#season-modal,#season-match) .nw{ display:grid; grid-template-columns:minmax(0,1.1fr) minmax(0,1fr); gap:14px; padding:12px; border-radius:16px; background:var(--glass-soft); border:1px solid var(--glass-line); }
+  :is(#season-view,#season-modal,#season-match) .nw-i{ display:flex; flex-direction:column; gap:9px; min-width:0; }
+  :is(#season-view,#season-modal,#season-match) .nw-h{ margin:0; font-family:var(--font-display); font-size:22px; line-height:1.1; }
+  :is(#season-view,#season-modal,#season-match) .nw-lead{ margin:0; font-size:13px; line-height:1.5; }
+  :is(#season-view,#season-modal,#season-match) .nw-sec b{ display:block; font-size:13px; margin-bottom:5px; color:var(--gold); }
+  :is(#season-view,#season-modal,#season-match) .nw-sec ol{ margin:0; padding:0; list-style:none; display:grid; gap:6px; }
+  :is(#season-view,#season-modal,#season-match) .nw-sec li{ display:grid; grid-template-columns:22px 1fr; gap:8px; font-size:12.5px; line-height:1.4; }
+  :is(#season-view,#season-modal,#season-match) .nw-sec li em{ width:20px; height:20px; border-radius:50%; display:grid; place-items:center; font-style:normal; font-weight:900; font-size:11px; background:#FBBF24; color:#1c1305; }
+  :is(#season-view,#season-modal,#season-match) .nw-coach{ display:flex; gap:10px; align-items:center; padding:8px 10px; border-radius:12px; background:rgba(15,23,42,.45); border:1px solid var(--glass-line); }
+  :is(#season-view,#season-modal,#season-match) .nw-av{ flex:none; width:44px; height:44px; border-radius:50%; display:grid; place-items:center; font-weight:900; background:linear-gradient(135deg,var(--gold),var(--gold-dark)); color:#1c1305; }
+  :is(#season-view,#season-modal,#season-match) .nw-coach > div:last-child{ display:grid; gap:1px; font-size:12px; min-width:0; }
+  :is(#season-view,#season-modal,#season-match) .nw-coach b{ font-size:14px; }
+  :is(#season-view,#season-modal,#season-match) .nw-coach small{ color:var(--ink-soft); }
+  :is(#season-view,#season-modal,#season-match) .nw-hn{ margin:0; padding-left:2px; list-style:none; font-size:12.5px; line-height:1.45; display:grid; gap:3px; }
+  :is(#season-view,#season-modal,#season-match) .nw-fx{ display:grid; gap:2px; }
+  :is(#season-view,#season-modal,#season-match) .nw-b{ margin:0; display:flex; flex-direction:column; gap:6px; min-width:0; }
+  :is(#season-view,#season-modal,#season-match) .nw-pitch{ position:relative; aspect-ratio:100/140; border-radius:12px; overflow:hidden; background:repeating-linear-gradient(0deg,#2E8B4A 0 12.5%,#277A40 12.5% 25%); box-shadow:inset 0 0 0 3px rgba(255,255,255,.16); }
+  :is(#season-view,#season-modal,#season-match) .nw-pitch svg{ position:absolute; inset:0; width:100%; height:100%; }
+  :is(#season-view,#season-modal,#season-match) .nw-b figcaption{ font-size:11px; color:var(--ink-soft); text-align:center; line-height:1.5; }
+  :is(#season-view,#season-modal,#season-match) .lg{ font-weight:800; white-space:nowrap; }
+  :is(#season-view,#season-modal,#season-match) .lg::before{ content:''; display:inline-block; width:14px; border-top:2px solid; margin-right:4px; vertical-align:middle; }
+  :is(#season-view,#season-modal,#season-match) .lg.p{ color:#FBBF24; } :is(#season-view,#season-modal,#season-match) .lg.p::before{ border-top-style:dashed; }
+  :is(#season-view,#season-modal,#season-match) .lg.m{ color:#F8FAFC; } :is(#season-view,#season-modal,#season-match) .lg.d{ color:#F87171; }
+  :is(#season-view,#season-modal,#season-match) .nw-d{ margin-top:8px; } :is(#season-view,#season-modal,#season-match) .nw-d summary{ cursor:pointer; font-weight:800; font-size:13px; min-height:36px; display:flex; align-items:center; }
+  @container (max-width:520px){ .nw{ grid-template-columns:1fr; } .nw-b{ order:-1; max-width:250px; width:100%; margin:0 auto; } }
+  /* ===== Ra sân + trận đấu: sân dọc bên TRÁI, thông tin bên PHẢI, vừa một màn hình iPad ===== */
+  #season-match .in-wrap,#season-match .mx{ display:grid; grid-template-columns:var(--pw,300px) minmax(0,1fr); gap:14px; }
+  #season-match .in-l,#season-match .mx-l{ display:flex; flex-direction:column; gap:6px; min-width:0; overflow-y:auto; overscroll-behavior:contain; scroll-behavior:smooth; padding-right:4px; }
+  #season-match .in-r,#season-match .mx-r{ position:relative; min-width:0; order:-1; }
+  #season-match .in-pitch,#season-match .mx-pitch{ position:relative; width:100%; aspect-ratio:68/105; }
+  #season-match .in-grass{ background:repeating-linear-gradient(0deg,#2E8B4A 0 8.333%,#277A40 8.333% 16.666%); }
+  #season-match .in-grass::after{ background:linear-gradient(0deg,rgba(56,189,248,.16),transparent 38%,transparent 62%,rgba(239,68,68,.16)); }
+  #season-match .in-teams{ flex-direction:column; align-items:flex-start; gap:2px; font-size:17px; }
+  #season-match .in-meta,#season-match .in-cap{ text-align:left; }
+  #season-match .in-tac{ display:grid; gap:2px; font-size:12px; color:var(--ink-soft); margin-top:4px; }
+  #season-match .in-bench{ grid-template-columns:1fr; gap:24px; margin-top:14px; }
+  #season-match .in-bhalf{ flex-wrap:wrap; justify-content:flex-start; gap:6px; }
+  #season-match .in-btns{ margin-top:auto; flex-direction:column; align-items:stretch; }
+  #season-match .in-kick{ min-width:0; width:100%; }
+  #season-match .mx-tag{ position:absolute; left:6px; max-width:58%; overflow:hidden; text-overflow:ellipsis; font-size:11px; font-weight:900; padding:2px 8px; border-radius:99px; background:rgba(15,23,42,.72); color:#fff; white-space:nowrap; z-index:2; }
+  #season-match .mx-tag.t1{ top:5px; } #season-match .mx-tag.t0{ bottom:5px; }
+  /* mỗi cầu thủ trên sân = chính thẻ cầu thủ (fcCardHTML); chuyển động bằng transform do mxPut đặt (đạo diễn trận đấu) */
+  #season-match .mx-d{ position:absolute; left:0; top:0; width:var(--cwp,12%); z-index:10; will-change:transform; transform:translate(-50%,-50%);
+    transition:opacity .3s, transform var(--d,.9s) var(--e,cubic-bezier(.45,.05,.25,1)) var(--dl,0s); }
+  /* Tối ưu phần cứng: không dùng contain:paint để tránh cắt cụt thẻ khi phóng to/lắc lư */
+  #season-match .mx-d{ contain:layout style; overflow:visible !important; -webkit-backface-visibility:hidden; backface-visibility:hidden; }
+  #season-match .mx-c{ position:relative; width:100%; transform-origin:50% 60%; transition:transform .28s cubic-bezier(.2,.8,.3,1); will-change:transform; overflow:visible !important; }
+  #season-match .mx-c .fc-card{ display:block; box-shadow:0 3px 8px rgba(0,0,0,.65), 0 0 1px rgba(255,255,255,.4); border-radius:8% / 6%; overflow:visible !important; }
+  #season-match .mx-c .in-txt{ height:auto; aspect-ratio:var(--fc-ar,.74); border-radius:8% / 6%; border:1.5px solid var(--sc,#fff); }
+  #season-match .mx-o{ position:absolute; z-index:5; right:-14%; bottom:7%; display:grid; place-items:center; min-width:calc(var(--cw,50px) * .46); height:calc(var(--cw,50px) * .3); padding:0 calc(var(--cw,50px) * .06); border-radius:99px; font-size:max(9px, calc(var(--cw,50px) * .2)); font-weight:900; line-height:1; font-variant-numeric:tabular-nums; color:#fff; background:#2563EB; border:2px solid var(--sc,#fff); box-shadow:0 2px 5px rgba(0,0,0,.6); }
+  #season-match .mx-d.s1 .mx-o{ background:#DC2626; }
+  #season-match .mx-pitch.act .mx-d:not(.on){ opacity:.74; }
+  /* Phân cấp z-index: thẻ tham gia pha bóng (.on) LUÔN NẰM TRÊN thẻ không tham gia; thẻ user (s0) LUÔN NẰM TRÊN thẻ đối thủ (s1) */
   #season-match .mx-d.s1{ z-index:10; }
   #season-match .mx-d.s0{ z-index:16; }
   #season-match .mx-d.s1.on{ z-index:50 !important; }
@@ -3882,8 +3992,6 @@
   #season-match .mx-d.mv .mx-c .fc-card{ box-shadow:0 6px 14px rgba(0,0,0,.65); }
   #season-match .mx-d.mv:not(.on) .mx-c{ transform:translateY(-4%) scale(1.05); }
   #season-match .mx-pitch.key .mx-d.on .mx-c{ animation:mxPulse 1.1s ease-in-out infinite; }
-  #season-match .mx-d.s1.hero{ z-index:70 !important; }
-  #season-match .mx-d.s0.hero{ z-index:76 !important; }
   #season-match .mx-d.s1.cele{ z-index:80 !important; }
   #season-match .mx-d.s0.cele{ z-index:86 !important; }
   #season-match .mx-d.cele .mx-c{ animation:mxCele .55s ease-in-out infinite; }
@@ -3892,6 +4000,8 @@
   #season-match .mx-d.sad .mx-c .fc-card{ filter:grayscale(.75); box-shadow:0 2px 4px rgba(0,0,0,.5); }
   #season-match .mx-d.shk .mx-c{ animation:mxShake .5s ease-in-out 2; }
   #season-match .mx-d.shk .mx-c .fc-card{ filter:grayscale(.45); }
+  #season-match .mx-d.s1.hero{ z-index:70 !important; }
+  #season-match .mx-d.s0.hero{ z-index:76 !important; }
   #season-match .mx-d.hero{ z-index:72 !important; }
   #season-match .mx-d.hero .mx-c{ transform:scale(1.12); }
   #season-match .mx-d.hero .mx-c .fc-card{ box-shadow:0 0 0 2px #fff, 0 0 18px 5px #22D3EE, 0 6px 14px rgba(0,0,0,.7); }
