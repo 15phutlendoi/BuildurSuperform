@@ -23233,7 +23233,8 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
       setTimeout(function(){ clearInterval(iv); if(el && sc >= 8) el.classList.add('hi'); resolve(); }, 1500);
     });
   }
-  async function sMatchNext(auto){   // auto = true: hết giờ nghỉ, tự chạy (bỏ lựa chọn chưa xác nhận, không hỏi lại)
+  async function sMatchNext(auto){
+    seAnthemStop();   // auto = true: hết giờ nghỉ, tự chạy (bỏ lựa chọn chưa xác nhận, không hỏi lại)
     var c = sMC; if(c && c.lv) return frlGo(auto);
     if(!c || c.busy) return; var m = c.m, tok = c.tok; sBrkStop(c);
     if(c.pend && c.pend.length && m.phase === 'break') sSubApply(c);   // 4.4: hết giờ nghỉ = mặc định xác nhận các lượt thay đã chọn
