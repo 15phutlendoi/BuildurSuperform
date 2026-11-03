@@ -1828,26 +1828,271 @@
   @keyframes cmPulse{ 0%,100%{ box-shadow:0 0 0 0 rgba(253,224,71,.8),0 4px 10px rgba(0,0,0,.45); } 50%{ box-shadow:0 0 0 12px rgba(253,224,71,0),0 4px 10px rgba(0,0,0,.45); } }
   @keyframes cmBounce{ 0%,100%{ transform:translate(-50%,0); } 50%{ transform:translate(-50%,-6px); } }
   @media (prefers-reduced-motion: reduce){ .cm-node.cur .cm-ball, .cm-pin{ animation:none; } }
-  /* cửa hàng đổi mảnh ghép */
-  .cm-shop{ position:fixed; inset:0; z-index:9998; display:none; align-items:flex-start; justify-content:center; padding:14px 10px; overflow-y:auto; background:rgba(2,6,23,.86); -webkit-overflow-scrolling:touch; }
-  .cm-shop.on{ display:flex; }
-  .cm-shop-box{ width:100%; max-width:720px; padding:14px; border-radius:18px; color:#fff; background:linear-gradient(180deg,#14213A,#0B1220); border:2px solid #FDE047; }
-  .cm-shop-top{ display:flex; align-items:center; justify-content:space-between; font-size:17px; }
-  .cm-shop-x{ width:38px; height:38px; border:none; border-radius:50%; background:#334155; color:#fff; font-size:17px; cursor:pointer; }
-  .cm-shop-bal{ margin:8px 0; padding:9px 12px; border-radius:12px; font-weight:800; background:rgba(253,224,71,.14); border:1px solid rgba(253,224,71,.5); }
-  .cm-shop-bal b{ color:#FDE047; font-size:18px; }
-  .cm-shop-tiers{ display:flex; flex-wrap:wrap; gap:6px 12px; margin:0 0 10px; font-size:11.5px; font-weight:700; color:#CBD5E1; }
-  .cm-shop-tiers b{ color:#FDE047; }
-  .cm-shelf{ margin:0 0 12px; padding:10px; border-radius:14px; background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.14); }
-  .cm-shelf-h{ display:flex; align-items:center; gap:8px; margin:0 0 8px; font-weight:900; font-size:14px; }
-  .cm-shelf-img{ width:28px; height:28px; object-fit:contain; }
-  .cm-shelf-row{ display:grid; grid-template-columns:repeat(auto-fill,minmax(112px,1fr)); gap:10px; }
-  .cm-item{ display:flex; flex-direction:column; align-items:center; gap:4px; text-align:center; }
-  .cm-item-card{ width:96px; } .cm-item-card .player-card{ pointer-events:none; }
-  .cm-item-name{ font-size:12px; font-weight:800; line-height:1.2; }
-  .cm-item-tier{ font-size:11px; font-weight:800; color:#FDE047; }
-  .cm-buy{ width:100%; border:0; border-radius:99px; padding:7px 6px; font:inherit; font-weight:900; font-size:12px; cursor:pointer; color:#3d2500; background:linear-gradient(180deg,#FFF0A8,#F5A300); }
-  .cm-buy.no{ color:#E2E8F0; background:#475569; } .cm-buy.have{ color:#86EFAC; background:rgba(34,197,94,.18); cursor:default; }
+  /* ===== Toolbar Hành Trình: Stepper chọn chương & Nút đổi thưởng cùng hàng ===== */
+  .cm-toolbar{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin: 8px 0 12px 0;
+    flex-wrap: wrap;
+  }
+  .cm-ch-stepper{
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: rgba(15, 23, 42, 0.88);
+    border: 1.5px solid rgba(245, 158, 11, 0.5);
+    border-radius: 99px;
+    padding: 3px 6px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45);
+  }
+  .cm-step-btn{
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    background: rgba(255, 255, 255, 0.1);
+    color: #F8FAFC;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.12s, background 0.15s;
+    user-select: none;
+  }
+  .cm-step-btn:hover:not(:disabled){
+    background: rgba(245, 158, 11, 0.35);
+    border-color: #FDE047;
+    transform: scale(1.08);
+  }
+  .cm-step-btn:active:not(:disabled){
+    transform: scale(0.92);
+  }
+  .cm-step-btn:disabled{
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+  .cm-ch-display{
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 2px 10px;
+    cursor: pointer;
+  }
+  .cm-ch-icon{
+    font-size: 20px;
+    filter: drop-shadow(0 1px 3px rgba(0,0,0,0.5));
+  }
+  .cm-ch-text{
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    line-height: 1.2;
+  }
+  .cm-ch-num{
+    font-size: 10px;
+    font-weight: 900;
+    letter-spacing: 0.5px;
+    color: #FDE047;
+  }
+  .cm-ch-name{
+    font-size: 13.5px;
+    font-weight: 800;
+    color: #FFFFFF;
+    white-space: nowrap;
+    max-width: 170px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .cm-ch-arrow{
+    font-size: 11px;
+    color: var(--ink-soft);
+    margin-left: 2px;
+  }
+  .cm-ch-select{
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+  }
+
+  .cm-frag-btn{
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 16px 5px 12px;
+    border-radius: 99px;
+    border: 1.5px solid #F59E0B;
+    background: linear-gradient(135deg, #78350F 0%, #B45309 50%, #D97706 100%);
+    box-shadow: 0 4px 14px rgba(245, 158, 11, 0.4), 0 0 10px rgba(251, 191, 36, 0.3);
+    cursor: pointer;
+    color: #FFF;
+    transition: transform 0.12s, box-shadow 0.15s;
+  }
+  .cm-frag-btn:hover{
+    transform: scale(1.04);
+    box-shadow: 0 6px 18px rgba(245, 158, 11, 0.55), 0 0 14px rgba(251, 191, 36, 0.45);
+  }
+  .cm-frag-btn:active{ transform: scale(0.96); }
+  .cm-frag-icon{
+    font-size: 20px;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+  }
+  .cm-frag-text{
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    line-height: 1.2;
+  }
+  .cm-frag-label{
+    font-size: 10px;
+    font-weight: 900;
+    color: #FEF08A;
+    letter-spacing: 0.5px;
+  }
+  .cm-frag-val{
+    font-size: 14.5px;
+    font-weight: 900;
+    color: #FFFFFF;
+  }
+
+  /* Modal đổi thưởng chương */
+  .cm-shop{
+    position: fixed; inset: 0; z-index: 10050;
+    display: none; align-items: center; justify-content: center;
+    padding: 16px 12px; overflow-y: auto;
+    background: rgba(2, 6, 23, 0.88); backdrop-filter: blur(8px);
+    -webkit-overflow-scrolling: touch;
+  }
+  .cm-shop.on{ display: flex; animation: cmShopIn 0.25s ease-out; }
+  @keyframes cmShopIn{ from{ opacity: 0; transform: scale(0.96); } to{ opacity: 1; transform: scale(1); } }
+
+  .cm-shop-box{
+    width: 100%; max-width: 760px; max-height: 90vh; max-height: 90dvh;
+    overflow-y: auto; padding: 18px 20px; border-radius: 22px; color: #fff;
+    background: linear-gradient(180deg, #131E35 0%, #0B1220 100%);
+    border: 2px solid #F59E0B;
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.75), 0 0 24px rgba(245, 158, 11, 0.3);
+  }
+  .cm-shop-head{
+    display: flex; align-items: flex-start; justify-content: space-between; gap: 12px;
+    margin-bottom: 12px;
+  }
+  .cm-shop-title{
+    font-size: 18px; font-weight: 900; color: #FDE047;
+    line-height: 1.3;
+  }
+  .cm-shop-sub{
+    font-size: 12.5px; font-weight: 700; color: #CBD5E1; margin-top: 3px;
+  }
+  .cm-shop-close{
+    width: 36px; height: 36px; border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    background: rgba(255, 255, 255, 0.1); color: #fff;
+    font-size: 16px; font-weight: 900; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .cm-shop-close:hover{ background: rgba(239, 68, 68, 0.35); border-color: #F87171; }
+
+  .cm-shop-status{
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 10px; flex-wrap: wrap; padding: 10px 14px; border-radius: 14px;
+    background: rgba(245, 158, 11, 0.14); border: 1px solid rgba(245, 158, 11, 0.45);
+    margin-bottom: 14px;
+  }
+  .cm-shop-bal-txt{
+    font-size: 14px; font-weight: 800; color: #FEF08A;
+  }
+  .cm-shop-bal-txt b{
+    font-size: 18px; color: #FFF; margin-left: 2px;
+  }
+
+  .cm-shop-grid5{
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  @media (max-width: 640px){
+    .cm-shop-grid5{
+      grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+      gap: 10px;
+    }
+  }
+
+  .cm-shop-card-item{
+    display: flex; flex-direction: column; align-items: center;
+    gap: 6px; text-align: center; padding: 10px 8px; border-radius: 16px;
+    background: rgba(15, 23, 42, 0.65); border: 1.5px solid rgba(148, 163, 184, 0.25);
+    transition: transform 0.15s, border-color 0.15s;
+  }
+  .cm-shop-card-item:hover{
+    border-color: rgba(245, 158, 11, 0.6);
+    transform: translateY(-3px);
+  }
+  .cm-shop-card-wrap{
+    width: 100%; max-width: 110px;
+  }
+  .cm-shop-card-wrap .player-card{
+    pointer-events: none;
+  }
+  .cm-shop-item-name{
+    font-size: 12.5px; font-weight: 800; color: #F8FAFC;
+    line-height: 1.25; max-width: 110px; overflow: hidden;
+    text-overflow: ellipsis; white-space: nowrap;
+  }
+  .cm-shop-item-meta{
+    font-size: 11px; font-weight: 800; color: #FDE047;
+  }
+  .cm-buy-btn{
+    width: 100%; border: 0; border-radius: 99px;
+    padding: 7px 8px; font: inherit; font-weight: 900;
+    font-size: 12px; cursor: pointer; transition: transform 0.12s;
+  }
+  .cm-buy-btn.can{
+    background: linear-gradient(135deg, #F59E0B, #D97706);
+    color: #3D2500;
+    box-shadow: 0 2px 8px rgba(245, 158, 11, 0.5);
+  }
+  .cm-buy-btn.can:hover{ transform: scale(1.04); }
+  .cm-buy-btn.have{
+    background: rgba(34, 197, 94, 0.2);
+    color: #86EFAC;
+    border: 1px solid rgba(74, 222, 128, 0.4);
+    cursor: default;
+  }
+  .cm-buy-btn.no{
+    background: #334155;
+    color: #94A3B8;
+    cursor: not-allowed;
+  }
+
+  .cm-shop-refresh-row{
+    display: flex; flex-direction: column; align-items: center;
+    gap: 8px; padding-top: 10px; border-top: 1px dashed rgba(148, 163, 184, 0.3);
+  }
+  .cm-refresh-btn{
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 9px 22px; border-radius: 99px; border: 1.5px solid #38BDF8;
+    background: linear-gradient(135deg, #0284C7 0%, #0369A1 100%);
+    color: #FFF; font-weight: 900; font-size: 13.5px;
+    cursor: pointer; box-shadow: 0 4px 14px rgba(2, 132, 199, 0.45);
+    transition: transform 0.12s, box-shadow 0.15s;
+  }
+  .cm-refresh-btn:hover{
+    transform: scale(1.04);
+    box-shadow: 0 6px 18px rgba(2, 132, 199, 0.6);
+  }
+  .cm-refresh-btn:active{ transform: scale(0.96); }
+  .cm-refresh-note{
+    font-size: 11.5px; font-weight: 700; color: #94A3B8;
+    text-align: center; line-height: 1.4;
+  }
   .cm-reveal{ position:fixed; inset:0; z-index:10000; display:flex; align-items:center; justify-content:center; padding:16px; background:rgba(2,6,23,.9); }
   .cm-rv-box{ display:flex; flex-direction:column; align-items:center; gap:10px; max-width:340px; width:100%; padding:18px; border-radius:20px; text-align:center; color:#fff; background:linear-gradient(180deg,#1E3A5F,#0B1220); border:2px solid #FDE047; animation:cmRv .5s cubic-bezier(.2,1.4,.4,1) both; }
   .cm-rv-t{ font-size:20px; font-weight:900; color:#FDE047; } .cm-rv-card{ width:170px; } .cm-rv-n{ font-size:13px; font-weight:700; }
@@ -14194,7 +14439,7 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
   var FRAG_PER_NODE = [2, 2, 3, 3, 4, 4, 5, 5, 6];
   var FRAG_BOSS = 16;
   var FRAG_CH_SCALE = 0.12;
-  var FRAG_TIERS = [   // top = tỉ lệ xếp hạng OVR (0.05 = nằm trong 5% cao nhất)
+  var FRAG_TIERS = [
     {top:0.05, price:240, label:'Huyền thoại', icon:'💎'},
     {top:0.15, price:150, label:'Xuất sắc',    icon:'🥇'},
     {top:0.35, price:90,  label:'Giỏi',        icon:'🥈'},
@@ -14203,10 +14448,28 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
   ];
   var ROADMAP_THEME_NAMES = {};   // (tuỳ chọn) đặt tên chủ đề
   var COMIC_CHAPTERS = 1;         // số chương đã có ảnh truyện tranh trên Cloudinary
+
+  /* Yêu cầu 3: Chương càng khó số mảnh đạt được càng nhiều vượt trội */
   function fragReward(n){
-    var ch = Math.ceil(n/10), k = ((n-1)%10)+1;
-    var base = k === 10 ? FRAG_BOSS : FRAG_PER_NODE[k-1];
-    return Math.max(1, Math.round(base * (1 + FRAG_CH_SCALE*(ch-1))));
+    var ch = Math.ceil(n / 10), k = ((n - 1) % 10) + 1;
+    var chMult = 1 + (ch - 1) * 0.25 + Math.pow(ch - 1, 1.45) * 0.055;
+    if(k === 10){
+      return Math.round(24 * chMult); // Boss chương nhận thưởng cực lớn xứng tầm thử thách
+    }
+    var nodeBase = 2.5 + (k - 1) * 0.55;
+    return Math.max(2, Math.round(nodeBase * chMult));
+  }
+
+  /* Yêu cầu 2: Cấu trúc mảnh đổi phù hợp với Overall và Rarity của toàn bộ số lượng thẻ */
+  function fragPrice(p){
+    if(!p) return 30;
+    var ovr = p.realOvr || p.ovr || 75;
+    var rar = (p.battle && p.battle.rarity) || 'LIVE';
+    var rMult = (rar === 'SIG') ? 1.55 : ((rar === 'ICON') ? 1.35 : ((rar === 'RARE') ? 1.15 : 1.0));
+    var diff = Math.max(0, ovr - 68);
+    var raw = 25 + Math.pow(diff / 27, 2.1) * 200;
+    var finalP = Math.round((raw * rMult) / 5) * 5;
+    return Math.max(25, Math.min(350, finalP));
   }
   function roadmapRaw(){ var p = safeGet(ROADMAP_KEY); return (p && typeof p === 'object') ? p : {}; }
   function roadmapProgress(){
@@ -14481,10 +14744,13 @@ function roadmapIcon(def, locked){
     var R = roadmapRef();
     if(!_rmOvr) _rmOvr = R.pool.map(function(p){ return p.realOvr || 0; }).sort(function(a,b){ return a-b; });
     var a = _rmOvr, v = (base && base.realOvr) || 0, lo = 0, hi = a.length;
-    while(lo < hi){ var mid = (lo + hi) >> 1; if(a[mid] <= v) lo = mid + 1; else hi = mid; }   // lo = số thẻ có OVR ≤ v
-    var top = a.length ? (a.length - lo) / a.length : 1;                                    // tỉ lệ thẻ CAO HƠN
-    for(var i = 0; i < FRAG_TIERS.length; i++){ if(top < FRAG_TIERS[i].top) return FRAG_TIERS[i]; }
-    return FRAG_TIERS[FRAG_TIERS.length-1];
+    while(lo < hi){ var mid = (lo + hi) >> 1; if(a[mid] <= v) lo = mid + 1; else hi = mid; }
+    var top = a.length ? (a.length - lo) / a.length : 1;
+    var res = FRAG_TIERS[FRAG_TIERS.length-1];
+    for(var i = 0; i < FRAG_TIERS.length; i++){
+      if(top < FRAG_TIERS[i].top){ res = FRAG_TIERS[i]; break; }
+    }
+    return Object.assign({}, res, { price: fragPrice(base) });
   }
 
   /* Kệ thưởng của chương: Tuyển chọn 6-8 thẻ tiêu biểu trải dài các cấp bậc để mọi người chơi đều có thẻ phù hợp để đổi */
@@ -14568,13 +14834,37 @@ function roadmapIcon(def, locked){
     var chDone = cleared >= last, allDone = cleared >= ROADMAP_OPEN;
     var th = roadmapTheme(ch), hue = (ch*57 + 120) % 360;
     
-    // Thanh chọn 15 chương có icon cờ/CLB: mở trọn vẹn 15 chương
-    var tabs = '<div class="rm-tabs">';
+    // Yêu cầu 1 & 2: Ô gộp 15 chương tiến lùi + Nút đổi thưởng CÙNG HÀNG
+    var chOptions = '';
     for(var c = 1; c <= chTotal; c++){
       var cth = roadmapTheme(c);
-      tabs += '<button type="button" class="rm-tab'+(c===ch?' active':'')+'" data-ch="'+c+'">' + cth.icon + ' Chương '+c+'</button>';
+      chOptions += '<option value="' + c + '"' + (c === ch ? ' selected' : '') + '>' + cth.icon + ' Chương ' + c + ': ' + escHtml(cth.short || cth.name) + '</option>';
     }
-    tabs += '</div>';
+
+    var toolbarHTML = '<div class="cm-toolbar">'
+      // Stepper chọn chương (gộp 15 chương, có nút ◀ và ▶)
+      + '<div class="cm-ch-stepper">'
+      +   '<button type="button" class="cm-step-btn prev" id="cm-ch-prev" aria-label="Chương trước"' + (ch <= 1 ? ' disabled' : '') + '>◀</button>'
+      +   '<div class="cm-ch-display" id="cm-ch-display" title="Chạm để chọn nhanh chương">'
+      +     '<span class="cm-ch-icon">' + th.icon + '</span>'
+      +     '<div class="cm-ch-text">'
+      +       '<span class="cm-ch-num">CHƯƠNG ' + ch + '/' + chTotal + '</span>'
+      +       '<b class="cm-ch-name">' + escHtml(th.short || th.name) + '</b>'
+      +     '</div>'
+      +     '<span class="cm-ch-arrow">▾</span>'
+      +     '<select id="cm-ch-select" class="cm-ch-select" aria-label="Chọn chương">' + chOptions + '</select>'
+      +   '</div>'
+      +   '<button type="button" class="cm-step-btn next" id="cm-ch-next" aria-label="Chương sau"' + (ch >= chTotal ? ' disabled' : '') + '>▶</button>'
+      + '</div>'
+      // Nút Đổi Thưởng CÙNG HÀNG
+      + '<button type="button" class="cm-frag-btn" id="cm-frag-btn" data-ch="' + ch + '" title="Đổi mảnh ghép lấy cầu thủ Chương ' + ch + '">'
+      +   '<span class="cm-frag-icon">🎁</span>'
+      +   '<div class="cm-frag-text">'
+      +     '<span class="cm-frag-label">ĐỔI THƯỞNG C' + ch + '</span>'
+      +     '<b class="cm-frag-val">🧩 ' + prog.frags + '</b>'
+      +   '</div>'
+      + '</button>'
+      + '</div>';
     /* đường đi: nét đứt toàn bộ + nét vàng tới ải đang đứng */
     var pts = CM_PTS, doneUpTo = Math.max(0, Math.min(10, cleared - first + 1));
     var goldIdx = Math.min(9, doneUpTo);                       // đến nút hiện tại (đã qua + 1)
@@ -14604,9 +14894,7 @@ function roadmapIcon(def, locked){
     var chFrags = 0; for(var q = first; q <= last; q++) chFrags += fragReward(q);
     var hasComic = ch <= COMIC_CHAPTERS && inCh > 0;
     el.innerHTML =
-      '<div class="cm-head"><h3>🗺️ Hành trình · 15 Chặng Chiến Dịch</h3>'
-      + '<button type="button" class="cm-frag" id="cm-frag-btn" title="Đổi mảnh ghép lấy cầu thủ">🧩 <b>'+prog.frags+'</b> · Đổi thưởng</button></div>'
-      + tabs
+      toolbarHTML
       + '<div class="cm-banner" style="--cm-h:'+hue+'">'
       +   (ch <= COMIC_CHAPTERS ? '<span class="cm-cover">'+comicImg(ch,'Bia')+'</span>' : '')
       +   '<span class="cm-emb">' + (th.teams && th.teams.length > 1 ? th.teams.map(function(t){ return cmEmblem(t, 'cm-embimg') || t.icon; }).join('') : (cmEmblem(th, 'cm-embimg') || th.icon)) + '</span>'
@@ -14629,9 +14917,59 @@ function roadmapIcon(def, locked){
       + '</div>'
       + (bossOpp ? '<div class="cm-bossinfo">👑 <b>Boss chương '+ch+':</b> '+escHtml(bossOpp.name || '')+' · OVR thực chiến <b>'+(bossOpp.ovr || '?')+'</b> (+'+bossDef.ovrBoost+' OVR) · Sức mạnh x'+bossDef.mult.toFixed(2)+' · 🧩 +'+bossDef.frags+' khi hạ Boss</div>' : '')
       + (ROADMAP_OPEN < ROADMAP_VISION && ch === chTotal ? '<div class="rm-next">🔒 Chương '+(chTotal+1)+' · sắp mở — còn '+(ROADMAP_VISION-ROADMAP_OPEN)+' ải nữa đang chờ con!</div>' : '');
+
+    var chSel = document.getElementById('cm-ch-select');
+    if(chSel){
+      chSel.onchange = function(e){
+        rmChapter = parseInt(e.target.value, 10) || 1;
+        renderRoadmap();
+      };
+    }
   }
 
-  /* ---- 🏪 Đổi mảnh ghép lấy cầu thủ (Kệ thưởng các chương đã hạ Boss + Xem trước mục tiêu) ---- */
+  /* ---- Cửa hàng đổi thưởng Hành Trình theo từng chương: 5 thẻ/lần, refresh và tính mảnh theo OVR/Rarity ---- */
+  var rmCurShopCh = 1;
+  var rmShopCurrent5 = {};
+  var RM_REFRESH_KEY = 'kidchart_rm_shop_rf';
+
+  function getDailyShopRf(){
+    var dStr = new Date().toISOString().slice(0, 10);
+    var rec = null;
+    try{ rec = JSON.parse(localStorage.getItem(RM_REFRESH_KEY) || 'null'); }catch(e){}
+    if(!rec || rec.d !== dStr){
+      return { d: dStr, count: 0 };
+    }
+    return rec;
+  }
+  function saveDailyShopRf(rec){
+    try{ localStorage.setItem(RM_REFRESH_KEY, JSON.stringify(rec)); }catch(e){}
+  }
+
+  function pickShopCards5(ch){
+    var th = roadmapTheme(ch);
+    var list = (th && th.list && th.list.length) ? th.list.slice() : (roadmapRef().pool || []).slice();
+    if(!list.length) return [];
+    if(list.length <= 5){
+      return list.slice().sort(function(a, b){ return (b.realOvr || b.ovr || 0) - (a.realOvr || a.ovr || 0); });
+    }
+    var shuffled = list.slice();
+    for(var i = shuffled.length - 1; i > 0; i--){
+      var j = Math.floor(Math.random() * (i + 1));
+      var tmp = shuffled[i]; shuffled[i] = shuffled[j]; shuffled[j] = tmp;
+    }
+    var seen = {}, out = [];
+    for(var k = 0; k < shuffled.length && out.length < 5; k++){
+      var p = shuffled[k];
+      var id = playerIdentityKey(p) || p.dbId;
+      if(!seen[id]){
+        seen[id] = 1;
+        out.push(p);
+      }
+    }
+    out.sort(function(a, b){ return (b.realOvr || b.ovr || 0) - (a.realOvr || a.ovr || 0); });
+    return out;
+  }
+
   function cmShopEl(){
     var s = document.getElementById('cm-shop');
     if(s) return s;
@@ -14639,68 +14977,126 @@ function roadmapIcon(def, locked){
     document.body.appendChild(s);
     return s;
   }
-  function cmShopRender(){
+
+  function cmShopRender(ch){
+    ch = ch || rmChapter || 1;
+    rmCurShopCh = ch;
     var s = cmShopEl(), prog = roadmapProgress(), html = '';
     var owned = {}; loadPlayers().forEach(function(x){ if(x && x.dbId) owned[x.dbId] = 1; });
-    var doneChs = Math.floor(prog.cleared / 10);
-    var curCh = Math.min(Math.ceil(ROADMAP_OPEN / 10), Math.floor(prog.cleared / 10) + 1);
-    
+    var th = roadmapTheme(ch);
+    var rf = getDailyShopRf();
+    var freeLeft = Math.max(0, 3 - rf.count);
+
+    if(!rmShopCurrent5[ch] || !rmShopCurrent5[ch].length){
+      rmShopCurrent5[ch] = pickShopCards5(ch);
+    }
+    var fiveCards = rmShopCurrent5[ch] || [];
+
+    var chTotal = Math.ceil(ROADMAP_OPEN/10);
+    var chOptions = '';
+    for(var c = 1; c <= chTotal; c++){
+      var cth = roadmapTheme(c);
+      chOptions += '<option value="' + c + '"' + (c === ch ? ' selected' : '') + '>' + cth.icon + ' Chương ' + c + ': ' + escHtml(cth.short || cth.name) + '</option>';
+    }
+
     html += '<div class="cm-shop-box">'
-      + '<div class="cm-shop-top"><b>🏪 Đổi thưởng Hành trình · 15 Chặng Chiến Dịch</b><button type="button" class="cm-shop-x" data-cm="close" aria-label="Đóng">✕</button></div>'
-      + '<div class="cm-shop-bal">🧩 Con đang có <b>' + prog.frags + '</b> mảnh ghép <span style="font-size:12px;color:var(--ink-soft);font-weight:700">· Đã chinh phục ' + doneChs + '/' + Math.ceil(ROADMAP_OPEN/10) + ' Boss</span></div>'
-      + '<div class="cm-shop-tiers">' + FRAG_TIERS.map(function(t){ return '<span>' + t.icon + ' ' + t.label + ' <b>' + t.price + '</b></span>'; }).join('') + '</div>';
+      + '<div class="cm-shop-head">'
+      +   '<div>'
+      +     '<div class="cm-shop-title">🏪 Đổi Thưởng · ' + th.icon + ' Chương ' + ch + ': ' + escHtml(th.title) + '</div>'
+      +     '<div class="cm-shop-sub">Chủ đề: 🛡️ ' + escHtml(th.teamNames) + ' · Mỗi lần hiển thị 5 thẻ ngẫu nhiên</div>'
+      +   '</div>'
+      +   '<button type="button" class="cm-shop-close" data-cm="close" aria-label="Đóng">✕</button>'
+      + '</div>'
+      + '<div class="cm-shop-status">'
+      +   '<div class="cm-shop-bal-txt">🧩 Số mảnh ghép hiện có: <b>' + prog.frags + '</b></div>'
+      +   '<div style="display:flex;align-items:center;gap:6px">'
+      +     '<label for="cm-shop-ch-sel" style="font-size:12px;font-weight:800;color:#CBD5E1">Xem chương:</label>'
+      +     '<select id="cm-shop-ch-sel" style="background:#0F172A;border:1.5px solid rgba(245,158,11,0.5);color:#FDE047;border-radius:8px;padding:4px 8px;font-weight:800;font-size:12px;cursor:pointer">'
+      +       chOptions
+      +     '</select>'
+      +   '</div>'
+      + '</div>';
 
-    // 1. Hiển thị các kệ thưởng của những chương đã hạ Boss (đã mở khóa đổi)
-    if(doneChs > 0){
-      for(var ch = 1; ch <= doneChs; ch++){
-        var th = roadmapTheme(ch);
-        var shelf = roadmapShelf(ch);
-        html += '<div class="cm-shelf">'
-          + '<div class="cm-shelf-h">' + (cmEmblem(th, 'cm-shelf-img') || th.icon) + ' Chương ' + ch + ' · ' + escHtml(th.title)
-          + '<span class="cm-shelf-tag ok">✓ Đã mở khóa</span></div>'
-          + '<div class="cm-shelf-row">';
-        shelf.forEach(function(p){
-          var tier = fragTier(p), have = owned[p.dbId], can = prog.frags >= tier.price;
-          var btn = have
-            ? '<button type="button" class="cm-buy have" disabled>✓ Đã có</button>'
-            : '<button type="button" class="cm-buy' + (can ? '' : ' no') + '" data-cm="buy" data-db="' + escHtml(p.dbId) + '">🧩 ' + tier.price + (can ? ' · Đổi' : ' · thiếu ' + (tier.price - prog.frags)) + '</button>';
-          html += '<div class="cm-item">'
-            + '<div class="cm-item-card">' + playerCardHTML(p, false) + '</div>'
-            + '<div class="cm-item-name">' + escHtml(p.name || '') + '</div>'
-            + '<div class="cm-item-tier">' + tier.icon + ' ' + tier.label + ' · OVR ' + (p.realOvr || p.ovr || '?') + '</div>'
-            + btn
-            + '</div>';
-        });
-        html += '</div></div>';
-      }
+    // Hiển thị 5 thẻ
+    if(fiveCards.length){
+      html += '<div class="cm-shop-grid5">';
+      fiveCards.forEach(function(p){
+        var price = fragPrice(p);
+        var have = owned[p.dbId];
+        var can = prog.frags >= price;
+        var btn = have
+          ? '<button type="button" class="cm-buy-btn have" disabled>✓ Đã sở hữu</button>'
+          : '<button type="button" class="cm-buy-btn ' + (can ? 'can' : 'no') + '" data-cm="buy" data-db="' + escHtml(p.dbId) + '">'
+            + '🧩 ' + price + (can ? ' · Đổi ngay' : ' · Thiếu ' + (price - prog.frags))
+            + '</button>';
+
+        var rar = (p.battle && p.battle.rarity) || 'LIVE';
+        var rarBadge = rar === 'SIG' ? '✍️ Chữ Ký' : (rar === 'ICON' ? '👑 Huyền Thoại' : (rar === 'RARE' ? '🌟 Đặc Biệt' : '⚪ Phổ Thông'));
+
+        html += '<div class="cm-shop-card-item">'
+          + '<div class="cm-shop-card-wrap">' + playerCardHTML(p, false) + '</div>'
+          + '<div class="cm-shop-item-name" title="' + escHtml(p.name || '') + '">' + escHtml(p.name || '') + '</div>'
+          + '<div class="cm-shop-item-meta">' + rarBadge + ' · OVR ' + (p.realOvr || p.ovr || '?') + '</div>'
+          + btn
+          + '</div>';
+      });
+      html += '</div>';
+    } else {
+      html += '<div class="empty-collection" style="margin:20px 0">Chưa tìm thấy thẻ nào thuộc chủ đề chương này.</div>';
     }
 
-    // 2. Kệ xem trước (Preview) của chương hiện tại (hoặc chương 1 nếu chưa hạ Boss nào)
-    var previewCh = (doneChs === 0) ? 1 : (curCh <= Math.ceil(ROADMAP_OPEN / 10) && curCh !== doneChs ? curCh : 0);
-    if(previewCh > 0 && previewCh <= Math.ceil(ROADMAP_OPEN / 10)){
-      var pTh = roadmapTheme(previewCh);
-      var pShelf = roadmapShelf(previewCh);
-      if(pShelf && pShelf.length){
-        html += '<div class="cm-shelf locked">'
-          + '<div class="cm-shelf-h">' + (cmEmblem(pTh, 'cm-shelf-img') || pTh.icon) + ' Chương ' + previewCh + ' · ' + escHtml(pTh.title)
-          + '<span class="cm-shelf-tag lock">🔒 Mục tiêu đang đấu (Hạ Boss C' + previewCh + ' để mở khóa)</span></div>'
-          + '<div class="cm-shelf-row">';
-        pShelf.forEach(function(p){
-          var tier = fragTier(p), have = owned[p.dbId];
-          html += '<div class="cm-item">'
-            + '<div class="cm-item-card">' + playerCardHTML(p, false) + '</div>'
-            + '<div class="cm-item-name">' + escHtml(p.name || '') + '</div>'
-            + '<div class="cm-item-tier">' + tier.icon + ' ' + tier.label + ' · OVR ' + (p.realOvr || p.ovr || '?') + '</div>'
-            + (have ? '<button type="button" class="cm-buy have" disabled>✓ Đã có</button>' : '<button type="button" class="cm-buy lock" disabled>🔒 Hạ Boss C' + previewCh + '</button>')
-            + '</div>';
-        });
-        html += '</div></div>';
-      }
-    }
+    // Nút Refresh 5 thẻ khác
+    var rfBtnLabel = (rf.count < 3)
+      ? ('🔄 Đổi 5 thẻ khác (Miễn phí còn ' + freeLeft + '/3)')
+      : '🔄 Đổi 5 thẻ khác (Phí: 5 🧩)';
+
+    html += '<div class="cm-shop-refresh-row">'
+      + '<button type="button" class="cm-refresh-btn" id="cm-shop-refresh">' + rfBtnLabel + '</button>'
+      + '<div class="cm-refresh-note">Mỗi ngày con được <b>3 lần đổi thẻ miễn phí</b>. Sau 3 lần sẽ bắt đầu <b>trừ 5 mảnh</b> cho 1 lần đổi thẻ.<br>Quy tắc này sẽ tự động đặt lại (reset) vào ngày tiếp theo!</div>'
+      + '</div>';
 
     html += '</div>';
     s.innerHTML = html;
     s.classList.add('on');
+
+    var chSel = document.getElementById('cm-shop-ch-sel');
+    if(chSel){
+      chSel.onchange = function(e){
+        var newCh = parseInt(e.target.value, 10) || 1;
+        rmChapter = newCh;
+        cmShopRender(newCh);
+        renderRoadmap();
+      };
+    }
+  }
+
+  function cmShopDoRefresh(ch){
+    ch = ch || rmCurShopCh || rmChapter || 1;
+    var rf = getDailyShopRf();
+    var p = roadmapRaw(), bal = parseInt(p.frags, 10) || 0;
+    if(rf.count >= 3){
+      if(bal < 5){
+        triggerToast('low', 'Con không đủ 5 mảnh ghép để đổi 5 thẻ khác!');
+        return;
+      }
+      p.frags = bal - 5;
+      p.spent = (parseInt(p.spent, 10) || 0) + 5;
+      safeSet(ROADMAP_KEY, p);
+      rf.count++;
+      saveDailyShopRf(rf);
+      rmShopCurrent5[ch] = pickShopCards5(ch);
+      try{ seSfx('click'); }catch(e){}
+      triggerToast('high', '🔄 Đã đổi 5 thẻ khác (-5 🧩)!');
+    } else {
+      rf.count++;
+      saveDailyShopRf(rf);
+      rmShopCurrent5[ch] = pickShopCards5(ch);
+      var left = 3 - rf.count;
+      try{ seSfx('click'); }catch(e){}
+      triggerToast('high', '🔄 Đã đổi 5 thẻ khác' + (left > 0 ? ' (Còn ' + left + ' lần miễn phí)' : ' (Hết lượt miễn phí hôm nay)') + '!');
+    }
+    cmShopRender(ch);
+    renderRoadmap();
   }
 
   function cmReveal(base){
@@ -14712,25 +15108,49 @@ function roadmapIcon(def, locked){
 
   function cmBuy(dbId){
     var base = PLAYER_DB_BY_ID[dbId]; if(!base) return;
-    var tier = fragTier(base), p = roadmapRaw(), bal = parseInt(p.frags, 10) || 0;
-    if(bal < tier.price){ triggerToast('low', '🧩 Con cần thêm '+(tier.price-bal)+' mảnh ghép nữa nhé!'); return; }
+    var price = fragPrice(base);
+    var p = roadmapRaw(), bal = parseInt(p.frags, 10) || 0;
+    if(bal < price){ triggerToast('low', '🧩 Con cần thêm '+(price-bal)+' mảnh ghép nữa nhé!'); return; }
     var players = loadPlayers();
     if(players.some(function(x){ return x && x.dbId === dbId; })){ triggerToast('low', 'Con đã có cầu thủ này trong đội hình rồi!'); return; }
-    if(!confirm('Đổi '+tier.price+' 🧩 lấy cầu thủ '+(base.name || '')+' ('+tier.label+' · OVR '+(base.realOvr||base.ovr||'?')+')?')) return;
+    if(!confirm('Đổi '+price+' 🧩 lấy cầu thủ '+(base.name || '')+' (OVR '+(base.realOvr||base.ovr||'?')+')?')) return;
     players.push(ownedPlayerFromBase(base));
     if(savePlayers(players) === false){ alert('Chưa lưu được thẻ vào máy. Con thử lại nhé!'); return; }
-    p.frags = bal - tier.price; p.spent = (parseInt(p.spent, 10) || 0) + tier.price;
-    p.bought = (Array.isArray(p.bought) ? p.bought : []).concat([{dbId:dbId, cost:tier.price, at:Date.now()}]).slice(-200);
+    p.frags = bal - price; p.spent = (parseInt(p.spent, 10) || 0) + price;
+    p.bought = (Array.isArray(p.bought) ? p.bought : []).concat([{dbId:dbId, cost:price, at:Date.now()}]).slice(-200);
     safeSet(ROADMAP_KEY, p);
     try{ seSfx('win'); }catch(e){}
     try{ triggerToast('high', '🎉 Đổi thành công ' + (base.name || 'cầu thủ') + '!'); }catch(e){}
-    cmShopRender(); renderRoadmap(); cmReveal(base);
+    cmShopRender(rmCurShopCh); renderRoadmap(); cmReveal(base);
   }
 
   document.addEventListener('click', function(e){
     var t = e.target && e.target.closest ? e.target : null;
     if(!t) return;
-    if(t.closest('#cm-frag-btn')){ cmShopRender(); return; }
+    if(t.closest('#cm-ch-prev')){
+      var chTotal = Math.ceil(ROADMAP_OPEN/10);
+      var cur = rmChapter || 1;
+      rmChapter = Math.max(1, cur - 1);
+      renderRoadmap();
+      return;
+    }
+    if(t.closest('#cm-ch-next')){
+      var chTotal = Math.ceil(ROADMAP_OPEN/10);
+      var cur = rmChapter || 1;
+      rmChapter = Math.min(chTotal, cur + 1);
+      renderRoadmap();
+      return;
+    }
+    var fb = t.closest('#cm-frag-btn');
+    if(fb){
+      var targetCh = parseInt(fb.getAttribute('data-ch'), 10) || rmChapter || 1;
+      cmShopRender(targetCh);
+      return;
+    }
+    if(t.closest('#cm-shop-refresh')){
+      cmShopDoRefresh(rmCurShopCh);
+      return;
+    }
     var rb = t.closest('#cm-read-btn');
     if(rb){ rmOpenReader(parseInt(rb.getAttribute('data-n'), 10) || 1); return; }
     var a = t.closest('[data-cm]');
