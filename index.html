@@ -4492,11 +4492,14 @@
 
   /* =====================================================================
      CĂN CHỈNH TỈ SỐ & THỜI GIAN RA GIỮA, KHUNG DIỄN BIẾN 4-5 DÒNG CỐ ĐỊNH TRÊN NÚT TIẾP THEO
+     ÁP DỤNG ĐỒNG BỘ CẢ QUAY NGANG VÀ QUAY DỌC (IPHONE & IPAD)
      ===================================================================== */
   :is(#season-modal, #season-match) .mt-hd{
     position: relative;
-    margin-bottom: 6px;
+    margin-bottom: 4px;
     padding-right: 36px;
+    width: 100%;
+    box-sizing: border-box;
   }
   :is(#season-modal, #season-match) .mt-exit{
     position: absolute;
@@ -4513,6 +4516,7 @@
     display: grid;
     place-items: center;
     transition: background .15s;
+    z-index: 10;
   }
   :is(#season-modal, #season-match) .mt-sc{
     display: flex !important;
@@ -4545,7 +4549,7 @@
   :is(#season-modal, #season-match) .mt-sc em{
     flex: 0 0 auto !important;
     font-style: normal !important;
-    font-size: 26px !important;
+    font-size: 24px !important;
     font-weight: 900 !important;
     color: var(--gold, #FBBF24) !important;
     letter-spacing: 2px !important;
@@ -4571,10 +4575,10 @@
     border: 1px solid rgba(255, 255, 255, 0.12) !important;
   }
   :is(#season-modal, #season-match) .mt-live{
+    display: flex !important;
     justify-content: center !important;
     position: relative !important;
-    margin-top: 2px !important;
-    margin-bottom: 2px !important;
+    margin: 2px 0 !important;
   }
   :is(#season-modal, #season-match) .mt-voice{
     position: absolute !important;
@@ -4582,137 +4586,73 @@
     top: 50% !important;
     transform: translateY(-50%) !important;
   }
-  /* Bỏ hoàn toàn thanh bar thời gian theo yêu cầu */
-  :is(#season-modal, #season-match) .mt-prog{
+  /* Bỏ dòng chiến thuật, sức lực của 2 đội và bỏ bar thời gian */
+  :is(#season-modal, #season-match) .mt-prog,
+  :is(#season-modal, #season-match) .mt-tac,
+  :is(#season-modal, #season-match) .mt-eng,
+  :is(#season-modal, #season-match) .mt-tactics{
     display: none !important;
   }
 
-  /* Khung diễn biến 4-5 dòng cố định nằm ngay phía trên nút tình huống tiếp theo khi quay ngang */
-  @media (orientation: landscape){
-    #season-match .mx-body.sit > .mt-feedwrap{
-      flex: 0 0 auto !important;
-      width: 100% !important;
-      margin: 4px 0 6px !important;
-      display: block !important;
-    }
-    #season-match .mx-body.sit .mt-feed{
-      height: 120px !important;
-      max-height: 120px !important;
-      min-height: 105px !important;
-      overflow-y: auto !important;
-      display: flex !important;
-      flex-direction: column !important;
-      justify-content: flex-start !important;
-      padding: 6px 10px !important;
-      background: rgba(15, 23, 42, 0.88) !important;
-      border: 1.5px solid rgba(254, 240, 138, 0.35) !important;
-      border-radius: 14px !important;
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5) !important;
-      scroll-behavior: smooth !important;
-      touch-action: pan-y !important;
-    }
-    /* Hiển thị khoảng 4-5 dòng mới nhất, ẩn các dòng quá cũ */
-    #season-match .mx-body.sit .mt-feed > :nth-last-child(n+6){
-      display: none !important;
-    }
-    #season-match .mx-body.sit .fe{
-      display: flex !important;
-      align-items: baseline !important;
-      gap: 6px !important;
-      font-size: 13px !important;
-      line-height: 1.35 !important;
-      padding: 2.5px 0 !important;
-      margin: 0 !important;
-      border: none !important;
-      background: transparent !important;
-      white-space: normal !important;
-    }
-    #season-match .mx-body.sit .fe-m{
-      color: #FDE047 !important;
-      font-weight: 900 !important;
-      font-size: 12px !important;
-      flex: 0 0 auto !important;
-    }
-    #season-match .mx-body.sit .fe-w{
-      font-size: 13px !important;
-      flex: 0 0 auto !important;
-    }
-    #season-match .mx-body.sit .fe-t{
-      color: #F8FAFC !important;
-      flex: 1 1 auto !important;
-      min-width: 0 !important;
-      white-space: normal !important;
-      line-height: 1.35 !important;
-    }
-    #season-match .mx-foot{
-      margin-top: 0 !important;
-      position: static !important;
-      padding: 2px 0 4px !important;
-      width: 100% !important;
-    }
-    #season-match .mx-foot .se-btn{
-      min-height: 44px !important;
-      font-size: 15px !important;
-      font-weight: 800 !important;
-    }
-  }
-
-  /* =====================================================================
-     ƯU TIÊN TUYỆT ĐỐI CHO SÂN ĐẤU TRỌN VẸN (IPHONE & IPAD, DỌC & NGANG)
-     ===================================================================== */
-  /* Diễn biến trong tab Live: thiết kế dạng Broadcast Ticker gọn gàng (1 dòng mới nhất) */
+  /* KHUNG DIỄN BIẾN 4-5 DÒNG CỐ ĐỊNH NẰM NGAY TRÊN NÚT TIẾP THEO (QUY TẮC CHUNG) */
   #season-match .mx-body.sit > .mt-feedwrap{
     flex: 0 0 auto !important;
-    min-height: 0 !important;
-    margin: 2px 0 4px !important;
+    width: 100% !important;
+    margin: 4px 0 6px !important;
+    display: block !important;
+    box-sizing: border-box !important;
   }
   #season-match .mx-body.sit .mt-feed{
-    max-height: 48px !important;
-    min-height: 0 !important;
-    overflow: hidden !important;
-    padding: 3px 8px !important;
-    background: rgba(15, 23, 42, 0.85) !important;
-    border: 1px solid rgba(254, 240, 138, 0.35) !important;
-    border-radius: 12px !important;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4) !important;
+    height: 112px !important;
+    max-height: 112px !important;
+    min-height: 96px !important;
+    overflow-y: auto !important;
+    overscroll-behavior: contain !important;
     display: flex !important;
     flex-direction: column !important;
-    justify-content: center !important;
+    justify-content: flex-start !important;
+    padding: 6px 10px !important;
+    background: rgba(15, 23, 42, 0.9) !important;
+    border: 1.5px solid rgba(254, 240, 138, 0.4) !important;
+    border-radius: 14px !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.55) !important;
     scroll-behavior: smooth !important;
+    touch-action: pan-y !important;
+    box-sizing: border-box !important;
   }
-  /* Chỉ hiện duy nhất 1 dòng sự kiện mới nhất đang xảy ra, ẩn toàn bộ các dòng cũ đã trôi qua */
-  #season-match .mx-body.sit .mt-feed > :nth-last-child(n+2){
+  /* Giữ 5 dòng diễn biến mới nhất, ẩn các dòng cũ hơn để duy trì đúng 4-5 dòng */
+  #season-match .mx-body.sit .mt-feed > :nth-last-child(n+6){
     display: none !important;
   }
   #season-match .mx-body.sit .fe{
     display: flex !important;
-    align-items: center !important;
-    gap: 7px !important;
-    font-size: 13.5px !important;
-    font-weight: 700 !important;
+    align-items: baseline !important;
+    gap: 6px !important;
+    font-size: 12.5px !important;
     line-height: 1.35 !important;
-    padding: 2px 4px !important;
+    padding: 2.5px 0 !important;
     margin: 0 !important;
     border: none !important;
     background: transparent !important;
     color: #F8FAFC !important;
+    white-space: normal !important;
   }
   #season-match .mx-body.sit .fe-m{
     color: #FDE047 !important;
     font-weight: 900 !important;
-    font-size: 13px !important;
+    font-size: 12px !important;
     flex: 0 0 auto !important;
   }
   #season-match .mx-body.sit .fe-w{
-    font-size: 14px !important;
+    font-size: 13px !important;
     flex: 0 0 auto !important;
   }
   #season-match .mx-body.sit .fe-t{
+    color: #F8FAFC !important;
     flex: 1 1 auto !important;
     min-width: 0 !important;
-    white-space: nowrap !important;
-    overflow: hidden !important;
-    text-overflow: ellipsis !important;
+    white-space: normal !important;
+    line-height: 1.35 !important;
   }
   #season-match .mx-body.sit .fe-goal{
     color: #34D399 !important;
@@ -4724,18 +4664,28 @@
     font-weight: 900 !important;
     text-shadow: 0 0 8px rgba(251, 191, 36, 0.5) !important;
   }
-  #season-match .mt-skiprow{
-    margin-top: 2px !important;
-    text-align: right !important;
+  #season-match .mx-foot{
+    width: 100% !important;
+    box-sizing: border-box !important;
+    padding: 2px 0 4px !important;
+    margin-top: 0 !important;
   }
-  #season-match .mt-skip{
-    font-size: 11px !important;
-    padding: 2px 8px !important;
-    border-radius: 99px !important;
+  #season-match .mx-foot .se-btn{
+    width: 100% !important;
+    min-height: 42px !important;
+    font-size: 14.5px !important;
+    font-weight: 800 !important;
+    border-radius: 12px !important;
   }
 
-  /* Bố cục điện thoại (iPhone dọc): sân đấu là nhân vật chính, hiển thị 100% trọn vẹn */
+  /* =====================================================================
+     BỐ CỤC ĐIỆN THOẠI QUAY DỌC (PORTRAIT - IPHONE / IPAD):
+     SÂN BÓNG Ở TRÊN -> KHUNG DIỄN BIẾN 4-5 DÒNG NGAY DƯỚI -> NÚT TIẾP THEO Ở ĐÁY
+     ===================================================================== */
   @media (max-width: 640px){
+    #season-match{
+      padding-bottom: calc(var(--dock-h, 72px) + env(safe-area-inset-bottom, 16px) + 12px) !important;
+    }
     #season-match .mx{
       display: flex !important;
       flex-direction: column !important;
@@ -4744,6 +4694,8 @@
       gap: 3px !important;
       align-items: center !important;
       padding: 0 4px !important;
+      width: 100% !important;
+      box-sizing: border-box !important;
     }
     #season-match .mx-l{
       display: contents !important;
@@ -4758,36 +4710,17 @@
       width: 100% !important;
       margin: 0 0 2px 0 !important;
     }
-    #season-match .mx-body.sit{
-      order: 3 !important;
-      width: 100% !important;
-      flex: 0 0 auto !important;
-      display: block !important;
-      margin: 0 !important;
-      padding: 0 !important;
-    }
-    #season-match .mx-body:not(.sit){
-      order: 3 !important;
-      width: 100% !important;
-      max-height: 60vh !important;
-      overflow-y: auto !important;
-    }
+    /* Sân bóng đặt ở vị trí order 3: nằm trọn vẹn, không chiếm hết màn hình */
     #season-match .mx-r{
-      order: 4 !important;
+      order: 3 !important;
       display: flex !important;
       justify-content: center !important;
       align-items: center !important;
       width: 100% !important;
       margin: 2px auto !important;
     }
-    #season-match:not(.tab-sit) .mx-r{
-      order: 5 !important;
-    }
-    #season-match:not(.tab-sit) .mx-foot{
-      order: 4 !important;
-    }
     #season-match .mx-pitch{
-      height: min(calc(100dvh - 180px), 520px) !important;
+      height: min(calc(100dvh - 310px), 430px) !important;
       width: auto !important;
       aspect-ratio: 68/105 !important;
       max-width: calc(100% - 10px) !important;
@@ -4796,41 +4729,86 @@
       border-radius: 12px !important;
       overflow: hidden !important;
     }
+    /* Khung diễn biến 4-5 dòng đặt ở order 4: NẰM NGAY DƯỚI SÂN BÓNG & PHÍA TRÊN NÚT TIẾP THEO */
+    #season-match .mx-body.sit{
+      order: 4 !important;
+      width: 100% !important;
+      flex: 0 0 auto !important;
+      display: block !important;
+      margin: 2px 0 0 !important;
+      padding: 0 !important;
+    }
+    #season-match .mx-body.sit .mt-feed{
+      height: 98px !important;
+      max-height: 98px !important;
+      min-height: 88px !important;
+      padding: 4px 8px !important;
+    }
+    #season-match .mx-body:not(.sit){
+      order: 4 !important;
+      width: 100% !important;
+      max-height: 55vh !important;
+      overflow-y: auto !important;
+    }
+    /* Nút hành động đặt ở order 5: NẰM NGAY DƯỚI KHUNG DIỄN BIẾN 4-5 DÒNG */
     #season-match .mx-foot{
       order: 5 !important;
       width: 100% !important;
       position: static !important;
       padding: 3px 0 6px !important;
       background: transparent !important;
+      margin-top: 2px !important;
     }
-    #season-match .mx-foot .se-btn{
-      min-height: 44px !important;
-      font-size: 15px !important;
-      font-weight: 800 !important;
+    /* Các tab khác (Sơ đồ, Số liệu, Nhật ký) */
+    #season-match:not(.tab-sit) .mx-r{
+      order: 5 !important;
+    }
+    #season-match:not(.tab-sit) .mx-foot{
+      order: 4 !important;
     }
   }
 
-  /* Khi iPhone xoay ngang (chiều cao hẹp <= 520px): bố cục truyền hình 2 cột song song */
-  @media (orientation: landscape) and (max-height: 520px){
+  /* =====================================================================
+     BỐ CỤC QUAY NGANG (LANDSCAPE - IPHONE & IPAD):
+     TRÁI: SÂN BÓNG TRỌN VẸN | PHẢI: TỈ SỐ -> TABS -> KHUNG DIỄN BIẾN 4-5 DÒNG -> NÚT TIẾP THEO
+     ===================================================================== */
+  @media (orientation: landscape){
+    body.se-match .app-header{
+      display: none !important;
+    }
+    body.se-match .app-main{
+      padding: 4px 8px !important;
+      margin: 0 auto !important;
+      height: 100dvh !important;
+      max-height: 100dvh !important;
+      box-sizing: border-box !important;
+      overflow: hidden !important;
+    }
+    #season-match{
+      height: 100% !important;
+      max-height: 100% !important;
+      display: flex !important;
+      flex-direction: column !important;
+      justify-content: center !important;
+      padding: 0 !important;
+      margin: 0 !important;
+      box-sizing: border-box !important;
+    }
     #season-match .mx{
       display: flex !important;
       flex-direction: row !important;
       align-items: center !important;
       justify-content: center !important;
-      height: min(calc(100dvh - 16px), 380px) !important;
-      gap: 12px !important;
-      padding: 0 8px !important;
+      height: min(calc(100dvh - 12px), 400px) !important;
+      max-height: calc(100dvh - 12px) !important;
+      width: 100% !important;
+      max-width: 960px !important;
+      gap: 14px !important;
+      padding: 0 6px !important;
+      margin: 0 auto !important;
+      box-sizing: border-box !important;
     }
-    #season-match .mx-l{
-      display: flex !important;
-      flex-direction: column !important;
-      flex: 1 1 0 !important;
-      min-width: 0 !important;
-      order: 2 !important;
-      max-height: 100% !important;
-      overflow-y: auto !important;
-      gap: 4px !important;
-    }
+    /* Sân bóng bên trái */
     #season-match .mx-r{
       flex: 0 0 auto !important;
       order: 1 !important;
@@ -4841,16 +4819,61 @@
       margin: 0 !important;
     }
     #season-match .mx-pitch{
-      height: min(calc(100dvh - 20px), 360px) !important;
+      height: min(calc(100dvh - 18px), 370px) !important;
       width: auto !important;
       aspect-ratio: 68/105 !important;
       max-height: 100% !important;
       margin: 0 auto !important;
+      border-radius: 12px !important;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6) !important;
+    }
+    /* Cột thông tin bên phải */
+    #season-match .mx-l{
+      display: flex !important;
+      flex-direction: column !important;
+      flex: 1 1 0 !important;
+      min-width: 0 !important;
+      max-width: 480px !important;
+      height: min(calc(100dvh - 18px), 370px) !important;
+      max-height: 100% !important;
+      order: 2 !important;
+      justify-content: space-between !important;
+      overflow-y: auto !important;
+      gap: 3px !important;
+      padding: 0 !important;
+      box-sizing: border-box !important;
+    }
+    #season-match .mx-l > .mt-hd{
+      flex: 0 0 auto !important;
+      margin-bottom: 2px !important;
+    }
+    #season-match .mx-l > .mt-tabs{
+      flex: 0 0 auto !important;
+      margin: 0 0 2px !important;
+    }
+    #season-match .mx-body.sit{
+      flex: 1 1 auto !important;
+      min-height: 0 !important;
+      display: flex !important;
+      flex-direction: column !important;
+      justify-content: flex-end !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      overflow: hidden !important;
+    }
+    #season-match .mx-body.sit > .mt-feedwrap{
+      margin: 2px 0 !important;
+    }
+    #season-match .mx-body.sit .mt-feed{
+      height: 112px !important;
+      max-height: 112px !important;
+      min-height: 98px !important;
     }
     #season-match .mx-foot{
-      margin-top: auto !important;
+      flex: 0 0 auto !important;
+      margin-top: 3px !important;
+      padding: 0 !important;
       position: static !important;
-      padding: 2px 0 !important;
     }
   }
 
