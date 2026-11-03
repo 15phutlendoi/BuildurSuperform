@@ -4332,6 +4332,352 @@
   #season-match .in-grass.land .wx-img{ inset:auto; left:50%; top:50%; width:154.4%; height:64.76%; transform:translate(-50%,-50%) rotate(90deg); }   /* ảnh ngang → xoay 90° cho vừa sân dọc 68:105 */
   #season-match .mx-wx{ position:absolute; right:6px; top:5px; z-index:2; max-width:46%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:11px; font-weight:900; padding:2px 8px; border-radius:99px; background:rgba(15,23,42,.72); color:#fff; }
   /* =====================================================================
+     THANH MENU ĐIỀU HƯỚNG CHÍNH: XOAY DỌC BÊN TRÁI MÀN HÌNH KHI QUAY NGANG (LANDSCAPE)
+     ===================================================================== */
+  @media (orientation: landscape){
+    /* Dock menu chính xoay sang chiều dọc và neo cố định ở mép trái */
+    .tab-bar{
+      position: fixed !important;
+      z-index: 95 !important;
+      left: max(8px, env(safe-area-inset-left)) !important;
+      right: auto !important;
+      top: 50% !important;
+      bottom: auto !important;
+      transform: translateY(-50%) !important;
+      width: 68px !important;
+      max-width: 74px !important;
+      height: min(calc(100% - 16px), 540px) !important;
+      margin: 0 !important;
+      padding: 6px 4px !important;
+      display: flex !important;
+      flex-direction: column !important;
+      justify-content: space-evenly !important;
+      align-items: center !important;
+      gap: 3px !important;
+      border-radius: 24px !important;
+      background: rgba(15, 23, 42, 0.94) !important;
+      border: 1px solid rgba(255, 255, 255, 0.16) !important;
+      box-shadow: 0 10px 32px rgba(0, 0, 0, 0.7), 0 2px 8px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.12) !important;
+      backdrop-filter: blur(18px) !important;
+      -webkit-backdrop-filter: blur(18px) !important;
+    }
+    .tab-bar .tab-btn{
+      width: 100% !important;
+      min-width: 0 !important;
+      max-width: 60px !important;
+      min-height: 0 !important;
+      flex: 1 1 0 !important;
+      padding: 3px 2px !important;
+      border-radius: 14px !important;
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: center !important;
+      justify-content: center !important;
+      gap: 2px !important;
+      white-space: normal !important;
+      text-align: center !important;
+      box-sizing: border-box !important;
+    }
+    .tab-bar .tab-btn .tab-ico{
+      font-size: 20px !important;
+      line-height: 1 !important;
+    }
+    .tab-bar .tab-btn .tab-lbl-short{
+      display: block !important;
+      font-size: 9.5px !important;
+      font-weight: 800 !important;
+      line-height: 1.15 !important;
+      white-space: nowrap !important;
+      overflow: hidden !important;
+      text-overflow: ellipsis !important;
+      max-width: 56px !important;
+    }
+    .tab-bar .tab-btn .tab-lbl-full{
+      display: none !important;
+    }
+    .tab-bar .tab-btn.active .tab-ico{
+      transform: scale(1.15) !important;
+    }
+
+    /* Giải phóng hoàn toàn chiều cao đáy: không còn bị dock che chân trang */
+    .app-main{
+      padding-bottom: 12px !important;
+    }
+    .app-footer{
+      padding-bottom: 24px !important;
+    }
+
+    /* Dịch chuyển nội dung trang sang phải để chừa khoảng cho thanh menu dọc bên trái */
+    body{
+      --nav-rail-w: calc(72px + max(8px, env(safe-area-inset-left)));
+    }
+    .app-header,
+    .app-main,
+    .app-footer{
+      padding-left: calc(74px + max(10px, env(safe-area-inset-left))) !important;
+    }
+
+    /* Khi ở màn hình thi đấu Mùa giải (#season-match): */
+    #season-match{
+      padding-bottom: max(6px, env(safe-area-inset-bottom)) !important;
+    }
+    /* Sân bóng và cột thông tin trong trận dàn hàng ngang trọn vẹn, không bị dock đáy che */
+    #season-match .mx{
+      display: flex !important;
+      flex-direction: row !important;
+      align-items: center !important;
+      justify-content: center !important;
+      height: min(calc(100dvh - 12px), 640px) !important;
+      gap: 12px !important;
+      padding: 0 4px !important;
+    }
+    #season-match .mx-r{
+      flex: 0 0 auto !important;
+      order: 1 !important;
+      height: 100% !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      margin: 0 !important;
+    }
+    #season-match .mx-pitch{
+      height: min(calc(100dvh - 16px), 540px) !important;
+      width: auto !important;
+      aspect-ratio: 68/105 !important;
+      max-height: 100% !important;
+      margin: 0 auto !important;
+    }
+    #season-match .mx-l{
+      display: flex !important;
+      flex-direction: column !important;
+      flex: 1 1 0 !important;
+      min-width: 0 !important;
+      max-width: 480px !important;
+      order: 2 !important;
+      max-height: 100% !important;
+      overflow-y: auto !important;
+      gap: 4px !important;
+    }
+    #season-match .mx-foot{
+      margin-top: auto !important;
+      position: static !important;
+      padding: 2px 0 !important;
+      width: 100% !important;
+    }
+  }
+
+  /* Khi câu hỏi xuất hiện trong lúc quay ngang: trượt menu bên trái ra ngoài để tập trung làm bài */
+  @media (orientation: landscape){
+    body.is-quiz-active .tab-bar{
+      transform: translate(-180%, -50%) scale(0.95) !important;
+      opacity: 0 !important;
+      pointer-events: none !important;
+      transition: transform .25s cubic-bezier(.34,1.56,.64,1), opacity .2s ease !important;
+    }
+    body.is-quiz-active .app-header,
+    body.is-quiz-active .app-main{
+      padding-left: max(10px, env(safe-area-inset-left)) !important;
+    }
+  }
+
+  /* =====================================================================
+     ƯU TIÊN TUYỆT ĐỐI CHO SÂN ĐẤU TRỌN VẸN (IPHONE & IPAD, DỌC & NGANG)
+     ===================================================================== */
+  /* Diễn biến trong tab Live: thiết kế dạng Broadcast Ticker gọn gàng (1 dòng mới nhất) */
+  #season-match .mx-body.sit > .mt-feedwrap{
+    flex: 0 0 auto !important;
+    min-height: 0 !important;
+    margin: 2px 0 4px !important;
+  }
+  #season-match .mx-body.sit .mt-feed{
+    max-height: 48px !important;
+    min-height: 0 !important;
+    overflow: hidden !important;
+    padding: 3px 8px !important;
+    background: rgba(15, 23, 42, 0.85) !important;
+    border: 1px solid rgba(254, 240, 138, 0.35) !important;
+    border-radius: 12px !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4) !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    scroll-behavior: smooth !important;
+  }
+  /* Chỉ hiện duy nhất 1 dòng sự kiện mới nhất đang xảy ra, ẩn toàn bộ các dòng cũ đã trôi qua */
+  #season-match .mx-body.sit .mt-feed > :nth-last-child(n+2){
+    display: none !important;
+  }
+  #season-match .mx-body.sit .fe{
+    display: flex !important;
+    align-items: center !important;
+    gap: 7px !important;
+    font-size: 13.5px !important;
+    font-weight: 700 !important;
+    line-height: 1.35 !important;
+    padding: 2px 4px !important;
+    margin: 0 !important;
+    border: none !important;
+    background: transparent !important;
+    color: #F8FAFC !important;
+  }
+  #season-match .mx-body.sit .fe-m{
+    color: #FDE047 !important;
+    font-weight: 900 !important;
+    font-size: 13px !important;
+    flex: 0 0 auto !important;
+  }
+  #season-match .mx-body.sit .fe-w{
+    font-size: 14px !important;
+    flex: 0 0 auto !important;
+  }
+  #season-match .mx-body.sit .fe-t{
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+  #season-match .mx-body.sit .fe-goal{
+    color: #34D399 !important;
+    font-weight: 900 !important;
+    text-shadow: 0 0 8px rgba(52, 211, 153, 0.5) !important;
+  }
+  #season-match .mx-body.sit .fe-key{
+    color: #FBBF24 !important;
+    font-weight: 900 !important;
+    text-shadow: 0 0 8px rgba(251, 191, 36, 0.5) !important;
+  }
+  #season-match .mt-skiprow{
+    margin-top: 2px !important;
+    text-align: right !important;
+  }
+  #season-match .mt-skip{
+    font-size: 11px !important;
+    padding: 2px 8px !important;
+    border-radius: 99px !important;
+  }
+
+  /* Bố cục điện thoại (iPhone dọc): sân đấu là nhân vật chính, hiển thị 100% trọn vẹn */
+  @media (max-width: 640px){
+    #season-match .mx{
+      display: flex !important;
+      flex-direction: column !important;
+      height: auto !important;
+      min-height: 0 !important;
+      gap: 3px !important;
+      align-items: center !important;
+      padding: 0 4px !important;
+    }
+    #season-match .mx-l{
+      display: contents !important;
+    }
+    #season-match .mx-l > .mt-hd{
+      order: 1 !important;
+      width: 100% !important;
+      margin-bottom: 2px !important;
+    }
+    #season-match .mx-l > .mt-tabs{
+      order: 2 !important;
+      width: 100% !important;
+      margin: 0 0 2px 0 !important;
+    }
+    #season-match .mx-body.sit{
+      order: 3 !important;
+      width: 100% !important;
+      flex: 0 0 auto !important;
+      display: block !important;
+      margin: 0 !important;
+      padding: 0 !important;
+    }
+    #season-match .mx-body:not(.sit){
+      order: 3 !important;
+      width: 100% !important;
+      max-height: 60vh !important;
+      overflow-y: auto !important;
+    }
+    #season-match .mx-r{
+      order: 4 !important;
+      display: flex !important;
+      justify-content: center !important;
+      align-items: center !important;
+      width: 100% !important;
+      margin: 2px auto !important;
+    }
+    #season-match:not(.tab-sit) .mx-r{
+      order: 5 !important;
+    }
+    #season-match:not(.tab-sit) .mx-foot{
+      order: 4 !important;
+    }
+    #season-match .mx-pitch{
+      height: min(calc(100dvh - 180px), 520px) !important;
+      width: auto !important;
+      aspect-ratio: 68/105 !important;
+      max-width: calc(100% - 10px) !important;
+      margin: 0 auto !important;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6) !important;
+      border-radius: 12px !important;
+      overflow: hidden !important;
+    }
+    #season-match .mx-foot{
+      order: 5 !important;
+      width: 100% !important;
+      position: static !important;
+      padding: 3px 0 6px !important;
+      background: transparent !important;
+    }
+    #season-match .mx-foot .se-btn{
+      min-height: 44px !important;
+      font-size: 15px !important;
+      font-weight: 800 !important;
+    }
+  }
+
+  /* Khi iPhone xoay ngang (chiều cao hẹp <= 520px): bố cục truyền hình 2 cột song song */
+  @media (orientation: landscape) and (max-height: 520px){
+    #season-match .mx{
+      display: flex !important;
+      flex-direction: row !important;
+      align-items: center !important;
+      justify-content: center !important;
+      height: min(calc(100dvh - 16px), 380px) !important;
+      gap: 12px !important;
+      padding: 0 8px !important;
+    }
+    #season-match .mx-l{
+      display: flex !important;
+      flex-direction: column !important;
+      flex: 1 1 0 !important;
+      min-width: 0 !important;
+      order: 2 !important;
+      max-height: 100% !important;
+      overflow-y: auto !important;
+      gap: 4px !important;
+    }
+    #season-match .mx-r{
+      flex: 0 0 auto !important;
+      order: 1 !important;
+      height: 100% !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      margin: 0 !important;
+    }
+    #season-match .mx-pitch{
+      height: min(calc(100dvh - 20px), 360px) !important;
+      width: auto !important;
+      aspect-ratio: 68/105 !important;
+      max-height: 100% !important;
+      margin: 0 auto !important;
+    }
+    #season-match .mx-foot{
+      margin-top: auto !important;
+      position: static !important;
+      padding: 2px 0 !important;
+    }
+  }
+
+  /* =====================================================================
      ƯU TIÊN TUYỆT ĐỐI CHO CÂU HỎI VÀ ĐÁP ÁN TRÊN IPHONE / IPAD KHI CÓ KEY MOMENT
      ===================================================================== */
   /* Ẩn thanh dock chính (.tab-bar) khi câu hỏi hiển thị để giải phóng toàn bộ màn hình */
@@ -22222,7 +22568,7 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
   function comRowInner(l){ return '<span class="fe-m">' + (l.min != null ? l.min + '’' : '') + '</span><span class="fe-i">' + (COM_ICON[l.k] || '🗣️') + '</span><span class="fe-t">' + comTxt(l.t) + '</span>'; }
   function sFeedBox(m, tail, skip){
     comEnsure(m);
-    var rows = m.feed.slice(-(tail || 14));
+    var rows = m.feed.slice(-(tail || 2));
     return '<div class="mt-feedwrap"><div class="mt-feed" id="mt-feed">' + (rows.length ? rows.map(function(l){ return '<div class="fe fe-' + l.k + '">' + comRowInner(l) + '</div>'; }).join('')
       : '<div class="fe fe-info">' + comRowInner({k:'info', t:'The match goes on. Press the button for the next moment.'}) + '</div>') + '</div>'
       + (skip ? '<div class="mt-skiprow"><button type="button" class="mt-skip" data-mt="skip">⏩ Đọc nhanh</button></div>' : '') + '</div>';
@@ -22243,11 +22589,55 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
     if(!list.length) return '';
     return '<div class="mt-words"><div class="mt-wt">📚 Từ bóng đá hôm nay</div>' + list.slice(0, 8).map(function(w){ return '<span class="mt-wc"><b>' + COM_WORDS[w][0] + '</b> · ' + COM_WORDS[w][1] + '</span>'; }).join('') + '</div>';
   }
+  var comVoiceObj = null;
+  function comGetVoice(){
+    if(comVoiceObj) return comVoiceObj;
+    if(!('speechSynthesis' in window)) return null;
+    var vs = window.speechSynthesis.getVoices() || [];
+    if(!vs.length) return null;
+    var pref = ['daniel', 'oliver', 'arthur', 'george', 'uk english male', 'uk english', 'en-gb', 'en_gb', 'samantha', 'karen', 'en-us'];
+    for(var i = 0; i < pref.length; i++){
+      var p = pref[i];
+      for(var j = 0; j < vs.length; j++){
+        var nm = (vs[j].name || '').toLowerCase(), lg = (vs[j].lang || '').toLowerCase();
+        if(nm.indexOf(p) >= 0 || lg.indexOf(p) >= 0){ comVoiceObj = vs[j]; return comVoiceObj; }
+      }
+    }
+    return vs[0];
+  }
+  if('speechSynthesis' in window && window.speechSynthesis.onvoiceschanged !== undefined){
+    window.speechSynthesis.onvoiceschanged = function(){ comVoiceObj = null; comGetVoice(); };
+  }
+
   function comSpeak(t, force){
     if((!comVoice && !force) || !('speechSynthesis' in window)) return;
     try{
-      var u = new SpeechSynthesisUtterance(String(t).replace(/\*\*/g, '').replace(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}\u{FE0F}]/gu, ' '));
-      u.lang = 'en-GB'; u.rate = 0.9; u.pitch = 1.05; window.speechSynthesis.cancel(); window.speechSynthesis.speak(u);
+      var raw = String(t).replace(/\*\*/g, '').replace(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}\u{FE0F}]/gu, ' ').trim();
+      if(!raw) return;
+      var isGoal = /\b(goal|scores|scored|net|what a moment|strike|winner)\b/i.test(raw);
+      var isExciting = /\b(chance|save|shot|kicks|box|danger|momentum|fire|key moment)\b/i.test(raw);
+      var speakTxt = raw;
+      if(isGoal && !/^(goal|it's a goal)/i.test(speakTxt)){
+        speakTxt = 'Goal! ' + speakTxt;
+      }
+      var u = new SpeechSynthesisUtterance(speakTxt);
+      u.lang = 'en-GB';
+      var v = comGetVoice(); if(v) u.voice = v;
+      if(isGoal){
+        u.rate = 1.22;   // nhịp điệu dồn dập, bùng nổ khi có bàn thắng
+        u.pitch = 1.26;  // cao độ phấn khích, hào hứng của BLV bóng đá
+        u.volume = 1.0;
+      } else if(isExciting){
+        u.rate = 1.16;   // tình huống kịch tính, khẩn trương
+        u.pitch = 1.15;
+        u.volume = 1.0;
+      } else {
+        u.rate = 1.12;   // nhịp bình luận trận đấu trôi chảy, sôi nổi
+        u.pitch = 1.08;
+        u.volume = 0.95;
+      }
+      window.speechSynthesis.cancel();
+      window.speechSynthesis.speak(u);
     }catch(e){}
   }
   function comWait(ms, tok){
@@ -22529,12 +22919,18 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
      để toàn bộ khối trận đấu nằm gọn giữa hai thanh đó, không bị che và không phải cuộn */
   function mxAvail(el){
     var vh = window.innerHeight || document.documentElement.clientHeight;
+    var vw = window.innerWidth || document.documentElement.clientWidth;
+    var isLandscape = (vw > vh);
     var hd = document.querySelector('.app-header'), hh = (hd && getComputedStyle(hd).position === 'sticky') ? hd.offsetHeight : 0;
     var dock = document.querySelector('.tab-bar'), dt = vh;
-    if(dock && getComputedStyle(dock).display !== 'none'){ var dr = dock.getBoundingClientRect(); if(dr.height > 0) dt = dr.top; }
-    if(!(dt > hh + 300)) dt = vh - 110;
-    var host = document.getElementById('season-match'); if(host) host.style.setProperty('--dock-h', Math.max(0, Math.round(vh - dt)) + 'px');
-    var H = Math.max(360, Math.floor(dt - hh - 12));
+    if(!isLandscape && dock && getComputedStyle(dock).display !== 'none'){
+      var dr = dock.getBoundingClientRect();
+      if(dr.height > 0 && dr.width > dr.height && dr.top > vh * 0.4) dt = dr.top;
+    }
+    if(!isLandscape && !(dt > hh + 300)) dt = vh - 110;
+    var host = document.getElementById('season-match');
+    if(host) host.style.setProperty('--dock-h', isLandscape ? '0px' : Math.max(0, Math.round(vh - dt)) + 'px');
+    var H = Math.max(260, Math.floor(dt - hh - 12));
     el.style.height = H + 'px';   // đặt chiều cao TRƯỚC khi cuộn: trang phải đủ dài thì mới cuộn tới đúng vị trí được
     var y = el.getBoundingClientRect().top - hh - 6; if(Math.abs(y) > 2) window.scrollTo(0, window.pageYOffset + y);
     return H;
@@ -23494,8 +23890,39 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
   }
   function mxSize(){
     var mx = sEl('mx'); if(!mx) return;
-    var H = mxAvail(mx), W = Math.round(Math.max(240, Math.min(H * 68 / 105, mx.clientWidth * 0.56)));
-    mx.style.height = H + 'px'; mx.style.setProperty('--pw', W + 'px'); mx.style.setProperty('--dw', Math.round(W * 0.085) + 'px'); mx.style.setProperty('--cw', Math.round(W * 0.12) + 'px');
+    var isMobile = (window.innerWidth <= 640);
+    var isLandscape = (window.innerWidth > window.innerHeight && window.innerHeight <= 520);
+    var H, W;
+    if(isLandscape){
+      H = Math.min(window.innerHeight - 20, 360);
+      W = Math.round(H * 68 / 105);
+      mx.style.setProperty('--pw', W + 'px');
+      mx.style.setProperty('--dw', Math.round(W * 0.085) + 'px');
+      mx.style.setProperty('--cw', Math.round(W * 0.12) + 'px');
+    } else if(isMobile){
+      var availH = Math.min(window.innerHeight - 180, 520);
+      W = Math.round(availH * 68 / 105);
+      if(W > window.innerWidth - 16){
+        W = window.innerWidth - 16;
+        availH = Math.round(W * 105 / 68);
+      }
+      H = availH;
+      mx.style.setProperty('--pw', W + 'px');
+      mx.style.setProperty('--dw', Math.round(W * 0.085) + 'px');
+      mx.style.setProperty('--cw', Math.round(W * 0.12) + 'px');
+    } else {
+      H = mxAvail(mx);
+      W = Math.round(Math.max(240, Math.min(H * 68 / 105, mx.clientWidth * 0.56)));
+      mx.style.height = H + 'px';
+      mx.style.setProperty('--pw', W + 'px');
+      mx.style.setProperty('--dw', Math.round(W * 0.085) + 'px');
+      mx.style.setProperty('--cw', Math.round(W * 0.12) + 'px');
+    }
+    var pitch = mx.querySelector('.mx-pitch');
+    if(pitch && (isMobile || isLandscape)){
+      pitch.style.width = W + 'px';
+      pitch.style.height = (isLandscape ? H : Math.round(W * 105 / 68)) + 'px';
+    }
     if(sMC && sMC.dir) mxRelayout(sMC.dir);
   }
   function mxScroll(){ var l = sEl('mx-l'), b = l && l.querySelector('.mx-body'); [l, b].forEach(function(x){ if(x && x.scrollTo && x.scrollHeight > x.clientHeight + 2) x.scrollTo({top:x.scrollHeight, behavior:'smooth'}); }); }
@@ -23505,6 +23932,8 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
     var v = sEl('season-view'); if(!v) return;
     var host = sEl('season-match');
     if(!host){ v.style.display = ''; v.innerHTML = '<div id="season-match"></div>'; host = sEl('season-match'); }
+    var tab = (sMC && sMC.tab) || 'sit';
+    host.classList.toggle('tab-sit', tab === 'sit');
     var m = sMC && sMC.m;
     if(m && html.indexOf('id="in-wrap"') < 0){
       var c = sMC, sig = mxSig(m), keep = null, kl = sEl('mx-l'), kb = kl && kl.querySelector('.mx-body'), ks = [kl ? kl.scrollTop : 0, kb ? kb.scrollTop : 0, window.pageYOffset || 0];   // giữ nguyên sân (và vị trí các thẻ) giữa các lần vẽ lại cột bên trái
@@ -23742,7 +24171,7 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
     else if(tab === 'stats') body += sStatsHTML(m);
     else if(tab === 'xi') body += sXIHTML(c, false);
     else {
-      body += sFeedBox(m, 14) + (m.note ? '<div class="mt-line mt-warn">' + escHtml(m.note) + '</div>' : '');
+      body += sFeedBox(m, 2) + (m.note ? '<div class="mt-line mt-warn">' + escHtml(m.note) + '</div>' : '');
       var needN = done ? [] : seNeedSub(m, mMe(m));
       if(needN.length) body += '<div class="mt-half">🚑 ' + needN.map(function(i){ return escHtml(mT(m).pitch[i].n); }).join(', ') + ' bị chấn thương! Vào tab 🧩 Sơ đồ chọn người thay vào nhé</div><div class="se-btns"><button type="button" class="se-btn" data-mt="tab" data-t="xi">🚑 Chọn người thay</button></div>';
       else if(!done && sTacOK(m)) body += '<div class="mt-half">' + (m.redPick ? '🟥 Đội mình thiếu người! Vào tab 🧩 Sơ đồ để chọn lại phong cách cho hợp nhé' : (m.freeTac && !(m.half && !m.halfDone) ? '⏸ Nghỉ giữa hai tình huống: đổi sơ đồ, phong cách và thay người ở tab 🧩 Sơ đồ' : '⏸ Giờ nghỉ giữa hiệp: đổi sơ đồ, phong cách và thay người ở tab 🧩 Sơ đồ')) + '</div><div class="se-btns"><button type="button" class="se-btn ghost" data-mt="tab" data-t="xi">🧩 Mở Sơ đồ và Thay người</button></div>';
@@ -23788,7 +24217,7 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
   function sSitHTML(m, cur){
     var A = m.teams[cur.att], D = m.teams[1 - cur.att], mineAtt = cur.att === mMe(m);
     function col(t, idx){ return idx.map(function(i){ return sPRow(t.pitch[i], t.slots[i], 'p', i, false, true); }).join(''); }
-    return sFeedBox(m, 8, true)
+    return sFeedBox(m, 2, true)
       + '<details class="mt-pdet"><summary>👥 Ai tham gia pha này</summary><div class="mt-cols mt-part"><div><div class="mt-ct">' + (mineAtt ? '🟦 Tấn công' : '🟥 Tấn công') + ' · ' + escHtml(A.name) + '</div>' + col(A, cur.ia) + '</div><div><div class="mt-ct">' + (mineAtt ? '🟥 Phòng ngự' : '🟦 Phòng ngự') + ' · ' + escHtml(D.name) + '</div>' + col(D, cur.id) + '</div></div></details>'
       + '<div class="mt-q" id="mt-q"></div><div class="mt-reel" id="mt-reel"></div>';
   }
