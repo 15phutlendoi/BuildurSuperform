@@ -25298,12 +25298,37 @@ function roadmapIcon(def, locked){
     if(!('speechSynthesis' in window)) return null;
     var vs = window.speechSynthesis.getVoices() || [];
     if(!vs.length) return null;
-    var pref = ['daniel', 'oliver', 'arthur', 'george', 'uk english male', 'uk english', 'en-gb', 'en_gb', 'samantha', 'karen', 'en-us'];
+    // Ưu tiên các giọng BLV chuẩn Anh (British English) phong cách Ngoại Hạng Anh (Premier League)
+    // Các giọng tự nhiên, ấm áp và truyền cảm hàng đầu: Google UK English Male, Daniel (Enhanced), Oliver, Ryan Natural...
+    var pref = [
+      'google uk english male',
+      'google uk english female',
+      'microsoft ryan online (natural) - english (united kingdom)',
+      'microsoft sonia online (natural) - english (united kingdom)',
+      'microsoft george',
+      'daniel (enhanced)',
+      'oliver (enhanced)',
+      'serena (enhanced)',
+      'daniel',
+      'oliver',
+      'arthur',
+      'george',
+      'uk english male',
+      'uk english',
+      'en-gb',
+      'en_gb',
+      'samantha',
+      'karen',
+      'en-us'
+    ];
     for(var i = 0; i < pref.length; i++){
       var p = pref[i];
       for(var j = 0; j < vs.length; j++){
         var nm = (vs[j].name || '').toLowerCase(), lg = (vs[j].lang || '').toLowerCase();
-        if(nm.indexOf(p) >= 0 || lg.indexOf(p) >= 0){ comVoiceObj = vs[j]; return comVoiceObj; }
+        if(nm.indexOf(p) >= 0 || lg.indexOf(p) >= 0){
+          comVoiceObj = vs[j];
+          return comVoiceObj;
+        }
       }
     }
     return vs[0];
@@ -25312,33 +25337,58 @@ function roadmapIcon(def, locked){
     window.speechSynthesis.onvoiceschanged = function(){ comVoiceObj = null; comGetVoice(); };
   }
 
+  /* Nâng cấp giọng bình luận bóng đá truyền cảm, sôi nổi chuẩn phong cách Ngoại Hạng Anh (Premier League) */
   function comSpeak(t, force){
     if((!comVoice && !force) || !('speechSynthesis' in window)) return;
     try{
       var raw = String(t).replace(/\*\*/g, '').replace(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}\u{FE0F}]/gu, ' ').trim();
       if(!raw) return;
-      var isGoal = /\b(goal|scores|scored|net|what a moment|strike|winner)\b/i.test(raw);
-      var isExciting = /\b(chance|save|shot|kicks|box|danger|momentum|fire|key moment)\b/i.test(raw);
+
+      var isGoal = /\b(goal|scores|scored|net|what a moment|strike|winner|celebrates)\b/i.test(raw);
+      var isExciting = /\b(chance|save|shot|kicks|box|danger|momentum|fire|key moment|breaks through|shoots)\b/i.test(raw);
+      var isMissOrFoul = /\b(missed|misses|wide|foul|yellow|red|denied|blocked|crossbar|post|offside)\b/i.test(raw);
+
+      // Định hình nhịp điệu & ngắt nghỉ truyền cảm (Pacing & Dramatic Pauses kiểu BLV Peter Drury / Martin Tyler)
       var speakTxt = raw;
-      if(isGoal && !/^(goal|it's a goal)/i.test(speakTxt)){
-        speakTxt = 'Goal! ' + speakTxt;
+      if(isGoal){
+        if(!/^(goal|what a goal|it's in)/i.test(speakTxt)){
+          speakTxt = 'Goal! ' + speakTxt;
+        }
+        speakTxt = speakTxt.replace(/!+/g, '! ').replace(/\.\.\./g, '... ');
+      } else if(isExciting){
+        speakTxt = speakTxt.replace(/shoots\b/i, 'shoots!')
+                           .replace(/\.\.\./g, '... ');
       }
+
       var u = new SpeechSynthesisUtterance(speakTxt);
       u.lang = 'en-GB';
-      var v = comGetVoice(); if(v) u.voice = v;
+      var v = comGetVoice();
+      if(v) u.voice = v;
+
+      // Chuẩn hóa tempo: Giảm tốc độ từ mức quá nhanh (1.12-1.22) xuống mức vàng (0.95-1.02)
+      // Giúp giọng nói có độ dày, tròn vành rõ chữ, ngắt nghỉ truyền cảm và giàu năng lượng như trên sóng Sky Sports / BBC
       if(isGoal){
-        u.rate = 1.22;   // nhịp điệu dồn dập, bùng nổ khi có bàn thắng
-        u.pitch = 1.26;  // cao độ phấn khích, hào hứng của BLV bóng đá
+        // Bàn thắng bùng nổ: nhịp 1.0 (chuẩn xác, hào sảng), cao độ 1.22 (hân hoan, vang dội)
+        u.rate = 1.0;
+        u.pitch = 1.22;
         u.volume = 1.0;
       } else if(isExciting){
-        u.rate = 1.16;   // tình huống kịch tính, khẩn trương
-        u.pitch = 1.15;
+        // Cơ hội nguy hiểm / dứt điểm: nhịp 1.02, cao độ 1.14 (sôi nổi, dồn dập nhưng không líu lưỡi)
+        u.rate = 1.02;
+        u.pitch = 1.14;
         u.volume = 1.0;
-      } else {
-        u.rate = 1.12;   // nhịp bình luận trận đấu trôi chảy, sôi nổi
-        u.pitch = 1.08;
+      } else if(isMissOrFoul){
+        // Pha bỏ lỡ / phạm lỗi: nhịp 0.94 (trầm xuống, tiếc nuối), cao độ 0.98
+        u.rate = 0.94;
+        u.pitch = 0.98;
         u.volume = 0.95;
+      } else {
+        // Tường thuật trận đấu thông thường: nhịp đĩnh đạc 0.96, ấm áp, nhịp điệu trôi chảy chuẩn BLV Anh
+        u.rate = 0.96;
+        u.pitch = 1.02;
+        u.volume = 0.98;
       }
+
       window.speechSynthesis.cancel();
       window.speechSynthesis.speak(u);
     }catch(e){}
@@ -25464,7 +25514,7 @@ function roadmapIcon(def, locked){
       if(lines[i].k === 'goal'){ try{ if(!reducedMotion()) spawnConfetti(40, 'perfect'); }catch(e){} }
       if(!(sMC && sMC.skip)) comSpeak(lines[i].t);
       var isFriendlyLive = !!(sMC && sMC.lv);
-      var waitMs = isFriendlyLive ? (fast ? 350 : 1150) : (fast ? 500 : (lines[i].fx ? 700 : Math.min(4200, 900 + String(lines[i].t).length * 50)));
+      var waitMs = isFriendlyLive ? (fast ? 350 : 1200) : (fast ? 500 : (lines[i].fx ? 800 : Math.max(1600, Math.min(4500, 1100 + String(lines[i].t).length * 55))));
       await comWait(waitMs, tok);
     }
     if(c) c.shownN = null;
