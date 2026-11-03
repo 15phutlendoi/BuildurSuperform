@@ -1579,6 +1579,87 @@
   .cm-cover img{ width:100%; height:100%; object-fit:cover; display:block; }
   .cm-emb{ position:relative; flex:none; width:62px; height:62px; display:flex; align-items:center; justify-content:center; font-size:36px; border-radius:50%; background:rgba(255,255,255,.14); border:2px solid rgba(255,255,255,.55); }
   .cm-embimg{ width:78%; height:78%; object-fit:contain; }
+/* Logo quốc gia / CLB trên từng chặng Hành Trình */
+  .cm-node-logo{
+    width: 76% !important;
+    height: 76% !important;
+    object-fit: contain !important;
+    filter: drop-shadow(0 1px 3px rgba(0,0,0,0.65)) !important;
+    border-radius: 50% !important;
+    pointer-events: none !important;
+  }
+  .cm-node.lock .cm-node-logo{
+    filter: grayscale(0.85) opacity(0.6) !important;
+  }
+  .cm-node .cm-ball{
+    position: relative !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background: radial-gradient(circle at 35% 30%, #1E293B, #0F172A) !important;
+    border: 2px solid rgba(255, 255, 255, 0.25) !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.5) !important;
+  }
+  .cm-node.done .cm-ball{
+    background: radial-gradient(circle at 35% 30%, #064E3B, #022C22) !important;
+    border-color: #34D399 !important;
+  }
+  .cm-node.cur .cm-ball{
+    background: radial-gradient(circle at 35% 30%, #78350F, #451A03) !important;
+    border-color: #FDE047 !important;
+    animation: cmPulse 1.3s ease-in-out infinite !important;
+  }
+  .cm-node.boss .cm-ball{
+    background: radial-gradient(circle at 35% 30%, #451A03, #1E1B4B) !important;
+    border-color: #F59E0B !important;
+  }
+  .cm-badge{
+    position: absolute !important;
+    bottom: -2px !important;
+    right: -2px !important;
+    width: 18px !important;
+    height: 18px !important;
+    border-radius: 50% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 10px !important;
+    font-weight: 900 !important;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.7) !important;
+    border: 1.5px solid #fff !important;
+    z-index: 3 !important;
+  }
+  .cm-badge.done{
+    background: #22C55E !important;
+    color: #fff !important;
+  }
+  .cm-badge.cur{
+    background: #F59E0B !important;
+    color: #fff !important;
+    width: 20px !important;
+    height: 20px !important;
+    font-size: 11px !important;
+    bottom: -3px !important;
+    right: -3px !important;
+  }
+  .cm-badge.lock{
+    background: #475569 !important;
+    color: #E2E8F0 !important;
+    font-size: 9px !important;
+  }
+  .cm-bossimg{
+    width: 78% !important;
+    height: 78% !important;
+    object-fit: contain !important;
+    filter: drop-shadow(0 2px 6px rgba(0,0,0,0.7)) !important;
+  }
+  .cm-embimg{
+    width: 80% !important;
+    height: 80% !important;
+    object-fit: contain !important;
+    filter: drop-shadow(0 2px 6px rgba(0,0,0,0.6)) !important;
+  }
+
   .cm-bn-txt{ position:relative; flex:1; min-width:0; display:flex; flex-direction:column; gap:2px; }
   .cm-bn-txt small{ font-size:11px; font-weight:900; letter-spacing:.08em; color:#FDE047; }
   .cm-bn-txt b{ font-size:18px; line-height:1.15; }
@@ -4063,9 +4144,14 @@
   #season-match .in-pitch,#season-match .mx-pitch{ position:relative; width:100%; aspect-ratio:68/105; }
   #season-match .in-grass{ background:repeating-linear-gradient(0deg,#2E8B4A 0 8.333%,#277A40 8.333% 16.666%); }
   #season-match .in-grass::after{ background:linear-gradient(0deg,rgba(56,189,248,.16),transparent 38%,transparent 62%,rgba(239,68,68,.16)); }
-  #season-match .in-teams{ flex-direction:column; align-items:flex-start; gap:2px; font-size:17px; }
-  #season-match .in-meta,#season-match .in-cap{ text-align:left; }
-  #season-match .in-tac{ display:grid; gap:2px; font-size:12px; color:var(--ink-soft); margin-top:4px; }
+  #season-match .in-teams{ display:flex; flex-direction:row; align-items:center; justify-content:center; gap:12px; font-size:16px; font-weight:800; width:100%; text-align:center; }
+  #season-match .in-teams b{ flex:1 1 0; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; display:flex; align-items:center; gap:6px; font-size:16px; }
+  #season-match .in-teams b:first-child{ justify-content:flex-end; text-align:right; }
+  #season-match .in-teams b:last-child{ justify-content:flex-start; text-align:left; }
+  #season-match .in-teams span{ flex:0 0 auto; font-size:13.5px; font-weight:900; color:var(--gold,#FBBF24); background:rgba(245,158,11,0.15); border:1px solid rgba(251,191,36,0.4); padding:2px 10px; border-radius:99px; }
+  #season-match .in-meta{ text-align:center; margin:3px 0 4px; display:flex; justify-content:center; align-items:center; gap:6px; font-size:12px; }
+  #season-match .in-tac{ display:flex; justify-content:center; align-items:center; flex-wrap:wrap; gap:8px 16px; font-size:12px; color:var(--ink-soft); margin:4px 0; text-align:center; }
+  #season-match .in-cap{ text-align:center; }
   #season-match .in-bench{ grid-template-columns:1fr; gap:24px; margin-top:14px; }
   #season-match .in-bhalf{ flex-wrap:wrap; justify-content:flex-start; gap:6px; }
   #season-match .in-btns{ margin-top:auto; flex-direction:column; align-items:stretch; }
@@ -4325,6 +4411,259 @@
   @media (prefers-reduced-motion:reduce){ #season-match .mx-l,#season-match .in-l{ scroll-behavior:auto; } }
 </style>
 <style id="season-fit-css">
+  /* =====================================================================
+     BỘ TIÊU CHUẨN THIẾT KẾ IMPECCABLE (CONTRAST, TYPOGRAPHY, SPACING, STATES)
+     Triệt tiêu hoàn toàn các lỗi AI slop, chuẩn hóa hệ thống giao diện
+     ===================================================================== */
+  :root{
+    --ink: #F8FAFC;
+    --ink-soft: #CBD5E1;
+    --ink-muted: #94A3B8;
+    --night: #0F172A;
+    --night-card: #1E293B;
+    --gold: #F59E0B;
+    --gold-light: #FDE047;
+    --gold-glow: rgba(245, 158, 11, 0.35);
+    --brand-success: #10B981;
+    --brand-danger: #EF4444;
+  }
+
+  /* 1. TYPOGRAPHY & CONTRAST NORMALIZATION (WCAG AAA) */
+  body{
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+  p, span, div, li{
+    line-height: 1.45;
+  }
+
+  /* 2. KEYBOARD & FOCUS ACCESSIBILITY STATES */
+  :focus-visible{
+    outline: 2px solid var(--gold-light, #FDE047) !important;
+    outline-offset: 2px !important;
+    box-shadow: 0 0 10px rgba(253, 224, 71, 0.5) !important;
+  }
+  button:focus:not(:focus-visible),
+  [tabindex]:focus:not(:focus-visible){
+    outline: none !important;
+  }
+
+  /* 3. INTERACTIVE STATES (HOVER, ACTIVE, DISABLED) */
+  button, .se-btn, .cm-node, .rm-tab, .mt-opt, .in-kick{
+    transition: transform 0.15s cubic-bezier(0.16, 1, 0.3, 1),
+                background-color 0.15s ease,
+                border-color 0.15s ease,
+                box-shadow 0.15s ease,
+                opacity 0.15s ease !important;
+    -webkit-tap-highlight-color: transparent;
+  }
+  button:hover:not(:disabled),
+  .se-btn:hover:not(:disabled),
+  .mt-opt:hover:not(:disabled){
+    filter: brightness(1.06);
+  }
+  button:active:not(:disabled),
+  .se-btn:active:not(:disabled),
+  .mt-opt:active:not(:disabled){
+    transform: scale(0.97) !important;
+  }
+  button:disabled,
+  .se-btn:disabled{
+    opacity: 0.45 !important;
+    cursor: not-allowed !important;
+    filter: grayscale(0.5) !important;
+    pointer-events: none !important;
+  }
+
+  /* 4. EMPTY STATES & ERROR HARDENING */
+  .empty-collection, .empty-state{
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+    padding: 28px 18px !important;
+    margin: 14px auto !important;
+    max-width: 440px !important;
+    background: rgba(15, 23, 42, 0.72) !important;
+    border: 1.5px dashed rgba(148, 163, 184, 0.35) !important;
+    border-radius: 18px !important;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45) !important;
+    box-sizing: border-box !important;
+    color: var(--ink-soft) !important;
+    font-size: 13.5px !important;
+    line-height: 1.5 !important;
+  }
+  .empty-collection:before, .empty-state:before{
+    content: "🏟️";
+    font-size: 38px;
+    margin-bottom: 8px;
+    display: block;
+    filter: drop-shadow(0 2px 6px rgba(0,0,0,0.5));
+  }
+
+  /* 5. ROADMAP BANNER & HIERARCHY POLISH */
+  .cm-banner{
+    position: relative !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 14px !important;
+    margin: 8px 0 6px !important;
+    padding: 14px 16px !important;
+    border-radius: 18px !important;
+    overflow: hidden !important;
+    color: #fff !important;
+    border: 1.5px solid rgba(254, 240, 138, 0.4) !important;
+    background: linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(30, 41, 59, 0.92)) !important;
+    box-shadow: 0 10px 28px -4px rgba(0, 0, 0, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+  }
+  .cm-emb{
+    position: relative !important;
+    flex: none !important;
+    width: 66px !important;
+    height: 66px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border-radius: 50% !important;
+    background: radial-gradient(circle at 35% 30%, rgba(255, 255, 255, 0.18), rgba(15, 23, 42, 0.85)) !important;
+    border: 2px solid rgba(254, 240, 138, 0.55) !important;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.5) !important;
+    overflow: hidden !important;
+  }
+  .cm-embimg{
+    width: 82% !important;
+    height: 82% !important;
+    object-fit: contain !important;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.65)) !important;
+  }
+  .cm-bn-txt{
+    position: relative !important;
+    flex: 1 1 0 !important;
+    min-width: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 3px !important;
+  }
+  .cm-bn-txt small:first-child{
+    font-size: 11px !important;
+    font-weight: 800 !important;
+    letter-spacing: 0.05em !important;
+    color: var(--gold-light, #FDE047) !important;
+    text-transform: uppercase !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+  .cm-bn-txt b{
+    font-size: 19px !important;
+    font-weight: 900 !important;
+    color: #FFFFFF !important;
+    line-height: 1.25 !important;
+    letter-spacing: -0.01em !important;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8) !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+  .cm-bn-txt span{
+    font-size: 12.5px !important;
+    color: var(--ink-soft, #CBD5E1) !important;
+    line-height: 1.35 !important;
+  }
+
+  /* 6. ROADMAP STAGE NODES & BADGES */
+  .cm-node .cm-ball{
+    position: relative !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border-radius: 50% !important;
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease !important;
+  }
+  .cm-node-logo{
+    width: 78% !important;
+    height: 78% !important;
+    object-fit: contain !important;
+    border-radius: 50% !important;
+    filter: drop-shadow(0 1px 3px rgba(0,0,0,0.7)) !important;
+    pointer-events: none !important;
+  }
+  .cm-node:hover .cm-ball{
+    transform: scale(1.08) !important;
+  }
+  .cm-badge{
+    position: absolute !important;
+    bottom: -2px !important;
+    right: -2px !important;
+    width: 19px !important;
+    height: 19px !important;
+    border-radius: 50% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 10px !important;
+    font-weight: 900 !important;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.75) !important;
+    border: 1.5px solid #FFFFFF !important;
+    z-index: 3 !important;
+  }
+  .cm-badge.done{
+    background: #10B981 !important;
+    color: #FFFFFF !important;
+  }
+  .cm-badge.cur{
+    background: #F59E0B !important;
+    color: #FFFFFF !important;
+    width: 21px !important;
+    height: 21px !important;
+    font-size: 11px !important;
+    bottom: -3px !important;
+    right: -3px !important;
+  }
+  .cm-badge.lock{
+    background: #475569 !important;
+    color: #E2E8F0 !important;
+    font-size: 9px !important;
+  }
+
+  /* 7. CHAPTER TABS SCROLL & CHIPS */
+  .rm-tabs{
+    display: flex !important;
+    gap: 6px !important;
+    margin: 8px 0 10px !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    scrollbar-width: none !important;
+    padding-bottom: 2px !important;
+  }
+  .rm-tabs::-webkit-scrollbar{
+    display: none !important;
+  }
+  .rm-tab{
+    flex: 0 0 auto !important;
+    min-height: 38px !important;
+    padding: 0 14px !important;
+    border-radius: 99px !important;
+    font-size: 13px !important;
+    font-weight: 800 !important;
+    color: var(--ink-soft) !important;
+    background: rgba(30, 41, 59, 0.8) !important;
+    border: 1px solid rgba(255, 255, 255, 0.14) !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    cursor: pointer !important;
+  }
+  .rm-tab.active{
+    color: #0F172A !important;
+    background: linear-gradient(135deg, #FDE047, #F59E0B) !important;
+    border-color: #FDE047 !important;
+    box-shadow: 0 2px 10px rgba(245, 158, 11, 0.4) !important;
+  }
+
   /* ảnh mặt sân theo thời tiết: phủ lên nền cỏ + vạch dự phòng khi đã tải xong */
   #season-match .in-grass .wx-img{ position:absolute; inset:0; background-size:cover; background-position:center; background-repeat:no-repeat; opacity:0; transition:opacity .35s; }
   #season-match .in-grass.img-ok .wx-img{ opacity:1; }
@@ -4491,12 +4830,40 @@
   }
 
   /* =====================================================================
-     CĂN CHỈNH TỈ SỐ & THỜI GIAN RA GIỮA, KHUNG DIỄN BIẾN 4-5 DÒNG CỐ ĐỊNH TRÊN NÚT TIẾP THEO
-     ÁP DỤNG ĐỒNG BỘ CẢ QUAY NGANG VÀ QUAY DỌC (IPHONE & IPAD)
+     TỐI ƯU TOÀN DIỆN CHO TRẬN ĐẤU MÙA GIẢI TRÊN IPHONE & IPAD (DỌC VÀ NGANG)
+     1. Khung diễn biến linh hoạt: mở rộng tối đa khi chưa có câu hỏi, triệt tiêu khoảng trống thừa
+     2. Màn hình giới thiệu đội hình (.in-wrap) cân đối trên iPad, nút KICK OFF thu bé tinh tế
+     3. Tối ưu iPhone dọc & ngang: tận dụng tối đa diện tích cho khung diễn biến, hiển thị nhiều dòng hơn
+     4. Xóa bỏ hoàn toàn khung đen trống (empty pill bar) ở dưới cùng
      ===================================================================== */
+  body.se-match .app-header{
+    display: none !important;
+  }
+  body.se-match #view-battle > .panel:first-child{
+    display: none !important;
+  }
+  body.se-match .app-main{
+    padding-top: 4px !important;
+    padding-bottom: 0 !important;
+  }
+
+  /* TRIỆT TIÊU HOÀN TOÀN KHUNG ĐEN TRỐNG KHI CHƯA CÓ CÂU HỎI HOẶC CHƯA QUAY SỐ */
+  :is(#season-modal, #season-match) .mt-q:empty,
+  :is(#season-modal, #season-match) .mt-reel:empty{
+    display: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+    min-height: 0 !important;
+    height: 0 !important;
+    visibility: hidden !important;
+    overflow: hidden !important;
+  }
+
   :is(#season-modal, #season-match) .mt-hd{
     position: relative;
-    margin-bottom: 4px;
+    margin-bottom: 3px;
     padding-right: 36px;
     width: 100%;
     box-sizing: border-box;
@@ -4509,7 +4876,7 @@
     height: 32px;
     border: 0;
     border-radius: 10px;
-    background: rgba(148, 163, 184, 0.22);
+    background: rgba(148, 163, 184, 0.25);
     color: var(--ink, #fff);
     cursor: pointer;
     font-size: 14px;
@@ -4556,7 +4923,6 @@
     padding: 0 6px !important;
     text-shadow: 0 0 12px rgba(251, 191, 36, 0.45) !important;
   }
-  /* Đưa phần thông báo hiệp và thời gian ra chính giữa ngay dưới tỉ số */
   :is(#season-modal, #season-match) .mt-meta{
     display: flex !important;
     justify-content: center !important;
@@ -4566,7 +4932,7 @@
     font-size: 12px !important;
     font-weight: 800 !important;
     color: var(--ink-soft, #CBD5E1) !important;
-    margin: 2px 0 4px !important;
+    margin: 2px 0 3px !important;
   }
   :is(#season-modal, #season-match) .mt-meta span{
     background: rgba(255, 255, 255, 0.08) !important;
@@ -4578,7 +4944,7 @@
     display: flex !important;
     justify-content: center !important;
     position: relative !important;
-    margin: 2px 0 !important;
+    margin: 1px 0 3px !important;
   }
   :is(#season-modal, #season-match) .mt-voice{
     position: absolute !important;
@@ -4586,7 +4952,6 @@
     top: 50% !important;
     transform: translateY(-50%) !important;
   }
-  /* Bỏ dòng chiến thuật, sức lực của 2 đội và bỏ bar thời gian */
   :is(#season-modal, #season-match) .mt-prog,
   :is(#season-modal, #season-match) .mt-tac,
   :is(#season-modal, #season-match) .mt-eng,
@@ -4594,41 +4959,12 @@
     display: none !important;
   }
 
-  /* KHUNG DIỄN BIẾN 4-5 DÒNG CỐ ĐỊNH NẰM NGAY TRÊN NÚT TIẾP THEO (QUY TẮC CHUNG) */
-  #season-match .mx-body.sit > .mt-feedwrap{
-    flex: 0 0 auto !important;
-    width: 100% !important;
-    margin: 4px 0 6px !important;
-    display: block !important;
-    box-sizing: border-box !important;
-  }
-  #season-match .mx-body.sit .mt-feed{
-    height: 112px !important;
-    max-height: 112px !important;
-    min-height: 96px !important;
-    overflow-y: auto !important;
-    overscroll-behavior: contain !important;
-    display: flex !important;
-    flex-direction: column !important;
-    justify-content: flex-start !important;
-    padding: 6px 10px !important;
-    background: rgba(15, 23, 42, 0.9) !important;
-    border: 1.5px solid rgba(254, 240, 138, 0.4) !important;
-    border-radius: 14px !important;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.55) !important;
-    scroll-behavior: smooth !important;
-    touch-action: pan-y !important;
-    box-sizing: border-box !important;
-  }
-  /* Giữ 5 dòng diễn biến mới nhất, ẩn các dòng cũ hơn để duy trì đúng 4-5 dòng */
-  #season-match .mx-body.sit .mt-feed > :nth-last-child(n+6){
-    display: none !important;
-  }
+  /* ĐỊNH DẠNG DÒNG BÌNH LUẬN TRẬN ĐẤU */
   #season-match .mx-body.sit .fe{
     display: flex !important;
     align-items: baseline !important;
     gap: 6px !important;
-    font-size: 12.5px !important;
+    font-size: 13px !important;
     line-height: 1.35 !important;
     padding: 2.5px 0 !important;
     margin: 0 !important;
@@ -4657,7 +4993,7 @@
   #season-match .mx-body.sit .fe-goal{
     color: #34D399 !important;
     font-weight: 900 !important;
-    text-shadow: 0 0 8px rgba(52, 211, 153, 0.5) !important;
+    text-shadow: 0 0 8px rgba(52, 211, 153, 0.6) !important;
   }
   #season-match .mx-body.sit .fe-key{
     color: #FBBF24 !important;
@@ -4667,7 +5003,7 @@
   #season-match .mx-foot{
     width: 100% !important;
     box-sizing: border-box !important;
-    padding: 2px 0 4px !important;
+    padding: 2px 0 !important;
     margin-top: 0 !important;
   }
   #season-match .mx-foot .se-btn{
@@ -4679,12 +5015,256 @@
   }
 
   /* =====================================================================
-     BỐ CỤC ĐIỆN THOẠI QUAY DỌC (PORTRAIT - IPHONE / IPAD):
-     SÂN BÓNG Ở TRÊN -> KHUNG DIỄN BIẾN 4-5 DÒNG NGAY DƯỚI -> NÚT TIẾP THEO Ở ĐÁY
+     MÀN GIỚI THIỆU ĐỘI HÌNH TRƯỚC TRẬN (.in-wrap):
+  #season-match .in-teams{
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 12px !important;
+    font-size: 16px !important;
+    font-weight: 800 !important;
+    width: 100% !important;
+    text-align: center !important;
+    margin: 4px 0 !important;
+  }
+  #season-match .in-teams b{
+    flex: 1 1 0 !important;
+    min-width: 0 !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    font-size: 16px !important;
+  }
+  #season-match .in-teams b:first-child{
+    justify-content: flex-end !important;
+    text-align: right !important;
+  }
+  #season-match .in-teams b:last-child{
+    justify-content: flex-start !important;
+    text-align: left !important;
+  }
+  #season-match .in-teams span{
+    flex: 0 0 auto !important;
+    font-size: 13.5px !important;
+    font-weight: 900 !important;
+    color: var(--gold, #FBBF24) !important;
+    background: rgba(245, 158, 11, 0.15) !important;
+    border: 1px solid rgba(251, 191, 36, 0.4) !important;
+    padding: 2px 10px !important;
+    border-radius: 99px !important;
+  }
+  #season-match .in-meta{
+    text-align: center !important;
+    margin: 3px 0 4px !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    gap: 6px !important;
+    font-size: 12px !important;
+  }
+  #season-match .in-tac{
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    flex-wrap: wrap !important;
+    gap: 8px 16px !important;
+    font-size: 12px !important;
+    margin: 4px 0 !important;
+    text-align: center !important;
+  }
+
+     Cân đối hoàn hảo trên iPad & iPhone, nút KICK OFF thu bé gọn gàng, hiệu ứng đẹp mắt
      ===================================================================== */
-  @media (max-width: 640px){
+  #season-match .in-wrap{
+    width: 100% !important;
+    margin: 0 auto !important;
+    box-sizing: border-box !important;
+  }
+  #season-match .in-btns{
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 8px !important;
+    width: 100% !important;
+    margin-top: auto !important;
+    box-sizing: border-box !important;
+  }
+  #season-match .in-kick{
+    width: auto !important;
+    min-width: 180px !important;
+    max-width: 220px !important;
+    min-height: 44px !important;
+    padding: 0 24px !important;
+    border-radius: 99px !important;
+    font-size: 15.5px !important;
+    font-weight: 900 !important;
+    letter-spacing: .03em !important;
+    margin: 0 auto !important;
+    box-shadow: 0 4px 16px rgba(239, 68, 68, .4) !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    transition: transform .15s, box-shadow .15s !important;
+  }
+  #season-match .in-kick.ready{
+    animation: inPulse 1.1s ease-in-out infinite alternate !important;
+    box-shadow: 0 0 20px rgba(245, 158, 11, .6), 0 4px 16px rgba(239, 68, 68, .5) !important;
+  }
+  #season-match .in-skipb{
+    min-height: 34px !important;
+    padding: 0 16px !important;
+    font-size: 12.5px !important;
+    border-radius: 99px !important;
+    margin: 0 auto !important;
+  }
+
+  /* iPad màn giới thiệu đội hình (.in-wrap) */
+  @media (min-width: 641px){
+    #season-match .in-wrap{
+      display: flex !important;
+      flex-direction: row !important;
+      align-items: center !important;
+      justify-content: center !important;
+      height: min(calc(100dvh - 36px), 760px) !important;
+      max-height: calc(100dvh - 36px) !important;
+      max-width: 1100px !important;
+      gap: 24px !important;
+      padding: 0 10px !important;
+    }
+    #season-match .in-r{
+      flex: 0 0 auto !important;
+      order: 1 !important;
+      height: 100% !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+    }
+    #season-match .in-field{
+      height: 100% !important;
+      width: auto !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+    }
+    #season-match .in-pitch{
+      height: min(calc(100dvh - 48px), 720px) !important;
+      width: auto !important;
+      aspect-ratio: 68/105 !important;
+      max-height: 100% !important;
+      border-radius: 16px !important;
+      box-shadow: 0 10px 32px rgba(0, 0, 0, 0.65) !important;
+    }
+    #season-match .in-l{
+      flex: 1 1 0 !important;
+      max-width: 460px !important;
+      height: min(calc(100dvh - 48px), 720px) !important;
+      max-height: 100% !important;
+      order: 2 !important;
+      display: flex !important;
+      flex-direction: column !important;
+      justify-content: space-between !important;
+      gap: 8px !important;
+      padding: 6px 0 !important;
+      box-sizing: border-box !important;
+    }
+    #season-match .in-head{
+      flex: 0 0 auto !important;
+    }
+    #season-match .in-cap{
+      flex: 0 0 auto !important;
+      font-size: 15px !important;
+      font-weight: 800 !important;
+      color: var(--gold) !important;
+      margin: 4px 0 !important;
+    }
+    #season-match .in-bench{
+      flex: 0 0 auto !important;
+      margin-top: 8px !important;
+      gap: 16px !important;
+    }
+  }
+
+  /* iPhone màn giới thiệu đội hình (.in-wrap) */
+  @media (max-width: 640px) and (orientation: portrait){
+    #season-match .in-wrap{
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: center !important;
+      height: auto !important;
+      gap: 4px !important;
+      padding: 0 4px !important;
+    }
+    #season-match .in-l{
+      order: 1 !important;
+      width: 100% !important;
+      flex: 0 0 auto !important;
+    }
+    #season-match .in-r{
+      order: 2 !important;
+      width: 100% !important;
+      display: flex !important;
+      justify-content: center !important;
+      margin: 4px auto !important;
+    }
+    #season-match .in-pitch{
+      height: min(calc(100dvh - 300px), 380px) !important;
+      width: auto !important;
+      aspect-ratio: 68/105 !important;
+      max-width: calc(100% - 10px) !important;
+      border-radius: 12px !important;
+    }
+  }
+  @media (orientation: landscape) and (max-height: 520px){
+    #season-match .in-wrap{
+      display: flex !important;
+      flex-direction: row !important;
+      align-items: center !important;
+      justify-content: center !important;
+      height: min(calc(100dvh - 12px), 365px) !important;
+      max-height: calc(100dvh - 12px) !important;
+      gap: 12px !important;
+      padding: 0 4px !important;
+    }
+    #season-match .in-r{
+      flex: 0 0 auto !important;
+      order: 1 !important;
+      height: 100% !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+    }
+    #season-match .in-pitch{
+      height: min(calc(100dvh - 16px), 360px) !important;
+      width: auto !important;
+      aspect-ratio: 68/105 !important;
+    }
+    #season-match .in-l{
+      flex: 1 1 0 !important;
+      max-width: 480px !important;
+      height: min(calc(100dvh - 16px), 360px) !important;
+      order: 2 !important;
+      display: flex !important;
+      flex-direction: column !important;
+      justify-content: space-between !important;
+      gap: 2px !important;
+    }
+  }
+
+  /* ---------------------------------------------------------------------
+     1. IPHONE QUAY DỌC (PORTRAIT <= 640px):
+     Khung diễn biến 4-5 dòng, sân đấu to rõ, không để thừa khoảng trống
+     --------------------------------------------------------------------- */
+  @media (max-width: 640px) and (orientation: portrait){
+    body.se-match .app-main{
+      padding: 2px 6px 0 !important;
+    }
     #season-match{
-      padding-bottom: calc(var(--dock-h, 72px) + env(safe-area-inset-bottom, 16px) + 12px) !important;
+      padding-bottom: calc(var(--dock-h, 60px) + env(safe-area-inset-bottom, 8px) + 2px) !important;
+      margin: 0 !important;
     }
     #season-match .mx{
       display: flex !important;
@@ -4693,7 +5273,7 @@
       min-height: 0 !important;
       gap: 3px !important;
       align-items: center !important;
-      padding: 0 4px !important;
+      padding: 0 !important;
       width: 100% !important;
       box-sizing: border-box !important;
     }
@@ -4710,7 +5290,6 @@
       width: 100% !important;
       margin: 0 0 2px 0 !important;
     }
-    /* Sân bóng đặt ở vị trí order 3: nằm trọn vẹn, không chiếm hết màn hình */
     #season-match .mx-r{
       order: 3 !important;
       display: flex !important;
@@ -4720,16 +5299,15 @@
       margin: 2px auto !important;
     }
     #season-match .mx-pitch{
-      height: min(calc(100dvh - 310px), 430px) !important;
+      height: min(calc(100dvh - 250px), 375px) !important;
       width: auto !important;
       aspect-ratio: 68/105 !important;
       max-width: calc(100% - 10px) !important;
       margin: 0 auto !important;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6) !important;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6) !important;
       border-radius: 12px !important;
       overflow: hidden !important;
     }
-    /* Khung diễn biến 4-5 dòng đặt ở order 4: NẰM NGAY DƯỚI SÂN BÓNG & PHÍA TRÊN NÚT TIẾP THEO */
     #season-match .mx-body.sit{
       order: 4 !important;
       width: 100% !important;
@@ -4738,28 +5316,42 @@
       margin: 2px 0 0 !important;
       padding: 0 !important;
     }
+    #season-match .mx-body.sit > .mt-feedwrap{
+      margin: 2px 0 !important;
+    }
     #season-match .mx-body.sit .mt-feed{
-      height: 98px !important;
-      max-height: 98px !important;
-      min-height: 88px !important;
-      padding: 4px 8px !important;
+      height: 120px !important;
+      max-height: 128px !important;
+      min-height: 105px !important;
+      padding: 5px 8px !important;
+      background: rgba(15, 23, 42, 0.92) !important;
+      border: 1.5px solid rgba(254, 240, 138, 0.4) !important;
+      border-radius: 14px !important;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.55) !important;
+      overflow-y: auto !important;
+    }
+    #season-match .mx-body.sit .fe{
+      padding: 2.5px 0 !important;
+      font-size: 13px !important;
     }
     #season-match .mx-body:not(.sit){
       order: 4 !important;
       width: 100% !important;
-      max-height: 55vh !important;
+      max-height: 52vh !important;
       overflow-y: auto !important;
     }
-    /* Nút hành động đặt ở order 5: NẰM NGAY DƯỚI KHUNG DIỄN BIẾN 4-5 DÒNG */
     #season-match .mx-foot{
       order: 5 !important;
       width: 100% !important;
       position: static !important;
-      padding: 3px 0 6px !important;
+      padding: 2px 0 0 !important;
       background: transparent !important;
       margin-top: 2px !important;
     }
-    /* Các tab khác (Sơ đồ, Số liệu, Nhật ký) */
+    #season-match .mx-foot .se-btn{
+      min-height: 42px !important;
+      font-size: 15px !important;
+    }
     #season-match:not(.tab-sit) .mx-r{
       order: 5 !important;
     }
@@ -4768,47 +5360,42 @@
     }
   }
 
-  /* =====================================================================
-     BỐ CỤC QUAY NGANG (LANDSCAPE - IPHONE & IPAD):
-     TRÁI: SÂN BÓNG TRỌN VẸN | PHẢI: TỈ SỐ -> TABS -> KHUNG DIỄN BIẾN 4-5 DÒNG -> NÚT TIẾP THEO
-     ===================================================================== */
-  @media (orientation: landscape){
-    body.se-match .app-header{
-      display: none !important;
-    }
+  /* ---------------------------------------------------------------------
+     2. IPHONE QUAY NGANG (LANDSCAPE <= 520px height):
+     Bố cục Dual-column phát sóng: Sân đấu trọn vẹn, Khung diễn biến co giãn mượt mà
+     --------------------------------------------------------------------- */
+  @media (orientation: landscape) and (max-height: 520px){
     body.se-match .app-main{
-      padding: 4px 8px !important;
-      margin: 0 auto !important;
+      padding: 4px 6px !important;
       height: 100dvh !important;
       max-height: 100dvh !important;
       box-sizing: border-box !important;
       overflow: hidden !important;
     }
     #season-match{
-      height: 100% !important;
-      max-height: 100% !important;
-      display: flex !important;
-      flex-direction: column !important;
-      justify-content: center !important;
-      padding: 0 !important;
-      margin: 0 !important;
+      height: calc(100dvh - 8px) !important;
+      max-height: calc(100dvh - 8px) !important;
+      width: 100% !important;
+      margin: 0 auto !important;
       box-sizing: border-box !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      padding: 0 4px !important;
     }
     #season-match .mx{
       display: flex !important;
       flex-direction: row !important;
       align-items: center !important;
       justify-content: center !important;
-      height: min(calc(100dvh - 12px), 400px) !important;
-      max-height: calc(100dvh - 12px) !important;
+      height: 100% !important;
       width: 100% !important;
-      max-width: 960px !important;
-      gap: 14px !important;
-      padding: 0 6px !important;
+      max-width: 920px !important;
+      gap: 12px !important;
+      padding: 0 !important;
       margin: 0 auto !important;
       box-sizing: border-box !important;
     }
-    /* Sân bóng bên trái */
     #season-match .mx-r{
       flex: 0 0 auto !important;
       order: 1 !important;
@@ -4819,7 +5406,7 @@
       margin: 0 !important;
     }
     #season-match .mx-pitch{
-      height: min(calc(100dvh - 18px), 370px) !important;
+      height: min(calc(100dvh - 12px), 375px) !important;
       width: auto !important;
       aspect-ratio: 68/105 !important;
       max-height: 100% !important;
@@ -4827,47 +5414,64 @@
       border-radius: 12px !important;
       box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6) !important;
     }
-    /* Cột thông tin bên phải */
     #season-match .mx-l{
       display: flex !important;
       flex-direction: column !important;
       flex: 1 1 0 !important;
       min-width: 0 !important;
-      max-width: 480px !important;
-      height: min(calc(100dvh - 18px), 370px) !important;
+      max-width: 520px !important;
+      height: min(calc(100dvh - 12px), 375px) !important;
       max-height: 100% !important;
       order: 2 !important;
       justify-content: space-between !important;
-      overflow-y: auto !important;
-      gap: 3px !important;
+      overflow: hidden !important;
+      gap: 2px !important;
       padding: 0 !important;
       box-sizing: border-box !important;
     }
     #season-match .mx-l > .mt-hd{
       flex: 0 0 auto !important;
       margin-bottom: 2px !important;
+      padding: 2px 8px !important;
     }
     #season-match .mx-l > .mt-tabs{
       flex: 0 0 auto !important;
       margin: 0 0 2px !important;
+      min-height: 28px !important;
     }
+    /* KHUNG DIỄN BIẾN TRÊN IPHONE NGANG: Co giãn lấp đầy khoảng trống thừa, không để lại ô đen chết */
     #season-match .mx-body.sit{
       flex: 1 1 auto !important;
       min-height: 0 !important;
       display: flex !important;
       flex-direction: column !important;
-      justify-content: flex-end !important;
+      justify-content: flex-start !important;
       margin: 0 !important;
       padding: 0 !important;
       overflow: hidden !important;
     }
     #season-match .mx-body.sit > .mt-feedwrap{
-      margin: 2px 0 !important;
+      flex: 1 1 auto !important;
+      height: auto !important;
+      min-height: 110px !important;
+      display: flex !important;
+      flex-direction: column !important;
+      margin: 2px 0 4px !important;
     }
     #season-match .mx-body.sit .mt-feed{
-      height: 112px !important;
-      max-height: 112px !important;
-      min-height: 98px !important;
+      flex: 1 1 auto !important;
+      height: 100% !important;
+      max-height: none !important;
+      min-height: 110px !important;
+      padding: 6px 10px !important;
+      background: rgba(15, 23, 42, 0.92) !important;
+      border: 1.5px solid rgba(254, 240, 138, 0.4) !important;
+      border-radius: 14px !important;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.55) !important;
+      overflow-y: auto !important;
+    }
+    #season-match .mx-body.sit .mt-feed > :nth-last-child(n+6){
+      display: flex !important;
     }
     #season-match .mx-foot{
       flex: 0 0 auto !important;
@@ -4875,10 +5479,291 @@
       padding: 0 !important;
       position: static !important;
     }
+    #season-match .mx-foot .se-btn{
+      min-height: 38px !important;
+      font-size: 14px !important;
+    }
+  }
+
+  /* ---------------------------------------------------------------------
+     3. IPAD QUAY NGANG (LANDSCAPE > 520px height):
+     TỐI ƯU TOÀN DIỆN: Sân lớn hoành tráng, Khung diễn biến LINH HOẠT lấp đầy không gian trống
+     --------------------------------------------------------------------- */
+  @media (orientation: landscape) and (min-height: 521px){
+    body.se-match .app-main{
+      padding: 6px 12px !important;
+      height: 100dvh !important;
+      max-height: 100dvh !important;
+      box-sizing: border-box !important;
+      overflow: hidden !important;
+    }
+    #season-match{
+      width: 100% !important;
+      max-width: calc(100vw - 84px) !important;
+      height: calc(100dvh - 12px) !important;
+      max-height: calc(100dvh - 12px) !important;
+      margin: 0 auto !important;
+      box-sizing: border-box !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      padding: 0 !important;
+    }
+    #season-match .mx{
+      display: flex !important;
+      flex-direction: row !important;
+      align-items: center !important;
+      justify-content: center !important;
+      height: 100% !important;
+      width: 100% !important;
+      max-width: 1360px !important;
+      gap: 28px !important;
+      padding: 0 8px !important;
+      box-sizing: border-box !important;
+    }
+    #season-match .mx-r{
+      flex: 0 0 auto !important;
+      order: 1 !important;
+      height: 100% !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+    }
+    #season-match .mx-pitch{
+      height: min(calc(100dvh - 20px), 820px) !important;
+      width: auto !important;
+      aspect-ratio: 68/105 !important;
+      max-height: 100% !important;
+      border-radius: 16px !important;
+      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.65) !important;
+    }
+    #season-match .mx-l{
+      display: flex !important;
+      flex-direction: column !important;
+      flex: 1 1 0 !important;
+      min-width: 0 !important;
+      max-width: 580px !important;
+      height: min(calc(100dvh - 20px), 820px) !important;
+      max-height: 100% !important;
+      order: 2 !important;
+      justify-content: flex-start !important;
+      gap: 8px !important;
+      padding: 0 !important;
+      box-sizing: border-box !important;
+    }
+    #season-match .mx-l > .mt-hd{
+      flex: 0 0 auto !important;
+      margin-bottom: 2px !important;
+    }
+    #season-match .mx-l .mt-sc em{
+      font-size: 32px !important;
+    }
+    #season-match .mx-l > .mt-tabs{
+      flex: 0 0 auto !important;
+      margin-bottom: 4px !important;
+    }
+    #season-match .mx-l > .mt-tabs button{
+      min-height: 42px !important;
+      font-size: 14px !important;
+    }
+    /* KHUNG DIỄN BIẾN LINH HOẠT TRÊN IPAD NGANG: Tự giãn lấp đầy khoảng trống khi chưa có câu hỏi */
+    #season-match .mx-body.sit{
+      flex: 1 1 auto !important;
+      min-height: 0 !important;
+      display: flex !important;
+      flex-direction: column !important;
+      justify-content: flex-start !important;
+      overflow: hidden !important;
+      margin: 0 !important;
+      padding: 0 !important;
+    }
+    #season-match .mx-body.sit > .mt-feedwrap{
+      flex: 1 1 auto !important;
+      height: auto !important;
+      min-height: 160px !important;
+      display: flex !important;
+      flex-direction: column !important;
+      margin: 0 0 6px !important;
+    }
+    #season-match .mx-body.sit .mt-feed{
+      flex: 1 1 auto !important;
+      height: 100% !important;
+      max-height: none !important;
+      min-height: 160px !important;
+      padding: 10px 14px !important;
+      background: rgba(15, 23, 42, 0.92) !important;
+      border: 1.5px solid rgba(254, 240, 138, 0.45) !important;
+      border-radius: 16px !important;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.55) !important;
+      overflow-y: auto !important;
+    }
+    #season-match .mx-body.sit .mt-feed > :nth-last-child(n+6){
+      display: flex !important;
+    }
+    #season-match .mx-body.sit .fe{
+      font-size: 14.5px !important;
+      line-height: 1.4 !important;
+      padding: 3.5px 0 !important;
+    }
+    #season-match .mx-body.sit .fe-m{
+      font-size: 14px !important;
+    }
+    #season-match .mx-body.sit .mt-half{
+      flex: 0 0 auto !important;
+      margin: 4px 0 !important;
+    }
+    #season-match .mx-body.sit .se-btns{
+      flex: 0 0 auto !important;
+      margin: 4px 0 !important;
+    }
+    #season-match .mx-foot{
+      flex: 0 0 auto !important;
+      margin-top: 6px !important;
+    }
+    #season-match .mx-foot .se-btn{
+      min-height: 52px !important;
+      font-size: 17px !important;
+      font-weight: 900 !important;
+    }
+  }
+
+  /* ---------------------------------------------------------------------
+     4. IPAD QUAY DỌC (PORTRAIT > 640px width):
+     TỐI ƯU TOÀN DIỆN: Sân lớn, Khung diễn biến LINH HOẠT lấp đầy khoảng trống khi chưa có câu hỏi
+     --------------------------------------------------------------------- */
+  @media (min-width: 641px) and (orientation: portrait){
+    body.se-match .app-main{
+      padding: 6px 12px !important;
+      height: 100dvh !important;
+      max-height: 100dvh !important;
+      box-sizing: border-box !important;
+      overflow: hidden !important;
+    }
+    #season-match{
+      width: 100% !important;
+      max-width: calc(100vw - 16px) !important;
+      height: calc(100dvh - 76px) !important;
+      max-height: calc(100dvh - 76px) !important;
+      margin: 0 auto !important;
+      box-sizing: border-box !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      padding: 0 !important;
+    }
+    #season-match .mx{
+      display: flex !important;
+      flex-direction: row !important;
+      align-items: center !important;
+      justify-content: center !important;
+      height: 100% !important;
+      width: 100% !important;
+      max-width: 1080px !important;
+      gap: 20px !important;
+      padding: 0 8px !important;
+      box-sizing: border-box !important;
+    }
+    #season-match .mx-r{
+      flex: 0 0 auto !important;
+      order: 1 !important;
+      height: 100% !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+    }
+    #season-match .mx-pitch{
+      height: min(calc(100dvh - 84px), 800px) !important;
+      width: auto !important;
+      aspect-ratio: 68/105 !important;
+      max-height: 100% !important;
+      border-radius: 14px !important;
+      box-shadow: 0 10px 32px rgba(0, 0, 0, 0.6) !important;
+    }
+    #season-match .mx-l{
+      display: flex !important;
+      flex-direction: column !important;
+      flex: 1 1 0 !important;
+      min-width: 0 !important;
+      max-width: 480px !important;
+      height: min(calc(100dvh - 84px), 800px) !important;
+      max-height: 100% !important;
+      order: 2 !important;
+      justify-content: flex-start !important;
+      gap: 6px !important;
+      padding: 0 !important;
+      box-sizing: border-box !important;
+    }
+    #season-match .mx-l > .mt-hd{
+      flex: 0 0 auto !important;
+    }
+    #season-match .mx-l .mt-sc em{
+      font-size: 28px !important;
+    }
+    #season-match .mx-l > .mt-tabs{
+      flex: 0 0 auto !important;
+    }
+    /* KHUNG DIỄN BIẾN LINH HOẠT TRÊN IPAD DỌC */
+    #season-match .mx-body.sit{
+      flex: 1 1 auto !important;
+      min-height: 0 !important;
+      display: flex !important;
+      flex-direction: column !important;
+      justify-content: flex-start !important;
+      overflow: hidden !important;
+      margin: 0 !important;
+      padding: 0 !important;
+    }
+    #season-match .mx-body.sit > .mt-feedwrap{
+      flex: 1 1 auto !important;
+      height: auto !important;
+      min-height: 140px !important;
+      display: flex !important;
+      flex-direction: column !important;
+      margin: 0 0 6px !important;
+    }
+    #season-match .mx-body.sit .mt-feed{
+      flex: 1 1 auto !important;
+      height: 100% !important;
+      max-height: none !important;
+      min-height: 140px !important;
+      padding: 8px 12px !important;
+      background: rgba(15, 23, 42, 0.92) !important;
+      border: 1.5px solid rgba(254, 240, 138, 0.45) !important;
+      border-radius: 14px !important;
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.55) !important;
+      overflow-y: auto !important;
+    }
+    #season-match .mx-body.sit .mt-feed > :nth-last-child(n+6){
+      display: flex !important;
+    }
+    #season-match .mx-body.sit .fe{
+      font-size: 13.5px !important;
+      line-height: 1.38 !important;
+      padding: 2.5px 0 !important;
+    }
+    #season-match .mx-body.sit .mt-half{
+      flex: 0 0 auto !important;
+      margin: 4px 0 !important;
+    }
+    #season-match .mx-body.sit .se-btns{
+      flex: 0 0 auto !important;
+      margin: 4px 0 !important;
+    }
+    #season-match .mx-foot{
+      flex: 0 0 auto !important;
+      margin-top: 4px !important;
+    }
+    #season-match .mx-foot .se-btn{
+      min-height: 48px !important;
+      font-size: 16px !important;
+      font-weight: 800 !important;
+    }
   }
 
   /* =====================================================================
      ƯU TIÊN TUYỆT ĐỐI CHO CÂU HỎI VÀ ĐÁP ÁN TRÊN IPHONE / IPAD KHI CÓ KEY MOMENT
+     Áp dụng cho cả 4 chế độ hiển thị: iPhone Dọc, iPhone Ngang, iPad Dọc, iPad Ngang
+     Đảm bảo CÂU HỎI và TẤT CẢ CÁC LỰA CHỌN ĐÁP ÁN luôn hiển thị 100%, không bị che cắt
      ===================================================================== */
   /* Ẩn thanh dock chính (.tab-bar) khi câu hỏi hiển thị để giải phóng toàn bộ màn hình */
   body.is-quiz-active .tab-bar{
@@ -4888,60 +5773,37 @@
     transition: transform .25s cubic-bezier(.34,1.56,.64,1), opacity .2s ease !important;
   }
   body.is-quiz-active #season-match{
-    padding-bottom: max(16px, env(safe-area-inset-bottom)) !important;
+    padding-bottom: max(6px, env(safe-area-inset-bottom)) !important;
   }
 
-  /* Thu gọn danh sách diễn biến: chỉ hiển thị 1 dòng KEY MOMENT làm tiêu đề ngữ cảnh */
+  /* KHI CÂU HỎI XUẤT HIỆN: Ẩn hoàn toàn khung diễn biến feed để nhường 100% không gian cho câu hỏi & các lựa chọn đáp án */
   body.is-quiz-active #season-match .mt-feedwrap{
-    flex: 0 0 auto !important;
-    margin: 2px 0 6px !important;
-  }
-  body.is-quiz-active #season-match .mt-feed{
-    max-height: 52px !important;
-    min-height: 0 !important;
-    flex: 0 0 auto !important;
-    overflow: hidden !important;
-    padding: 0 !important;
-    background: transparent !important;
-    border: none !important;
-    touch-action: pan-y;
-  }
-  body.is-quiz-active #season-match .mt-feed > :not(:last-child){
     display: none !important;
   }
-  body.is-quiz-active #season-match .mt-feed > :last-child{
-    margin: 0 !important;
-    padding: 7px 11px !important;
-    border-radius: 12px !important;
-    background: linear-gradient(135deg, rgba(245, 158, 11, 0.22), rgba(217, 119, 6, 0.12)) !important;
-    border: 1.5px solid rgba(251, 191, 36, 0.6) !important;
-    box-shadow: 0 4px 12px rgba(245, 158, 11, 0.2) !important;
-    font-size: 13.5px !important;
-    font-weight: 800 !important;
-    color: #FEF08A !important;
-    line-height: 1.35 !important;
-    animation: fcPulseKey 1.5s ease-in-out infinite alternate;
+  body.is-quiz-active #season-match .mt-tabs{
+    display: none !important;
   }
-  @keyframes fcPulseKey{
-    0%{ border-color: rgba(251, 191, 36, 0.45); box-shadow: 0 0 8px rgba(245, 158, 11, 0.2); }
-    100%{ border-color: rgba(254, 240, 138, 0.95); box-shadow: 0 0 16px rgba(250, 204, 21, 0.45); }
-  }
-
-  /* Ẩn chi tiết người tham gia pha bóng trong lúc làm bài để không chiếm diện tích */
   body.is-quiz-active #season-match .mt-pdet{
+    display: none !important;
+  }
+  body.is-quiz-active #season-match .mt-reel{
+    display: none !important;
+  }
+  body.is-quiz-active #season-match .mx-foot{
     display: none !important;
   }
 
   /* Hộp câu hỏi: thiết kế nổi bật, độ tương phản cao, ưu tiên hàng đầu */
   #season-match .mt-q{
-    margin: 4px 0 8px;
-    padding: 12px 14px;
+    margin: 4px 0;
+    padding: 10px 14px;
     border-radius: 16px;
-    background: rgba(15, 23, 42, 0.94);
-    border: 1.5px solid rgba(250, 204, 21, 0.55);
+    background: rgba(15, 23, 42, 0.95);
+    border: 1.5px solid rgba(250, 204, 21, 0.6);
     box-shadow: 0 10px 28px -4px rgba(0, 0, 0, 0.75), 0 0 16px rgba(234, 179, 8, 0.25);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
+    box-sizing: border-box;
   }
   #season-match .mt-qchip{
     display: inline-flex;
@@ -4954,24 +5816,24 @@
     border: 1px solid rgba(250, 204, 21, 0.55);
     border-radius: 99px;
     padding: 3px 9px;
-    margin-bottom: 6px;
+    margin-bottom: 5px;
   }
   #season-match .mt-qq{
-    font-size: 16px;
+    font-size: 15px;
     font-weight: 800;
-    line-height: 1.45;
+    line-height: 1.4;
     color: #FFFFFF;
-    margin-bottom: 8px;
+    margin-bottom: 6px;
     text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
   }
   #season-match .mt-qtime{
     display: flex;
     align-items: center;
     gap: 8px;
-    font-size: 13px;
+    font-size: 12.5px;
     font-weight: 900;
     color: #FDE047;
-    margin-bottom: 8px;
+    margin-bottom: 6px;
   }
   #season-match .mt-qbar{
     flex: 1;
@@ -5000,13 +5862,13 @@
     grid-template-columns: 1fr !important;
   }
   #season-match .mt-opt{
-    min-height: 48px;
-    padding: 8px 12px;
+    min-height: 44px;
+    padding: 6px 10px;
     border-radius: 12px;
     border: 1.5px solid rgba(255, 255, 255, 0.22);
-    background: rgba(30, 41, 59, 0.88);
+    background: rgba(30, 41, 59, 0.92);
     color: #F8FAFC;
-    font-size: 14.5px;
+    font-size: 14px;
     font-weight: 700;
     line-height: 1.35;
     display: flex;
@@ -5019,6 +5881,7 @@
     -webkit-user-select: none;
     transition: transform .1s, background .15s, border-color .15s, box-shadow .15s;
     box-shadow: 0 3px 8px rgba(0, 0, 0, 0.35);
+    box-sizing: border-box;
   }
   #season-match .mt-opt:active:not(:disabled){
     transform: scale(0.97);
@@ -5043,42 +5906,286 @@
     text-align: center;
   }
 
-  /* Khi iPhone xoay ngang (chiều cao hẹp < 520px) */
+  /* 1. KHI IPHONE QUAY NGANG (LANDSCAPE <= 520px height):
+     ƯU TIÊN TUYỆT ĐỐI: Sân đấu = Câu hỏi và lựa chọn > Diễn biến
+     Sân bóng 100% bên trái, Bảng tỉ số + Câu hỏi + 4 lựa chọn trọn vẹn bên phải, không cuộn */
   @media (orientation: landscape) and (max-height: 520px){
-    body.is-quiz-active #season-match .mt-feedwrap{
+    body.is-quiz-active #season-match .mt-feedwrap,
+    body.is-quiz-active #season-match .mt-tabs,
+    body.is-quiz-active #season-match .mt-pdet,
+    body.is-quiz-active #season-match .mt-reel,
+    body.is-quiz-active #season-match .mx-foot,
+    body.is-quiz-active #season-match .mt-meta,
+    body.is-quiz-active #season-match .mt-live{
       display: none !important;
+      height: 0 !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      overflow: hidden !important;
     }
-    body.is-quiz-active #season-match .mt-tabs{
-      display: none !important;
+    body.is-quiz-active #season-match .mx-l{
+      justify-content: flex-start !important;
+      gap: 2px !important;
+      overflow: hidden !important;
     }
     body.is-quiz-active #season-match .mt-hd{
-      padding: 2px 8px;
-      margin-bottom: 2px;
+      padding: 1px 6px !important;
+      margin: 0 0 2px 0 !important;
+      flex: 0 0 auto !important;
+    }
+    body.is-quiz-active #season-match .mt-hd .mt-sc{
+      font-size: 11.5px !important;
+      gap: 4px !important;
     }
     body.is-quiz-active #season-match .mt-hd .mt-sc em{
-      font-size: 18px;
+      font-size: 15px !important;
+    }
+    body.is-quiz-active #season-match .mt-hd .mt-logo{
+      width: 18px !important;
+      height: 18px !important;
+    }
+    body.is-quiz-active #season-match .mx-body.sit{
+      flex: 1 1 auto !important;
+      min-height: 0 !important;
+      height: calc(100% - 28px) !important;
+      max-height: calc(100% - 28px) !important;
+      justify-content: flex-start !important;
+      overflow: hidden !important;
+      display: flex !important;
+      flex-direction: column !important;
     }
     body.is-quiz-active #season-match .mt-q{
-      padding: 8px 12px;
-      margin: 2px 0 4px;
+      display: flex !important;
+      flex-direction: column !important;
+      justify-content: space-between !important;
+      height: 100% !important;
+      max-height: 100% !important;
+      box-sizing: border-box !important;
+      padding: 6px 10px !important;
+      margin: 0 !important;
+      border-radius: 14px !important;
+      background: rgba(15, 23, 42, 0.96) !important;
+      border: 1.5px solid rgba(250, 204, 21, 0.6) !important;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6) !important;
+      overflow: hidden !important;
+    }
+    body.is-quiz-active #season-match .mt-qchip{
+      font-size: 10px !important;
+      padding: 1px 6px !important;
+      margin-bottom: 2px !important;
+      align-self: flex-start !important;
     }
     body.is-quiz-active #season-match .mt-qq{
-      font-size: 14px;
-      margin-bottom: 4px;
-      line-height: 1.35;
+      font-size: 12.5px !important;
+      font-weight: 800 !important;
+      line-height: 1.25 !important;
+      margin-bottom: 3px !important;
+      color: #FFFFFF !important;
     }
     body.is-quiz-active #season-match .mt-qtime{
-      margin-bottom: 6px;
-      font-size: 12px;
+      margin-bottom: 4px !important;
+      font-size: 11px !important;
+      font-weight: 900 !important;
+      gap: 6px !important;
+      height: 14px !important;
+    }
+    body.is-quiz-active #season-match .mt-qopts{
+      display: grid !important;
+      grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+      gap: 5px !important;
+      margin-top: 2px !important;
+      flex: 1 1 auto !important;
+      align-content: stretch !important;
+    }
+    body.is-quiz-active #season-match .mt-qopts.long-opts{
+      grid-template-columns: 1fr !important;
+      gap: 4px !important;
+    }
+    body.is-quiz-active #season-match .mt-opt{
+      min-height: 35px !important;
+      max-height: 44px !important;
+      font-size: 12px !important;
+      font-weight: 700 !important;
+      line-height: 1.2 !important;
+      padding: 4px 6px !important;
+      border-radius: 10px !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      text-align: center !important;
+    }
+  }
+
+  /* 2. KHI IPHONE QUAY DỌC (PORTRAIT <= 640px):
+     CĂN ĐÁY KHUNG CÂU HỎI & LỰA CHỌN, TOÀN BỘ DIỆN TÍCH CÒN LẠI DÀNH CHO SÂN ĐẤU */
+  @media (max-width: 640px) and (orientation: portrait){
+    body.is-quiz-active .app-main{
+      padding: 0 4px !important;
+      height: 100dvh !important;
+      max-height: 100dvh !important;
+      overflow: hidden !important;
+      box-sizing: border-box !important;
+    }
+    body.is-quiz-active #season-match{
+      height: 100dvh !important;
+      max-height: 100dvh !important;
+      display: flex !important;
+      flex-direction: column !important;
+      justify-content: space-between !important;
+      padding: 2px 2px max(6px, env(safe-area-inset-bottom, 8px)) 2px !important;
+      margin: 0 !important;
+      overflow: hidden !important;
+      box-sizing: border-box !important;
+    }
+    body.is-quiz-active #season-match .mx{
+      display: flex !important;
+      flex-direction: column !important;
+      justify-content: space-between !important;
+      align-items: center !important;
+      height: 100% !important;
+      max-height: 100% !important;
+      width: 100% !important;
+      gap: 4px !important;
+      padding: 0 !important;
+      margin: 0 !important;
+      overflow: hidden !important;
+      box-sizing: border-box !important;
+    }
+    body.is-quiz-active #season-match .mt-feedwrap,
+    body.is-quiz-active #season-match .mt-tabs,
+    body.is-quiz-active #season-match .mt-pdet,
+    body.is-quiz-active #season-match .mt-reel,
+    body.is-quiz-active #season-match .mx-foot,
+    body.is-quiz-active #season-match .mt-meta,
+    body.is-quiz-active #season-match .mt-live{
+      display: none !important;
+      height: 0 !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      overflow: hidden !important;
+    }
+    body.is-quiz-active #season-match .mt-hd{
+      order: 1 !important;
+      flex: 0 0 auto !important;
+      width: 100% !important;
+      margin: 0 0 2px 0 !important;
+      padding: 2px 6px !important;
+    }
+    body.is-quiz-active #season-match .mx-r{
+      order: 2 !important;
+      flex: 1 1 0 !important;
+      min-height: 0 !important;
+      width: 100% !important;
+      height: 100% !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      margin: 0 auto !important;
+      overflow: hidden !important;
+    }
+    body.is-quiz-active #season-match .mx-pitch{
+      height: 100% !important;
+      max-height: 100% !important;
+      width: auto !important;
+      aspect-ratio: 68/105 !important;
+      max-width: calc(100vw - 12px) !important;
+      margin: 0 auto !important;
+      box-shadow: 0 6px 22px rgba(0, 0, 0, 0.65) !important;
+      border-radius: 14px !important;
+      overflow: hidden !important;
+      object-fit: contain !important;
+    }
+    body.is-quiz-active #season-match .mx-body.sit{
+      order: 3 !important;
+      flex: 0 0 auto !important;
+      width: 100% !important;
+      margin: 0 !important;
+      padding: 0 !important;
+    }
+    body.is-quiz-active #season-match .mt-q{
+      display: flex !important;
+      flex-direction: column !important;
+      padding: 8px 12px 10px !important;
+      margin: 0 auto !important;
+      width: 100% !important;
+      border-radius: 16px !important;
+      box-sizing: border-box !important;
+      background: rgba(15, 23, 42, 0.96) !important;
+      border: 1.5px solid rgba(250, 204, 21, 0.6) !important;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6) !important;
+    }
+    body.is-quiz-active #season-match .mt-qchip{
+      font-size: 11px !important;
+      padding: 2px 8px !important;
+      margin-bottom: 3px !important;
+      align-self: flex-start !important;
+    }
+    body.is-quiz-active #season-match .mt-qq{
+      font-size: 14.5px !important;
+      line-height: 1.35 !important;
+      margin-bottom: 5px !important;
+      font-weight: 800 !important;
+      color: #FFFFFF !important;
+    }
+    body.is-quiz-active #season-match .mt-qtime{
+      margin-bottom: 6px !important;
+      font-size: 12px !important;
+      font-weight: 900 !important;
+      gap: 8px !important;
+    }
+    body.is-quiz-active #season-match .mt-qopts{
+      display: grid !important;
+      grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+      gap: 7px !important;
+      margin-top: 3px !important;
+    }
+    body.is-quiz-active #season-match .mt-qopts.long-opts{
+      grid-template-columns: 1fr !important;
+      gap: 5px !important;
+    }
+    body.is-quiz-active #season-match .mt-opt{
+      min-height: 42px !important;
+      font-size: 13.5px !important;
+      font-weight: 700 !important;
+      padding: 6px 10px !important;
+      border-radius: 12px !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      text-align: center !important;
+    }
+  }
+
+  /* 3. KHI IPAD QUAY DỌC HOẶC QUAY NGANG (> 640px width):
+     Câu hỏi và đáp án hiển thị to rõ, 2 cột đáp án rộng rãi */
+  @media (min-width: 641px){
+    body.is-quiz-active #season-match .mt-q{
+      display: block !important;
+      padding: 14px 18px !important;
+      border-radius: 18px !important;
+      margin: 6px 0 !important;
+      width: 100% !important;
+    }
+    body.is-quiz-active #season-match .mt-qq{
+      font-size: 17px !important;
+      font-weight: 800 !important;
+      line-height: 1.4 !important;
+      margin-bottom: 8px !important;
+    }
+    body.is-quiz-active #season-match .mt-qtime{
+      font-size: 13px !important;
+      margin-bottom: 8px !important;
     }
     body.is-quiz-active #season-match .mt-qopts{
       grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-      gap: 6px !important;
+      gap: 10px !important;
+      margin-top: 8px !important;
     }
     body.is-quiz-active #season-match .mt-opt{
-      min-height: 40px;
-      font-size: 13.5px;
-      padding: 4px 8px;
+      min-height: 50px !important;
+      font-size: 15px !important;
+      font-weight: 800 !important;
+      padding: 8px 12px !important;
     }
   }
 
@@ -5143,13 +6250,11 @@
     #season-match .in-kick{ min-height:50px; font-size:17px; }
   }
 
-  /* điện thoại: khối chảy tự nhiên theo trang; nút hành động nổi ngay trên dock */
+  /* điện thoại: khối chảy gọn theo màn hình; nút hành động nổi ngay trên dock */
   @media (max-width:640px){
     #season-match .mx-l{ overflow:visible; container-type:normal; }
     #season-match .mx-body,#season-match .mx-body.sit{ overflow:visible; display:block; flex:none; }
-    #season-match .mx-body.sit > *{ margin-bottom:6px; }
-    #season-match .mx-body .mt-feedwrap > .mt-feed{ max-height:38vh; }
-    #season-match .mx-foot{ position:sticky; bottom:calc(var(--dock-h,96px) + 8px); z-index:5; padding:8px 0 4px; background:linear-gradient(0deg,var(--night,#0B1224) 70%,transparent); }
+    #season-match .mx-body.sit > *{ margin-bottom:4px; }
     #season-match .mx-r,#season-match .in-r{ display:block; }
   }
   /* ---- Scout: đối kháng chiến thuật ---- */
@@ -10064,52 +11169,106 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
 /* Sân khấu mở thẻ & thông tin */
 .sg-stage{
   position:absolute; inset:0; z-index:5; display:flex; align-items:center; justify-content:center;
-  box-sizing:border-box; padding:calc(env(safe-area-inset-top, 12px) + 8px) calc(env(safe-area-inset-right, 12px) + 8px) calc(env(safe-area-inset-bottom, 12px) + 8px) calc(env(safe-area-inset-left, 12px) + 8px);
+  box-sizing:border-box; width:100%; height:100%; margin:0 auto;
+  padding:calc(env(safe-area-inset-top, 8px) + 4px) calc(env(safe-area-inset-right, 12px) + 8px) calc(env(safe-area-inset-bottom, 8px) + 4px) calc(env(safe-area-inset-left, 12px) + 8px);
 }
 
 /* Khung chứa Thẻ cầu thủ & Khiên đội bóng */
 .sg-showcase{
   display:flex; align-items:center; justify-content:center; gap:clamp(12px, 3vw, 28px);
-  position:relative; transition:all .6s cubic-bezier(.2, .8, .2, 1);
+  position:relative; margin:0 auto; transition:all .6s cubic-bezier(.2, .8, .2, 1);
 }
 
-/* QUAY NGANG (Landscape - iPad & iPhone): Thẻ bên trái, Hồ sơ bên phải */
+/* 1. GIAI ĐOẠN CHƯA HIỆN HỒ SƠ (Reveal / Flip):
+   Ẩn hoàn toàn .sg-info để thẻ cầu thủ nằm chính giữa tuyệt đối trên màn hình */
+#sig-ov:not(.info) .sg-info{
+  display:none !important;
+  width:0 !important; max-width:0 !important; min-width:0 !important;
+  height:0 !important; max-height:0 !important;
+  margin:0 !important; padding:0 !important;
+  border:none !important; opacity:0 !important; pointer-events:none !important;
+  overflow:hidden !important;
+}
+#sig-ov:not(.info) .sg-showcase{
+  margin:0 auto !important;
+  justify-content:center !important;
+  align-items:center !important;
+}
+
+/* 2. GIAI ĐOẠN HIỆN HỒ SƠ & NÚT KÝ (Info State):
+   Quay ngang: Thẻ bên trái, Hồ sơ bên phải, cả 2 đối xứng và căn giữa hoàn hảo */
 #sig-ov.ls .sg-stage{
-  flex-direction:row; justify-content:center; align-items:center; gap:clamp(16px, 4vw, 44px);
+  flex-direction:row !important; justify-content:center !important; align-items:center !important;
+  gap:clamp(14px, 3.5vw, 36px) !important; width:100% !important; margin:0 auto !important;
+}
+#sig-ov.ls .sg-showcase{
+  flex:none; display:flex; align-items:center; justify-content:center;
 }
 #sig-ov.ls .sg-card-slot{
-  flex:none; height:min(78vh, 520px); aspect-ratio:var(--fc-ar, 0.74);
+  flex:none; height:min(78vh, 480px); width:auto; aspect-ratio:var(--fc-ar, 0.74);
   display:flex; align-items:center; justify-content:center; position:relative;
 }
 #sig-ov.ls .sg-team-slot{
-  flex:none; height:min(78vh, 520px); aspect-ratio:var(--fc-ar, 0.74);
+  flex:none; height:min(78vh, 480px); width:auto; aspect-ratio:var(--fc-ar, 0.74);
   display:none; align-items:center; justify-content:center; position:relative;
 }
 #sig-ov.ls .sg-info{
-  flex:none; width:min(52vw, 520px); max-height:86vh;
+  flex:none; width:min(48vw, 480px); max-height:86vh;
 }
 
-/* QUAY DỌC (Portrait - iPhone & iPad đứng): Thẻ nửa trên, Hồ sơ nửa dưới */
+/* Tinh chỉnh riêng cho iPhone quay ngang (màn hình <= 520px height) */
+@media (orientation: landscape) and (max-height: 520px){
+  #sig-ov.ls .sg-stage{
+    gap:clamp(12px, 3vw, 24px) !important;
+    padding:calc(env(safe-area-inset-top, 6px) + 2px) calc(env(safe-area-inset-right, 16px) + 6px) calc(env(safe-area-inset-bottom, 6px) + 2px) calc(env(safe-area-inset-left, 16px) + 6px) !important;
+  }
+  #sig-ov.ls .sg-card-slot{
+    height:min(78vh, 305px) !important;
+  }
+  #sig-ov.ls .sg-info{
+    width:min(50vw, 420px) !important; max-height:88vh !important;
+    padding:8px 12px !important; gap:4px !important;
+  }
+  #sig-ov.ls .sg-head .sg-nm{
+    font-size:clamp(16px, 3vw, 22px) !important;
+  }
+  #sig-ov.ls .sg-grid{
+    gap:4px !important;
+  }
+  #sig-ov.ls .sg-chip{
+    padding:4px 6px !important;
+  }
+  #sig-ov.ls .sg-sign-btn{
+    padding:6px 18px !important; font-size:13px !important;
+  }
+}
+
+/* Quay dọc: Thẻ nửa trên, Hồ sơ nửa dưới */
 #sig-ov.pt .sg-stage{
   flex-direction:column; justify-content:space-evenly; align-items:center; gap:8px;
+  width:100%; height:100%; margin:0 auto;
 }
 #sig-ov.pt .sg-card-slot{
-  flex:none; height:min(40vh, 320px); aspect-ratio:var(--fc-ar, 0.74);
+  flex:none; height:min(40vh, 320px); width:auto; aspect-ratio:var(--fc-ar, 0.74);
   display:flex; align-items:center; justify-content:center; position:relative;
 }
 #sig-ov.pt .sg-team-slot{
-  flex:none; height:min(40vh, 320px); aspect-ratio:var(--fc-ar, 0.74);
+  flex:none; height:min(40vh, 320px); width:auto; aspect-ratio:var(--fc-ar, 0.74);
   display:none; align-items:center; justify-content:center; position:relative;
 }
 #sig-ov.pt .sg-info{
   flex:none; width:min(94vw, 440px); max-height:51vh;
 }
 
-/* KHI ĐÃ KÝ HỢP ĐỒNG (SIGNED): Hồ sơ nhường chỗ cho sân khấu vinh danh Cầu thủ & Logo đội bóng */
+/* 3. GIAI ĐOẠN ĐÃ KÝ HỢP ĐỒNG (SIGNED):
+   ẨN HOÀN TOÀN BẢNG HỒ SƠ (.sg-info display:none), CẢ 2 THẺ (CẦU THỦ & CLB) CĂN CHÍNH GIỮA MÀN HÌNH */
 #sig-ov.signed .sg-info{
-  opacity:0 !important; transform:translateY(40px) scale(0.9) !important;
-  pointer-events:none !important; max-height:0 !important; margin:0 !important; padding:0 !important;
-  border:none !important; overflow:hidden !important; transition:opacity .4s ease, transform .4s ease;
+  display:none !important;
+  width:0 !important; max-width:0 !important; min-width:0 !important;
+  height:0 !important; max-height:0 !important;
+  margin:0 !important; padding:0 !important;
+  border:none !important; opacity:0 !important; pointer-events:none !important;
+  overflow:hidden !important;
 }
 
 #sig-ov.signed .sg-team-slot{
@@ -10118,26 +11277,54 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
 }
 
 #sig-ov.ls.signed .sg-stage{
-  justify-content:center; align-items:center;
+  justify-content:center !important; align-items:center !important;
+  flex-direction:row !important; width:100% !important; margin:0 auto !important;
 }
 #sig-ov.ls.signed .sg-showcase{
-  gap:clamp(16px, 3.5vw, 36px);
+  display:flex !important; flex-direction:row !important;
+  justify-content:center !important; align-items:center !important;
+  gap:clamp(14px, 3.5vw, 32px) !important;
+  margin:0 auto !important; width:auto !important;
 }
 #sig-ov.ls.signed .sg-card-slot,
 #sig-ov.ls.signed .sg-team-slot{
-  height:min(74vh, 490px); width:auto; aspect-ratio:var(--fc-ar, 0.74);
+  height:min(74vh, 480px) !important; width:auto !important; aspect-ratio:var(--fc-ar, 0.74) !important;
+  margin:0 !important;
+}
+
+/* Tinh chỉnh 2 thẻ khi đã ký trên iPhone quay ngang (<= 520px height) */
+@media (orientation: landscape) and (max-height: 520px){
+  #sig-ov.ls.signed .sg-stage{
+    justify-content:center !important; align-items:center !important;
+    padding:calc(env(safe-area-inset-top, 6px) + 2px) calc(env(safe-area-inset-right, 16px) + 6px) calc(env(safe-area-inset-bottom, 6px) + 2px) calc(env(safe-area-inset-left, 16px) + 6px) !important;
+  }
+  #sig-ov.ls.signed .sg-showcase{
+    display:flex !important; flex-direction:row !important;
+    justify-content:center !important; align-items:center !important;
+    gap:clamp(12px, 3vw, 24px) !important;
+    margin:0 auto !important; width:auto !important;
+  }
+  #sig-ov.ls.signed .sg-card-slot,
+  #sig-ov.ls.signed .sg-team-slot{
+    height:min(72vh, 290px) !important; width:auto !important; aspect-ratio:var(--fc-ar, 0.74) !important;
+    margin:0 !important;
+  }
 }
 
 #sig-ov.pt.signed .sg-stage{
-  justify-content:center; align-items:center; gap:0;
+  justify-content:center !important; align-items:center !important; gap:0 !important;
+  width:100% !important; margin:0 auto !important;
 }
 #sig-ov.pt.signed .sg-showcase{
-  display:flex; flex-direction:row; justify-content:center; align-items:center;
-  gap:clamp(8px, 2.8vw, 16px); width:100%; max-width:min(96vw, 480px);
+  display:flex !important; flex-direction:row !important;
+  justify-content:center !important; align-items:center !important;
+  gap:clamp(8px, 2.8vw, 16px) !important; width:100% !important;
+  max-width:min(96vw, 480px) !important; margin:0 auto !important;
 }
 #sig-ov.pt.signed .sg-card-slot,
 #sig-ov.pt.signed .sg-team-slot{
-  width:min(45vw, 215px); height:auto; aspect-ratio:var(--fc-ar, 0.74);
+  width:min(45vw, 215px) !important; height:auto !important; aspect-ratio:var(--fc-ar, 0.74) !important;
+  margin:0 !important;
 }
 
 /* Hoạt ảnh Logo đội bóng bay vào đứng cạnh thẻ */
@@ -10652,9 +11839,21 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
     var ended = false, fin = false, raf = 0, run = false, signed = false, flTimer = null;
     function T(fn, ms){ setTimeout(function(){ if(!ended) fn(); }, ms); }
     function finish(){ if(fin) return; fin = true; try{ done(); }catch(e){ console.warn(e); } }
+    function onSigResize(){
+      if(ended) return;
+      var w = window.innerWidth, h = window.innerHeight, l = w > h;
+      ov.classList.toggle('ls', l);
+      ov.classList.toggle('pt', !l);
+      if(f){ f.width = w; f.height = h; }
+    }
+    window.addEventListener('resize', onSigResize);
+    window.addEventListener('orientationchange', onSigResize);
+
     function end(){
       if(ended) return; ended = true; cancelAnimationFrame(raf); run = false;
       if(flTimer) clearInterval(flTimer);
+      window.removeEventListener('resize', onSigResize);
+      window.removeEventListener('orientationchange', onSigResize);
       ov.classList.add('out');
       setTimeout(function(){ finish(); ov.classList.add('clear'); setTimeout(function(){ ov.remove(); window.__sigBusy = false; }, 1000); }, 450);
     }
@@ -12445,21 +13644,21 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
 
   /* Danh mục 15 Chặng Hành Trình Danh Giá (Quốc gia / CLB xen kẽ) */
   var ROADMAP_15_CAMPAIGNS = [
-    { ch: 1,  type: 'nation', name: 'Đội tuyển Brazil', short: 'Brazil', icon: '🇧🇷', natKey: 'brazil', clubKey: null, color: '#FACC15', desc: 'Vũ Điệu Samba Hoàng Kim' },
-    { ch: 2,  type: 'club',   name: 'Real Madrid CF', short: 'Real Madrid', icon: '👑', natKey: null, clubKey: 'real', color: '#38BDF8', desc: 'Hoàng Gia Madrid Vĩ Đại' },
-    { ch: 3,  type: 'nation', name: 'Đội tuyển Argentina', short: 'Argentina', icon: '🇦🇷', natKey: 'argentina', clubKey: null, color: '#67E8F9', desc: 'Vũ Điệu Tango Rực Lửa' },
-    { ch: 4,  type: 'club',   name: 'Manchester City', short: 'Man City', icon: '🔵', natKey: null, clubKey: 'manchester_city', color: '#0EA5E9', desc: 'Cỗ Máy Chiến Thắng Tiki-Taka' },
-    { ch: 5,  type: 'nation', name: 'Đội tuyển Pháp', short: 'Pháp', icon: '🇫🇷', natKey: 'france', clubKey: null, color: '#3B82F6', desc: 'Những Chú Gà Trống Gaulois' },
-    { ch: 6,  type: 'club',   name: 'Manchester United', short: 'Man United', icon: '🔴', natKey: null, clubKey: 'manchester_united', color: '#EF4444', desc: 'Nhà Hát Của Những Giấc Mơ' },
-    { ch: 7,  type: 'nation', name: 'Đội tuyển Đức', short: 'Đức', icon: '🇩🇪', natKey: 'germany', clubKey: null, color: '#E2E8F0', desc: 'Cỗ Xe Tăng Bất Khả Chiến Bại' },
-    { ch: 8,  type: 'club',   name: 'Liverpool FC', short: 'Liverpool', icon: '🔴', natKey: null, clubKey: 'liverpool', color: '#DC2626', desc: 'Lữ Đoàn Đỏ Vùng Merseyside' },
-    { ch: 9,  type: 'nation', name: 'Đội tuyển Anh', short: 'Anh', icon: '🏴󠁧󠁢󠁥󠁮󠁧󠁿', natKey: 'england', clubKey: null, color: '#F8FAFC', desc: 'Sức Mạnh Tam Sư Hùng Cường' },
-    { ch: 10, type: 'club',  name: 'FC Bayern Munich', short: 'Bayern', icon: '🔴', natKey: null, clubKey: 'bayern', color: '#B91C1C', desc: 'Hùm Xám Xứ Bavaria' },
-    { ch: 11, type: 'nation', name: 'Đội tuyển Bồ Đào Nha', short: 'Bồ Đào Nha', icon: '🇵🇹', natKey: 'portugal', clubKey: null, color: '#10B981', desc: 'Seleção Châu Âu Kiêu Hùng' },
-    { ch: 12, type: 'club',  name: 'FC Barcelona', short: 'Barcelona', icon: '🔵', natKey: null, clubKey: 'barcelona', color: '#8B5CF6', desc: 'Thánh Địa Camp Nou Huyền Thoại' },
-    { ch: 13, type: 'nation', name: 'Đội tuyển Tây Ban Nha', short: 'Tây Ban Nha', icon: '🇪🇸', natKey: 'spain', clubKey: null, color: '#F59E0B', desc: 'Cơn Cuồng Phong Đỏ La Roja' },
-    { ch: 14, type: 'club',  name: 'Juventus FC', short: 'Juventus', icon: '⚪', natKey: null, clubKey: 'juventus', color: '#64748B', desc: 'Bà Đầm Già Thành Turin' },
-    { ch: 15, type: 'mix',   name: 'Siêu Sao Thế Giới', short: 'World Elite', icon: '🏆', natKey: null, clubKey: null, color: '#F59E0B', desc: 'Đỉnh Cao Huyền Thoại Vô Địch' }
+    { ch: 1,  type: 'nation', name: 'Đội tuyển Brazil', short: 'Brazil', icon: '🇧🇷', natKey: 'brazil', clubKey: null, logo: 'flags_23_128x128_54.png', color: '#FACC15', desc: 'Vũ Điệu Samba Hoàng Kim' },
+    { ch: 2,  type: 'club',   name: 'Real Madrid CF', short: 'Real Madrid', icon: '👑', natKey: null, clubKey: 'real', logo: 'club_23_243.png', color: '#38BDF8', desc: 'Hoàng Gia Madrid Vĩ Đại' },
+    { ch: 3,  type: 'nation', name: 'Đội tuyển Argentina', short: 'Argentina', icon: '🇦🇷', natKey: 'argentina', clubKey: null, logo: 'flags_23_128x128_52.png', color: '#67E8F9', desc: 'Vũ Điệu Tango Rực Lửa' },
+    { ch: 4,  type: 'club',   name: 'Manchester City', short: 'Man City', icon: '🔵', natKey: null, clubKey: 'manchester_city', logo: 'club_23_10.png', color: '#0EA5E9', desc: 'Cỗ Máy Chiến Thắng Tiki-Taka' },
+    { ch: 5,  type: 'nation', name: 'Đội tuyển Pháp', short: 'Pháp', icon: '🇫🇷', natKey: 'france', clubKey: null, logo: 'flags_23_128x128_18.png', color: '#3B82F6', desc: 'Những Chú Gà Trống Gaulois' },
+    { ch: 6,  type: 'club',   name: 'Manchester United', short: 'Man United', icon: '🔴', natKey: null, clubKey: 'manchester_united', logo: 'club_23_11.png', color: '#EF4444', desc: 'Nhà Hát Của Những Giấc Mơ' },
+    { ch: 7,  type: 'nation', name: 'Đội tuyển Đức', short: 'Đức', icon: '🇩🇪', natKey: 'germany', clubKey: null, logo: 'flags_23_128x128_21.png', color: '#E2E8F0', desc: 'Cỗ Xe Tăng Bất Khả Chiến Bại' },
+    { ch: 8,  type: 'club',   name: 'Liverpool FC', short: 'Liverpool', icon: '🔴', natKey: null, clubKey: 'liverpool', logo: 'club_23_9.png', color: '#DC2626', desc: 'Lữ Đoàn Đỏ Vùng Merseyside' },
+    { ch: 9,  type: 'nation', name: 'Đội tuyển Anh', short: 'Anh', icon: '🏴󠁧󠁢󠁥󠁮󠁧󠁿', natKey: 'england', clubKey: null, logo: 'flags_23_128x128_14.png', color: '#F8FAFC', desc: 'Sức Mạnh Tam Sư Hùng Cường' },
+    { ch: 10, type: 'club',  name: 'FC Bayern Munich', short: 'Bayern', icon: '🔴', natKey: null, clubKey: 'bayern', logo: 'club_23_21.png', color: '#B91C1C', desc: 'Hùm Xám Xứ Bavaria' },
+    { ch: 11, type: 'nation', name: 'Đội tuyển Bồ Đào Nha', short: 'Bồ Đào Nha', icon: '🇵🇹', natKey: 'portugal', clubKey: null, logo: 'flags_23_128x128_38.png', color: '#10B981', desc: 'Seleção Châu Âu Kiêu Hùng' },
+    { ch: 12, type: 'club',  name: 'FC Barcelona', short: 'Barcelona', icon: '🔵', natKey: null, clubKey: 'barcelona', logo: 'club_23_241.png', color: '#8B5CF6', desc: 'Thánh Địa Camp Nou Huyền Thoại' },
+    { ch: 13, type: 'nation', name: 'Đội tuyển Tây Ban Nha', short: 'Tây Ban Nha', icon: '🇪🇸', natKey: 'spain', clubKey: null, logo: 'flags_23_128x128_45.png', color: '#F59E0B', desc: 'Cơn Cuồng Phong Đỏ La Roja' },
+    { ch: 14, type: 'club',  name: 'Juventus FC', short: 'Juventus', icon: '⚪', natKey: null, clubKey: 'juventus', logo: 'club_23_45.png', color: '#64748B', desc: 'Bà Đầm Già Thành Turin' },
+    { ch: 15, type: 'mix',   name: 'Siêu Sao Thế Giới', short: 'World Elite', icon: '🏆', natKey: null, clubKey: null, logo: 'club_23_112893.png', color: '#F59E0B', desc: 'Đỉnh Cao Huyền Thoại Vô Địch' }
   ];
 
   /* ---- Hành trình: LOẠI TRẬN cố định theo từng ải (người chơi không đổi được) ----
@@ -12610,6 +13809,8 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
         title: camp.name,
         icon: camp.icon,
         desc: camp.desc,
+        logo: camp.logo,
+        emblem: camp.logo,
         list: arr
       });
     });
@@ -12634,14 +13835,15 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
     var type = (defCamp && defCamp.type) || (th && th.type) || 'mix';
     var icon = (defCamp && defCamp.icon) || (th ? (th.type === 'nation' ? '🌍' : '🛡️') : '🏟️');
     var title = (defCamp && defCamp.name) || roadmapThemeName(th);
-    var emblem = (th && th.key) || '';
+    var logo = (defCamp && defCamp.logo) || (th && th.logo) || '';
     return {
       t: th,
       list: th ? th.list : null,
       type: type,
       icon: icon,
       title: title,
-      emblem: emblem,
+      emblem: logo,
+      logo: logo,
       desc: (defCamp && defCamp.desc) || ''
     };
   }
@@ -12782,7 +13984,11 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
     return d;
   }
   function cmEmblem(th, cls){
-    return (th.emblem && cdnReady()) ? '<img class="'+cls+'" src="'+cdnUrl(th.emblem)+'" alt="" loading="lazy" onerror="this.remove()">' : '';
+    var emblem = (th && (th.logo || th.emblem));
+    if(!emblem) return '';
+    var src = cdnUrl(emblem);
+    if(!src) return '';
+    return '<img class="' + cls + '" src="' + src + '" alt="" loading="lazy">';
   }
 
   function renderRoadmap(){
@@ -12815,14 +14021,20 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
     var pts = CM_PTS, doneUpTo = Math.max(0, Math.min(10, cleared - first + 1));
     var goldIdx = Math.min(9, doneUpTo);                       // đến nút hiện tại (đã qua + 1)
     var goldPts = doneUpTo > 0 ? pts.slice(0, goldIdx + 1) : [];
-    var nodes = '';
+    var nodes = '', logoImg = cmEmblem(th, 'cm-node-logo');
     for(var i = first; i <= last; i++){
       var def = roadmapStageDef(i), p = pts[def.k-1];
       var st = i <= cleared ? 'done' : (i === cleared+1 ? 'cur' : 'lock');
-      var face = def.boss ? (cmEmblem(th, 'cm-bossimg') || '👑') : (st === 'lock' ? '🔒' : (st === 'done' ? '✓' : def.k));
+      var face = '';
+      if(def.boss){
+        face = (logoImg || cmEmblem(th, 'cm-bossimg') || '👑') + '<i class="cm-crown">👑</i>';
+      } else {
+        var badge = (st === 'done' ? '<span class="cm-badge done">✓</span>' : (st === 'cur' ? '<span class="cm-badge cur">' + def.k + '</span>' : '<span class="cm-badge lock">🔒</span>'));
+        face = (logoImg || (st === 'lock' ? '🔒' : (st === 'done' ? '✓' : def.k))) + badge;
+      }
       nodes += '<button type="button" class="cm-node '+st+(def.boss ? ' boss' : '')+'" data-n="'+i+'" style="left:'+p[0]+'%;top:'+(p[1]/1.3).toFixed(2)+'%" aria-label="'+escHtml(def.name)+'">'
         + (st === 'cur' ? '<span class="cm-pin">⚽</span>' : '')
-        + '<span class="cm-ball">'+face+(def.boss ? '<i class="cm-crown">👑</i>' : '')+'</span>'
+        + '<span class="cm-ball">'+face+'</span>'
         + '<span class="cm-lbl">'+(def.boss ? 'BOSS' : 'Ải '+def.k)+'</span>'
         + '<span class="cm-sub">'+(st === 'done' ? '✓ xong' : (st === 'cur' ? (played ? '⏰ mai đấu' : '▶ VÀO SÂN') : new Array(def.flames+1).join('🔥')))+(st !== 'done' ? ' 🧩'+def.frags : '')+'</span>'
         + '</button>';
@@ -23320,10 +24532,34 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
   }
   function inSize(){
     var wrap = sEl('in-wrap'), fld = sEl('in-field'); if(!wrap || !fld) return;
-    var H = mxAvail(wrap), W = Math.round(Math.max(260, Math.min(H * 68 / 105, wrap.clientWidth * 0.6)));
-    wrap.style.height = H + 'px'; wrap.style.setProperty('--pw', W + 'px');
-    fld.style.width = W + 'px'; fld.style.setProperty('--cw', Math.round(W * (parseFloat(wrap.getAttribute('data-cr')) || 0.118)) + 'px');
+    var vw = window.innerWidth, vh = window.innerHeight;
+    var isPhoneLand = (vw > vh && vh <= 520);
+    var isMobile = (vw <= 640 && vh >= vw);
+    var H, W;
+    if(isPhoneLand){
+      H = Math.min(vh - 16, 360);
+      W = Math.round(H * 68 / 105);
+    } else if(isMobile){
+      var availH = Math.min(vh - 280, 390);
+      W = Math.round(availH * 68 / 105);
+      if(W > vw - 16){
+        W = vw - 16;
+        availH = Math.round(W * 105 / 68);
+      }
+      H = availH;
+    } else { // iPad / tablet
+      H = Math.min(vh - 48, 720);
+      W = Math.round(Math.min(H * 68 / 105, vw * 0.52));
+    }
+    wrap.style.setProperty('--pw', W + 'px');
+    fld.style.width = W + 'px';
+    fld.style.setProperty('--cw', Math.round(W * (parseFloat(wrap.getAttribute('data-cr')) || 0.118)) + 'px');
     wrap.style.setProperty('--bw', Math.round(Math.min(46, (wrap.clientWidth - W - 40) / 7.6)) + 'px');
+    var pitch = wrap.querySelector('.in-pitch');
+    if(pitch){
+      pitch.style.width = W + 'px';
+      pitch.style.height = (isPhoneLand ? H : Math.round(W * 105 / 68)) + 'px';
+    }
   }
   window.addEventListener('resize', function(){ if(sEl('in-field')) inSize(); });
   window.addEventListener('orientationchange', function(){ setTimeout(function(){ if(sEl('in-field')) inSize(); }, 250); });
@@ -24273,23 +25509,38 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
   }
   function mxSize(){
     var mx = sEl('mx'); if(!mx) return;
-    var isMobile = (window.innerWidth <= 640);
-    var isLandscape = (window.innerWidth > window.innerHeight && window.innerHeight <= 520);
+    var vw = window.innerWidth, vh = window.innerHeight;
+    var isPhoneLand = (vw > vh && vh <= 520);
+    var isPadLand = (vw > vh && vh > 520);
+    var isMobile = (vw <= 640 && vh >= vw);
+    var isPadPort = (vw > 640 && vh >= vw);
     var H, W;
-    if(isLandscape){
-      H = Math.min(window.innerHeight - 20, 360);
+    if(isPhoneLand){
+      H = Math.min(vh - 12, 365);
+      W = Math.round(H * 68 / 105);
+      mx.style.setProperty('--pw', W + 'px');
+      mx.style.setProperty('--dw', Math.round(W * 0.085) + 'px');
+      mx.style.setProperty('--cw', Math.round(W * 0.12) + 'px');
+    } else if(isPadLand){
+      H = Math.min(vh - 20, 820);
       W = Math.round(H * 68 / 105);
       mx.style.setProperty('--pw', W + 'px');
       mx.style.setProperty('--dw', Math.round(W * 0.085) + 'px');
       mx.style.setProperty('--cw', Math.round(W * 0.12) + 'px');
     } else if(isMobile){
-      var availH = Math.min(window.innerHeight - 180, 520);
+      var availH = Math.min(vh - 295, 415);
       W = Math.round(availH * 68 / 105);
-      if(W > window.innerWidth - 16){
-        W = window.innerWidth - 16;
+      if(W > vw - 16){
+        W = vw - 16;
         availH = Math.round(W * 105 / 68);
       }
       H = availH;
+      mx.style.setProperty('--pw', W + 'px');
+      mx.style.setProperty('--dw', Math.round(W * 0.085) + 'px');
+      mx.style.setProperty('--cw', Math.round(W * 0.12) + 'px');
+    } else if(isPadPort){
+      H = Math.min(vh - 84, 800);
+      W = Math.round(Math.min(H * 68 / 105, vw * 0.56));
       mx.style.setProperty('--pw', W + 'px');
       mx.style.setProperty('--dw', Math.round(W * 0.085) + 'px');
       mx.style.setProperty('--cw', Math.round(W * 0.12) + 'px');
@@ -24302,9 +25553,14 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
       mx.style.setProperty('--cw', Math.round(W * 0.12) + 'px');
     }
     var pitch = mx.querySelector('.mx-pitch');
-    if(pitch && (isMobile || isLandscape)){
-      pitch.style.width = W + 'px';
-      pitch.style.height = (isLandscape ? H : Math.round(W * 105 / 68)) + 'px';
+    if(pitch){
+      if(isPhoneLand || isPadLand){
+        pitch.style.width = W + 'px';
+        pitch.style.height = H + 'px';
+      } else if(isMobile || isPadPort){
+        pitch.style.width = W + 'px';
+        pitch.style.height = Math.round(W * 105 / 68) + 'px';
+      }
     }
     if(sMC && sMC.dir) mxRelayout(sMC.dir);
   }
@@ -24554,7 +25810,7 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
     else if(tab === 'stats') body += sStatsHTML(m);
     else if(tab === 'xi') body += sXIHTML(c, false);
     else {
-      body += sFeedBox(m, 5) + (m.note ? '<div class="mt-line mt-warn">' + escHtml(m.note) + '</div>' : '');
+      body += sFeedBox(m, 14) + (m.note ? '<div class="mt-line mt-warn">' + escHtml(m.note) + '</div>' : '');
       var needN = done ? [] : seNeedSub(m, mMe(m));
       if(needN.length) body += '<div class="mt-half">🚑 ' + needN.map(function(i){ return escHtml(mT(m).pitch[i].n); }).join(', ') + ' bị chấn thương! Vào tab 🧩 Sơ đồ chọn người thay vào nhé</div><div class="se-btns"><button type="button" class="se-btn" data-mt="tab" data-t="xi">🚑 Chọn người thay</button></div>';
       else if(!done && sTacOK(m)) body += '<div class="mt-half">' + (m.redPick ? '🟥 Đội mình thiếu người! Vào tab 🧩 Sơ đồ để chọn lại phong cách cho hợp nhé' : (m.freeTac && !(m.half && !m.halfDone) ? '⏸ Nghỉ giữa hai tình huống: đổi sơ đồ, phong cách và thay người ở tab 🧩 Sơ đồ' : '⏸ Giờ nghỉ giữa hiệp: đổi sơ đồ, phong cách và thay người ở tab 🧩 Sơ đồ')) + '</div><div class="se-btns"><button type="button" class="se-btn ghost" data-mt="tab" data-t="xi">🧩 Mở Sơ đồ và Thay người</button></div>';
@@ -24600,14 +25856,67 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
   function sSitHTML(m, cur){
     var A = m.teams[cur.att], D = m.teams[1 - cur.att], mineAtt = cur.att === mMe(m);
     function col(t, idx){ return idx.map(function(i){ return sPRow(t.pitch[i], t.slots[i], 'p', i, false, true); }).join(''); }
-    return sFeedBox(m, 5, true)
+    return sFeedBox(m, 14, true)
       + '<details class="mt-pdet"><summary>👥 Ai tham gia pha này</summary><div class="mt-cols mt-part"><div><div class="mt-ct">' + (mineAtt ? '🟦 Tấn công' : '🟥 Tấn công') + ' · ' + escHtml(A.name) + '</div>' + col(A, cur.ia) + '</div><div><div class="mt-ct">' + (mineAtt ? '🟥 Phòng ngự' : '🟦 Phòng ngự') + ' · ' + escHtml(D.name) + '</div>' + col(D, cur.id) + '</div></div></details>'
-      + '<div class="mt-q" id="mt-q"></div><div class="mt-reel" id="mt-reel"></div>';
+      + '<div class="mt-q" id="mt-q" style="display:none"></div><div class="mt-reel" id="mt-reel" style="display:none"></div>';
   }
+  function mxQuizEnter(){
+    document.body.classList.add('is-quiz-active');
+    var mHost = sEl('season-match');
+    if(mHost){
+      var fw = mHost.querySelector('.mt-feedwrap');
+      if(fw) fw.style.display = 'none';
+      var tb = mHost.querySelector('.mt-tabs');
+      if(tb) tb.style.display = 'none';
+      var pd = mHost.querySelector('.mt-pdet');
+      if(pd) pd.style.display = 'none';
+      var ft = mHost.querySelector('.mx-foot');
+      if(ft) ft.style.display = 'none';
+      var sk = mHost.querySelector('.mt-skiprow');
+      if(sk) sk.style.display = 'none';
+      var meta = mHost.querySelector('.mt-meta');
+      var live = mHost.querySelector('.mt-live');
+      if(window.innerWidth > window.innerHeight){
+        if(meta) meta.style.display = 'none';
+        if(live) live.style.display = 'none';
+      }
+      var qe = sEl('mt-q');
+      if(qe) qe.style.display = '';
+    }
+    sScrollToPitch();
+  }
+
+  function mxQuizLeave(){
+    var qe = sEl('mt-q');
+    if(qe) qe.style.display = 'none';
+    document.body.classList.remove('is-quiz-active');
+    var mHost = sEl('season-match');
+    if(mHost){
+      var fw = mHost.querySelector('.mt-feedwrap');
+      if(fw) fw.style.display = '';
+      var tb = mHost.querySelector('.mt-tabs');
+      if(tb) tb.style.display = '';
+      var pd = mHost.querySelector('.mt-pdet');
+      if(pd) pd.style.display = '';
+      var ft = mHost.querySelector('.mx-foot');
+      if(ft) ft.style.display = '';
+      var meta = mHost.querySelector('.mt-meta');
+      if(meta) meta.style.display = '';
+      var live = mHost.querySelector('.mt-live');
+      if(live) live.style.display = '';
+      var fd = mHost.querySelector('.mt-feed');
+      if(fd){
+        fd.classList.remove('compact');
+        if(fd.scrollTo) fd.scrollTo({top: fd.scrollHeight, behavior: 'smooth'});
+      }
+    }
+    sScrollToPitch();
+  }
+
   function sQuiz(m, tok){
     var q = quizPick(m.qT), secs = m.secs || 15, subj = QUIZ_SUBJECTS[q.subject] || QUIZ_SUBJECTS.khac, tp = QUIZ_TOPICS[q.topic], box = sEl('mt-q');
     if(!box) return Promise.resolve({ok:false, score:1});
-    document.body.classList.add('is-quiz-active');
+    mxQuizEnter();
     var isLong = Array.isArray(q.options) && q.options.some(function(o){ return String(o).length > 28; });
     var chip = tp ? ('🔬 Science · ' + tp.ic + ' ' + tp.en + ' · ' + tp.vi) : (subj.ic + ' ' + subj.name);
     box.style.display = '';
@@ -24618,15 +25927,18 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
       function rem(){ return secs - (performance.now() - t0) / 1000; }
       function finish(res){
         if(done) return; done = true; clearInterval(iv);
-        document.body.classList.remove('is-quiz-active');
         res.score = res.ok ? Math.min(10, Math.max(1, res.secLeft)) : 0; seSfx(res.ok ? 'right' : 'wrong');
         optsEl.querySelectorAll('.mt-opt').forEach(function(b, i){ b.disabled = true; if(i === q.correct) b.classList.add('ok'); else if(i === res.picked) b.classList.add('bad'); });
         var fb = sEl('mt-qfb');
         if(fb) fb.innerHTML = res.ok ? '✅ <b>Chính xác!</b> Còn ' + res.secLeft + ' giây → ' + res.score + ' điểm' : ((res.timeout ? '⏰ <b>Hết giờ!</b> ' : '❌ <b>Chưa đúng.</b> ') + 'Đáp án: <b>' + escHtml(q.options[q.correct]) + '</b>' + (q.explain ? '<br><small>' + escHtml(q.explain) + '</small>' : ''));
-        setTimeout(function(){ resolve(res); }, res.ok ? 900 : 2300);
+        var delay = res.ok ? 1500 : 2800;
+        setTimeout(function(){
+          mxQuizLeave();
+          resolve(res);
+        }, delay);
       }
       function tick(){
-        if(!sAlive(tok)){ done = true; clearInterval(iv); document.body.classList.remove('is-quiz-active'); return; }
+        if(!sAlive(tok)){ done = true; clearInterval(iv); mxQuizLeave(); return; }
         var r = rem(); if(r <= 0){ finish({ok:false, timeout:true, picked:-1}); return; }
         var te = sEl('mt-qt'), be = sEl('mt-qb'); if(te) te.textContent = String(Math.ceil(r)); if(be) be.style.width = (r / secs * 100) + '%';
       }
@@ -24651,8 +25963,18 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
       setTimeout(function(){ clearInterval(iv); if(el && sc >= 8) el.classList.add('hi'); resolve(); }, 1500);
     });
   }
+    function sScrollToPitch(){
+    var host = sEl('season-match');
+    if(host){
+      var hd = host.querySelector('.mt-hd') || host;
+      var r = hd.getBoundingClientRect();
+      var topOff = r.top + (window.pageYOffset || document.documentElement.scrollTop);
+      window.scrollTo({top: Math.max(0, topOff - 4), behavior: 'smooth'});
+    }
+  }
   async function sMatchNext(auto){
-    seAnthemStop();   // auto = true: hết giờ nghỉ, tự chạy (bỏ lựa chọn chưa xác nhận, không hỏi lại)
+    seAnthemStop();
+    sScrollToPitch();   // auto = true: hết giờ nghỉ, tự chạy (bỏ lựa chọn chưa xác nhận, không hỏi lại)
     var c = sMC; if(c && c.lv) return frlGo(auto);
     if(!c || c.busy) return; var m = c.m, tok = c.tok; sBrkStop(c);
     if(c.pend && c.pend.length && m.phase === 'break') sSubApply(c);   // 4.4: hết giờ nghỉ = mặc định xác nhận các lượt thay đã chọn
@@ -24672,20 +25994,11 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
     var fd = sEl('mt-feed'); if(fd) fd.classList.add('compact');
     await comPlay(m, [comKey(m, cur)], tok, true, function(){ mxDo('key'); }); if(!sAlive(tok)) return;      // 2) KEY MOMENT
     var sk = document.querySelector('#season-match .mt-skiprow'); if(sk) sk.style.display = 'none';
-    var qp = sQuiz(m, tok), qe = sEl('mt-q');
-    if(qe){
-      try{
-        var topOff = qe.getBoundingClientRect().top + (window.pageYOffset || document.documentElement.scrollTop) - 12;
-        window.scrollTo({top: Math.max(0, topOff), behavior: 'smooth'});
-      }catch(e){
-        if(qe.scrollIntoView) qe.scrollIntoView({block:'start', behavior:'smooth'});
-      }
-    }
+    mxQuizEnter();
+    var qp = sQuiz(m, tok);
     var res = await qp; if(!sAlive(tok)) return; mxScroll();                                  // 3) bé trả lời
-    if(qe) qe.style.display = 'none';
-    document.body.classList.remove('is-quiz-active');
-    if(fd){ fd.classList.remove('compact'); if(fd.scrollIntoView) fd.scrollIntoView({block:'nearest'}); }
-    await sSpin(res.score, tok); if(!sAlive(tok)) return; mxScroll();
+    mxQuizLeave();
+    await sSpin(res.score, tok); var rl = sEl('mt-reel'); if(rl) rl.style.display = 'none'; if(!sAlive(tok)) return; mxScroll();
     var rec = seResolve(m, res.score, !!res.ok); rec.q = {ok:!!res.ok, sec:res.secLeft || 0, timeout:!!res.timeout}; m.phase = 'break'; c.outPending = true;
     c.skip = false;
     var ivs = setInterval(mxScroll, 700); await comPlay(m, comOutcome(m, rec), tok, false, function(l){ mxDo('out', rec, l); }); clearInterval(ivs); if(!sAlive(tok)) return;          // 4) kết quả + "Next:"
@@ -24771,7 +26084,7 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
       else if(a === 'subok') sSubConfirm();
       else if(a === 'subno'){ if(sMC){ sMC.pend = []; sMC.sel = null; sMC.keepScroll = true; sMatchRender(); } }
       else if(a === 'unpair'){ if(sMC && sMC.pend){ sMC.pend.splice(parseInt(b.getAttribute('data-i'), 10), 1); sMC.keepScroll = true; sMatchRender(); } }
-      else if(a === 'next') sMatchNext();
+      else if(a === 'next'){ sScrollToPitch(); sMatchNext(); }
       else if(a === 'end') sMatchFinish();
       else if(a === 'exit') sMExit();
       else if(a === 'kickoff') sKickOff();
@@ -26378,7 +27691,7 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
   function frlQuizUI(qd, tok){
     var q = qd.q, secs = qd.secs || 15, subj = QUIZ_SUBJECTS[q.subject] || QUIZ_SUBJECTS.khac, tp = QUIZ_TOPICS[q.topic], box = sEl('mt-q');
     if(!box) return Promise.resolve({ok:false, score:1, timeout:true, picked:-1, secLeft:0});
-    document.body.classList.add('is-quiz-active');
+    mxQuizEnter();
     var opts = Array.isArray(q.options) ? q.options : sArr(q.options), chip = tp ? ('🔬 Science · ' + tp.ic + ' ' + tp.en + ' · ' + tp.vi) : (subj.ic + ' ' + subj.name), plan = frlQuizPlan(qd, frnNow());
     var isLong = opts.some(function(o){ return String(o).length > 28; });
     box.style.display = '';
@@ -26386,26 +27699,29 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
       + opts.map(function(o, i){ return '<button type="button" class="mt-opt" data-i="' + i + '">' + escHtml(o) + '</button>'; }).join('') + '</div><div class="mt-qfb" id="mt-qfb"></div>';
     return new Promise(function(resolve){
       var done = false, iv = null, started = false, p0 = 0, optsEl = box.querySelector('.mt-qopts');
-      function rem(){ return started ? (plan.budget - (performance.now() - p0)) / 1000 : secs; }   // đồng hồ đơn điệu từ lúc câu hỏi hiện trên màn hình mình
+      function rem(){ return started ? (plan.budget - (performance.now() - p0)) / 1000 : secs; }
       function finish(res){
         if(done) return; done = true; clearInterval(iv);
-        document.body.classList.remove('is-quiz-active');
         res.score = res.ok ? Math.min(10, Math.max(1, res.secLeft)) : 0; seSfx(res.ok ? 'right' : 'wrong');
         optsEl.querySelectorAll('.mt-opt').forEach(function(b, i){ b.disabled = true; if(i === q.correct) b.classList.add('ok'); else if(i === res.picked) b.classList.add('bad'); });
         var fb = sEl('mt-qfb');
         if(fb) fb.innerHTML = res.ok ? '✅ <b>Chính xác!</b> Còn ' + res.secLeft + ' giây → ' + res.score + ' điểm' : ((res.timeout ? '⏰ <b>Hết giờ!</b> ' : '❌ <b>Chưa đúng.</b> ') + 'Đáp án: <b>' + escHtml(opts[q.correct]) + '</b>' + (q.explain ? '<br><small>' + escHtml(q.explain) + '</small>' : ''));
-        setTimeout(function(){ resolve(res); }, 600);
+        var delay = res.ok ? 1500 : 2800;
+        setTimeout(function(){
+          resolve(res);
+        }, delay);
       }
       function reveal(){
         started = true; p0 = performance.now();
         Array.prototype.forEach.call(box.querySelectorAll('[hidden]'), function(x){ x.hidden = false; });
         var pe = sEl('mt-qprep'); if(pe) pe.hidden = true;
+        sScrollToPitch();
       }
       function tick(){
-        if(!sAlive(tok)){ done = true; clearInterval(iv); document.body.classList.remove('is-quiz-active'); return; }
+        if(!sAlive(tok)){ done = true; clearInterval(iv); mxQuizLeave(); return; }
         if(!started){
           var w = qd.t0 - frnNow();
-          if(w > 0){ var pe = sEl('mt-qprep'); if(pe) pe.textContent = '⏱ Chuẩn bị… ' + Math.ceil(w / 1000); return; }   // chưa tới giờ: chưa lộ câu hỏi (cả hai máy cùng mở)
+          if(w > 0){ var pe = sEl('mt-qprep'); if(pe) pe.textContent = '⏱ Chuẩn bị… ' + Math.ceil(w / 1000); return; }
           reveal();
         }
         var r = rem();
@@ -26439,7 +27755,8 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
       await comPlay(m, [comKey(m, cur)], tok, true, function(){ mxDo('key'); }); if(!sAlive(tok)) return;
       var sk = document.querySelector('#season-match .mt-skiprow'); if(sk) sk.style.display = 'none';
     } else { var fdr = sEl('mt-feed'); if(fdr) fdr.classList.add('compact'); }
-    var qe = sEl('mt-q'); if(qe){ qe.style.display = ''; qe.innerHTML = '<div class="mt-qchip">⏳ Đang chờ <b>' + escHtml(on) + '</b> xem xong tường thuật…</div>'; if(qe.scrollIntoView) qe.scrollIntoView({block:'nearest', behavior:'smooth'}); }
+    mxQuizEnter();
+    var qe = sEl('mt-q'); if(qe){ qe.style.display = ''; qe.innerHTML = '<div class="mt-qchip">⏳ Đang chờ <b>' + escHtml(on) + '</b> xem xong tường thuật…</div>'; sScrollToPitch(); }
     await frlPut(R, 'qr/' + i + '/' + frlKey(me), {r:Math.round(frnRtt.med || 0), t:frnNow()});   // đã xem xong tường thuật + RTT của mình (để host chọn độ dẫn)
     var qd = await frlQuestion(R, tok, i, function(){
       var q = quizPickSeeded(m.qT, seRng(seHash(m.seed + ':qz' + i)), {used:c.lv.used});
@@ -26460,8 +27777,7 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
     if(!fin){ frlLost(c); return; }
     var ma = fin[frlKey(me)], oa = fin[frlKey(opp)];
     if(fb && res && (ma.s | 0) !== (res.score | 0)) fb.innerHTML += '<br><small>⚠️ Mạng chậm nên câu này được tính ' + (ma.s | 0) + ' điểm.</small>';
-    if(qe) qe.style.display = 'none';
-    var fd = sEl('mt-feed'); if(fd){ fd.classList.remove('compact'); if(fd.scrollIntoView) fd.scrollIntoView({block:'nearest'}); }
+    mxQuizLeave();
     await frlSpin2(ma.s | 0, oa.s | 0, on, tok); if(!sAlive(tok)) return; mxScroll();
     var rec = frlResolveSit(m, R.d, i, me); c.outPending = true; c.skip = false;
     var ivs = setInterval(mxScroll, 700); await comPlay(m, comOutcome(m, rec), tok, false, function(l){ mxDo('out', rec, l); }); clearInterval(ivs); if(!sAlive(tok)) return;
