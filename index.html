@@ -6984,6 +6984,28 @@
 .frl-loaded-badge.ok{ color:#34D399; background:rgba(52,211,153,.15); border:1px solid rgba(52,211,153,.3); }
 .frl-loaded-badge.wait{ color:#FBBF24; background:rgba(251,191,36,.12); border:1px solid rgba(251,191,36,.25); }
 .frl-quick-preload{ text-align:center; padding:4px 0; }
+  /* Live Rivalry Badge in Friendly Quiz */
+  .mt-rival-wrap{ min-height: 26px; display: flex; align-items: center; justify-content: center; margin: 4px 0; }
+  .mt-rival-badge{
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 12px;
+    border-radius: 99px;
+    font-size: 11.5px;
+    font-weight: 800;
+    color: #FDE047;
+    background: rgba(234, 179, 8, 0.22);
+    border: 1px solid rgba(250, 204, 21, 0.55);
+    box-shadow: 0 0 12px rgba(250, 204, 21, 0.35);
+    margin: 2px auto;
+    text-align: center;
+    animation: rivalPulse 1s infinite alternate ease-in-out;
+  }
+  @keyframes rivalPulse{
+    0%{ transform: scale(1); box-shadow: 0 0 8px rgba(250, 204, 21, 0.3); }
+    100%{ transform: scale(1.04); box-shadow: 0 0 16px rgba(250, 204, 21, 0.65); }
+  }
 </style>
 
 <style id="fr-style">
@@ -23226,7 +23248,8 @@ function roadmapIcon(def, locked){
     var starters = f.positions.map(function(sl, i){ var id = sq.pitch[i] || ''; return {slot:sl.pos, id:id, p:id ? (by[id] || null) : null}; });
     var bench = sq.bench.map(function(id){ id = id || ''; return {id:id, p:id ? (by[id] || null) : null}; });
     var needS = starters.filter(function(x){ return !x.p; }).length, needB = bench.filter(function(x){ return !x.p; }).length;
-    return {sq:sq, f:f, starters:starters, bench:bench, missS:needS, missB:needB, ready:(needS === 0 && needB === 0)};
+    // Điều kiện 2: Chỉ cần tối thiểu 11 cầu thủ trong đội hình chính (starters) để đủ điều kiện thi đấu
+    return {sq:sq, f:f, starters:starters, bench:bench, missS:needS, missB:needB, ready:(needS === 0)};
   }
 
   /* ---------- trận (BẢN TẠM — Giai đoạn 2 thay bằng tình huống nguy hiểm + câu hỏi + vòng quay) ---------- */
@@ -25440,7 +25463,9 @@ function roadmapIcon(def, locked){
       if(c){ c.shownN = base + i + 1; if(c.busy && c.tab === 'log') sTabBusy('log'); }
       if(lines[i].k === 'goal'){ try{ if(!reducedMotion()) spawnConfetti(40, 'perfect'); }catch(e){} }
       if(!(sMC && sMC.skip)) comSpeak(lines[i].t);
-      await comWait(fast ? 500 : (lines[i].fx ? 700 : Math.min(4200, 900 + String(lines[i].t).length * 50)), tok);
+      var isFriendlyLive = !!(sMC && sMC.lv);
+      var waitMs = isFriendlyLive ? (fast ? 350 : 1150) : (fast ? 500 : (lines[i].fx ? 700 : Math.min(4200, 900 + String(lines[i].t).length * 50)));
+      await comWait(waitMs, tok);
     }
     if(c) c.shownN = null;
   }
@@ -27026,12 +27051,32 @@ function roadmapIcon(def, locked){
         if(!sAlive(tok)){ done = true; clearInterval(iv); mxQuizLeave(); return; }
         var r = rem(); if(r <= 0){ finish({ok:false, timeout:true, picked:-1}); return; }
         var te = sEl('mt-qt'), be = sEl('mt-qb'); if(te) te.textContent = String(Math.ceil(r)); if(be) be.style.width = (r / secs * 100) + '%';
+
+        // Tín hiệu đối thủ chốt đáp án thời gian thực (Live Rivalry Signal)
+        if(frnRoom && sMC && sMC.lv){
+          var oppKey = frlKey(1 - frlSide(frnRoom));
+          var oppLive = frlGet(frnRoom.d, 'ans_live', sMC.m.i, oppKey);
+          var rvWrap = sEl('mt-rival-wrap');
+          if(rvWrap && oppLive && !rvWrap.getAttribute('data-shown')){
+            rvWrap.setAttribute('data-shown', '1');
+            var oppNm = escHtml(frnWho(frnRoom.d, oppKey));
+            rvWrap.innerHTML = '<div class="mt-rival-badge pulse-fast">⚡ <b>' + oppNm + '</b> đã chốt đáp án trong ' + oppLive.s + 's!</div>';
+          }
+        }
       }
       tick(); iv = setInterval(tick, 100);
       optsEl.onclick = function(e){
         var b = e.target.closest ? e.target.closest('.mt-opt') : null; if(!b || done) return;
         var r = rem(); if(r <= 0) return;
-        var i = parseInt(b.getAttribute('data-i'), 10); finish({ok:i === q.correct, picked:i, secLeft:Math.ceil(r)});
+        var i = parseInt(b.getAttribute('data-i'), 10);
+        var secVal = Math.max(1, Math.ceil(r));
+        if(frnRoom && sMC && sMC.lv){
+          var meKey = frlKey(frlSide(frnRoom));
+          var patch = {};
+          patch['ans_live/' + sMC.m.i + '/' + meKey] = { t: frnNow(), s: secVal };
+          frnReq('PATCH', 'rooms/' + frnRoom.id, patch).catch(function(){});
+        }
+        finish({ok:i === q.correct, picked:i, secLeft:secVal});
       };
     });
   }
@@ -27371,7 +27416,15 @@ function roadmapIcon(def, locked){
     var goalsHtml = m.log.filter(function(x){ return x.res === 'goal'; }).map(function(x){ return '<div class="mt-line">⚽ ' + x.min + '’ · ' + sNm(m.teams[x.att], x.shooter) + ' (' + escHtml(m.teams[x.att].name) + ')</div>'; }).join('');
     var n0 = mT(m).name, n1 = oT(m).name, wordsHtml = comWordsHTML(m);
     sTok++; sMC = null; document.body.classList.remove('se-match');
-    sModalOpen('<h3>Giao hữu · Kết quả</h3><div class="se-score"><b>' + sMyLogo() + escHtml(n0) + '</b><em>' + g[0] + ' – ' + g[1] + '</em><b>' + escHtml(n1) + '</b></div>'
+    var ffNote = '';
+    if(forced && forced.forfeit != null){
+      if(w === me){
+        ffNote = '<div style="background:rgba(34,197,94,.18);border:1.5px solid #22C55E;border-radius:12px;padding:8px 12px;margin:8px 0;text-align:center;color:#86EFAC;font-weight:800;font-size:13px">🏆 <b>XỬ THẮNG!</b> Đối thủ đã rời trận hoặc không phản hồi sau 2 tình huống liên tiếp.</div>';
+      } else {
+        ffNote = '<div style="background:rgba(239,68,68,.18);border:1.5px solid #EF4444;border-radius:12px;padding:8px 12px;margin:8px 0;text-align:center;color:#FCA5A5;font-weight:800;font-size:13px">⚠️ Bạn đã rời trận hoặc không phản hồi sau 2 tình huống liên tiếp nên bị xử thua.</div>';
+      }
+    }
+    sModalOpen('<h3>Giao hữu · Kết quả</h3>' + ffNote + '<div class="se-score"><b>' + sMyLogo() + escHtml(n0) + '</b><em>' + g[0] + ' – ' + g[1] + '</em><b>' + escHtml(n1) + '</b></div>'
       + (ps ? '<p class="sl-intro"><small>🥅 Sút luân lưu: <b>' + ps[0] + ' – ' + ps[1] + '</b></small></p>' : (m.etBase != null ? '<p class="sl-intro"><small>⏱ Trận có hiệp phụ</small></p>' : ''))
       + '<p class="sl-intro">' + (w < 0 ? '🤝 Hòa nhau.' : (w === me ? '🎉 ' + escHtml(n0) + ' thắng rồi!' : '💪 ' + escHtml(n0) + ' thua một trận giao hữu, lần sau gỡ lại nhé!')) + ' <small>(Không tính vào bảng xếp hạng.)</small></p>' + frEndExtra(m.fr.code, fragN)
       + (goalsHtml ? '<div class="mt-log">' + goalsHtml + '</div>' : '') + wordsHtml + frEndBtns(m.fr.code, false));
@@ -27850,7 +27903,7 @@ function roadmapIcon(def, locked){
     return {fid:lu.f.id, pitch:lu.starters.map(function(x){ return x.id; }), bench:lu.bench.map(function(x){ return x.id; }), style:styleId || 'flex', pl:pl, avg:n ? Math.round(sum / n * 10) / 10 : 0, tn:teamGet().name || '', dv:frnDataFp(pl)};
   }
   function frnMyStyle(lu){ var st = sLoad(); return (st.styleBy && st.styleBy[lu.f.id]) || 'flex'; }
-  function frnNotReadyMsg(lu){ return 'Đội hình của ' + escHtml(sMyName()) + ' chưa đủ cầu thủ (còn thiếu ' + lu.missS + ' đá chính, ' + lu.missB + ' dự bị). Vào Kho cầu thủ xếp thêm nhé!'; }
+  function frnNotReadyMsg(lu){ return 'Đội hình của ' + escHtml(sMyName()) + ' chưa đủ 11 cầu thủ đá chính (còn thiếu ' + lu.missS + ' vị trí trên sân). Vào Đội hình Trong Mơ xếp đủ 11 cầu thủ trước khi thi đấu nhé!'; }
   async function frnInvite(code){
     if(!frnEligible()) return;
     if(frnRoom){ frnShowLobby(); return; }
@@ -28523,7 +28576,8 @@ function roadmapIcon(def, locked){
     if(got) return got;
     async function make(){
       var mr = frlGet(R.d, 'qr', i, frlKey(me)), or = frlGet(R.d, 'qr', i, frlKey(1 - me));
-      var lead = frlLead(Math.max(frnRtt.med || 0, (mr && mr.r) | 0), (or && or.r) | 0), p = pick();
+      var lead = 1800; // Khóa nhịp chuẩn: 1.8s đếm ngược chuẩn bị đồng thời trên cả 2 máy
+      var p = pick();
       await frlPutOnce(R, 'q/' + i, {q:p.q, secs:p.secs, t0:frnNow() + lead, lead:lead});
     }
     if(me === 0){
@@ -28549,7 +28603,8 @@ function roadmapIcon(def, locked){
     var pi = toSlotArray(snap.pitch, f.positions.length), bi = toSlotArray(snap.bench, BENCH_SIZE);
     var starters = f.positions.map(function(sl, i){ var id = pi[i] || ''; return {slot:sl.pos, id:id, p:P(id)}; });
     var bench = bi.map(function(id){ id = id || ''; return {id:id, p:P(id)}; });
-    if(starters.some(function(x){ return !x.p; }) || bench.some(function(x){ return !x.p; })) return null;
+    // Điều kiện 2: Chỉ yêu cầu đủ 11 cầu thủ đá chính trên sân, ghế dự bị linh hoạt
+    if(starters.some(function(x){ return !x.p; })) return null;
     return {f:f, starters:starters, bench:bench};
   }
   function frlBuildMatch(R){
@@ -28780,7 +28835,7 @@ function roadmapIcon(def, locked){
     var opts = Array.isArray(q.options) ? q.options : sArr(q.options), chip = tp ? ('🔬 Science · ' + tp.ic + ' ' + tp.en + ' · ' + tp.vi) : (subj.ic + ' ' + subj.name), plan = frlQuizPlan(qd, frnNow());
     var isLong = opts.some(function(o){ return String(o).length > 28; });
     box.style.display = '';
-    box.innerHTML = '<div class="mt-qprep" id="mt-qprep">⏱ Chuẩn bị…</div><div class="mt-qchip" hidden>' + escHtml(chip) + '</div><div class="mt-qq" hidden>' + escHtml(q.question) + '</div><div class="mt-qtime" hidden><span id="mt-qt">' + secs + '</span>s<div class="mt-qbar"><i id="mt-qb"></i></div></div><div class="mt-qopts' + (isLong ? ' long-opts' : '') + '" hidden>'
+    box.innerHTML = '<div class="mt-qprep" id="mt-qprep">⏱ Chuẩn bị đối đầu…</div><div class="mt-rival-wrap" id="mt-rival-wrap"></div><div class="mt-qchip" hidden>' + escHtml(chip) + '</div><div class="mt-qq" hidden>' + escHtml(q.question) + '</div><div class="mt-qtime" hidden><span id="mt-qt">' + secs + '</span>s<div class="mt-qbar"><i id="mt-qb"></i></div></div><div class="mt-qopts' + (isLong ? ' long-opts' : '') + '" hidden>'
       + opts.map(function(o, i){ return '<button type="button" class="mt-opt" data-i="' + i + '">' + escHtml(o) + '</button>'; }).join('') + '</div><div class="mt-qfb" id="mt-qfb"></div>';
     return new Promise(function(resolve){
       var done = false, iv = null, started = false, p0 = 0, optsEl = box.querySelector('.mt-qopts');
@@ -28870,8 +28925,15 @@ function roadmapIcon(def, locked){
     frlAfterSit(c);
     c.outPending = false; lv.stage = 'break'; lv.shMine = Date.now();
     frlPut(R, 'sh/' + i + '/' + frlKey(me), 1); frlPut(R, 'hash/' + i + '/' + frlKey(me), lv.hashes[i]);
-    var rs = R.d.settings || {}, fa = rs.forfeitAfter || 3, streak = 0; for(var j = i; j >= 0; j--){ if(frlGet(R.d, 'fin', j, frlKey(opp), 'px')) streak++; else break; }
-    if(streak >= fa && frlArb(R)){ frlForfeit(R, c, opp); return; }   // chỉ trọng tài xử thua đối thủ (tránh hai bên xử thua nhau)
+    // Điều kiện 3: Không có phản hồi sau 2 key moments liên tiếp -> xử thua và xử thắng 3-0 cho đội còn lại
+    var streak = 0;
+    for(var j = i; j >= 0; j--){
+      var finOpp = frlGet(R.d, 'fin', j, frlKey(opp));
+      var gfOpp = frlGet(R.d, 'gf', j, frlKey(opp));
+      if((finOpp && finOpp.px) || (gfOpp && gfOpp.px)) streak++;
+      else break;
+    }
+    if(streak >= 2 && frlArb(R)){ frlForfeit(R, c, opp); return; }
     if(sTacOK(m) || seNeedSub(m, me).length) c.tab = 'xi';
     sMatchRender();
   }
@@ -29032,7 +29094,14 @@ function roadmapIcon(def, locked){
   /* ---- kết thúc ---- */
   function frlStoreClear(){ try{ localStorage.removeItem(FRL_KEY); }catch(e){} }
   async function frlForfeit(R, c, loserSide, remote){
-    var res = {forfeit:loserSide, g:[c.m.goals[0], c.m.goals[1]], t:frnNow()};
+    var w = 1 - loserSide;
+    var m = c.m;
+    var g = [m.goals[0] || 0, m.goals[1] || 0];
+    // Điều kiện 3: Xử thắng 3 - 0 hoặc giữ tỷ số nếu đội thắng đang dẫn với cách biệt >= 3
+    if((g[w] - g[loserSide]) < 3){
+      g[w] = Math.max(3, g[loserSide] + 3);
+    }
+    var res = {forfeit:loserSide, winner:w, g:g, t:frnNow()};
     await frlPut(R, 'result', res, true);
     try{ await frnReq('PATCH', 'rooms/' + R.id, {status:'done', closedAt:{'.sv':'timestamp'}}); }catch(e){}
     frlFinish(res);
@@ -29040,15 +29109,36 @@ function roadmapIcon(def, locked){
   function frlRemoteDone(R, d){   // phòng đã đóng (xử thua / đối thủ kết thúc)
     if(R.lvDone) return;
     var c = sMC, res = d.result || {};
-    if(c && c.lv && c.lv.rid === R.id){ if(res.forfeit != null){ R.lvDone = true; frlFinish(res); } return; }   // kết quả thường: bé tự xem hết trận rồi bấm xem kết quả
-    R.lvDone = true; frlStoreClear(); frnRoomStop(R); frnRoom = null; var bn = sEl('frl-banner'); if(bn) bn.hidden = true; frnPaintList();
     var me = frlSide(R);
-    frMsg('🤝 Giao hữu', res.forfeit != null ? (res.forfeit === me ? 'Trận giao hữu đã kết thúc: ' + escHtml(sMyName()) + ' vắng mặt quá lâu nên bị xử thua.' : 'Trận giao hữu đã kết thúc: ' + escHtml(frnWho(R.d, frlKey(1 - me))) + ' vắng mặt quá lâu nên ' + escHtml(sMyName()) + ' thắng!') : 'Trận giao hữu đã kết thúc.');
+    var oppName = escHtml(frnWho(R.d, frlKey(1 - me)));
+    var myName = escHtml(sMyName());
+    if(c && c.lv && c.lv.rid === R.id){
+      R.lvDone = true;
+      frlFinish(res);
+      return;
+    }
+    R.lvDone = true; frlStoreClear(); frnRoomStop(R); frnRoom = null; var bn = sEl('frl-banner'); if(bn) bn.hidden = true; frnPaintList();
+    if(res.forfeit != null){
+      var g = res.g || [3, 0];
+      var myScore = (me === 0 ? g[0] : g[1]);
+      var oppScore = (me === 0 ? g[1] : g[0]);
+      var msg = (res.forfeit === me)
+        ? ('Bạn đã rời trận hoặc không phản hồi sau 2 tình huống liên tiếp nên bị xử thua (' + myScore + ' - ' + oppScore + ').')
+        : ('🎉 Đối thủ ' + oppName + ' đã rời trận hoặc không phản hồi sau 2 tình huống liên tiếp. ' + myName + ' được XỬ THẮNG (' + myScore + ' - ' + oppScore + ')! 🏆');
+      frMsg('🤝 Giao hữu', msg);
+    } else {
+      frMsg('🤝 Giao hữu', 'Trận giao hữu đã kết thúc.');
+    }
   }
   async function frlFinish(forced){
     var c = sMC; if(!c || !c.lv) return; var R = frnRoom, m = c.m, lv = c.lv, me = mMe(m);
     var w, ps = 0, g = mG(m);
-    if(forced && forced.forfeit != null){ w = 1 - forced.forfeit; }
+    if(forced && forced.forfeit != null){
+      w = forced.winner != null ? forced.winner : (1 - forced.forfeit);
+      if(forced.g){
+        g = me === 0 ? [forced.g[0], forced.g[1]] : [forced.g[1], forced.g[0]];
+      }
+    }
     else {
       w = seWinner(m); ps = (m.pso && m.pso.done) ? [m.pso.sc[me], m.pso.sc[1 - me]] : 0;
       if(R && R.d && R.d.status === 'live'){
@@ -29068,7 +29158,15 @@ function roadmapIcon(def, locked){
     frlBrkStop(c); if(c.psoIv){ clearInterval(c.psoIv); c.psoIv = 0; }
     sTok++; sMC = null; document.body.classList.remove('se-match');
     frlStoreClear(); if(R){ frnRoomStop(R); if(frnRoom === R) frnRoom = null; } var bn = sEl('frl-banner'); if(bn) bn.hidden = true;
-    sModalOpen('<h3>Giao hữu · Kết quả</h3><div class="se-score"><b>' + sMyLogo() + escHtml(n0) + '</b><em>' + g[0] + ' – ' + g[1] + '</em><b>' + escHtml(n1) + '</b></div>'
+    var ffNote = '';
+    if(forced && forced.forfeit != null){
+      if(w === me){
+        ffNote = '<div style="background:rgba(34,197,94,.18);border:1.5px solid #22C55E;border-radius:12px;padding:8px 12px;margin:8px 0;text-align:center;color:#86EFAC;font-weight:800;font-size:13px">🏆 <b>XỬ THẮNG!</b> Đối thủ đã rời trận hoặc không phản hồi sau 2 tình huống liên tiếp.</div>';
+      } else {
+        ffNote = '<div style="background:rgba(239,68,68,.18);border:1.5px solid #EF4444;border-radius:12px;padding:8px 12px;margin:8px 0;text-align:center;color:#FCA5A5;font-weight:800;font-size:13px">⚠️ Bạn đã rời trận hoặc không phản hồi sau 2 tình huống liên tiếp nên bị xử thua.</div>';
+      }
+    }
+    sModalOpen('<h3>Giao hữu · Kết quả</h3>' + ffNote + '<div class="se-score"><b>' + sMyLogo() + escHtml(n0) + '</b><em>' + g[0] + ' – ' + g[1] + '</em><b>' + escHtml(n1) + '</b></div>'
       + (ps ? '<p class="sl-intro"><small>🥅 Sút luân lưu: <b>' + ps[0] + ' – ' + ps[1] + '</b></small></p>' : (m.etBase != null ? '<p class="sl-intro"><small>⏱ Trận có hiệp phụ</small></p>' : ''))
       + '<p class="sl-intro">' + (ff ? (w === me ? '🏳️ ' + escHtml(n1) + ' vắng mặt quá lâu nên ' + escHtml(n0) + ' thắng xử thua!' : '🏳️ ' + escHtml(n0) + ' vắng mặt hoặc xin rời trận nên bị xử thua.') : (w < 0 ? '🤝 Hòa nhau.' : (w === me ? '🎉 ' + escHtml(n0) + ' thắng rồi!' : '💪 ' + escHtml(n0) + ' thua một trận giao hữu, lần sau gỡ lại nhé!'))) + ' <small>(Không tính vào bảng xếp hạng.)</small></p>'
       + frEndExtra(m.fr.code, lv.fragN | 0) + (goalsHtml ? '<div class="mt-log">' + goalsHtml + '</div>' : '') + (ff ? '' : wordsHtml) + frEndBtns(m.fr.code, true));
@@ -29076,8 +29174,8 @@ function roadmapIcon(def, locked){
   }
   function frlExit(){
     var c = sMC; if(!c || !c.lv) return;
-    sModalOpen('<h3>⏸ Tạm thoát trận giao hữu?</h3><p class="sl-intro">Trận <b>vẫn tiếp tục</b> với ' + escHtml(frlOppName()) + '. Nếu ' + escHtml(sMyName()) + ' thoát lâu, các câu hỏi sẽ bị bỏ lỡ (1 điểm) và vắng quá nhiều tình huống sẽ bị xử thua. Có thể vào lại trận bất cứ lúc nào.</p>'
-      + '<div class="se-btns"><button type="button" class="se-btn" data-frl="stay">↩ Quay lại trận</button><button type="button" class="se-btn ghost" data-frl="leave">⏸ Tạm thoát</button><button type="button" class="se-btn ghost" data-frl="quit">🏳️ Xin thua và rời trận</button></div>');
+    sModalOpen('<h3>⏸ Rời khỏi trận giao hữu?</h3><p class="sl-intro">Theo quy chế thi đấu: Nếu bạn <b>rời khỏi trận</b> lúc này, trận đấu sẽ <b>kết thúc ngay lập tức</b> và <b>' + escHtml(frlOppName()) + '</b> sẽ được <b>xử thắng (3 - 0)</b>.<br><br>Bạn có chắc chắn muốn rời trận?</p>'
+      + '<div class="se-btns"><button type="button" class="se-btn" data-frl="stay">↩ Ở lại thi đấu tiếp</button><button type="button" class="se-btn ghost" data-frl="quit" style="border-color:#EF4444;color:#F87171">🏳️ Rời trận & Chấp nhận thua (3-0)</button></div>');
   }
   document.addEventListener('click', function(e){
     var b = e.target && e.target.closest ? e.target.closest('[data-frl]') : null; if(!b) return;
