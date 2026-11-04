@@ -4258,6 +4258,768 @@
     margin: 4px 0;
   }
 
+
+  /* =====================================================================
+     NHIỆM VỤ «NỐI TỪ MỚI» (VOCAB MATCH GAME) - STYLES (vmg-*)
+     Thiết kế chuẩn Impeccable: màu sắc rõ ràng, phân cấp thị giác cao,
+     tỷ lệ ô theo khung thẻ (--fc-ar: 0.74), vừa vặn mọi màn hình điện thoại (360x640).
+     ===================================================================== */
+  .vmg-entry-panel {
+    margin-top: 10px;
+    margin-bottom: 12px;
+  }
+  .vmg-entry-card {
+    background: linear-gradient(135deg, rgba(16,185,129,0.14), rgba(15,23,42,0.85) 60%),
+                linear-gradient(225deg, rgba(56,189,248,0.12), transparent 70%);
+    border: 1.5px solid rgba(16,185,129,0.38);
+    border-radius: 16px;
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    box-shadow: 0 4px 18px rgba(0,0,0,0.3), inset 0 1px 1px rgba(255,255,255,0.1);
+    position: relative;
+    overflow: hidden;
+  }
+  .vmg-entry-card::before {
+    content: "";
+    position: absolute;
+    top: -24px; right: -24px;
+    width: 90px; height: 90px;
+    background: radial-gradient(circle, rgba(16,185,129,0.22), transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+  .vmg-ec-left {
+    flex: 1;
+    min-width: 0;
+  }
+  .vmg-ec-title {
+    font-family: 'Baloo 2', cursive, sans-serif;
+    font-size: 19px;
+    font-weight: 800;
+    color: #F8FAFC;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 2px;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.4);
+  }
+  .vmg-ec-ico {
+    font-size: 22px;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4));
+  }
+  .vmg-ec-sub {
+    font-size: 13px;
+    color: #94A3B8;
+    margin-bottom: 8px;
+    font-weight: 500;
+  }
+  .vmg-ec-stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .vmg-stat-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: rgba(15,23,42,0.75);
+    border: 1px solid rgba(148,163,184,0.22);
+    border-radius: 999px;
+    padding: 3px 10px;
+    font-size: 11.5px;
+    color: #E2E8F0;
+    font-weight: 600;
+  }
+  .vmg-stat-pill b {
+    color: #38BDF8;
+    font-weight: 800;
+  }
+  .vmg-stat-pill b.gold {
+    color: #FACC15;
+  }
+  .vmg-ec-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 6px;
+    flex-shrink: 0;
+  }
+  .vmg-play-btn {
+    padding: 8px 18px;
+    font-size: 14px;
+    font-weight: 700;
+    border-radius: 12px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(16,185,129,0.35);
+    transition: transform 0.15s, box-shadow 0.15s;
+    white-space: nowrap;
+  }
+  .vmg-play-btn:active {
+    transform: scale(0.96);
+  }
+  .vmg-play-btn.is-disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
+  }
+  .vmg-ec-note {
+    font-size: 11px;
+    color: #F87171;
+    font-weight: 600;
+    text-align: right;
+  }
+
+  /* MODAL CHUNG */
+  .vmg-modal-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(148,163,184,0.18);
+    margin-bottom: 14px;
+  }
+  .vmg-modal-title {
+    font-family: 'Baloo 2', cursive, sans-serif;
+    font-size: 20px;
+    font-weight: 800;
+    color: #F8FAFC;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .vmg-close-btn {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.16);
+    color: #E2E8F0;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.15s;
+  }
+  .vmg-close-btn:hover {
+    background: rgba(239,68,68,0.25);
+    border-color: #EF4444;
+    color: #FCA5A5;
+  }
+  .vmg-close-btn:active {
+    transform: scale(0.92);
+  }
+
+  /* SẢNH LOBBY */
+  .vmg-lobby-box {
+    max-width: 480px;
+    width: 95%;
+    border: 1.5px solid rgba(16,185,129,0.35);
+    background: linear-gradient(160deg, #1E293B, #0F172A);
+  }
+  .vmg-rules-list {
+    background: rgba(15,23,42,0.6);
+    border: 1px solid rgba(148,163,184,0.14);
+    border-radius: 12px;
+    padding: 10px 14px;
+    margin-bottom: 14px;
+    font-size: 12.5px;
+    color: #CBD5E1;
+    line-height: 1.5;
+  }
+  .vmg-rules-list li {
+    margin-bottom: 6px;
+    list-style-type: none;
+    position: relative;
+    padding-left: 18px;
+  }
+  .vmg-rules-list li::before {
+    content: "•";
+    position: absolute;
+    left: 4px;
+    color: #34D399;
+    font-weight: bold;
+    font-size: 16px;
+    line-height: 1;
+  }
+  .vmg-rewards-prog {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+  .vmg-rew-card {
+    background: rgba(15,23,42,0.8);
+    border: 1.5px solid rgba(148,163,184,0.18);
+    border-radius: 12px;
+    padding: 10px 8px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    position: relative;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .vmg-rew-card.is-claimed {
+    border-color: #10B981;
+    background: linear-gradient(145deg, rgba(16,185,129,0.16), rgba(15,23,42,0.8));
+  }
+  .vmg-rew-card.is-next {
+    border-color: #FACC15;
+    box-shadow: 0 0 12px rgba(250,204,21,0.25);
+  }
+  .vmg-rew-icon {
+    font-size: 22px;
+  }
+  .vmg-rew-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: #F8FAFC;
+  }
+  .vmg-rew-cond {
+    font-size: 10px;
+    color: #94A3B8;
+  }
+  .vmg-rew-status {
+    font-size: 10px;
+    font-weight: 700;
+    margin-top: 2px;
+  }
+  .vmg-rew-card.is-claimed .vmg-rew-status {
+    color: #34D399;
+  }
+  .vmg-rew-card.is-next .vmg-rew-status {
+    color: #FACC15;
+  }
+  .vmg-lobby-stats {
+    font-size: 12px;
+    color: #94A3B8;
+    text-align: center;
+    margin-bottom: 14px;
+  }
+  .vmg-lobby-stats b {
+    color: #38BDF8;
+  }
+  .vmg-lobby-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+  }
+
+  /* MÀN HÌNH CHƠI CHÍNH (FULL MODAL) */
+  .vmg-game-modal {
+    padding: 6px !important;
+  }
+  .vmg-game-box {
+    max-width: 720px;
+    width: 100%;
+    height: 98vh;
+    max-height: 98vh;
+    display: flex;
+    flex-direction: column;
+    padding: 10px 12px !important;
+    background: radial-gradient(circle at 50% 0%, #1E293B, #0B1120 70%);
+    border: 1.5px solid rgba(56,189,248,0.3);
+    border-radius: 18px;
+    position: relative;
+    overflow: hidden;
+  }
+  .vmg-game-header {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(148,163,184,0.18);
+    flex-shrink: 0;
+    width: 100%;
+  }
+  .vmg-header-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    gap: 10px;
+  }
+  .vmg-timer-text {
+    font-size: 18px;
+    font-weight: 800;
+    color: #F8FAFC;
+    font-family: monospace;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    text-shadow: 0 0 10px rgba(56,189,248,0.4);
+  }
+  .vmg-header-stats {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+  .vmg-timer-bar-wrap {
+    width: 100%;
+    position: relative;
+  }
+  .vmg-timer-bar {
+    width: 100%;
+    height: 8px;
+    background: rgba(255,255,255,0.12);
+    border-radius: 999px;
+    overflow: hidden;
+    position: relative;
+  }
+  .vmg-timer-fill {
+    height: 100%;
+    background: #22C55E;
+    border-radius: 999px;
+    transition: width 0.1s linear, background-color 0.3s;
+  }
+  .vmg-timer-fill.warn {
+    background: #F59E0B;
+  }
+  .vmg-timer-fill.danger {
+    background: #EF4444;
+    animation: vmg-pulse-red 0.8s infinite alternate;
+  }
+  @keyframes vmg-pulse-red {
+    from { opacity: 0.8; }
+    to { opacity: 1; filter: drop-shadow(0 0 6px #EF4444); }
+  }
+  .vmg-penalty-fly {
+    position: absolute;
+    top: -18px;
+    right: 20px;
+    color: #EF4444;
+    font-size: 15px;
+    font-weight: 900;
+    pointer-events: none;
+    text-shadow: 0 0 8px rgba(239,68,68,0.8);
+    animation: vmg-float-up 0.85s ease-out forwards;
+    z-index: 10;
+  }
+  @keyframes vmg-float-up {
+    0% { opacity: 1; transform: translateY(0) scale(1); }
+    100% { opacity: 0; transform: translateY(-24px) scale(1.2); }
+  }
+  .vmg-pair-count {
+    background: rgba(16,185,129,0.18);
+    border: 1px solid rgba(16,185,129,0.4);
+    color: #6EE7B7;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 8px;
+  }
+  .vmg-streak-badge, .vmg-card-badge {
+    background: rgba(15,23,42,0.8);
+    border: 1px solid rgba(148,163,184,0.2);
+    color: #E2E8F0;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 7px;
+    border-radius: 8px;
+  }
+
+  /* 4x5 GRID CHƠI */
+  .vmg-grid-wrap {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 0;
+    min-height: 0;
+    overflow: hidden;
+  }
+  .vmg-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(5, 1fr);
+    gap: 6px;
+    width: 100%;
+    /* Tự động tính toán sao cho chiều ngang và chiều dọc luôn vừa màn hình */
+    height: 100%;
+    max-height: 100%;
+    max-width: min(96vw, calc((98vh - 120px) * 4 / 5 * 0.74));
+    aspect-ratio: calc(4 * 0.74) / 5;
+    margin: auto;
+    perspective: 1000px;
+  }
+  .vmg-cell {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    perspective: 800px;
+    cursor: pointer;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .vmg-cell-inner {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    transition: transform 0.55s cubic-bezier(0.2, 0.8, 0.2, 1);
+    border-radius: 10px;
+  }
+  .vmg-cell.is-flipped .vmg-cell-inner {
+    transform: rotateY(180deg);
+  }
+  .vmg-cell-front, .vmg-cell-back {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .vmg-cell-front {
+    z-index: 2;
+    transform: rotateY(0deg);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 4px;
+    text-align: center;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.3);
+    transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+  }
+  .vmg-cell-back {
+    transform: rotateY(180deg);
+    background: #0F172A;
+    border: 1.5px solid #10B981;
+    box-shadow: 0 0 10px rgba(16,185,129,0.35);
+    position: relative;
+  }
+  .vmg-cell-back .fc-card {
+    width: 100% !important;
+    height: 100% !important;
+    border-radius: 8px !important;
+  }
+  .vmg-matched-label {
+    position: absolute;
+    bottom: 2px;
+    left: 2px;
+    right: 2px;
+    background: rgba(15,23,42,0.92);
+    border: 1px solid rgba(16,185,129,0.6);
+    border-radius: 4px;
+    color: #6EE7B7;
+    font-size: 9px;
+    font-weight: 800;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 1px 2px;
+    z-index: 5;
+    pointer-events: none;
+  }
+
+  /* Phân biệt loại thẻ tiếng Anh vs tiếng Việt */
+  .vmg-cell.is-en .vmg-cell-front {
+    background: linear-gradient(150deg, rgba(14,165,233,0.18), rgba(15,23,42,0.92) 80%);
+    border: 1.8px solid #38BDF8;
+  }
+  .vmg-cell.is-vi .vmg-cell-front {
+    background: linear-gradient(150deg, rgba(249,115,22,0.18), rgba(15,23,42,0.92) 80%);
+    border: 1.8px solid #FB923C;
+  }
+  .vmg-cell-badge {
+    position: absolute;
+    top: 3px;
+    right: 4px;
+    font-size: 9px;
+    color: #94A3B8;
+    font-weight: 700;
+  }
+  .vmg-cell.is-en .vmg-cell-badge {
+    font-size: 10px;
+    opacity: 0.85;
+  }
+  .vmg-word-text {
+    font-size: 12.5px;
+    font-weight: 800;
+    color: #FFFFFF;
+    line-height: 1.2;
+    word-break: break-word;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+    padding: 0 2px;
+  }
+  .vmg-cell.is-en .vmg-word-text {
+    color: #E0F2FE;
+  }
+  .vmg-cell.is-vi .vmg-word-text {
+    color: #FFEDD5;
+  }
+
+  /* Trạng thái ô đang chọn */
+  .vmg-cell.is-selected .vmg-cell-front {
+    border-color: #FACC15 !important;
+    box-shadow: 0 0 16px rgba(250,204,21,0.7) !important;
+    transform: scale(1.05);
+  }
+  /* Trạng thái nối sai: Rung lắc đỏ */
+  .vmg-cell.is-wrong .vmg-cell-front {
+    border-color: #EF4444 !important;
+    box-shadow: 0 0 16px rgba(239,68,68,0.7) !important;
+    animation: vmg-shake 0.4s ease-in-out;
+  }
+  @keyframes vmg-shake {
+    0%, 100% { transform: translateX(0); }
+    20%, 60% { transform: translateX(-5px); }
+    40%, 80% { transform: translateX(5px); }
+  }
+  /* Khi đã nối đúng */
+  .vmg-cell.is-matched {
+    cursor: default;
+  }
+
+  /* MÀN HÌNH KẾT QUẢ & DANH SÁCH ÔN TỪ */
+  .vmg-result-section {
+    position: absolute;
+    inset: 0;
+    background: rgba(11,17,32,0.97);
+    z-index: 20;
+    display: flex;
+    flex-direction: column;
+    padding: 16px;
+    overflow-y: auto;
+    border-radius: 18px;
+    animation: vmg-fade-in 0.3s ease-out;
+  }
+  @keyframes vmg-fade-in {
+    from { opacity: 0; transform: scale(0.96); }
+    to { opacity: 1; transform: scale(1); }
+  }
+  .vmg-res-banner {
+    text-align: center;
+    margin-bottom: 12px;
+  }
+  .vmg-res-title {
+    font-family: 'Baloo 2', cursive, sans-serif;
+    font-size: 24px;
+    font-weight: 800;
+    margin-bottom: 2px;
+  }
+  .vmg-res-title.win {
+    color: #34D399;
+    text-shadow: 0 0 16px rgba(52,211,153,0.4);
+  }
+  .vmg-res-title.lose {
+    color: #F87171;
+    text-shadow: 0 0 16px rgba(248,113,113,0.4);
+  }
+  .vmg-res-stats {
+    font-size: 12.5px;
+    color: #94A3B8;
+  }
+  .vmg-res-stats b {
+    color: #F1F5F9;
+  }
+  .vmg-reward-alert {
+    background: linear-gradient(135deg, rgba(250,204,21,0.18), rgba(15,23,42,0.85));
+    border: 1px solid #FACC15;
+    border-radius: 12px;
+    padding: 8px 12px;
+    margin-bottom: 12px;
+    text-align: center;
+    font-size: 13px;
+    color: #FEF08A;
+    font-weight: 700;
+  }
+  .vmg-review-box {
+    background: rgba(15,23,42,0.8);
+    border: 1px solid rgba(148,163,184,0.18);
+    border-radius: 14px;
+    padding: 12px;
+    margin-bottom: 14px;
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+  }
+  .vmg-review-head {
+    font-size: 13px;
+    font-weight: 800;
+    color: #38BDF8;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .vmg-review-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .vmg-review-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 6px 10px;
+    background: rgba(30,41,59,0.6);
+    border-radius: 8px;
+    font-size: 13px;
+    gap: 8px;
+  }
+  .vmg-rev-left {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    min-width: 0;
+  }
+  .vmg-rev-en {
+    font-weight: 800;
+    color: #38BDF8;
+  }
+  .vmg-speak-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    padding: 2px 4px;
+    opacity: 0.85;
+    transition: transform 0.1s, opacity 0.1s;
+  }
+  .vmg-speak-btn:hover {
+    transform: scale(1.15);
+    opacity: 1;
+  }
+  .vmg-rev-pos {
+    font-size: 10px;
+    color: #64748B;
+    background: rgba(255,255,255,0.06);
+    padding: 1px 4px;
+    border-radius: 4px;
+  }
+  .vmg-rev-vi {
+    color: #F8FAFC;
+    font-weight: 500;
+  }
+  .vmg-rev-flag {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 6px;
+    flex-shrink: 0;
+  }
+  .vmg-rev-flag.warn {
+    background: rgba(245,158,11,0.2);
+    border: 1px solid rgba(245,158,11,0.5);
+    color: #FCD34D;
+  }
+  .vmg-rev-flag.ok {
+    background: rgba(16,185,129,0.15);
+    color: #6EE7B7;
+  }
+  .vmg-res-btns {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  /* MODAL TỪ CỦA CON */
+  .vmg-custom-box {
+    max-width: 520px;
+    width: 95%;
+    max-height: 85vh;
+    display: flex;
+    flex-direction: column;
+    background: #1E293B;
+  }
+  .vmg-custom-body {
+    overflow-y: auto;
+    flex: 1;
+  }
+  .vmg-add-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr 90px auto;
+    gap: 6px;
+    margin-bottom: 12px;
+    background: rgba(15,23,42,0.6);
+    padding: 10px;
+    border-radius: 12px;
+    border: 1px solid rgba(148,163,184,0.18);
+  }
+  .vmg-add-form input, .vmg-add-form select {
+    background: #0F172A;
+    border: 1px solid rgba(148,163,184,0.3);
+    color: #F8FAFC;
+    border-radius: 8px;
+    padding: 6px 8px;
+    font-size: 12px;
+  }
+  .vmg-custom-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    max-height: 280px;
+    overflow-y: auto;
+  }
+  .vmg-custom-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(15,23,42,0.5);
+    border: 1px solid rgba(148,163,184,0.12);
+    border-radius: 8px;
+    padding: 6px 10px;
+    font-size: 12.5px;
+  }
+  .vmg-del-btn {
+    background: none;
+    border: none;
+    color: #EF4444;
+    cursor: pointer;
+    font-size: 14px;
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
+  .vmg-del-btn:hover {
+    background: rgba(239,68,68,0.15);
+  }
+
+  /* Hỗ trợ giảm chuyển động (reduced-motion) */
+  @media (prefers-reduced-motion: reduce) {
+    .vmg-cell-inner {
+      transition: none !important;
+    }
+    .vmg-cell.is-wrong .vmg-cell-front {
+      animation: none !important;
+      border-color: #EF4444 !important;
+    }
+    .vmg-penalty-fly {
+      animation: none !important;
+      display: none !important;
+    }
+  }
+
+  /* Mobile Responsive (<= 640px) */
+  @media (max-width: 640px) {
+    .vmg-grid {
+      gap: 4px;
+    }
+    .vmg-word-text {
+      font-size: 11px;
+    }
+    .vmg-add-form {
+      grid-template-columns: 1fr 1fr;
+    }
+    .vmg-add-form button {
+      grid-column: span 2;
+    }
+  }
+
 </style>
 <style id="welcome-notice-css">
   /* ===== Thông báo chào mừng: popup cho User + tab soạn thảo trong Trang quản trị ===== */
@@ -7334,6 +8096,25 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
       <div id="day-summary" class="day-summary"></div>
     </div>
 
+    <!-- Thẻ nhiệm vụ: Nối Từ Mới -->
+    <div class="panel vmg-entry-panel" id="vmg-entry-panel">
+      <div class="vmg-entry-card" id="vmg-entry-card">
+        <div class="vmg-ec-left">
+          <div class="vmg-ec-title"><span class="vmg-ec-ico">🔤</span> Nối Từ Mới</div>
+          <div class="vmg-ec-sub">Nối đúng 10 cặp để nhận thẻ cầu thủ!</div>
+          <div class="vmg-ec-stats">
+            <span class="vmg-stat-pill">🎴 Thẻ hôm nay <b id="vmg-ec-cards">0/3</b></span>
+            <span class="vmg-stat-pill">🔥 Chuỗi thắng <b id="vmg-ec-streak">0/3</b></span>
+          </div>
+        </div>
+        <div class="vmg-ec-right">
+          <button type="button" class="btn-primary vmg-play-btn" id="vmg-btn-play">Chơi ngay</button>
+          <div class="vmg-ec-note" id="vmg-ec-note" style="display:none"></div>
+        </div>
+      </div>
+    </div>
+
+
     <div class="panel">
       <p class="legend">👉 Chạm vào một nhiệm vụ để đánh dấu đã hoàn thành nhé!</p>
       <div id="day-tasklist" class="day-tasklist"></div>
@@ -7849,6 +8630,27 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
       </div>
       <p class="hint-text" style="margin:6px 0 0">File mới có <b>"mode": "append"</b> (mặc định) sẽ được <b>thêm</b> vào kho trên Firebase; <b>"mode": "replace"</b> thì thay toàn bộ. Muốn sửa kho: bấm "Tải kho hiện tại", chỉnh file rồi tải lên lại. Câu Toán được máy tự tạo vô hạn.</p>
       </div>
+
+      <div class="ap-card" id="apcard-vocab">
+        <h4>🔤 Kho từ vựng &amp; Nhiệm vụ «Nối từ mới» <span class="ap-chip-now">Có tác dụng ngay</span></h4>
+        <p class="hint-text" id="vbank-status" style="margin:2px 0 6px">Đang kiểm tra…</p>
+        <div class="reward-row" style="margin-bottom:8px">
+          <button type="button" id="btn-vbank-import" class="btn-secondary">Cập nhật từ file .json</button>
+          <button type="button" id="btn-vbank-export" class="btn-secondary">Tải kho hiện tại</button>
+          <input type="file" id="vbank-file" accept=".json,application/json" style="display:none">
+        </div>
+        <p class="hint-text" style="margin:4px 0 8px">File mới có <b>"mode": "append"</b> sẽ gộp thêm từ mới vào kho; <b>"mode": "replace"</b> sẽ thay thế toàn bộ kho từ trên Firebase.</p>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(140px, 1fr));gap:8px;margin-top:8px">
+          <label style="font-size:11.5px;color:#94A3B8;display:flex;flex-direction:column;gap:2px">Thời gian 1 ván (giây)<input type="number" id="vmg-cfg-dur" min="60" max="300" step="5" value="150" style="background:#0F172A;border:1px solid #334155;color:#F8FAFC;padding:4px 6px;border-radius:6px;font-size:12px"></label>
+          <label style="font-size:11.5px;color:#94A3B8;display:flex;flex-direction:column;gap:2px">Phạt sai lần 1 (giây)<input type="number" id="vmg-cfg-pen1" min="1" max="20" step="1" value="5" style="background:#0F172A;border:1px solid #334155;color:#F8FAFC;padding:4px 6px;border-radius:6px;font-size:12px"></label>
+          <label style="font-size:11.5px;color:#94A3B8;display:flex;flex-direction:column;gap:2px">Phạt sai lần 2 (giây)<input type="number" id="vmg-cfg-pen2" min="1" max="25" step="1" value="8" style="background:#0F172A;border:1px solid #334155;color:#F8FAFC;padding:4px 6px;border-radius:6px;font-size:12px"></label>
+          <label style="font-size:11.5px;color:#94A3B8;display:flex;flex-direction:column;gap:2px">Phạt từ lần 3 (giây)<input type="number" id="vmg-cfg-pen3" min="1" max="30" step="1" value="12" style="background:#0F172A;border:1px solid #334155;color:#F8FAFC;padding:4px 6px;border-radius:6px;font-size:12px"></label>
+          <label style="font-size:11.5px;color:#94A3B8;display:flex;flex-direction:column;gap:2px">Thẻ thưởng tối đa/ngày<input type="number" id="vmg-cfg-maxc" min="1" max="10" step="1" value="3" style="background:#0F172A;border:1px solid #334155;color:#F8FAFC;padding:4px 6px;border-radius:6px;font-size:12px"></label>
+        </div>
+        <div style="margin-top:8px">
+          <button type="button" id="btn-vbank-save-cfg" class="btn-primary" style="padding:4px 12px;font-size:12px">Lưu thông số trò chơi</button>
+        </div>
+      </div>
     </section>
     <section class="ap-pane" id="appane-notice" role="tabpanel" aria-labelledby="aptab-notice" hidden>
       <div><h3 class="ap-pane-title">📣 Thông báo chào mừng</h3><p class="ap-pane-desc">Soạn popup hiện ra cho Người dùng ngay khi đăng nhập — ví dụ giới thiệu cầu thủ mới của phiên bản mới. Dùng chung cho mọi hồ sơ.</p></div>
@@ -8109,6 +8911,115 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
 
     <div class="modal-actions center" style="margin-top:14px">
       <button type="button" id="des-finish-btn" class="btn-primary" style="min-width:140px">Hoàn tất</button>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- ========== MODALS CHO NHIỆM VỤ NỐI TỪ MỚI ========== -->
+<!-- 1. SẢNH CHỜ TRÒ CHƠI (LOBBY) -->
+<div id="vmg-lobby-modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="vmg-lobby-title">
+  <div id="vmg-lobby-backdrop" class="modal-backdrop"></div>
+  <div class="modal-box vmg-lobby-box">
+    <div class="vmg-modal-head">
+      <div class="vmg-modal-title" id="vmg-lobby-title">🔤 Nối Từ Mới</div>
+      <button type="button" class="vmg-close-btn" id="vmg-lobby-close" aria-label="Đóng">✕</button>
+    </div>
+    <div class="vmg-lobby-body">
+      <ul class="vmg-rules-list">
+        <li>Ghép đúng <b>10 cặp</b> từ tiếng Anh &amp; nghĩa tiếng Việt trên lưới 20 ô.</li>
+        <li>Nối sai bị trừ thời gian (<b>−5s, −8s, −12s</b>). Nối đúng được đặt lại mức phạt.</li>
+        <li>Thắng ván đầu nhận <b>1 thẻ</b>. Mỗi chuỗi <b>3 ván thắng</b> nhận thêm <b>1 thẻ</b> (tối đa 3 thẻ/ngày).</li>
+      </ul>
+
+      <div class="vmg-rewards-prog" id="vmg-rewards-prog">
+        <!-- Rendered by JS -->
+      </div>
+
+      <div class="vmg-lobby-stats" id="vmg-lobby-stats">
+        Đang tính toán tiến độ từ vựng…
+      </div>
+
+      <div class="vmg-lobby-actions">
+        <button type="button" id="vmg-btn-start" class="btn-primary" style="padding:10px 22px;font-size:15px;font-weight:800">▶ Bắt đầu chơi</button>
+        <button type="button" id="vmg-btn-open-custom" class="btn-secondary" style="padding:10px 16px;font-size:13px;font-weight:700">➕ Từ của con</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 2. MÀN HÌNH CHƠI TOÀN MÀN HÌNH (GAME MODAL) -->
+<div id="vmg-game-modal" class="modal vmg-game-modal" role="dialog" aria-modal="true" aria-label="Trò chơi Nối Từ Mới">
+  <div id="vmg-game-backdrop" class="modal-backdrop"></div>
+  <div class="modal-box vmg-game-box">
+    <div class="vmg-game-header">
+      <div class="vmg-header-top">
+        <button type="button" class="vmg-close-btn" id="vmg-game-exit" aria-label="Tạm dừng hoặc thoát ván chơi">✕</button>
+        <div class="vmg-timer-text">⏱ <span id="vmg-timer-digits">02:30</span></div>
+        <div class="vmg-header-stats">
+          <span class="vmg-pair-count" id="vmg-pair-count">0/10 cặp</span>
+          <span class="vmg-streak-badge" id="vmg-game-streak">🔥 Chuỗi 0/3</span>
+          <span class="vmg-card-badge" id="vmg-game-cards">🎴 Thẻ 0/3</span>
+        </div>
+      </div>
+      <div class="vmg-timer-bar-wrap">
+        <div class="vmg-timer-bar"><div class="vmg-timer-fill" id="vmg-timer-fill" style="width:100%"></div></div>
+        <div class="vmg-penalty-fly" id="vmg-penalty-fly" style="display:none">−5s</div>
+      </div>
+    </div>
+
+    <!-- 4x5 GRID -->
+    <div class="vmg-grid-wrap" id="vmg-grid-wrap">
+      <div class="vmg-grid" id="vmg-grid" role="grid" aria-label="Lưới 20 ô từ vựng"></div>
+    </div>
+
+    <!-- MÀN HÌNH KẾT QUẢ VÀ DANH SÁCH ÔN TẬP TỪ -->
+    <div class="vmg-result-section" id="vmg-result-section" style="display:none">
+      <div class="vmg-res-banner">
+        <div class="vmg-res-title" id="vmg-res-title">🎉 HOÀN THÀNH!</div>
+        <div class="vmg-res-stats" id="vmg-res-stats">Thời gian: 01:24 · Nối sai: 2 lần</div>
+      </div>
+      <div class="vmg-reward-alert" id="vmg-reward-alert" style="display:none"></div>
+      <div class="vmg-review-box">
+        <div class="vmg-review-head">📚 Danh sách 10 từ vựng vừa gặp</div>
+        <div class="vmg-review-list" id="vmg-review-list"></div>
+      </div>
+      <div class="vmg-res-btns">
+        <button type="button" id="vmg-btn-replay" class="btn-primary" style="padding:8px 18px">Chơi lại ván mới</button>
+        <button type="button" id="vmg-btn-close-result" class="btn-secondary" style="padding:8px 18px">Đóng</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SÂN KHẤU MỞ THẺ RIÊNG (#vmg-stage) -->
+  <div id="vmg-stage" class="dbx-stage" aria-live="polite"></div>
+</div>
+
+<!-- 3. MODAL QUẢN LÝ «TỪ CỦA CON» -->
+<div id="vmg-custom-modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="vmg-custom-title">
+  <div id="vmg-custom-backdrop" class="modal-backdrop"></div>
+  <div class="modal-box vmg-custom-box">
+    <div class="vmg-modal-head">
+      <div class="vmg-modal-title" id="vmg-custom-title">➕ Từ Của Con (Tối đa 200 từ)</div>
+      <button type="button" class="vmg-close-btn" id="vmg-custom-close" aria-label="Đóng">✕</button>
+    </div>
+    <div class="vmg-custom-body">
+      <form class="vmg-add-form" id="vmg-add-form" onsubmit="return false;">
+        <input type="text" id="vmg-inp-en" placeholder="Từ tiếng Anh (vd: striker)" maxlength="24" required autocomplete="off">
+        <input type="text" id="vmg-inp-vi" placeholder="Nghĩa tiếng Việt (vd: tiền đạo cắm)" maxlength="28" required autocomplete="off">
+        <select id="vmg-sel-pos">
+          <option value="n.">Danh từ (n.)</option>
+          <option value="v.">Động từ (v.)</option>
+          <option value="adj.">Tính từ (adj.)</option>
+          <option value="khác">Khác</option>
+        </select>
+        <button type="button" id="vmg-btn-add-word" class="btn-primary" style="padding:6px 12px;font-size:12px;font-weight:700">Thêm</button>
+      </form>
+      <div id="vmg-custom-error" style="color:#F87171;font-size:11.5px;margin-bottom:8px;display:none;font-weight:600"></div>
+
+      <div style="font-size:12px;font-weight:700;color:#94A3B8;margin-bottom:6px">Danh sách từ con đã thêm (<span id="vmg-custom-count">0</span>):</div>
+      <div class="vmg-custom-list" id="vmg-custom-list"></div>
     </div>
   </div>
 </div>
@@ -8466,7 +9377,7 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
      không phải dữ liệu riêng của từng hồ sơ nên không được seed/ghi vào bên trong kidchart/{mã hồ sơ}/. */
   function allLocalKidchartKeys(){
     var keys = [];
-    var SHARED_KEYS = {kidchart_player_db:1, kidchart_battle_config:1, kidchart_question_bank:1};
+    var SHARED_KEYS = {kidchart_player_db:1, kidchart_battle_config:1, kidchart_question_bank:1, kidchart_vocab_bank:1};
     try{
       for(var i=0;i<localStorage.length;i++){
         var k = localStorage.key(i);
@@ -9732,6 +10643,11 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
         + '</label>';
     });
     document.getElementById('day-tasklist').innerHTML = listHtml;
+    if(typeof vmgRenderEntryCard === 'function'){
+      try{ vmgRenderEntryCard(d); }catch(err){ console.error('Lỗi khi chạy vmgRenderEntryCard:', err); }
+    } else {
+      console.error('CẢNH BÁO NGHIÊM TRỌNG: vmgRenderEntryCard is not defined! Kiểm tra phạm vi khai báo của khối mã Nối Từ Mới.');
+    }
 
     renderBadges();
     renderPlayer();
@@ -20323,6 +21239,1142 @@ function roadmapIcon(def, locked){
     renderWeek();
     try{ renderSkills(); }catch(e){}
   }
+  /* =====================================================================
+     NHIỆM VỤ «NỐI TỪ MỚI» (VOCAB MATCH GAME) - JAVASCRIPT ENGINE
+     Slug: vocab-match-game
+     - Lưới 4x5 (20 ô: 10 từ Anh + 10 nghĩa Việt)
+     - Giới hạn thời gian (mặc định 150s), phạt luỹ tiến -5s/-8s/-12s khi nối sai
+     - Thưởng thẻ tối đa 3 thẻ/ngày: Thẻ 1 (thắng ván 1), Thẻ 2 (chuỗi 3 win), Thẻ 3 (thêm chuỗi 3 win)
+     - Lưu tiến độ từ vựng, tự thêm từ, ôn từ sai, phát âm chuẩn Anh-Anh (rate 0.9)
+     - Tương thích 100% Impeccable standard, an toàn ngày/tháng, cách ly _vm.
+     ===================================================================== */
+  var VMG_BUILTIN_WORDS = [{"id": "w-001", "en": "dog", "vi": "con chó", "pos": "n.", "topic": "animals", "level": "A1"}, {"id": "w-002", "en": "cat", "vi": "con mèo", "pos": "n.", "topic": "animals", "level": "A1"}, {"id": "w-003", "en": "bird", "vi": "con chim", "pos": "n.", "topic": "animals", "level": "A1"}, {"id": "w-004", "en": "fish", "vi": "con cá", "pos": "n.", "topic": "animals", "level": "A1"}, {"id": "w-005", "en": "horse", "vi": "con ngựa", "pos": "n.", "topic": "animals", "level": "A1"}, {"id": "w-006", "en": "cow", "vi": "con bò", "pos": "n.", "topic": "animals", "level": "A1"}, {"id": "w-007", "en": "pig", "vi": "con lợn", "pos": "n.", "topic": "animals", "level": "A1"}, {"id": "w-008", "en": "sheep", "vi": "con cừu", "pos": "n.", "topic": "animals", "level": "A1"}, {"id": "w-009", "en": "duck", "vi": "con vịt", "pos": "n.", "topic": "animals", "level": "A1"}, {"id": "w-010", "en": "chicken", "vi": "con gà", "pos": "n.", "topic": "animals", "level": "A1"}, {"id": "w-011", "en": "tiger", "vi": "con hổ", "pos": "n.", "topic": "animals", "level": "A1"}, {"id": "w-012", "en": "lion", "vi": "sư tử", "pos": "n.", "topic": "animals", "level": "A1"}, {"id": "w-013", "en": "elephant", "vi": "con voi", "pos": "n.", "topic": "animals", "level": "A1"}, {"id": "w-014", "en": "monkey", "vi": "con khỉ", "pos": "n.", "topic": "animals", "level": "A1"}, {"id": "w-015", "en": "bear", "vi": "con gấu", "pos": "n.", "topic": "animals", "level": "A1"}, {"id": "w-016", "en": "rabbit", "vi": "con thỏ", "pos": "n.", "topic": "animals", "level": "A1"}, {"id": "w-017", "en": "mouse", "vi": "con chuột", "pos": "n.", "topic": "animals", "level": "A1"}, {"id": "w-018", "en": "snake", "vi": "con rắn", "pos": "n.", "topic": "animals", "level": "A1"}, {"id": "w-019", "en": "frog", "vi": "con ếch", "pos": "n.", "topic": "animals", "level": "A1"}, {"id": "w-020", "en": "dolphin", "vi": "cá heo", "pos": "n.", "topic": "animals", "level": "A2"}, {"id": "w-021", "en": "whale", "vi": "cá voi", "pos": "n.", "topic": "animals", "level": "A2"}, {"id": "w-022", "en": "shark", "vi": "cá mập", "pos": "n.", "topic": "animals", "level": "A2"}, {"id": "w-023", "en": "bee", "vi": "con ong", "pos": "n.", "topic": "animals", "level": "A2"}, {"id": "w-024", "en": "ant", "vi": "con kiến", "pos": "n.", "topic": "animals", "level": "A2"}, {"id": "w-025", "en": "butterfly", "vi": "con bướm", "pos": "n.", "topic": "animals", "level": "A2"}, {"id": "w-026", "en": "book", "vi": "sách", "pos": "n.", "topic": "school", "level": "A1"}, {"id": "w-027", "en": "pen", "vi": "bút mực", "pos": "n.", "topic": "school", "level": "A1"}, {"id": "w-028", "en": "pencil", "vi": "bút chì", "pos": "n.", "topic": "school", "level": "A1"}, {"id": "w-029", "en": "ruler", "vi": "thước kẻ", "pos": "n.", "topic": "school", "level": "A1"}, {"id": "w-030", "en": "eraser", "vi": "cục tẩy", "pos": "n.", "topic": "school", "level": "A1"}, {"id": "w-031", "en": "desk", "vi": "bàn học", "pos": "n.", "topic": "school", "level": "A1"}, {"id": "w-032", "en": "chair", "vi": "cái ghế", "pos": "n.", "topic": "school", "level": "A1"}, {"id": "w-033", "en": "classroom", "vi": "lớp học", "pos": "n.", "topic": "school", "level": "A1"}, {"id": "w-034", "en": "teacher", "vi": "giáo viên", "pos": "n.", "topic": "school", "level": "A1"}, {"id": "w-035", "en": "student", "vi": "học sinh", "pos": "n.", "topic": "school", "level": "A1"}, {"id": "w-036", "en": "blackboard", "vi": "bảng đen", "pos": "n.", "topic": "school", "level": "A1"}, {"id": "w-037", "en": "backpack", "vi": "ba lô", "pos": "n.", "topic": "school", "level": "A1"}, {"id": "w-038", "en": "notebook", "vi": "vở ghi", "pos": "n.", "topic": "school", "level": "A1"}, {"id": "w-039", "en": "library", "vi": "thư viện", "pos": "n.", "topic": "school", "level": "A1"}, {"id": "w-040", "en": "lesson", "vi": "bài học", "pos": "n.", "topic": "school", "level": "A1"}, {"id": "w-041", "en": "homework", "vi": "bài tập", "pos": "n.", "topic": "school", "level": "A1"}, {"id": "w-042", "en": "question", "vi": "câu hỏi", "pos": "n.", "topic": "school", "level": "A1"}, {"id": "w-043", "en": "answer", "vi": "câu trả lời", "pos": "n.", "topic": "school", "level": "A1"}, {"id": "w-044", "en": "exam", "vi": "kỳ thi", "pos": "n.", "topic": "school", "level": "A2"}, {"id": "w-045", "en": "dictionary", "vi": "từ điển", "pos": "n.", "topic": "school", "level": "A2"}, {"id": "w-046", "en": "scissors", "vi": "cái kéo", "pos": "n.", "topic": "school", "level": "A2"}, {"id": "w-047", "en": "glue", "vi": "keo dán", "pos": "n.", "topic": "school", "level": "A2"}, {"id": "w-048", "en": "paper", "vi": "tờ giấy", "pos": "n.", "topic": "school", "level": "A1"}, {"id": "w-049", "en": "map", "vi": "bản đồ", "pos": "n.", "topic": "school", "level": "A2"}, {"id": "w-050", "en": "computer", "vi": "máy tính", "pos": "n.", "topic": "school", "level": "A1"}, {"id": "w-051", "en": "apple", "vi": "quả táo", "pos": "n.", "topic": "food", "level": "A1"}, {"id": "w-052", "en": "banana", "vi": "quả chuối", "pos": "n.", "topic": "food", "level": "A1"}, {"id": "w-053", "en": "orange", "vi": "quả cam", "pos": "n.", "topic": "food", "level": "A1"}, {"id": "w-054", "en": "grape", "vi": "quả nho", "pos": "n.", "topic": "food", "level": "A2"}, {"id": "w-055", "en": "lemon", "vi": "quả chanh", "pos": "n.", "topic": "food", "level": "A2"}, {"id": "w-056", "en": "watermelon", "vi": "dưa hấu", "pos": "n.", "topic": "food", "level": "A2"}, {"id": "w-057", "en": "strawberry", "vi": "dâu tây", "pos": "n.", "topic": "food", "level": "A2"}, {"id": "w-058", "en": "mango", "vi": "quả xoài", "pos": "n.", "topic": "food", "level": "A2"}, {"id": "w-059", "en": "bread", "vi": "bánh mì", "pos": "n.", "topic": "food", "level": "A1"}, {"id": "w-060", "en": "rice", "vi": "cơm", "pos": "n.", "topic": "food", "level": "A1"}, {"id": "w-061", "en": "noodles", "vi": "mì sợi", "pos": "n.", "topic": "food", "level": "A1"}, {"id": "w-062", "en": "egg", "vi": "trứng", "pos": "n.", "topic": "food", "level": "A1"}, {"id": "w-063", "en": "milk", "vi": "sữa", "pos": "n.", "topic": "food", "level": "A1"}, {"id": "w-064", "en": "water", "vi": "nước", "pos": "n.", "topic": "food", "level": "A1"}, {"id": "w-065", "en": "juice", "vi": "nước ép", "pos": "n.", "topic": "food", "level": "A1"}, {"id": "w-066", "en": "cheese", "vi": "phô mai", "pos": "n.", "topic": "food", "level": "A2"}, {"id": "w-067", "en": "butter", "vi": "bơ", "pos": "n.", "topic": "food", "level": "A2"}, {"id": "w-068", "en": "meat", "vi": "thịt", "pos": "n.", "topic": "food", "level": "A1"}, {"id": "w-069", "en": "beef", "vi": "thịt bò", "pos": "n.", "topic": "food", "level": "A2"}, {"id": "w-070", "en": "pork", "vi": "thịt heo", "pos": "n.", "topic": "food", "level": "A2"}, {"id": "w-071", "en": "soup", "vi": "món súp", "pos": "n.", "topic": "food", "level": "A1"}, {"id": "w-072", "en": "salad", "vi": "rau trộn", "pos": "n.", "topic": "food", "level": "A2"}, {"id": "w-073", "en": "cake", "vi": "bánh ngọt", "pos": "n.", "topic": "food", "level": "A1"}, {"id": "w-074", "en": "cookie", "vi": "bánh quy", "pos": "n.", "topic": "food", "level": "A2"}, {"id": "w-075", "en": "ice cream", "vi": "kem", "pos": "n.", "topic": "food", "level": "A1"}, {"id": "w-076", "en": "head", "vi": "đầu", "pos": "n.", "topic": "body", "level": "A1"}, {"id": "w-077", "en": "face", "vi": "khuôn mặt", "pos": "n.", "topic": "body", "level": "A1"}, {"id": "w-078", "en": "hair", "vi": "tóc", "pos": "n.", "topic": "body", "level": "A1"}, {"id": "w-079", "en": "eye", "vi": "mắt", "pos": "n.", "topic": "body", "level": "A1"}, {"id": "w-080", "en": "ear", "vi": "tai", "pos": "n.", "topic": "body", "level": "A1"}, {"id": "w-081", "en": "nose", "vi": "mũi", "pos": "n.", "topic": "body", "level": "A1"}, {"id": "w-082", "en": "mouth", "vi": "miệng", "pos": "n.", "topic": "body", "level": "A1"}, {"id": "w-083", "en": "tooth", "vi": "răng", "pos": "n.", "topic": "body", "level": "A1"}, {"id": "w-084", "en": "neck", "vi": "cổ", "pos": "n.", "topic": "body", "level": "A2"}, {"id": "w-085", "en": "shoulder", "vi": "vai", "pos": "n.", "topic": "body", "level": "A1"}, {"id": "w-086", "en": "arm", "vi": "cánh tay", "pos": "n.", "topic": "body", "level": "A1"}, {"id": "w-087", "en": "hand", "vi": "bàn tay", "pos": "n.", "topic": "body", "level": "A1"}, {"id": "w-088", "en": "finger", "vi": "ngón tay", "pos": "n.", "topic": "body", "level": "A1"}, {"id": "w-089", "en": "thumb", "vi": "ngón cái", "pos": "n.", "topic": "body", "level": "A2"}, {"id": "w-090", "en": "chest", "vi": "ngực", "pos": "n.", "topic": "body", "level": "A2"}, {"id": "w-091", "en": "stomach", "vi": "bụng", "pos": "n.", "topic": "body", "level": "A2"}, {"id": "w-092", "en": "leg", "vi": "chân", "pos": "n.", "topic": "body", "level": "A1"}, {"id": "w-093", "en": "knee", "vi": "đầu gối", "pos": "n.", "topic": "body", "level": "A2"}, {"id": "w-094", "en": "foot", "vi": "bàn chân", "pos": "n.", "topic": "body", "level": "A1"}, {"id": "w-095", "en": "toe", "vi": "ngón chân", "pos": "n.", "topic": "body", "level": "A2"}, {"id": "w-096", "en": "father", "vi": "bố", "pos": "n.", "topic": "family", "level": "A1"}, {"id": "w-097", "en": "mother", "vi": "mẹ", "pos": "n.", "topic": "family", "level": "A1"}, {"id": "w-098", "en": "parents", "vi": "cha mẹ", "pos": "n.", "topic": "family", "level": "A1"}, {"id": "w-099", "en": "son", "vi": "con trai", "pos": "n.", "topic": "family", "level": "A1"}, {"id": "w-100", "en": "daughter", "vi": "con gái", "pos": "n.", "topic": "family", "level": "A1"}, {"id": "w-101", "en": "brother", "vi": "anh trai", "pos": "n.", "topic": "family", "level": "A1"}, {"id": "w-102", "en": "sister", "vi": "chị gái", "pos": "n.", "topic": "family", "level": "A1"}, {"id": "w-103", "en": "grandfather", "vi": "ông", "pos": "n.", "topic": "family", "level": "A1"}, {"id": "w-104", "en": "grandmother", "vi": "bà", "pos": "n.", "topic": "family", "level": "A1"}, {"id": "w-105", "en": "baby", "vi": "em bé", "pos": "n.", "topic": "family", "level": "A1"}, {"id": "w-106", "en": "uncle", "vi": "chú bác", "pos": "n.", "topic": "family", "level": "A1"}, {"id": "w-107", "en": "aunt", "vi": "cô dì", "pos": "n.", "topic": "family", "level": "A1"}, {"id": "w-108", "en": "cousin", "vi": "anh em họ", "pos": "n.", "topic": "family", "level": "A2"}, {"id": "w-109", "en": "family", "vi": "gia đình", "pos": "n.", "topic": "family", "level": "A1"}, {"id": "w-110", "en": "friend", "vi": "bạn bè", "pos": "n.", "topic": "family", "level": "A1"}, {"id": "w-111", "en": "neighbor", "vi": "hàng xóm", "pos": "n.", "topic": "family", "level": "A2"}, {"id": "w-112", "en": "boy", "vi": "cậu bé", "pos": "n.", "topic": "family", "level": "A1"}, {"id": "w-113", "en": "girl", "vi": "cô bé", "pos": "n.", "topic": "family", "level": "A1"}, {"id": "w-114", "en": "man", "vi": "đàn ông", "pos": "n.", "topic": "family", "level": "A1"}, {"id": "w-115", "en": "woman", "vi": "phụ nữ", "pos": "n.", "topic": "family", "level": "A1"}, {"id": "w-116", "en": "football", "vi": "bóng đá", "pos": "n.", "topic": "sports", "level": "A1"}, {"id": "w-117", "en": "ball", "vi": "quả bóng", "pos": "n.", "topic": "sports", "level": "A1"}, {"id": "w-118", "en": "goal", "vi": "khung thành", "pos": "n.", "topic": "sports", "level": "A1"}, {"id": "w-119", "en": "player", "vi": "cầu thủ", "pos": "n.", "topic": "sports", "level": "A1"}, {"id": "w-120", "en": "goalkeeper", "vi": "thủ môn", "pos": "n.", "topic": "sports", "level": "A2"}, {"id": "w-121", "en": "referee", "vi": "trọng tài", "pos": "n.", "topic": "sports", "level": "A2"}, {"id": "w-122", "en": "coach", "vi": "huấn luyện viên", "pos": "n.", "topic": "sports", "level": "A2"}, {"id": "w-123", "en": "stadium", "vi": "sân vận động", "pos": "n.", "topic": "sports", "level": "A2"}, {"id": "w-124", "en": "match", "vi": "trận đấu", "pos": "n.", "topic": "sports", "level": "A1"}, {"id": "w-125", "en": "team", "vi": "đội bóng", "pos": "n.", "topic": "sports", "level": "A1"}, {"id": "w-126", "en": "score", "vi": "tỷ số", "pos": "n.", "topic": "sports", "level": "A2"}, {"id": "w-127", "en": "whistle", "vi": "còi", "pos": "n.", "topic": "sports", "level": "A2"}, {"id": "w-128", "en": "jersey", "vi": "áo đấu", "pos": "n.", "topic": "sports", "level": "A2"}, {"id": "w-129", "en": "cleats", "vi": "giày đinh", "pos": "n.", "topic": "sports", "level": "A2"}, {"id": "w-130", "en": "trophy", "vi": "chiếc cúp", "pos": "n.", "topic": "sports", "level": "A2"}, {"id": "w-131", "en": "medal", "vi": "huy chương", "pos": "n.", "topic": "sports", "level": "A2"}, {"id": "w-132", "en": "champion", "vi": "vô địch", "pos": "n.", "topic": "sports", "level": "A2"}, {"id": "w-133", "en": "swimming", "vi": "bơi lội", "pos": "n.", "topic": "sports", "level": "A1"}, {"id": "w-134", "en": "running", "vi": "chạy bộ", "pos": "n.", "topic": "sports", "level": "A1"}, {"id": "w-135", "en": "basketball", "vi": "bóng rổ", "pos": "n.", "topic": "sports", "level": "A1"}, {"id": "w-136", "en": "badminton", "vi": "cầu lông", "pos": "n.", "topic": "sports", "level": "A1"}, {"id": "w-137", "en": "tennis", "vi": "quần vợt", "pos": "n.", "topic": "sports", "level": "A1"}, {"id": "w-138", "en": "bicycle", "vi": "xe đạp", "pos": "n.", "topic": "sports", "level": "A1"}, {"id": "w-139", "en": "exercise", "vi": "tập thể dục", "pos": "n.", "topic": "sports", "level": "A1"}, {"id": "w-140", "en": "victory", "vi": "chiến thắng", "pos": "n.", "topic": "sports", "level": "A2"}, {"id": "w-141", "en": "house", "vi": "ngôi nhà", "pos": "n.", "topic": "home", "level": "A1"}, {"id": "w-142", "en": "room", "vi": "căn phòng", "pos": "n.", "topic": "home", "level": "A1"}, {"id": "w-143", "en": "bedroom", "vi": "phòng ngủ", "pos": "n.", "topic": "home", "level": "A1"}, {"id": "w-144", "en": "kitchen", "vi": "nhà bếp", "pos": "n.", "topic": "home", "level": "A1"}, {"id": "w-145", "en": "bathroom", "vi": "phòng tắm", "pos": "n.", "topic": "home", "level": "A1"}, {"id": "w-146", "en": "living room", "vi": "phòng khách", "pos": "n.", "topic": "home", "level": "A1"}, {"id": "w-147", "en": "door", "vi": "cửa ra vào", "pos": "n.", "topic": "home", "level": "A1"}, {"id": "w-148", "en": "window", "vi": "cửa sổ", "pos": "n.", "topic": "home", "level": "A1"}, {"id": "w-149", "en": "wall", "vi": "bức tường", "pos": "n.", "topic": "home", "level": "A1"}, {"id": "w-150", "en": "floor", "vi": "sàn nhà", "pos": "n.", "topic": "home", "level": "A1"}, {"id": "w-151", "en": "roof", "vi": "mái nhà", "pos": "n.", "topic": "home", "level": "A2"}, {"id": "w-152", "en": "garden", "vi": "khu vườn", "pos": "n.", "topic": "home", "level": "A1"}, {"id": "w-153", "en": "bed", "vi": "chiếc giường", "pos": "n.", "topic": "home", "level": "A1"}, {"id": "w-154", "en": "table", "vi": "cái bàn", "pos": "n.", "topic": "home", "level": "A1"}, {"id": "w-155", "en": "sofa", "vi": "ghế xô pha", "pos": "n.", "topic": "home", "level": "A1"}, {"id": "w-156", "en": "lamp", "vi": "đèn", "pos": "n.", "topic": "home", "level": "A1"}, {"id": "w-157", "en": "clock", "vi": "đồng hồ", "pos": "n.", "topic": "home", "level": "A1"}, {"id": "w-158", "en": "mirror", "vi": "gương soi", "pos": "n.", "topic": "home", "level": "A2"}, {"id": "w-159", "en": "towel", "vi": "khăn tắm", "pos": "n.", "topic": "home", "level": "A2"}, {"id": "w-160", "en": "soap", "vi": "xà phòng", "pos": "n.", "topic": "home", "level": "A2"}, {"id": "w-161", "en": "pillow", "vi": "gối", "pos": "n.", "topic": "home", "level": "A2"}, {"id": "w-162", "en": "blanket", "vi": "chăn ấm", "pos": "n.", "topic": "home", "level": "A2"}, {"id": "w-163", "en": "fridge", "vi": "tủ lạnh", "pos": "n.", "topic": "home", "level": "A2"}, {"id": "w-164", "en": "cup", "vi": "chiếc cốc", "pos": "n.", "topic": "home", "level": "A1"}, {"id": "w-165", "en": "spoon", "vi": "cái thìa", "pos": "n.", "topic": "home", "level": "A2"}, {"id": "w-166", "en": "sun", "vi": "mặt trời", "pos": "n.", "topic": "nature", "level": "A1"}, {"id": "w-167", "en": "moon", "vi": "mặt trăng", "pos": "n.", "topic": "nature", "level": "A1"}, {"id": "w-168", "en": "star", "vi": "ngôi sao", "pos": "n.", "topic": "nature", "level": "A1"}, {"id": "w-169", "en": "sky", "vi": "bầu trời", "pos": "n.", "topic": "nature", "level": "A1"}, {"id": "w-170", "en": "cloud", "vi": "mây", "pos": "n.", "topic": "nature", "level": "A1"}, {"id": "w-171", "en": "rain", "vi": "mưa", "pos": "n.", "topic": "nature", "level": "A1"}, {"id": "w-172", "en": "snow", "vi": "tuyết", "pos": "n.", "topic": "nature", "level": "A1"}, {"id": "w-173", "en": "wind", "vi": "gió", "pos": "n.", "topic": "nature", "level": "A1"}, {"id": "w-174", "en": "storm", "vi": "cơn bão", "pos": "n.", "topic": "nature", "level": "A2"}, {"id": "w-175", "en": "rainbow", "vi": "cầu vồng", "pos": "n.", "topic": "nature", "level": "A2"}, {"id": "w-176", "en": "tree", "vi": "cây", "pos": "n.", "topic": "nature", "level": "A1"}, {"id": "w-177", "en": "flower", "vi": "bông hoa", "pos": "n.", "topic": "nature", "level": "A1"}, {"id": "w-178", "en": "grass", "vi": "cỏ", "pos": "n.", "topic": "nature", "level": "A1"}, {"id": "w-179", "en": "leaf", "vi": "lá cây", "pos": "n.", "topic": "nature", "level": "A1"}, {"id": "w-180", "en": "forest", "vi": "rừng", "pos": "n.", "topic": "nature", "level": "A2"}, {"id": "w-181", "en": "mountain", "vi": "núi", "pos": "n.", "topic": "nature", "level": "A1"}, {"id": "w-182", "en": "river", "vi": "sông", "pos": "n.", "topic": "nature", "level": "A1"}, {"id": "w-183", "en": "lake", "vi": "hồ", "pos": "n.", "topic": "nature", "level": "A1"}, {"id": "w-184", "en": "sea", "vi": "biển", "pos": "n.", "topic": "nature", "level": "A1"}, {"id": "w-185", "en": "ocean", "vi": "đại dương", "pos": "n.", "topic": "nature", "level": "A2"}, {"id": "w-186", "en": "beach", "vi": "bãi biển", "pos": "n.", "topic": "nature", "level": "A1"}, {"id": "w-187", "en": "island", "vi": "hòn đảo", "pos": "n.", "topic": "nature", "level": "A2"}, {"id": "w-188", "en": "rock", "vi": "hòn đá", "pos": "n.", "topic": "nature", "level": "A2"}, {"id": "w-189", "en": "fire", "vi": "lửa", "pos": "n.", "topic": "nature", "level": "A1"}, {"id": "w-190", "en": "earth", "vi": "trái đất", "pos": "n.", "topic": "nature", "level": "A2"}, {"id": "w-191", "en": "run", "vi": "chạy", "pos": "v.", "topic": "actions", "level": "A1"}, {"id": "w-192", "en": "walk", "vi": "đi bộ", "pos": "v.", "topic": "actions", "level": "A1"}, {"id": "w-193", "en": "jump", "vi": "nhảy", "pos": "v.", "topic": "actions", "level": "A1"}, {"id": "w-194", "en": "swim", "vi": "bơi", "pos": "v.", "topic": "actions", "level": "A1"}, {"id": "w-195", "en": "fly", "vi": "bay", "pos": "v.", "topic": "actions", "level": "A1"}, {"id": "w-196", "en": "kick", "vi": "sút", "pos": "v.", "topic": "actions", "level": "A1"}, {"id": "w-197", "en": "catch", "vi": "bắt", "pos": "v.", "topic": "actions", "level": "A1"}, {"id": "w-198", "en": "throw", "vi": "ném", "pos": "v.", "topic": "actions", "level": "A1"}, {"id": "w-199", "en": "eat", "vi": "ăn", "pos": "v.", "topic": "actions", "level": "A1"}, {"id": "w-200", "en": "drink", "vi": "uống", "pos": "v.", "topic": "actions", "level": "A1"}, {"id": "w-201", "en": "sleep", "vi": "ngủ", "pos": "v.", "topic": "actions", "level": "A1"}, {"id": "w-202", "en": "wake up", "vi": "thức dậy", "pos": "v.", "topic": "actions", "level": "A1"}, {"id": "w-203", "en": "read", "vi": "đọc", "pos": "v.", "topic": "actions", "level": "A1"}, {"id": "w-204", "en": "write", "vi": "viết", "pos": "v.", "topic": "actions", "level": "A1"}, {"id": "w-205", "en": "listen", "vi": "nghe", "pos": "v.", "topic": "actions", "level": "A1"}, {"id": "w-206", "en": "speak", "vi": "nói", "pos": "v.", "topic": "actions", "level": "A1"}, {"id": "w-207", "en": "sing", "vi": "hát", "pos": "v.", "topic": "actions", "level": "A1"}, {"id": "w-208", "en": "dance", "vi": "múa", "pos": "v.", "topic": "actions", "level": "A1"}, {"id": "w-209", "en": "draw", "vi": "vẽ", "pos": "v.", "topic": "actions", "level": "A1"}, {"id": "w-210", "en": "play", "vi": "chơi", "pos": "v.", "topic": "actions", "level": "A1"}, {"id": "w-211", "en": "open", "vi": "mở", "pos": "v.", "topic": "actions", "level": "A1"}, {"id": "w-212", "en": "close", "vi": "đóng", "pos": "v.", "topic": "actions", "level": "A1"}, {"id": "w-213", "en": "stand", "vi": "đứng", "pos": "v.", "topic": "actions", "level": "A1"}, {"id": "w-214", "en": "sit", "vi": "ngồi", "pos": "v.", "topic": "actions", "level": "A1"}, {"id": "w-215", "en": "smile", "vi": "mỉm cười", "pos": "v.", "topic": "actions", "level": "A1"}, {"id": "w-216", "en": "laugh", "vi": "cười to", "pos": "v.", "topic": "actions", "level": "A1"}, {"id": "w-217", "en": "help", "vi": "giúp đỡ", "pos": "v.", "topic": "actions", "level": "A1"}, {"id": "w-218", "en": "wash", "vi": "rửa", "pos": "v.", "topic": "actions", "level": "A1"}, {"id": "w-219", "en": "climb", "vi": "leo trèo", "pos": "v.", "topic": "actions", "level": "A2"}, {"id": "w-220", "en": "pass", "vi": "chuyền bóng", "pos": "v.", "topic": "actions", "level": "A1"}, {"id": "w-221", "en": "happy", "vi": "vui vẻ", "pos": "adj.", "topic": "adjectives", "level": "A1"}, {"id": "w-222", "en": "sad", "vi": "buồn bã", "pos": "adj.", "topic": "adjectives", "level": "A1"}, {"id": "w-223", "en": "angry", "vi": "tức giận", "pos": "adj.", "topic": "adjectives", "level": "A1"}, {"id": "w-224", "en": "tired", "vi": "mệt mỏi", "pos": "adj.", "topic": "adjectives", "level": "A1"}, {"id": "w-225", "en": "hungry", "vi": "đói bụng", "pos": "adj.", "topic": "adjectives", "level": "A1"}, {"id": "w-226", "en": "thirsty", "vi": "khát nước", "pos": "adj.", "topic": "adjectives", "level": "A1"}, {"id": "w-227", "en": "brave", "vi": "dũng cảm", "pos": "adj.", "topic": "adjectives", "level": "A2"}, {"id": "w-228", "en": "strong", "vi": "khỏe mạnh", "pos": "adj.", "topic": "adjectives", "level": "A1"}, {"id": "w-229", "en": "weak", "vi": "yếu ớt", "pos": "adj.", "topic": "adjectives", "level": "A2"}, {"id": "w-230", "en": "fast", "vi": "nhanh", "pos": "adj.", "topic": "adjectives", "level": "A1"}, {"id": "w-231", "en": "slow", "vi": "chậm", "pos": "adj.", "topic": "adjectives", "level": "A1"}, {"id": "w-232", "en": "big", "vi": "to lớn", "pos": "adj.", "topic": "adjectives", "level": "A1"}, {"id": "w-233", "en": "small", "vi": "nhỏ bé", "pos": "adj.", "topic": "adjectives", "level": "A1"}, {"id": "w-234", "en": "tall", "vi": "cao", "pos": "adj.", "topic": "adjectives", "level": "A1"}, {"id": "w-235", "en": "short", "vi": "thấp", "pos": "adj.", "topic": "adjectives", "level": "A1"}, {"id": "w-236", "en": "hot", "vi": "nóng", "pos": "adj.", "topic": "adjectives", "level": "A1"}, {"id": "w-237", "en": "cold", "vi": "lạnh", "pos": "adj.", "topic": "adjectives", "level": "A1"}, {"id": "w-238", "en": "warm", "vi": "ấm áp", "pos": "adj.", "topic": "adjectives", "level": "A1"}, {"id": "w-239", "en": "cool", "vi": "mát mẻ", "pos": "adj.", "topic": "adjectives", "level": "A1"}, {"id": "w-240", "en": "clean", "vi": "sạch sẽ", "pos": "adj.", "topic": "adjectives", "level": "A1"}, {"id": "w-241", "en": "dirty", "vi": "bẩn", "pos": "adj.", "topic": "adjectives", "level": "A1"}, {"id": "w-242", "en": "new", "vi": "mới", "pos": "adj.", "topic": "adjectives", "level": "A1"}, {"id": "w-243", "en": "old", "vi": "cũ", "pos": "adj.", "topic": "adjectives", "level": "A1"}, {"id": "w-244", "en": "good", "vi": "tốt", "pos": "adj.", "topic": "adjectives", "level": "A1"}, {"id": "w-245", "en": "bad", "vi": "xấu", "pos": "adj.", "topic": "adjectives", "level": "A1"}, {"id": "w-246", "en": "beautiful", "vi": "xinh đẹp", "pos": "adj.", "topic": "adjectives", "level": "A1"}, {"id": "w-247", "en": "smart", "vi": "thông minh", "pos": "adj.", "topic": "adjectives", "level": "A2"}, {"id": "w-248", "en": "careful", "vi": "cẩn thận", "pos": "adj.", "topic": "adjectives", "level": "A2"}, {"id": "w-249", "en": "easy", "vi": "dễ", "pos": "adj.", "topic": "adjectives", "level": "A1"}, {"id": "w-250", "en": "difficult", "vi": "khó", "pos": "adj.", "topic": "adjectives", "level": "A2"}];
+
+  // Cấu hình mặc định
+  if(!settings.vmg || typeof settings.vmg !== 'object') settings.vmg = {};
+  if(typeof settings.vmg.matchDuration !== 'number') settings.vmg.matchDuration = 150;
+  if(typeof settings.vmg.penalty1 !== 'number') settings.vmg.penalty1 = 5;
+  if(typeof settings.vmg.penalty2 !== 'number') settings.vmg.penalty2 = 8;
+  if(typeof settings.vmg.penalty3 !== 'number') settings.vmg.penalty3 = 12;
+  if(typeof settings.vmg.maxCards !== 'number') settings.vmg.maxCards = 3;
+
+  var VMG_CLOUD_BANK = null;
+  function normalizeVocabBank(raw){
+    if(!raw || typeof raw !== 'object') return { version:1, words: VMG_BUILTIN_WORDS.slice() };
+    var words = Array.isArray(raw.words) ? raw.words : (Array.isArray(raw) ? raw : []);
+    var clean = [];
+    var seenIds = {}, seenEn = {}, seenVi = {};
+    words.forEach(function(w, i){
+      if(!w || typeof w !== 'object') return;
+      var en = String(w.en || '').trim();
+      var vi = String(w.vi || '').trim();
+      var id = String(w.id || ('w-' + (i + 1)));
+      if(!en || !vi || seenIds[id] || seenEn[en.toLowerCase()] || seenVi[vi.toLowerCase()]) return;
+      seenIds[id] = true; seenEn[en.toLowerCase()] = true; seenVi[vi.toLowerCase()] = true;
+      clean.push({
+        id: id,
+        en: en,
+        vi: vi,
+        pos: String(w.pos || 'n.').trim(),
+        topic: String(w.topic || 'general').trim(),
+        level: String(w.level || 'A1').trim()
+      });
+    });
+    return {
+      version: raw.version || 1,
+      mode: raw.mode || 'append',
+      words: clean.length >= 10 ? clean : VMG_BUILTIN_WORDS.slice()
+    };
+  }
+
+  async function loadVocabBank(){
+    var bank = null;
+    try {
+      var res = await fetch(FIREBASE_BASE + '/kidchart_vocab_bank.json');
+      if(res.ok){
+        var j = await res.json();
+        if(j) bank = normalizeVocabBank(j);
+      }
+    } catch(e) {
+      console.warn('Khong tai duoc kidchart_vocab_bank tu Firebase', e);
+    }
+    if(bank && bank.words.length){
+      VMG_CLOUD_BANK = bank;
+      try{ localStorage.setItem('kidchart_vocab_bank', JSON.stringify(bank)); }catch(e){}
+    }
+    vmgRefreshAdminStatus();
+  }
+
+  // Khởi tạo từ bộ nhớ đệm hoặc built-in
+  try {
+    var cachedVBank = safeGet('kidchart_vocab_bank');
+    VMG_CLOUD_BANK = cachedVBank ? normalizeVocabBank(cachedVBank) : { version:1, words: VMG_BUILTIN_WORDS.slice() };
+  } catch(e) {
+    VMG_CLOUD_BANK = { version:1, words: VMG_BUILTIN_WORDS.slice() };
+  }
+  loadVocabBank();
+
+  function vmgGetEffectiveBank(){
+    var baseWords = (VMG_CLOUD_BANK && VMG_CLOUD_BANK.words && VMG_CLOUD_BANK.words.length >= 10)
+      ? VMG_CLOUD_BANK.words
+      : VMG_BUILTIN_WORDS;
+    var userWords = vmgGetUserVocab();
+    return baseWords.concat(userWords);
+  }
+
+  /* ---- Quản lý từ do bé tự thêm (kidchart_user_vocab) ---- */
+  function vmgGetUserVocab(){
+    var v = safeGet('kidchart_user_vocab');
+    return Array.isArray(v) ? v : [];
+  }
+  function vmgSaveUserVocab(list){
+    safeSet('kidchart_user_vocab', list.slice(0, 200));
+  }
+
+  /* ---- Quản lý tiến độ từ vựng (kidchart_vocab_progress) ---- */
+  function vmgGetWordProgress(){
+    var p = safeGet('kidchart_vocab_progress');
+    return (p && typeof p === 'object') ? p : {};
+  }
+  function vmgSaveWordProgress(prog){
+    safeSet('kidchart_vocab_progress', prog);
+  }
+
+  /* ---- Quản lý trạng thái ngày trong dayObj._vm ---- */
+  function vmgGetDayData(d){
+    var targetDate = d || new Date();
+    var ymKey = ym(targetDate), dk = dkey(targetDate);
+    var mData = loadMonth(ymKey);
+    var dayObj = (mData && mData.days && mData.days[dk]) || {};
+    if(!dayObj._vm || typeof dayObj._vm !== 'object'){
+      dayObj._vm = { plays: 0, wins: 0, streak: 0, cards: 0 };
+    }
+    return dayObj._vm;
+  }
+  function vmgSaveDayData(d, vmData){
+    var targetDate = d || new Date();
+    var ymKey = ym(targetDate), dk = dkey(targetDate);
+    var mData = loadMonth(ymKey);
+    if(!mData.days) mData.days = {};
+    if(!mData.days[dk]) mData.days[dk] = {};
+    mData.days[dk]._vm = vmData;
+    saveMonth(ymKey, mData);
+  }
+
+  /* ---- Thuật toán tính trọng số và bốc 10 từ ---- */
+  var vmgLastGameIds = [];
+  function vmgComputeWordWeight(w, progress, lastSet){
+    var p = progress[w.id] || { seen:0, ok:0, wrong:0, streak:0 };
+    var weight = 0;
+    if(!p.seen || p.seen === 0){
+      weight = 6.0; // Chưa từng gặp
+    } else {
+      weight = 2.0; // Đã gặp, cơ sở
+      weight += Math.min(3, p.wrong || 0) * 2.0; // Mỗi lần nối sai +2 (tối đa +6)
+      if(p.streak > 0){
+        weight *= Math.pow(0.5, p.streak); // Nối đúng liên tiếp
+      }
+      if(p.streak >= 3){
+        weight = Math.max(0.2, weight); // Đã thuộc: sàn 0.2
+      }
+    }
+    if(w.isUser || (w.id && String(w.id).indexOf('u-') === 0)){
+      weight *= 1.5; // Từ bé tự thêm nhân 1.5
+    }
+    if(lastSet && lastSet[w.id]){
+      weight *= 0.3; // Vừa xuất hiện ván trước nhân 0.3
+    }
+    return Math.max(0.05, weight);
+  }
+
+  function vmgPick10Words(){
+    var bank = vmgGetEffectiveBank();
+    var prog = vmgGetWordProgress();
+    var lastSet = {};
+    vmgLastGameIds.forEach(function(id){ lastSet[id] = true; });
+
+    var pool = bank.slice();
+    var selected = [];
+    var seenVi = {};
+
+    while(selected.length < 10 && pool.length > 0){
+      var candidates = pool.filter(function(w){
+        return !seenVi[w.vi.toLowerCase().trim()];
+      });
+      if(!candidates.length) break;
+
+      var weights = candidates.map(function(w){
+        return vmgComputeWordWeight(w, prog, lastSet);
+      });
+      var totalW = weights.reduce(function(a, b){ return a + b; }, 0);
+      var r = Math.random() * totalW;
+      var chosenIdx = 0;
+      for(var i = 0; i < candidates.length; i++){
+        r -= weights[i];
+        if(r <= 0){ chosenIdx = i; break; }
+      }
+      var chosen = candidates[chosenIdx];
+      selected.push(chosen);
+      seenVi[chosen.vi.toLowerCase().trim()] = true;
+      var rm = pool.indexOf(chosen);
+      if(rm >= 0) pool.splice(rm, 1);
+    }
+
+    // Nếu kho thiếu từ, lấy thêm từ built-in để luôn đảm bảo đủ 10 cặp
+    if(selected.length < 10){
+      VMG_BUILTIN_WORDS.forEach(function(w){
+        if(selected.length < 10 && !seenVi[w.vi.toLowerCase().trim()] && !selected.some(function(s){ return s.id === w.id; })){
+          selected.push(w);
+          seenVi[w.vi.toLowerCase().trim()] = true;
+        }
+      });
+    }
+
+    vmgLastGameIds = selected.map(function(w){ return w.id; });
+    return selected;
+  }
+
+  /* ---- Phát âm từ vựng qua Web Speech API (rate 0.90) ---- */
+  function vmgSpeak(wordText){
+    if(!('speechSynthesis' in window)) return;
+    try {
+      window.speechSynthesis.cancel();
+      var clean = String(wordText).replace(/[^a-zA-Z\s'\-]/g, '').trim();
+      if(!clean) return;
+      var u = new SpeechSynthesisUtterance(clean);
+      u.lang = 'en-GB';
+      var v = (typeof comGetVoice === 'function') ? comGetVoice() : null;
+      if(v) u.voice = v;
+      u.rate = 0.90; // tốc độ chậm hơn một chút theo yêu cầu mục 7
+      u.pitch = 1.0;
+      window.speechSynthesis.speak(u);
+    } catch(e){}
+  }
+
+  /* ---- State của ván chơi hiện tại ---- */
+  var vmgGame = {
+    active: false,
+    timerIv: null,
+    deadline: 0,
+    durationMs: 150000,
+    startDate: null,
+    words: [],
+    players: [],
+    cells: [],
+    selectedCell: null,
+    wrongStreak: 0,
+    wrongCount: 0,
+    matchedPairs: 0,
+    locked: false,
+    wordsWithMistake: {},
+    mistakeCountByWord: {}
+  };
+
+  /* Render thẻ nhiệm vụ ngoài tab Nhiệm Vụ Ngày */
+  function vmgRenderEntryCard(d){
+    var panel = document.getElementById('vmg-entry-panel');
+    if(!panel) return;
+    var targetDate = d || currentDay || new Date();
+    var todayStr = ymd(new Date());
+    var isToday = ymd(targetDate) === todayStr;
+    var vm = vmgGetDayData(new Date()); // luôn hiển thị số liệu ngày hôm nay thật
+
+    var cardsEl = document.getElementById('vmg-ec-cards');
+    var streakEl = document.getElementById('vmg-ec-streak');
+    var btnPlay = document.getElementById('vmg-btn-play');
+    var noteEl = document.getElementById('vmg-ec-note');
+
+    if(cardsEl) cardsEl.textContent = (vm.cards || 0) + '/' + (settings.vmg.maxCards || 3);
+    if(streakEl) streakEl.textContent = (vm.streak || 0) + '/3';
+
+    if(!btnPlay) return;
+
+    if(!isToday){
+      btnPlay.classList.add('is-disabled');
+      btnPlay.disabled = true;
+      if(noteEl){ noteEl.textContent = 'Chỉ chơi được trong ngày hôm nay'; noteEl.style.display = ''; }
+    } else if(!PLAYER_DB || PLAYER_DB.length < 10){
+      btnPlay.classList.add('is-disabled');
+      btnPlay.disabled = true;
+      if(noteEl){ noteEl.textContent = 'Chưa tải được dữ liệu cầu thủ…'; noteEl.style.display = ''; }
+    } else {
+      btnPlay.classList.remove('is-disabled');
+      btnPlay.disabled = false;
+      if(noteEl){ noteEl.style.display = 'none'; }
+    }
+  }
+
+  /* Mở sảnh chờ (Lobby) */
+  function vmgOpenLobby(){
+    var vm = vmgGetDayData(new Date());
+    var maxC = settings.vmg.maxCards || 3;
+    var cardsEarned = vm.cards || 0;
+    var curStreak = vm.streak || 0;
+
+    // Render 3 mốc thẻ
+    var progEl = document.getElementById('vmg-rewards-prog');
+    if(progEl){
+      var h = '';
+      var m1Claimed = cardsEarned >= 1;
+      var m2Claimed = cardsEarned >= 2;
+      var m3Claimed = cardsEarned >= 3;
+
+      var m1Next = (cardsEarned === 0);
+      var m2Next = (cardsEarned === 1);
+      var m3Next = (cardsEarned === 2);
+
+      h += '<div class="vmg-rew-card ' + (m1Claimed ? 'is-claimed' : (m1Next ? 'is-next' : '')) + '">'
+        + '<span class="vmg-rew-icon">' + (m1Claimed ? '✅' : '🎴') + '</span>'
+        + '<span class="vmg-rew-label">Thẻ 1</span>'
+        + '<span class="vmg-rew-cond">Thắng ván 1</span>'
+        + '<span class="vmg-rew-status">' + (m1Claimed ? 'Đã nhận' : (m1Next ? 'Đang chờ' : 'Chưa đạt')) + '</span>'
+        + '</div>';
+
+      h += '<div class="vmg-rew-card ' + (m2Claimed ? 'is-claimed' : (m2Next ? 'is-next' : '')) + '">'
+        + '<span class="vmg-rew-icon">' + (m2Claimed ? '✅' : '🔥') + '</span>'
+        + '<span class="vmg-rew-label">Thẻ 2</span>'
+        + '<span class="vmg-rew-cond">Chuỗi 3 win</span>'
+        + '<span class="vmg-rew-status">' + (m2Claimed ? 'Đã nhận' : (m2Next ? (curStreak + '/3 win') : 'Chưa đạt')) + '</span>'
+        + '</div>';
+
+      h += '<div class="vmg-rew-card ' + (m3Claimed ? 'is-claimed' : (m3Next ? 'is-next' : '')) + '">'
+        + '<span class="vmg-rew-icon">' + (m3Claimed ? '✅' : '🏆') + '</span>'
+        + '<span class="vmg-rew-label">Thẻ 3</span>'
+        + '<span class="vmg-rew-cond">Thêm 3 win</span>'
+        + '<span class="vmg-rew-status">' + (m3Claimed ? 'Đã nhận' : (m3Next ? (curStreak + '/3 win') : 'Chưa đạt')) + '</span>'
+        + '</div>';
+
+      progEl.innerHTML = h;
+    }
+
+    // Thống kê số từ đã thuộc
+    var prog = vmgGetWordProgress();
+    var bank = vmgGetEffectiveBank();
+    var masteredCount = 0;
+    bank.forEach(function(w){
+      if(prog[w.id] && prog[w.id].streak >= 3) masteredCount++;
+    });
+    var statsEl = document.getElementById('vmg-lobby-stats');
+    if(statsEl){
+      statsEl.innerHTML = 'Đã thuộc <b>' + masteredCount + '</b> / ' + bank.length + ' từ vựng · ' + (cardsEarned >= maxC ? '🎉 Đã nhận đủ ' + maxC + ' thẻ hôm nay!' : 'Hôm nay còn ' + (maxC - cardsEarned) + ' thẻ chờ đón!');
+    }
+
+    openModalTop('vmg-lobby-modal');
+  }
+
+  function vmgCloseLobby(){
+    var m = document.getElementById('vmg-lobby-modal');
+    if(m) m.classList.remove('open');
+  }
+
+  /* Khởi tạo và Bắt đầu Ván Chơi Mới */
+  function vmgStartGame(){
+    if(!PLAYER_DB || PLAYER_DB.length < 10){
+      alert('Chưa tải được dữ liệu cầu thủ. Vui lòng thử lại sau.');
+      return;
+    }
+    vmgCloseLobby();
+
+    // 1. Chọn 10 từ
+    var words = vmgPick10Words();
+
+    // 2. Chọn 10 cầu thủ khác nhau từ PLAYER_DB
+    var pPool = PLAYER_DB.slice();
+    // Xáo trộn mảng cầu thủ
+    for(var i = pPool.length - 1; i > 0; i--){
+      var j = Math.floor(Math.random() * (i + 1));
+      var temp = pPool[i]; pPool[i] = pPool[j]; pPool[j] = temp;
+    }
+    var players = pPool.slice(0, 10);
+
+    // Tải trước ảnh cho 10 cầu thủ
+    players.forEach(function(p){
+      if(p.image && typeof cdnUrl === 'function'){
+        var im = new Image();
+        im.src = cdnUrl(p.image);
+      }
+      if(p.background && typeof cdnUrl === 'function'){
+        var bg = new Image();
+        bg.src = cdnUrl(p.background);
+      }
+    });
+
+    // 3. Tạo 20 ô (10 tiếng Anh + 10 tiếng Việt)
+    var cellItems = [];
+    words.forEach(function(w, idx){
+      var pl = players[idx];
+      cellItems.push({
+        pairId: idx,
+        type: 'en',
+        text: w.en,
+        badge: '🔊',
+        pos: w.pos,
+        word: w,
+        player: pl,
+        isMatched: false,
+        isFlipped: false
+      });
+      cellItems.push({
+        pairId: idx,
+        type: 'vi',
+        text: w.vi,
+        badge: w.pos || '',
+        pos: w.pos,
+        word: w,
+        player: pl,
+        isMatched: false,
+        isFlipped: false
+      });
+    });
+
+    // Xáo trộn 20 ô
+    for(var k = cellItems.length - 1; k > 0; k--){
+      var r = Math.floor(Math.random() * (k + 1));
+      var tk = cellItems[k]; cellItems[k] = cellItems[r]; cellItems[r] = tk;
+    }
+
+    // Reset game state
+    var durSecs = settings.vmg.matchDuration || 150;
+    vmgGame.active = true;
+    vmgGame.durationMs = durSecs * 1000;
+    vmgGame.deadline = performance.now() + vmgGame.durationMs;
+    vmgGame.startDate = new Date();
+    vmgGame.words = words;
+    vmgGame.players = players;
+    vmgGame.cells = cellItems;
+    vmgGame.selectedCell = null;
+    vmgGame.wrongStreak = 0;
+    vmgGame.wrongCount = 0;
+    vmgGame.matchedPairs = 0;
+    vmgGame.locked = false;
+    vmgGame.wordsWithMistake = {};
+    vmgGame.mistakeCountByWord = {};
+
+    // Ẩn màn hình kết quả
+    var resSec = document.getElementById('vmg-result-section');
+    if(resSec) resSec.style.display = 'none';
+
+    // Vẽ 20 ô vào grid
+    vmgRenderGrid();
+    vmgUpdateGameHeader();
+
+    // Mở game modal
+    openModalTop('vmg-game-modal');
+
+    // Khởi động đồng hồ đếm ngược chính xác theo deadline
+    if(vmgGame.timerIv) clearInterval(vmgGame.timerIv);
+    vmgGame.timerIv = setInterval(vmgTickTimer, 60);
+  }
+
+  function vmgRenderGrid(){
+    var gridEl = document.getElementById('vmg-grid');
+    if(!gridEl) return;
+    var h = '';
+    vmgGame.cells.forEach(function(item, idx){
+      var isEn = item.type === 'en';
+      var cardInnerHtml = dbxCardHTML(item.player);
+      h += '<div class="vmg-cell ' + (isEn ? 'is-en' : 'is-vi') + '" data-index="' + idx + '" data-pair="' + item.pairId + '" data-type="' + item.type + '" role="button" tabindex="0" aria-label="' + (isEn ? 'Từ tiếng Anh: ' + item.text : 'Nghĩa tiếng Việt: ' + item.text) + '">'
+        + '<div class="vmg-cell-inner">'
+        +   '<div class="vmg-cell-front">'
+        +     '<span class="vmg-cell-badge">' + escHtml(item.badge) + '</span>'
+        +     '<span class="vmg-word-text">' + escHtml(item.text) + '</span>'
+        +   '</div>'
+        +   '<div class="vmg-cell-back">'
+        +     cardInnerHtml
+        +     '<div class="vmg-matched-label">' + escHtml(item.text) + '</div>'
+        +   '</div>'
+        + '</div>'
+        + '</div>';
+    });
+    gridEl.innerHTML = h;
+  }
+
+  function vmgUpdateGameHeader(){
+    var pcEl = document.getElementById('vmg-pair-count');
+    var strkEl = document.getElementById('vmg-game-streak');
+    var crdsEl = document.getElementById('vmg-game-cards');
+    var vm = vmgGetDayData(new Date());
+
+    if(pcEl) pcEl.textContent = vmgGame.matchedPairs + '/10 cặp';
+    if(strkEl) strkEl.textContent = '🔥 Chuỗi ' + (vm.streak || 0) + '/3';
+    if(crdsEl) crdsEl.textContent = '🎴 Thẻ ' + (vm.cards || 0) + '/' + (settings.vmg.maxCards || 3);
+  }
+
+  function vmgTickTimer(){
+    if(!vmgGame.active) return;
+    var now = performance.now();
+    var remMs = Math.max(0, vmgGame.deadline - now);
+    var remSecs = Math.ceil(remMs / 1000);
+
+    var digitsEl = document.getElementById('vmg-timer-digits');
+    var fillEl = document.getElementById('vmg-timer-fill');
+
+    if(digitsEl){
+      var m = Math.floor(remSecs / 60);
+      var s = remSecs % 60;
+      digitsEl.textContent = (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s;
+    }
+
+    var pct = Math.max(0, Math.min(100, (remMs / vmgGame.durationMs) * 100));
+    if(fillEl){
+      fillEl.style.width = pct + '%';
+      if(pct > 50){
+        fillEl.className = 'vmg-timer-fill';
+      } else if(pct >= 25){
+        fillEl.className = 'vmg-timer-fill warn';
+      } else {
+        fillEl.className = 'vmg-timer-fill danger';
+      }
+    }
+
+    if(remMs <= 0){
+      clearInterval(vmgGame.timerIv);
+      vmgGame.timerIv = null;
+      vmgEndGame(false, 'Hết giờ!');
+    }
+  }
+
+  function vmgApplyPenalty(secs){
+    vmgGame.deadline -= (secs * 1000);
+    // Hiển thị hiệu ứng bay con số đỏ
+    var flyEl = document.getElementById('vmg-penalty-fly');
+    if(flyEl){
+      flyEl.textContent = '−' + secs + 's';
+      flyEl.style.display = 'none';
+      void flyEl.offsetWidth; // ép reflow
+      flyEl.style.display = '';
+    }
+  }
+
+  /* Xử lý tương tác khi chạm vào 1 ô */
+  function vmgHandleCellClick(cellIdx){
+    if(!vmgGame.active || vmgGame.locked) return;
+    var cellData = vmgGame.cells[cellIdx];
+    if(!cellData || cellData.isMatched) return;
+
+    var grid = document.getElementById('vmg-grid');
+    if(!grid) return;
+    var cellEl = grid.querySelector('.vmg-cell[data-index="' + cellIdx + '"]');
+    if(!cellEl) return;
+
+    // 1. Chưa chọn ô nào: chọn ô này
+    if(!vmgGame.selectedCell){
+      vmgGame.selectedCell = { index: cellIdx, data: cellData, el: cellEl };
+      cellEl.classList.add('is-selected');
+      if(cellData.type === 'en'){
+        vmgSpeak(cellData.text);
+      }
+      return;
+    }
+
+    // 2. Chạm lại chính ô đang chọn: bỏ chọn
+    if(vmgGame.selectedCell.index === cellIdx){
+      cellEl.classList.remove('is-selected');
+      vmgGame.selectedCell = null;
+      return;
+    }
+
+    // 3. Cùng loại (Anh - Anh hoặc Việt - Việt): chuyển chọn sang ô mới, không phạt
+    if(vmgGame.selectedCell.data.type === cellData.type){
+      vmgGame.selectedCell.el.classList.remove('is-selected');
+      vmgGame.selectedCell = { index: cellIdx, data: cellData, el: cellEl };
+      cellEl.classList.add('is-selected');
+      if(cellData.type === 'en'){
+        vmgSpeak(cellData.text);
+      }
+      return;
+    }
+
+    // 4. Khác loại: Kiểm tra ĐÚNG hay SAI
+    var first = vmgGame.selectedCell;
+    var second = { index: cellIdx, data: cellData, el: cellEl };
+
+    if(first.data.pairId === second.data.pairId){
+      // === ĐÚNG CẶP ===
+      try{ seSfx('right'); }catch(e){}
+      first.data.isMatched = true;
+      second.data.isMatched = true;
+      first.el.classList.remove('is-selected');
+      first.el.classList.add('is-flipped', 'is-matched');
+      second.el.classList.add('is-flipped', 'is-matched');
+
+      // Đặt lại mức phạt về -5s khi nối đúng
+      vmgGame.wrongStreak = 0;
+      vmgGame.matchedPairs++;
+      vmgGame.selectedCell = null;
+      vmgUpdateGameHeader();
+
+      // Kiểm tra thắng ván
+      if(vmgGame.matchedPairs >= 10){
+        if(vmgGame.timerIv) clearInterval(vmgGame.timerIv);
+        vmgGame.timerIv = null;
+        setTimeout(function(){
+          vmgEndGame(true);
+        }, 700);
+      }
+    } else {
+      // === SAI CẶP ===
+      try{ seSfx('wrong'); }catch(e){}
+      vmgGame.locked = true;
+      vmgGame.wrongStreak++;
+      vmgGame.wrongCount++;
+
+      var p1 = settings.vmg.penalty1 || 5;
+      var p2 = settings.vmg.penalty2 || 8;
+      var p3 = settings.vmg.penalty3 || 12;
+      var penSecs = (vmgGame.wrongStreak === 1 ? p1 : (vmgGame.wrongStreak === 2 ? p2 : p3));
+      vmgApplyPenalty(penSecs);
+
+      // Đánh dấu từ đã từng bị sai trong ván này
+      vmgGame.wordsWithMistake[first.data.word.id] = true;
+      vmgGame.wordsWithMistake[second.data.word.id] = true;
+      vmgGame.mistakeCountByWord[first.data.word.id] = (vmgGame.mistakeCountByWord[first.data.word.id] || 0) + 1;
+      vmgGame.mistakeCountByWord[second.data.word.id] = (vmgGame.mistakeCountByWord[second.data.word.id] || 0) + 1;
+
+      // Rung lắc đỏ 0.4s
+      first.el.classList.add('is-wrong');
+      second.el.classList.add('is-wrong');
+
+      setTimeout(function(){
+        if(first.el) first.el.classList.remove('is-wrong', 'is-selected');
+        if(second.el) second.el.classList.remove('is-wrong', 'is-selected');
+        vmgGame.selectedCell = null;
+        vmgGame.locked = false;
+
+        // Kiểm tra nếu bị trừ hết giờ do phạt
+        var remMs = Math.max(0, vmgGame.deadline - performance.now());
+        if(remMs <= 0 && vmgGame.active){
+          if(vmgGame.timerIv) clearInterval(vmgGame.timerIv);
+          vmgGame.timerIv = null;
+          vmgEndGame(false, 'Hết giờ!');
+        }
+      }, 420);
+    }
+  }
+
+  /* Kết thúc ván chơi (Thắng hoặc Thua) */
+  async function vmgEndGame(isWin, reason){
+    vmgGame.active = false;
+    if(vmgGame.timerIv){ clearInterval(vmgGame.timerIv); vmgGame.timerIv = null; }
+
+    var gameStartDate = vmgGame.startDate || new Date();
+    var todayStr = ymd(new Date());
+    var vm = vmgGetDayData(gameStartDate);
+    var maxC = settings.vmg.maxCards || 3;
+    var cardsBefore = vm.cards || 0;
+    var streakBefore = vm.streak || 0;
+    var cardAwarded = false;
+
+    // Cập nhật số liệu ngày trong dayObj._vm
+    vm.plays = (vm.plays || 0) + 1;
+
+    if(isWin){
+      try{ seSfx('crowd_goal'); }catch(e){}
+      vm.wins = (vm.wins || 0) + 1;
+      vm.streak = (vm.streak || 0) + 1;
+
+      // Kiểm tra mốc nhận thẻ
+      if(vm.cards === 0 && vm.wins >= 1){
+        // Thẻ 1: Thắng ván đầu tiên trong ngày
+        vm.cards = 1;
+        cardAwarded = true;
+      } else if(vm.cards === 1 && vm.streak >= 3){
+        // Thẻ 2: Chuỗi 3 ván thắng -> nhận thẻ, đặt lại chuỗi về 0
+        vm.cards = 2;
+        cardAwarded = true;
+        vm.streak = 0;
+      } else if(vm.cards === 2 && vm.streak >= 3){
+        // Thẻ 3: Đạt thêm một chuỗi 3 ván thắng nữa -> nhận thẻ, đặt lại chuỗi về 0
+        vm.cards = 3;
+        cardAwarded = true;
+        vm.streak = 0;
+      }
+    } else {
+      // Thua hoặc thoát -> chuỗi về 0
+      vm.streak = 0;
+    }
+
+    // Cập nhật tiến độ từng từ trong kidchart_vocab_progress
+    var prog = vmgGetWordProgress();
+    vmgGame.words.forEach(function(w){
+      if(!prog[w.id]) prog[w.id] = { seen:0, ok:0, wrong:0, streak:0, last:todayStr };
+      var p = prog[w.id];
+      p.seen = (p.seen || 0) + 1;
+      p.last = todayStr;
+
+      if(vmgGame.wordsWithMistake[w.id]){
+        p.wrong = (p.wrong || 0) + 1;
+        p.streak = 0;
+      } else if(isWin || vmgGame.cells.some(function(c){ return c.word.id === w.id && c.isMatched; })){
+        p.ok = (p.ok || 0) + 1;
+        p.streak = (p.streak || 0) + 1;
+      }
+    });
+    vmgSaveWordProgress(prog);
+    vmgSaveDayData(gameStartDate, vm);
+
+    // Cập nhật thẻ ngoài trang chính
+    vmgRenderEntryCard(currentDay);
+
+    // Xử lý phát thẻ cầu thủ nếu đạt mốc
+    if(isWin && cardAwarded){
+      await vmgGrantPlayerReward(function(){
+        vmgShowResultScreen(isWin, cardsBefore, vm.cards);
+      });
+    } else {
+      if(!isWin){
+        // Nếu thua: Nhấp nháy các cặp chưa nối trên lưới trong 1.2s rồi mới chuyển màn ôn từ
+        var grid = document.getElementById('vmg-grid');
+        if(grid){
+          Array.prototype.forEach.call(grid.querySelectorAll('.vmg-cell:not(.is-matched)'), function(el){
+            el.classList.add('is-selected');
+          });
+        }
+        setTimeout(function(){
+          vmgShowResultScreen(isWin, cardsBefore, vm.cards);
+        }, 1200);
+      } else {
+        vmgShowResultScreen(isWin, cardsBefore, vm.cards);
+      }
+    }
+  }
+
+  /* Trao thẻ cầu thủ và chạy hiệu ứng mở thẻ toàn màn hình (playDailyBoxReveal) */
+  async function vmgGrantPlayerReward(onComplete){
+    if(!PLAYER_DB || !PLAYER_DB.length){
+      if(onComplete) onComplete();
+      return;
+    }
+    // Chọn ngẫu nhiên 1 cầu thủ từ toàn kho PLAYER_DB
+    var base = PLAYER_DB[Math.floor(Math.random() * PLAYER_DB.length)];
+    var p = ownedPlayerFromBase(base);
+    var saved = false;
+    try {
+      var players = loadPlayers();
+      players.push(p);
+      saved = (savePlayers(players) !== false);
+    } catch(err){
+      console.warn('Luu the cau thu that bai', err);
+    }
+
+    if(!saved){
+      alert('Không lưu được thẻ cầu thủ (bộ nhớ đầy). Bạn có thể thử lại sau!');
+      if(onComplete) onComplete();
+      return;
+    }
+
+    // Chiếu hiệu ứng mở thẻ trên stage riêng #vmg-stage
+    try {
+      dbxResetStage('vmg-stage');
+      playDailyBoxReveal(base, p, 'vmg-stage', function(){
+        dbxResetStage('vmg-stage');
+        if(onComplete) onComplete();
+      }, false, true);
+    } catch(err){
+      console.warn('Loi hieu ung mo the vmg', err);
+      dbxResetStage('vmg-stage');
+      if(onComplete) onComplete();
+    }
+  }
+
+  /* Hiển thị màn hình kết quả & Danh sách ôn từ */
+  function vmgShowResultScreen(isWin, cardsBefore, cardsAfter){
+    var resSec = document.getElementById('vmg-result-section');
+    if(!resSec) return;
+
+    var titleEl = document.getElementById('vmg-res-title');
+    var statsEl = document.getElementById('vmg-res-stats');
+    var alertEl = document.getElementById('vmg-reward-alert');
+    var reviewListEl = document.getElementById('vmg-review-list');
+
+    var timeUsedSec = Math.max(1, Math.round((vmgGame.durationMs - Math.max(0, vmgGame.deadline - performance.now())) / 1000));
+    var m = Math.floor(timeUsedSec / 60);
+    var s = timeUsedSec % 60;
+    var timeStr = (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s;
+
+    if(isWin){
+      titleEl.textContent = '🎉 HOÀN THÀNH XUẤT SẮC!';
+      titleEl.className = 'vmg-res-title win';
+      statsEl.innerHTML = 'Thời gian hoàn thành: <b>' + timeStr + '</b> · Nối sai: <b>' + vmgGame.wrongCount + ' lần</b>';
+    } else {
+      titleEl.textContent = '⏰ HẾT GIỜ RỒI!';
+      titleEl.className = 'vmg-res-title lose';
+      statsEl.innerHTML = 'Đã ghép: <b>' + vmgGame.matchedPairs + '/10 cặp</b> · Nối sai: <b>' + vmgGame.wrongCount + ' lần</b> · Chuỗi thắng về 0';
+    }
+
+    if(isWin && cardsAfter > cardsBefore){
+      alertEl.innerHTML = '🎁 <b>Chúc mừng con!</b> Con vừa mở khóa thêm <b>1 thẻ cầu thủ mới</b>!';
+      alertEl.style.display = '';
+    } else if(cardsAfter >= (settings.vmg.maxCards || 3)){
+      alertEl.innerHTML = '✨ Hôm nay con đã nhận đủ <b>3/3 thẻ</b>! Chơi tiếp để luyện phản xạ từ nhé!';
+      alertEl.style.display = '';
+    } else {
+      alertEl.style.display = 'none';
+    }
+
+    // Render danh sách 10 từ kèm đánh dấu và nút phát âm
+    if(reviewListEl){
+      var h = '';
+      vmgGame.words.forEach(function(w){
+        var hadError = !!vmgGame.wordsWithMistake[w.id];
+        h += '<div class="vmg-review-item">'
+          + '<div class="vmg-rev-left">'
+          +   '<button type="button" class="vmg-speak-btn" data-word="' + escHtml(w.en) + '" aria-label="Nghe đọc ' + escHtml(w.en) + '">🔊</button>'
+          +   '<span class="vmg-rev-en">' + escHtml(w.en) + '</span>'
+          +   '<span class="vmg-rev-pos">' + escHtml(w.pos || '') + '</span>'
+          + '</div>'
+          + '<div style="display:flex;align-items:center;gap:8px">'
+          +   '<span class="vmg-rev-vi">' + escHtml(w.vi) + '</span>'
+          +   (hadError ? '<span class="vmg-rev-flag warn">⚠ cần ôn</span>' : '<span class="vmg-rev-flag ok">✅ đã nhớ</span>')
+          + '</div>'
+          + '</div>';
+      });
+      reviewListEl.innerHTML = h;
+    }
+
+    resSec.style.display = 'flex';
+  }
+
+  function vmgCloseGameModal(){
+    if(vmgGame.timerIv){ clearInterval(vmgGame.timerIv); vmgGame.timerIv = null; }
+    vmgGame.active = false;
+    var m = document.getElementById('vmg-game-modal');
+    if(m) m.classList.remove('open');
+    vmgRenderEntryCard(currentDay);
+  }
+
+  /* ---- Modal «Từ Của Con» (Custom Vocab) ---- */
+  function vmgOpenCustomModal(){
+    vmgRenderCustomList();
+    var errEl = document.getElementById('vmg-custom-error');
+    if(errEl) errEl.style.display = 'none';
+    openModalTop('vmg-custom-modal');
+  }
+
+  function vmgCloseCustomModal(){
+    var m = document.getElementById('vmg-custom-modal');
+    if(m) m.classList.remove('open');
+    vmgOpenLobby(); // quay lại sảnh
+  }
+
+  function vmgRenderCustomList(){
+    var list = vmgGetUserVocab();
+    var countEl = document.getElementById('vmg-custom-count');
+    if(countEl) countEl.textContent = list.length + '/200';
+
+    var listEl = document.getElementById('vmg-custom-list');
+    if(!listEl) return;
+    if(!list.length){
+      listEl.innerHTML = '<div style="font-size:12px;color:#64748B;text-align:center;padding:12px">Con chưa thêm từ nào. Hãy nhập từ tiếng Anh và nghĩa ở trên nhé!</div>';
+      return;
+    }
+    var h = '';
+    list.slice().reverse().forEach(function(w){
+      h += '<div class="vmg-custom-item">'
+        + '<div><b style="color:#38BDF8">' + escHtml(w.en) + '</b> <span style="font-size:11px;color:#94A3B8">(' + escHtml(w.pos || 'n.') + ')</span>: <span style="color:#F8FAFC">' + escHtml(w.vi) + '</span></div>'
+        + '<button type="button" class="vmg-del-btn" data-del-id="' + escHtml(w.id) + '" title="Xóa từ này">🗑️</button>'
+        + '</div>';
+    });
+    listEl.innerHTML = h;
+  }
+
+  function vmgAddCustomWord(){
+    var inpEn = document.getElementById('vmg-inp-en');
+    var inpVi = document.getElementById('vmg-inp-vi');
+    var selPos = document.getElementById('vmg-sel-pos');
+    var errEl = document.getElementById('vmg-custom-error');
+
+    var en = (inpEn && inpEn.value || '').trim();
+    var vi = (inpVi && inpVi.value || '').trim();
+    var pos = (selPos && selPos.value || 'n.').trim();
+
+    function showErr(msg){
+      if(errEl){ errEl.textContent = msg; errEl.style.display = ''; }
+    }
+
+    if(!en || !vi){
+      showErr('Vui lòng nhập đầy đủ cả từ tiếng Anh và nghĩa tiếng Việt.');
+      return;
+    }
+    if(!/^[A-Za-z\s'\-]+$/.test(en)){
+      showErr("Từ tiếng Anh chỉ được chứa chữ cái, khoảng trắng, gạch nối (-) hoặc dấu nháy (').");
+      return;
+    }
+    if(en.length > 24){
+      showErr('Từ tiếng Anh không được dài quá 24 ký tự.');
+      return;
+    }
+    if(vi.length > 28){
+      showErr('Nghĩa tiếng Việt không được dài quá 28 ký tự.');
+      return;
+    }
+
+    var bank = vmgGetEffectiveBank();
+    var enLow = en.toLowerCase();
+    var viLow = vi.toLowerCase();
+
+    var dupEn = bank.some(function(w){ return w.en.toLowerCase().trim() === enLow; });
+    if(dupEn){
+      showErr('Từ tiếng Anh "' + en + '" đã có trong kho từ rồi.');
+      return;
+    }
+    var dupVi = bank.some(function(w){ return w.vi.toLowerCase().trim() === viLow; });
+    if(dupVi){
+      showErr('Nghĩa tiếng Việt "' + vi + '" đã được dùng cho một từ khác rồi.');
+      return;
+    }
+
+    var list = vmgGetUserVocab();
+    if(list.length >= 200){
+      showErr('Đã đạt giới hạn tối đa 200 từ của con.');
+      return;
+    }
+
+    var newId = 'u-' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+    list.push({
+      id: newId,
+      en: en,
+      vi: vi,
+      pos: pos,
+      topic: 'custom',
+      level: 'A1',
+      isUser: true
+    });
+    vmgSaveUserVocab(list);
+
+    inpEn.value = '';
+    inpVi.value = '';
+    if(errEl) errEl.style.display = 'none';
+    vmgRenderCustomList();
+  }
+
+  function vmgDeleteCustomWord(id){
+    if(!id) return;
+    var list = vmgGetUserVocab();
+    var filtered = list.filter(function(w){ return w.id !== id; });
+    vmgSaveUserVocab(filtered);
+    vmgRenderCustomList();
+  }
+
+  /* ---- Quản trị Admin: Kho từ & Cài đặt thông số ---- */
+  function vmgRefreshAdminStatus(){
+    var stEl = document.getElementById('vbank-status');
+    if(!stEl) return;
+    var bank = VMG_CLOUD_BANK || { version:1, words: VMG_BUILTIN_WORDS };
+    var userList = vmgGetUserVocab();
+    var topics = {};
+    bank.words.forEach(function(w){
+      topics[w.topic] = (topics[w.topic] || 0) + 1;
+    });
+    var topStr = Object.keys(topics).map(function(k){ return k + ' (' + topics[k] + ')'; }).join(', ');
+    stEl.innerHTML = 'Kho chung trên Firebase: <b>' + bank.words.length + ' từ</b> (' + topStr + ') · Từ người dùng tự thêm: <b>' + userList.length + ' từ</b>.';
+
+    // Điền cấu hình vào input
+    var cfg = settings.vmg || {};
+    var dEl = document.getElementById('vmg-cfg-dur'); if(dEl) dEl.value = cfg.matchDuration || 150;
+    var p1El = document.getElementById('vmg-cfg-pen1'); if(p1El) p1El.value = cfg.penalty1 || 5;
+    var p2El = document.getElementById('vmg-cfg-pen2'); if(p2El) p2El.value = cfg.penalty2 || 8;
+    var p3El = document.getElementById('vmg-cfg-pen3'); if(p3El) p3El.value = cfg.penalty3 || 12;
+    var mcEl = document.getElementById('vmg-cfg-maxc'); if(mcEl) mcEl.value = cfg.maxCards || 3;
+  }
+
+  function vmgSaveAdminConfig(){
+    if(!settings.vmg) settings.vmg = {};
+    var dEl = document.getElementById('vmg-cfg-dur'); if(dEl) settings.vmg.matchDuration = parseInt(dEl.value, 10) || 150;
+    var p1El = document.getElementById('vmg-cfg-pen1'); if(p1El) settings.vmg.penalty1 = parseInt(p1El.value, 10) || 5;
+    var p2El = document.getElementById('vmg-cfg-pen2'); if(p2El) settings.vmg.penalty2 = parseInt(p2El.value, 10) || 8;
+    var p3El = document.getElementById('vmg-cfg-pen3'); if(p3El) settings.vmg.penalty3 = parseInt(p3El.value, 10) || 12;
+    var mcEl = document.getElementById('vmg-cfg-maxc'); if(mcEl) settings.vmg.maxCards = parseInt(mcEl.value, 10) || 3;
+    saveSettings();
+    alert('Đã lưu cấu hình Nhiệm vụ Nối Từ Mới thành công!');
+  }
+
+  /* ---- Event Delegation & Wiring ---- */
+  document.addEventListener('click', function(e){
+    var t = e.target;
+    if(!t) return;
+
+    // Nút "Chơi ngay" trên thẻ Nhiệm Vụ Ngày
+    if(t.closest('#vmg-btn-play')){
+      vmgOpenLobby();
+      return;
+    }
+
+    // Đóng Lobby
+    if(t.closest('#vmg-lobby-close') || t.id === 'vmg-lobby-backdrop'){
+      vmgCloseLobby();
+      return;
+    }
+
+    // Bắt đầu chơi từ Lobby
+    if(t.closest('#vmg-btn-start')){
+      vmgStartGame();
+      return;
+    }
+
+    // Mở modal Từ của con từ Lobby
+    if(t.closest('#vmg-btn-open-custom')){
+      vmgCloseLobby();
+      vmgOpenCustomModal();
+      return;
+    }
+
+    // Đóng modal Từ của con
+    if(t.closest('#vmg-custom-close') || t.id === 'vmg-custom-backdrop'){
+      vmgCloseCustomModal();
+      return;
+    }
+
+    // Thêm từ của con
+    if(t.closest('#vmg-btn-add-word')){
+      vmgAddCustomWord();
+      return;
+    }
+
+    // Xóa từ của con
+    var delBtn = t.closest('.vmg-del-btn');
+    if(delBtn){
+      var wid = delBtn.getAttribute('data-del-id');
+      vmgDeleteCustomWord(wid);
+      return;
+    }
+
+    // Thoát game giữa chừng
+    if(t.closest('#vmg-game-exit')){
+      if(vmgGame.active){
+        if(confirm('Bạn có chắc muốn thoát ván chơi? Thoát giữa chừng sẽ tính là thua và chuỗi thắng sẽ trở về 0.')){
+          vmgEndGame(false, 'Thoát ván chơi');
+        }
+      } else {
+        vmgCloseGameModal();
+      }
+      return;
+    }
+
+    // Chơi lại ván mới
+    if(t.closest('#vmg-btn-replay')){
+      vmgStartGame();
+      return;
+    }
+
+    // Đóng màn hình kết quả
+    if(t.closest('#vmg-btn-close-result')){
+      vmgCloseGameModal();
+      return;
+    }
+
+    // Phát âm từ vựng trong danh sách ôn tập
+    var speakBtn = t.closest('.vmg-speak-btn');
+    if(speakBtn){
+      var wText = speakBtn.getAttribute('data-word');
+      vmgSpeak(wText);
+      return;
+    }
+
+    // Chạm ô trong lưới 20 ô
+    var cell = t.closest('.vmg-cell');
+    if(cell && vmgGame.active){
+      var idx = parseInt(cell.getAttribute('data-index'), 10);
+      vmgHandleCellClick(idx);
+      return;
+    }
+
+    // Admin: Xuất kho từ vựng
+    if(t.closest('#btn-vbank-export')){
+      var curBank = VMG_CLOUD_BANK || { version:1, words: VMG_BUILTIN_WORDS };
+      var blob = new Blob([JSON.stringify(curBank, null, 2)], {type:'application/json'});
+      var a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'kidchart_vocab_bank.json';
+      document.body.appendChild(a);
+      a.click();
+      setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); }, 500);
+      return;
+    }
+
+    // Admin: Nhập kho từ vựng
+    if(t.closest('#btn-vbank-import')){
+      var fi = document.getElementById('vbank-file');
+      if(fi) fi.click();
+      return;
+    }
+
+    // Admin: Lưu cấu hình
+    if(t.closest('#btn-vbank-save-cfg')){
+      vmgSaveAdminConfig();
+      return;
+    }
+  });
+
+  // Xử lý nạp file JSON kho từ vựng trong Admin
+  var vbankFileInput = document.getElementById('vbank-file');
+  if(vbankFileInput){
+    vbankFileInput.addEventListener('change', function(e){
+      var f = e.target.files && e.target.files[0];
+      e.target.value = '';
+      if(!f) return;
+      var reader = new FileReader();
+      reader.onload = async function(){
+        var raw, parsed;
+        try {
+          raw = JSON.parse(reader.result);
+          parsed = normalizeVocabBank(raw);
+        } catch(err){
+          alert('File không đọc được (không phải JSON hợp lệ).');
+          return;
+        }
+        if(!parsed.words.length){
+          alert('Không tìm thấy từ vựng hợp lệ nào trong file (mỗi từ cần có id, en, vi, pos, topic, level).');
+          return;
+        }
+
+        var replace = (raw && raw.mode === 'replace');
+        var curWords = (VMG_CLOUD_BANK && VMG_CLOUD_BANK.words) ? VMG_CLOUD_BANK.words.slice() : VMG_BUILTIN_WORDS.slice();
+        var merged = [];
+        if(!replace){
+          var seenIds = {}, seenEn = {}, seenVi = {};
+          curWords.forEach(function(w){
+            seenIds[w.id] = true; seenEn[w.en.toLowerCase().trim()] = true; seenVi[w.vi.toLowerCase().trim()] = true;
+            merged.push(w);
+          });
+          parsed.words.forEach(function(w){
+            if(!seenIds[w.id] && !seenEn[w.en.toLowerCase().trim()] && !seenVi[w.vi.toLowerCase().trim()]){
+              seenIds[w.id] = true; seenEn[w.en.toLowerCase().trim()] = true; seenVi[w.vi.toLowerCase().trim()] = true;
+              merged.push(w);
+            }
+          });
+        } else {
+          merged = parsed.words;
+        }
+
+        var payload = { version: 1, words: merged };
+        try {
+          var res = await fetch(FIREBASE_BASE + '/kidchart_vocab_bank.json', {
+            method: 'PUT',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(payload)
+          });
+          if(!res.ok) throw new Error('HTTP ' + res.status);
+        } catch(err){
+          alert('Không ghi được lên Firebase (' + err.message + '). Kiểm tra mạng và Rules của node kidchart_vocab_bank.');
+          return;
+        }
+
+        VMG_CLOUD_BANK = payload;
+        try{ localStorage.setItem('kidchart_vocab_bank', JSON.stringify(payload)); }catch(e){}
+        vmgRefreshAdminStatus();
+        alert('Đã cập nhật kho từ vựng: ' + merged.length + ' từ trên Firebase thành công!');
+      };
+      reader.readAsText(f);
+    });
+  }
+
+  // Khởi tạo hiển thị trạng thái admin khi mở
+  vmgRefreshAdminStatus();
+
+
+  
+
   function adminTryUnlock(promptMsg){
     if(isAdmin) return true;
     if(authRole === 'admin'){ isAdmin = true; adminRefreshViews(); triggerToast('okay', '🔓 Đã mở chế độ Quản trị viên!'); return true; }
@@ -25338,91 +27390,88 @@ function roadmapIcon(def, locked){
   }
 
   /* Nâng cấp giọng bình luận bóng đá truyền cảm, sôi nổi chuẩn phong cách Ngoại Hạng Anh (Premier League) */
+  var comActiveUtterance = null;
   function comSpeak(t, force){
-    if((!comVoice && !force) || !('speechSynthesis' in window)) return;
-    try{
-      var raw = String(t).replace(/\*\*/g, '').replace(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}\u{FE0F}]/gu, ' ').trim();
-      if(!raw) return;
+    if((!comVoice && !force) || !('speechSynthesis' in window)) return Promise.resolve();
+    return new Promise(function(resolve){
+      try{
+        var raw = String(t).replace(/\*\*/g, '').replace(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}\u{FE0F}]/gu, ' ').trim();
+        if(!raw){ resolve(); return; }
 
-      var isGoal = /\b(goal|scores|scored|net|what a moment|strike|winner|celebrates)\b/i.test(raw);
-      var isExciting = /\b(chance|save|shot|kicks|box|danger|momentum|fire|key moment|breaks through|shoots)\b/i.test(raw);
-      var isMissOrFoul = /\b(missed|misses|wide|foul|yellow|red|denied|blocked|crossbar|post|offside)\b/i.test(raw);
+        var isGoal = /\b(goal|scores|scored|net|what a moment|strike|winner|celebrates)\b/i.test(raw);
+        var isExciting = /\b(chance|save|shot|kicks|box|danger|momentum|fire|key moment|breaks through|shoots)\b/i.test(raw);
+        var isMissOrFoul = /\b(missed|misses|wide|foul|yellow|red|denied|blocked|crossbar|post|offside)\b/i.test(raw);
 
-      // Định hình nhịp điệu & ngắt nghỉ truyền cảm (Pacing & Dramatic Pauses kiểu BLV Peter Drury / Martin Tyler)
-      var speakTxt = raw;
-      if(isGoal){
-        if(!/^(goal|what a goal|it's in)/i.test(speakTxt)){
-          speakTxt = 'Goal! ' + speakTxt;
+        // Định hình nhịp điệu & ngắt nghỉ truyền cảm (Pacing & Dramatic Pauses kiểu BLV Peter Drury / Martin Tyler)
+        var speakTxt = raw;
+        if(isGoal){
+          if(!/^(goal|what a goal|it's in)/i.test(speakTxt)){
+            speakTxt = 'Goal! ' + speakTxt;
+          }
+          speakTxt = speakTxt.replace(/!+/g, '! ').replace(/\.\.\./g, '... ');
+        } else if(isExciting){
+          speakTxt = speakTxt.replace(/shoots\b/i, 'shoots!')
+                             .replace(/\.\.\./g, '... ');
         }
-        speakTxt = speakTxt.replace(/!+/g, '! ').replace(/\.\.\./g, '... ');
-      } else if(isExciting){
-        speakTxt = speakTxt.replace(/shoots\b/i, 'shoots!')
-                           .replace(/\.\.\./g, '... ');
+
+        var u = new SpeechSynthesisUtterance(speakTxt);
+        u.lang = 'en-GB';
+        var v = comGetVoice();
+        if(v) u.voice = v;
+
+        // Tối ưu hóa Tempo & Cao độ chuẩn phong cách Ngoại Hạng Anh:
+        // Đưa tempo về mức 0.82 - 0.90 giúp giọng ấm, đĩnh đạc, tròn vành rõ chữ, không bị líu lưỡi hay nuốt chữ
+        if(isGoal){
+          // Bàn thắng: Hào sảng, bùng nổ, vang dội nhưng giữ nhịp đĩnh đạc 0.88, cao độ 1.18
+          u.rate = 0.88;
+          u.pitch = 1.18;
+          u.volume = 1.0;
+        } else if(isExciting){
+          // Tình huống nguy hiểm / dứt điểm: Nhịp điệu sôi nổi 0.90, cao độ 1.12
+          u.rate = 0.90;
+          u.pitch = 1.12;
+          u.volume = 1.0;
+        } else if(isMissOrFoul){
+          // Bỏ lỡ / phạm lỗi: Nhịp trầm xuống tiếc nuối 0.82, cao độ 0.96
+          u.rate = 0.82;
+          u.pitch = 0.96;
+          u.volume = 0.95;
+        } else {
+          // Tường thuật bóng lăn bình thường: Nhịp đĩnh đạc 0.85, cao độ 1.00 chuẩn BLV đài Sky Sports / BBC
+          u.rate = 0.85;
+          u.pitch = 1.00;
+          u.volume = 0.98;
+        }
+
+        comActiveUtterance = u;
+        var finished = false;
+        var fallbackTimer = null;
+        function finish(){
+          if(finished) return;
+          finished = true;
+          if(fallbackTimer) clearTimeout(fallbackTimer);
+          if(comActiveUtterance === u) comActiveUtterance = null;
+          resolve();
+        }
+        u.onend = finish;
+        u.onerror = finish;
+
+        // Ước lượng thời lượng an toàn dự phòng (fallback timer) để không bao giờ bị treo tiến trình nếu onend không kích hoạt
+        var estDuration = Math.max(1800, Math.min(8500, Math.round((speakTxt.length * 80) / u.rate) + 800));
+        fallbackTimer = setTimeout(finish, estDuration);
+
+        window.speechSynthesis.cancel();
+        window.speechSynthesis.speak(u);
+      }catch(e){
+        resolve();
       }
-
-      var u = new SpeechSynthesisUtterance(speakTxt);
-      u.lang = 'en-GB';
-      var v = comGetVoice();
-      if(v) u.voice = v;
-
-      // Chuẩn hóa tempo: Giảm tốc độ từ mức quá nhanh (1.12-1.22) xuống mức vàng (0.95-1.02)
-      // Giúp giọng nói có độ dày, tròn vành rõ chữ, ngắt nghỉ truyền cảm và giàu năng lượng như trên sóng Sky Sports / BBC
-      if(isGoal){
-        // Bàn thắng bùng nổ: nhịp 1.0 (chuẩn xác, hào sảng), cao độ 1.22 (hân hoan, vang dội)
-        u.rate = 1.0;
-        u.pitch = 1.22;
-        u.volume = 1.0;
-      } else if(isExciting){
-        // Cơ hội nguy hiểm / dứt điểm: nhịp 1.02, cao độ 1.14 (sôi nổi, dồn dập nhưng không líu lưỡi)
-        u.rate = 1.02;
-        u.pitch = 1.14;
-        u.volume = 1.0;
-      } else if(isMissOrFoul){
-        // Pha bỏ lỡ / phạm lỗi: nhịp 0.94 (trầm xuống, tiếc nuối), cao độ 0.98
-        u.rate = 0.94;
-        u.pitch = 0.98;
-        u.volume = 0.95;
-      } else {
-        // Tường thuật trận đấu thông thường: nhịp đĩnh đạc 0.96, ấm áp, nhịp điệu trôi chảy chuẩn BLV Anh
-        u.rate = 0.96;
-        u.pitch = 1.02;
-        u.volume = 0.98;
-      }
-
-      window.speechSynthesis.cancel();
-      window.speechSynthesis.speak(u);
-    }catch(e){}
+    });
   }
   function comWait(ms, tok){
     return new Promise(function(res){
       var t0 = performance.now();
       (function tick(){ if(!sAlive(tok) || (sMC && sMC.skip) || performance.now() - t0 >= ms) return res(); setTimeout(tick, 40); })();
     });
-  }
-  /* ===== ÂM THANH TRẬN ĐẤU (Mùa giải + Giao hữu: đá với đội bóng ma và PvP) =====
-     goal: sút vào (kể cả penalty) · miss: sút không vào (kể cả penalty) · kick: tiếng sút bóng (mọi cú sút, kể cả penalty)
-     key: có key moment (tiếng ồn sân vận động) · right / wrong: trả lời đúng (tiếng cổ vũ) / sai (hết giờ tính là sai) · whistle: trọng tài thổi còi phạt (lỗi, việt vị, chạm tay, phạt đền)
-     max = số mili-giây tối đa cho tiếng khán giả dài (cắt để không đè lên câu hỏi). Tắt tiếng: localStorage se_sfx = '0'. */
-  var SE_SFX = {
-    // 5. Âm thanh khi sút vào gôn ghi bàn (thay thế âm thanh cũ)
-    kick:{u:'https://res.cloudinary.com/tgvj8prc/video/upload/v1793613660/forza1903-a-football-hits-the-net-goal-313216.mp3'},
-    goal:{u:'https://res.cloudinary.com/tgvj8prc/video/upload/v1793613660/forza1903-a-football-hits-the-net-goal-313216.mp3'},
-    // 3. Âm thanh khán giả khi có bàn thắng
-    crowd_goal:{u:'https://res.cloudinary.com/tgvj8prc/video/upload/v1793613653/u_xg7ssi08yr-crowd-cheering-379666.mp3', max:6500},
-    // 1. Âm thanh trọng tài thổi còi kết thúc trận đấu
-    fulltime:{u:'https://res.cloudinary.com/tgvj8prc/video/upload/v1793613650/charlesheffley009-referee-whistle-568615.mp3'},
-    // 2. Âm thanh khán giả khi trận đấu đang diễn ra cân bằng
-    crowd_balanced:{u:'https://res.cloudinary.com/tgvj8prc/video/upload/v1793613652/freesound_community-football-crowd-3-69245.mp3', max:6000},
-    // 6. Âm thanh khi có một đội dẫn trước
-    crowd_leading:{u:'https://res.cloudinary.com/tgvj8prc/video/upload/v1793613665/freesound_community-soccer-stadium-10-6709.mp3', max:6000},
-    // 4. Âm thanh khi có đường chuyền bóng
-    pass:{u:'https://res.cloudinary.com/tgvj8prc/video/upload/v1793613657/freesound_community-soccer-kick-6235.mp3'},
-    // Các âm thanh khác
-    miss:{u:'https://res.cloudinary.com/tgvj8prc/video/upload/v1793163786/Am_thanh_khong_vao_da_bong-www_tiengdong_com.mp3'},
-    key:{u:'https://res.cloudinary.com/tgvj8prc/video/upload/v1793613652/freesound_community-football-crowd-3-69245.mp3', max:5000},
-    wrong:{u:'https://res.cloudinary.com/tgvj8prc/video/upload/v1793163785/Am_thanh_tieng_O_o_cua_khan_gia-www_tiengdong_com.mp3', max:4000},
-    right:{u:'https://res.cloudinary.com/tgvj8prc/video/upload/v1793163785/Am_thanh_tieng_co_vu_tran_bong_da-www_tiengdong_com.mp3', max:4000},
-    whistle:{u:'https://res.cloudinary.com/tgvj8prc/video/upload/v1793163785/tieng_thoi_coi_nhac_nho-www_tiengdong_com.mp3'}
   };
   var seSfxEl = {}, seSfxWhistleAt = 0;
   function seSfxWarm(){
@@ -25512,10 +27561,24 @@ function roadmapIcon(def, locked){
       row.classList.remove('typing');
       if(c){ c.shownN = base + i + 1; if(c.busy && c.tab === 'log') sTabBusy('log'); }
       if(lines[i].k === 'goal'){ try{ if(!reducedMotion()) spawnConfetti(40, 'perfect'); }catch(e){} }
-      if(!(sMC && sMC.skip)) comSpeak(lines[i].t);
+
       var isFriendlyLive = !!(sMC && sMC.lv);
-      var waitMs = isFriendlyLive ? (fast ? 350 : 1200) : (fast ? 500 : (lines[i].fx ? 800 : Math.max(1600, Math.min(4500, 1100 + String(lines[i].t).length * 55))));
-      await comWait(waitMs, tok);
+      var spkPromise = null;
+      if(!(sMC && sMC.skip)){
+        spkPromise = comSpeak(lines[i].t);
+      }
+
+      if(!(sMC && sMC.skip) && comVoice && spkPromise && !fast){
+        // Chờ bình luận viên đọc xong câu trọn vẹn, không bị ngắt ngang hay nuốt chữ
+        await spkPromise;
+        // Khoảng lặng thở truyền cảm tự nhiên chuẩn BLV Premier League (dài hơn khi có bàn thắng)
+        var breathPause = (lines[i].k === 'goal' || lines[i].k === 'goalx') ? 650 : (lines[i].fx ? 350 : 450);
+        await comWait(breathPause, tok);
+      } else {
+        // Chế độ đọc chữ (khi tắt giọng) hoặc các tình huống fast: Đảm bảo thời gian hiển thị đủ dài để người chơi đọc thoải mái
+        var waitMs = isFriendlyLive ? (fast ? 400 : 2200) : (fast ? 600 : (lines[i].fx ? 1200 : Math.max(2600, Math.min(5000, 1600 + String(lines[i].t).length * 50))));
+        await comWait(waitMs, tok);
+      }
     }
     if(c) c.shownN = null;
   }
