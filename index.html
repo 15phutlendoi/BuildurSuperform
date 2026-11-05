@@ -4116,17 +4116,9 @@
   /* ===== Sân đấu: cỡ và bố cục như màn thi đấu Mùa giải (1 đội) ===== */
   .pitch-side{ display:grid; gap:10px; align-content:start; min-width:0; }
   .pitch-side .bench-row{ margin-top:0; }
-  @media (min-width:760px){
-    #tab-pitch{ max-width:none; }
-    .pitch-layout{ grid-template-columns:var(--pw,min(56%,440px)) minmax(0,1fr); gap:14px; }
-    .pitch-layout .pitch-wrap{ aspect-ratio:68/105; }
-    .pitch-side{ max-height:var(--ph,none); overflow-y:auto; overscroll-behavior:contain; padding-right:4px; }
-    .pitch-slot .slot-label{ font-size:clamp(10px,calc(var(--pw,300px) * .032),13px); }
-    /* iPad: thẻ dự bị KHÔNG to hơn thẻ đội hình chính — bằng đúng cỡ thẻ trên sân (18.5% bề rộng sân), xếp 1 hàng ngang gọn trong khung bên phải */
-    .pitch-side .bench-row{ display:grid; grid-template-columns:repeat(auto-fill,calc(var(--pw,300px) * .185)); justify-content:center; gap:8px; padding:8px 6px; }
-    .pitch-side .bench-slot{ width:100%; min-width:0; }
-    .pitch-side .bench-slot .slot-label{ font-size:clamp(9px,calc(var(--pw,300px) * .026),11px); white-space:nowrap; }
-  }
+  /* Sân đấu: cấu trúc chuẩn chung */
+  .pitch-layout .pitch-wrap{ aspect-ratio:68/105; }
+  .pitch-side .bench-slot{ width:100%; min-width:0; }
 
   /* ===== GIAI ĐOẠN 3: HIỆU ỨNG CHIÊU THỨC, THANH TUYỆT KỸ & CẮT CẢNH (.bt-ps-*) ===== */
   /* Thanh Tuyệt Kỹ 3 vạch */
@@ -5021,8 +5013,96 @@
   }
 
 
-  /* iPad & Tablet Ngang (>= 900px landscape): Khung sân lớn theo chuẩn khung đỏ (~380x585px), 7 dự bị dàn đều */
-  @media (min-width: 900px) and (orientation: landscape){
+  /* ===== BỐ CỤC ĐỘI HÌNH TRONG MƠ ĐÁP ỨNG TOÀN DIỆN (IPAD & IPHONE, DỌC & NGANG) =====
+     Nguyên tắc:
+     - Xoay ngang (iPad/iPhone): Ưu tiên chiều cao sân vừa trọn màn hình, chiều rộng tự động theo tỷ lệ 68/105 (chuẩn khung đỏ ~385x594px).
+     - Xoay dọc (iPad/iPhone): Ưu tiên chiều rộng sân nở rộng phù hợp theo chiều rộng màn hình thiết bị. */
+
+  /* 1. MẶC ĐỊNH & THIẾT BỊ XOAY DỌC */
+  .pitch-layout{
+    display: grid;
+    gap: 14px;
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
+  .pitch-scroll{
+    width: 100%;
+    max-width: min(100%, 380px);
+    aspect-ratio: 68 / 105;
+    height: auto;
+    margin: 0 auto;
+    border: 1px solid #334155;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.4);
+  }
+  .pitch-wrap{
+    position: relative;
+    width: 100%;
+    height: 100%;
+    aspect-ratio: 68 / 105;
+  }
+  .pitch-side{
+    display: grid;
+    gap: 12px;
+    min-width: 0;
+  }
+  .pitch-slot, .bench-slot{
+    width: var(--card-w, 58px);
+    height: calc(var(--card-w, 58px) * 1.35);
+  }
+
+  /* iPad Xoay Dọc (Portrait >= 760px): Bề rộng sân mở rộng tương ứng theo chiều rộng iPad (~540px) */
+  @media (min-width: 760px) and (orientation: portrait), (min-width: 760px) and (max-aspect-ratio: 1/1){
+    #tab-pitch{
+      max-width: none !important;
+    }
+    .pitch-scroll{
+      max-width: min(100%, 540px) !important;
+    }
+    .bench-row{
+      display: grid !important;
+      grid-template-columns: repeat(7, minmax(0, 1fr)) !important;
+      gap: 8px !important;
+      padding: 10px 8px !important;
+      background: rgba(15, 23, 42, 0.6) !important;
+      border: 1px solid #334155 !important;
+      border-radius: 14px !important;
+      justify-items: center !important;
+      align-items: center !important;
+    }
+    .bench-slot{
+      width: 100% !important;
+      max-width: var(--card-w, 68px) !important;
+    }
+  }
+
+  /* iPhone Dọc: khung HLV xếp dưới và gập lại được */
+  @media (max-width: 768px), (max-width: 768px) and (orientation: portrait){
+    .pitch-scroll{
+      max-width: min(100%, 350px) !important;
+    }
+    .bench-row{
+      display: flex !important;
+      overflow-x: auto !important;
+      gap: 8px !important;
+      padding: 6px 2px !important;
+      justify-content: flex-start !important;
+    }
+    .bench-slot{
+      flex: none !important;
+      width: var(--card-w, 54px) !important;
+    }
+  }
+
+  /* 2. THIẾT BỊ XOAY NGANG (LANDSCAPE) */
+  /* iPad Xoay Ngang (Landscape >= 900px):
+     Khung sân đấu mở rộng khớp chuẩn khung chữ nhật đỏ (~385px × 594px),
+     chiều cao ưu tiên tối đa theo màn hình iPad, cột phải chiếm phần chiều rộng còn lại cho 7 dự bị và HLV */
+  @media (orientation: landscape) and (min-width: 900px), (min-width: 900px) and (min-aspect-ratio: 1/1){
+    #tab-pitch{
+      max-width: none !important;
+    }
     .panel.squad-body{
       padding: 8px 12px 10px !important;
     }
@@ -5045,27 +5125,33 @@
       padding: 4px 8px !important;
       font-size: 12px !important;
     }
+
+    /* Bố cục 2 cột linh hoạt:
+       Cột trái (Sân đấu): chiều rộng cố định theo chuẩn khung đỏ 385px (hoặc minmax 365-385px)
+       Cột phải (Dự bị + HLV): mở rộng chiếm toàn bộ không gian còn lại */
     .pitch-layout{
-      grid-template-columns: var(--pw, 380px) minmax(0, 1fr) !important;
+      grid-template-columns: minmax(360px, 385px) minmax(320px, 1fr) !important;
       gap: 16px !important;
       align-items: start !important;
     }
     .pitch-scroll{
-      width: var(--pw, 380px) !important;
-      height: var(--ph, 585px) !important;
-      max-width: 100% !important;
+      width: 100% !important;
+      max-width: 385px !important;
+      height: auto !important;
+      aspect-ratio: 68 / 105 !important;
       margin: 0 !important;
       border: 1px solid #334155 !important;
       border-radius: 16px !important;
       overflow: hidden !important;
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4) !important;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.45) !important;
     }
     .pitch-wrap{
-      width: var(--pw, 380px) !important;
-      height: var(--ph, 585px) !important;
+      width: 100% !important;
+      height: 100% !important;
+      aspect-ratio: 68 / 105 !important;
     }
     .pitch-side{
-      max-height: var(--ph, 585px) !important;
+      max-height: calc(385px * 105 / 68) !important;
       overflow-y: auto !important;
       overflow-x: hidden !important;
       padding-right: 4px !important;
@@ -5114,18 +5200,34 @@
     }
   }
 
-  /* iPhone Dọc: khung HLV xếp dưới và gập lại được */
-  @media (max-width: 768px){
-    .pitch-layout{ grid-template-columns: 1fr !important; }
+  /* iPhone Xoay Ngang (Landscape < 900px): Ưu tiên chiều cao màn hình điện thoại ngắn */
+  @media (orientation: landscape) and (max-width: 899px){
+    .pitch-layout{
+      grid-template-columns: auto minmax(260px, 1fr) !important;
+      gap: 12px !important;
+      align-items: start !important;
+    }
+    .pitch-scroll{
+      height: calc(100vh - 70px) !important;
+      max-height: calc(100vh - 70px) !important;
+      width: auto !important;
+      aspect-ratio: 68 / 105 !important;
+      margin: 0 !important;
+    }
+    .pitch-wrap{
+      width: 100% !important;
+      height: 100% !important;
+      aspect-ratio: 68 / 105 !important;
+    }
+    .pitch-side{
+      max-height: calc(100vh - 70px) !important;
+      overflow-y: auto !important;
+    }
     .bench-row{
       display: flex !important;
       overflow-x: auto !important;
-      gap: 8px !important;
-      padding: 6px 2px !important;
-    }
-    .pitch-slot, .bench-slot{
-      width: var(--card-w, 58px);
-      height: calc(var(--card-w, 58px) * 1.35);
+      gap: 6px !important;
+      padding: 6px 4px !important;
     }
   }
 
@@ -16575,50 +16677,14 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
       window.addEventListener('resize', cpSize);
       if(window.ResizeObserver) new ResizeObserver(cpSize).observe(tab);
     }
-    if(!tab.offsetWidth) return;
-
-    var isLandscape = (window.innerWidth >= 900 && (window.innerWidth > window.innerHeight || (window.matchMedia && window.matchMedia('(orientation: landscape)').matches)));
-
-    if(!isLandscape){
-      // Chế độ iPad Dọc và Điện thoại dọc (giữ nguyên tỷ lệ chuẩn đẹp sẵn có)
-      if(window.innerWidth < 760){
-        lay.style.removeProperty('--pw');
-        lay.style.removeProperty('--ph');
-        var curW = tab.clientWidth;
-        var cardW = Math.round(Math.max(46, Math.min(62, curW * 0.165)));
-        lay.style.setProperty('--card-w', cardW + 'px');
-        return;
-      }
-      var W = Math.round(Math.min(440, tab.clientWidth * 0.50));
-      var H = Math.round(W * 105 / 68);
-      lay.style.setProperty('--pw', W + 'px');
-      lay.style.setProperty('--ph', H + 'px');
-      var cardW = Math.round(Math.max(48, Math.min(66, W * 0.165)));
+    var pitchWrap = document.getElementById('pitch-wrap');
+    if(!pitchWrap) return;
+    var curW = pitchWrap.clientWidth;
+    if(curW > 0){
+      // Tỷ lệ kích thước thẻ trên sân co giãn linh hoạt theo bề rộng thực tế của sân
+      var cardW = Math.round(Math.max(48, Math.min(74, curW * 0.166)));
       lay.style.setProperty('--card-w', cardW + 'px');
-      return;
     }
-
-    // Chế độ iPad Xoay Ngang (Landscape >= 900px):
-    // Tối ưu kích thước sân chuẩn xác theo khung đỏ (~380x585px) để vừa vặn trọn 1 màn hình
-    var winH = window.innerHeight;
-    var layRect = lay.getBoundingClientRect();
-    var topPos = (layRect && layRect.top > 10) ? layRect.top : 170;
-    var bottomMargin = 20;
-    var maxPitchH = Math.max(380, Math.floor(winH - topPos - bottomMargin));
-
-    // Tính bề rộng theo tỷ lệ sân chuẩn 68 / 105
-    var calcW = Math.round(maxPitchH * 68 / 105);
-    // Bề rộng tối đa theo khung đỏ: chiếm ~45% chiều ngang tab, tối đa 385px
-    var maxW = Math.round(Math.min(385, tab.clientWidth * 0.46));
-    var finalW = Math.max(280, Math.min(calcW, maxW));
-    var finalH = Math.round(finalW * 105 / 68);
-
-    lay.style.setProperty('--pw', finalW + 'px');
-    lay.style.setProperty('--ph', finalH + 'px');
-
-    // Cỡ thẻ trên sân tỷ lệ thuận theo sân lớn (~62px - 66px)
-    var cardW = Math.round(Math.max(50, Math.min(66, finalW * 0.17)));
-    lay.style.setProperty('--card-w', cardW + 'px');
   }
   function cpFit(id, f){ return Math.round(seFormFit(id, f.positions.map(function(x){ return x.pos; })) * 100); }
   function renderCoachPanel(){
