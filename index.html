@@ -2093,7 +2093,7 @@
     font-size: 11.5px; font-weight: 700; color: #94A3B8;
     text-align: center; line-height: 1.4;
   }
-  .cm-reveal{ position:fixed; inset:0; z-index:10000; display:flex; align-items:center; justify-content:center; padding:16px; background:rgba(2,6,23,.9); }
+  .cm-reveal{ position:fixed; inset:0; z-index:10000; display:flex; align-items:center; justify-content:center; padding:16px; background: var(--pk-stadium) center / cover no-repeat; } .cm-reveal::before{ content:''; position:absolute; inset:0; background:rgba(2,6,23,0.7); pointer-events:none; }
   .cm-rv-box{ display:flex; flex-direction:column; align-items:center; gap:10px; max-width:340px; width:100%; padding:18px; border-radius:20px; text-align:center; color:#fff; background:linear-gradient(180deg,#1E3A5F,#0B1220); border:2px solid #FDE047; animation:cmRv .5s cubic-bezier(.2,1.4,.4,1) both; }
   .cm-rv-t{ font-size:20px; font-weight:900; color:#FDE047; } .cm-rv-card{ width:170px; } .cm-rv-n{ font-size:13px; font-weight:700; }
   @keyframes cmRv{ from{ transform:scale(.6); opacity:0; } to{ transform:scale(1); opacity:1; } }
@@ -7910,6 +7910,807 @@
 /* đang tải: đẩy nút Quản trị ở màn hình đăng nhập lên trên thanh tiến trình */
 html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-inset-bottom,0px)); }
 </style>
+<style id="pack-fx-css">
+  /* ===== PACK FX (Giai đoạn 1: Màn 9 pack bóng nilong và nền sân toàn màn hình) ===== */
+  #daily-box-modal.pk-mode {
+    position: fixed !important;
+    inset: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    height: 100dvh !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border: none !important;
+    overflow: hidden !important;
+    z-index: 10001 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background: #050a18 !important;
+  }
+
+  #daily-box-modal.pk-mode #daily-box-backdrop {
+    display: none !important;
+  }
+
+  #daily-box-modal.pk-mode .modal-box,
+  #daily-box-modal .modal-box.pk-mode,
+  .modal-box.daily-box-modal.pk-mode {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    height: 100vh !important;
+    height: 100dvh !important;
+    max-height: 100dvh !important;
+    border-radius: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+    margin: 0 !important;
+    padding: max(16px, env(safe-area-inset-top, 16px)) 16px max(16px, env(safe-area-inset-bottom, 16px)) !important;
+    box-sizing: border-box !important;
+    position: relative !important;
+    overflow: hidden !important;
+    background: #050a18 var(--pk-stadium, none) center/cover no-repeat !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+  }
+
+  /* Tiêu đề & phụ đề căn giữa tuyệt đối */
+  #daily-box-modal.pk-mode h3 {
+    position: relative !important;
+    z-index: 3 !important;
+    font-size: clamp(20px, 4vw, 28px) !important;
+    font-family: var(--font-display, inherit) !important;
+    font-weight: 900 !important;
+    color: #fff !important;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.9), 0 0 20px rgba(251,191,36,0.3) !important;
+    margin: 0 0 4px 0 !important;
+    text-align: center !important;
+  }
+
+  #daily-box-modal.pk-mode #daily-box-lead {
+    position: relative !important;
+    z-index: 3 !important;
+    font-size: clamp(12px, 2.5vw, 15px) !important;
+    font-weight: 600 !important;
+    color: #E2E8F0 !important;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.9) !important;
+    max-width: 600px !important;
+    margin: 0 auto !important;
+    text-align: center !important;
+    line-height: 1.35 !important;
+  }
+
+  /* Lưới 9 ô: 3 cột căn giữa hoàn hảo cả ngang và dọc */
+  #daily-box-modal.pk-mode .daily-box-grid,
+  .modal-box.pk-mode .daily-box-grid {
+    position: relative !important;
+    z-index: 2 !important;
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: clamp(8px, 1.8vh, 16px) clamp(8px, 1.8vw, 16px) !important;
+    justify-content: center !important;
+    align-content: center !important;
+    align-items: center !important;
+    justify-items: center !important;
+    margin: auto !important;
+    width: min(88vw, calc((100dvh - 180px) * 0.75), 440px) !important;
+    max-width: 440px !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Nút đóng ở dưới cùng */
+  #daily-box-modal.pk-mode .modal-actions {
+    position: relative !important;
+    z-index: 3 !important;
+    margin: 8px 0 0 0 !important;
+    padding: 0 !important;
+    display: flex !important;
+    justify-content: center !important;
+  }
+
+  #daily-box-modal.pk-mode #daily-box-close {
+    background: rgba(15, 23, 42, 0.75) !important;
+    color: #fff !important;
+    border: 1px solid rgba(255, 255, 255, 0.25) !important;
+    backdrop-filter: blur(8px) !important;
+    -webkit-backdrop-filter: blur(8px) !important;
+    border-radius: 99px !important;
+    padding: 8px 28px !important;
+    font-size: 14px !important;
+    font-weight: 700 !important;
+    cursor: pointer !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.4) !important;
+    transition: transform 0.15s ease, background 0.15s ease !important;
+  }
+  #daily-box-modal.pk-mode #daily-box-close:hover {
+    background: rgba(30, 41, 59, 0.9) !important;
+    transform: scale(1.05) !important;
+  }
+
+  /* Từng ô pack */
+  #daily-box-modal.pk-mode .daily-box-cell,
+  .modal-box.pk-mode .daily-box-cell {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    overflow: visible !important;
+    aspect-ratio: var(--pk-ar, 0.75) !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 0 !important;
+    margin: 0 auto !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer !important;
+    touch-action: manipulation !important;
+    -webkit-tap-highlight-color: transparent !important;
+    animation: none !important;
+  }
+
+  #daily-box-modal.pk-mode .daily-box-grid:not(.locked) .daily-box-cell:not(.picked) {
+    animation: none !important;
+  }
+
+  #daily-box-modal.pk-mode .daily-box-cell.picked {
+    animation: none !important;
+    box-shadow: none !important;
+    border: none !important;
+  }
+
+  /* Cấu trúc pack & hiệu ứng */
+  .pk-cell {
+    position: relative;
+    overflow: visible;
+  }
+  .pk-float {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    animation: pk-float-anim 2.6s ease-in-out infinite alternate;
+    animation-delay: var(--ph, 0s);
+    position: relative;
+    z-index: 1;
+  }
+  @keyframes pk-float-anim {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-5px); }
+  }
+
+  .pk-tilt {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.15s ease-out;
+    will-change: transform;
+  }
+
+  .pk-img {
+    width: 100%;
+    height: 100%;
+    aspect-ratio: var(--pk-ar, 0.75);
+    object-fit: contain;
+    display: block;
+    pointer-events: none;
+    filter: drop-shadow(0 8px 16px rgba(0,0,0,0.6));
+  }
+
+  #daily-box-modal.pk-mode .pk-sheen,
+  #daily-box-modal.pk-mode .pk-wrinkle,
+  #daily-box-modal.pk-mode .pk-spark {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    -webkit-mask-image: var(--pk-mask);
+    mask-image: var(--pk-mask);
+    -webkit-mask-size: 100% 100%;
+    mask-size: 100% 100%;
+  }
+
+  /* Vệt sáng quét ngang */
+  #daily-box-modal.pk-mode .pk-sheen {
+    background: linear-gradient(115deg, transparent 20%, rgba(255,255,255,0.7) 45%, rgba(255,255,255,0.9) 50%, rgba(255,255,255,0.7) 55%, transparent 80%);
+    background-size: 260% 100%;
+    mix-blend-mode: overlay;
+    animation: pk-sheen-sweep 3.2s ease-in-out infinite;
+    animation-delay: var(--ph, 0s);
+  }
+  @keyframes pk-sheen-sweep {
+    0% { background-position: 180% 0; }
+    50% { background-position: -80% 0; }
+    100% { background-position: -80% 0; }
+  }
+
+  /* Nếp nhăn nilong */
+  #daily-box-modal.pk-mode .pk-wrinkle {
+    background: #808080;
+    filter: url(#pk-wrinkle-f);
+    mix-blend-mode: soft-light;
+    opacity: 0.55;
+  }
+
+  /* Đốm sáng lấp lánh */
+  #daily-box-modal.pk-mode .pk-spark {
+    background-image:
+      radial-gradient(circle at 25% 20%, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0) 6px),
+      radial-gradient(circle at 75% 35%, rgba(255,255,255,0.85) 0%, rgba(255,255,255,0) 5px),
+      radial-gradient(circle at 35% 70%, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0) 5px),
+      radial-gradient(circle at 70% 80%, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0) 6px);
+    animation: pk-spark-flicker 2.8s ease-in-out infinite alternate;
+    animation-delay: var(--ph, 0s);
+  }
+  @keyframes pk-spark-flicker {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 0.9; }
+  }
+
+  /* Idle rung nhẹ */
+  @keyframes pk-wobble {
+    0% { transform: rotate(0deg); }
+    25% { transform: rotate(1.2deg); }
+    50% { transform: rotate(-1.2deg); }
+    75% { transform: rotate(0.8deg); }
+    100% { transform: rotate(0deg); }
+  }
+  .pk-cell.wobbling .pk-tilt {
+    animation: pk-wobble 0.35s ease-in-out;
+  }
+
+  /* Pack rung liên tục khi ở giữa (pha center & info) */
+  @keyframes pk-hold-anim {
+    0% { transform: perspective(500px) rotate(0deg); }
+    25% { transform: perspective(500px) rotate(1deg); }
+    75% { transform: perspective(500px) rotate(-1deg); }
+    100% { transform: perspective(500px) rotate(0deg); }
+  }
+  .pk-cell.pk-hold .pk-tilt {
+    animation: pk-hold-anim 1.6s ease-in-out infinite alternate !important;
+  }
+
+  /* Máy yếu pk-lite */
+  .pk-mode.pk-lite .pk-wrinkle,
+  .pk-mode.pk-lite .pk-spark {
+    display: none !important;
+  }
+
+  /* prefers-reduced-motion */
+  @media (prefers-reduced-motion: reduce) {
+    .pk-float,
+    .pk-sheen,
+    .pk-spark,
+    .pk-cell.wobbling .pk-tilt,
+    .pk-cell.pk-hold .pk-tilt {
+      animation: none !important;
+    }
+  }
+
+    /* ===== PACK FX (Clip 2734 & Stadium Hòa Trộn & Phiến Kính GĐ1 & 2 Lớp Quad GĐ2) ===== */
+  :root {
+    --pk-stadium: url('https://res.cloudinary.com/tgvj8prc/image/upload/v1793786154/Cinematic_Nighttime_Football_Stadium.png');
+  }
+
+  /* Sân khấu toàn màn hình độc lập cho Skill và VMG (#pk-stage) */
+  .pk-stage {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    display: none;
+    background-image: var(--pk-stadium);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    overflow: hidden;
+  }
+  .pk-stage.pk-mode {
+    display: block;
+  }
+
+  .pk-fx {
+    position: absolute;
+    inset: 0;
+    pointer-events: auto;
+    cursor: pointer;
+    z-index: 4;
+    overflow: hidden;
+    isolation: auto;
+  }
+
+  .pk-dim {
+    position: absolute;
+    inset: 0;
+    background: rgba(2, 6, 23, 0.72);
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* Nâng lưới và pack được chọn lên trên lớp dim để pack luôn sáng rực rỡ */
+  .modal-box.pk-mode #daily-box-grid,
+  .pk-mode .daily-box-grid {
+    z-index: 5 !important;
+  }
+  .pk-cell.pk-chosen {
+    position: relative !important;
+    z-index: 10 !important;
+  }
+  .pk-cell.pk-chosen.pk-hold {
+    z-index: 10 !important;
+  }
+
+  /* Spotlight trên ô được chọn - thu gọn về 240% để không bị quá to */
+  .pk-spot {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 240%;
+    max-width: none;
+    pointer-events: none;
+    z-index: 0;
+    transform: translate(calc(-1 * var(--cx, 50%)), calc(-1 * var(--cy, 50%)));
+    animation: pk-spot-in 0.7s ease-out both;
+    transition: opacity 0.35s ease;
+  }
+  @keyframes pk-spot-in {
+    from {
+      opacity: 0;
+      transform: translate(calc(-1 * var(--cx, 50%)), calc(-1 * var(--cy, 50% - 25%))) scale(0.7);
+    }
+    to {
+      opacity: 1;
+      transform: translate(calc(-1 * var(--cx, 50%)), calc(-1 * var(--cy, 50%))) scale(1);
+    }
+  }
+
+  /* 8 pack còn lại bay ra ngoài */
+  .pk-cell.pk-away {
+    transform: translate(var(--dx, 0px), var(--dy, 0px)) rotate(25deg) scale(0.6) !important;
+    opacity: 0 !important;
+    transition: transform 0.75s cubic-bezier(0.5, 0, 0.9, 0.4), opacity 0.55s ease !important;
+    pointer-events: none !important;
+  }
+
+  /* Video clip 2734: mix-blend-mode screen hòa trộn trực tiếp với stadium bên dưới */
+  .pk-video {
+    position: absolute;
+    object-fit: fill;
+    mix-blend-mode: screen;
+    pointer-events: none;
+    z-index: 2;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    /* Cắt bỏ góc dưới phải chứa watermark KlingAI (x: 87.5-100%, y: 92-100%) thành trong suốt */
+    clip-path: polygon(0 0, 100% 0, 100% 92%, 87.5% 92%, 87.5% 100%, 0 100%);
+    -webkit-clip-path: polygon(0 0, 100% 0, 100% 92%, 87.5% 92%, 87.5% 100%, 0 100%);
+  }
+
+  /* Wrapper chứa 2 lớp quad bám theo slab trong clip */
+  .pk-qwrap {
+    position: absolute;
+    pointer-events: none;
+    z-index: 3;
+    overflow: visible;
+  }
+
+  /* 2 LỚP QUAD GIAI ĐOẠN 2: Lớp nền (3.69s) & Lớp thẻ đầy đủ (4.30s) */
+  .pk-bg-layer,
+  .pk-card-layer {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 300px;
+    height: 405px;
+    transform-origin: 0 0;
+    opacity: 0;
+    will-change: transform, opacity;
+    pointer-events: none;
+    border-radius: 12px;
+    box-shadow: 0 0 0 3px rgba(220, 225, 235, 0.88), 0 0 16px rgba(255, 255, 255, 0.5);
+    overflow: hidden;
+    z-index: 4;
+  }
+  .pk-bg-layer .fc-bg {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    display: block !important;
+  }
+  .pk-card-layer .fc-card {
+    width: 100% !important;
+    height: 100% !important;
+    margin: 0 !important;
+  }
+
+  /* THÔNG TIN VỊ TRÍ (0.5s), QUỐC GIA (1.5s), CLB (2.5s) Ở FRONT & KÍCH THƯỚC LỚN HƠN NỔI BẬT */
+  .pk-plates {
+    position: absolute !important;
+    inset: 0 !important;
+    pointer-events: none !important;
+    z-index: 60 !important; /* Luôn nằm ở FRONT cao hơn pack (z-index 10) */
+    overflow: hidden !important;
+  }
+  .pk-big-item {
+    position: absolute !important;
+    left: 50% !important;
+    top: 50% !important;
+    transform: translate(-50%, -50%) scale(0.75);
+    opacity: 0;
+    text-align: center;
+    z-index: 65 !important;
+    pointer-events: none;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 94vw;
+    max-width: 620px;
+    animation: pkBigZoomFade 1.5s cubic-bezier(0.2, 0.8, 0.25, 1) forwards;
+  }
+  @keyframes pkBigZoomFade {
+    0% {
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(0.75);
+      filter: blur(6px);
+    }
+    18% {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1.0);
+      filter: blur(0px);
+    }
+    68% {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1.24);
+      filter: blur(0px);
+    }
+    100% {
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(1.6);
+      filter: blur(10px);
+    }
+  }
+  .pk-big-sub {
+    font-size: clamp(14px, 3.2vmin, 22px);
+    font-weight: 900;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--pk-acc, #38BDF8);
+    margin-bottom: 12px;
+    padding: 5px 22px;
+    border-radius: 99px;
+    background: rgba(15, 23, 42, 0.85);
+    border: 1.5px solid var(--pk-acc, #38BDF8);
+    box-shadow: 0 0 24px rgba(var(--pk-acc-rgb, 56, 189, 248), 0.6), inset 0 0 10px rgba(var(--pk-acc-rgb, 56, 189, 248), 0.3);
+    text-shadow: 0 2px 10px rgba(0,0,0,0.9);
+    display: inline-block;
+  }
+  .pk-big-pos b {
+    font-size: clamp(100px, 28vmin, 220px);
+    font-weight: 900;
+    line-height: 0.95;
+    letter-spacing: 0.02em;
+    text-shadow: 0 0 50px var(--pk-acc, #38BDF8), 0 0 100px rgba(255,255,255,0.85), 0 8px 30px rgba(0,0,0,0.95);
+    display: block;
+    filter: drop-shadow(0 12px 30px rgba(0,0,0,0.9));
+  }
+  .pk-big-item img {
+    height: clamp(120px, 24vmin, 200px);
+    width: auto;
+    max-width: 340px;
+    object-fit: contain;
+    display: block;
+    margin: 0 auto;
+    border-radius: 12px;
+    box-shadow: 0 14px 45px rgba(0,0,0,0.9), 0 0 35px var(--pk-acc, rgba(56, 189, 248, 0.65));
+    border: 3px solid rgba(255, 255, 255, 0.35);
+  }
+  .pk-big-item img.pk-big-logo {
+    border: none;
+    box-shadow: none;
+    border-radius: 0;
+    filter: drop-shadow(0 14px 40px rgba(0,0,0,0.95)) drop-shadow(0 0 35px var(--pk-acc, #38BDF8));
+  }
+  .pk-big-name {
+    font-size: clamp(30px, 7vmin, 58px);
+    font-weight: 900;
+    letter-spacing: 0.05em;
+    margin-top: 14px;
+    display: block;
+    text-transform: uppercase;
+    color: #FFFFFF;
+    text-shadow: 0 4px 20px rgba(0,0,0,1), 0 0 35px var(--pk-acc, #38BDF8), 0 0 70px rgba(var(--pk-acc-rgb, 56, 189, 248), 0.6);
+    line-height: 1.15;
+  }
+
+  /* GIAI ĐOẠN 1: PACK NỔI BẬT & 3 PHIẾN KÍNH THÔNG TIN */
+  .pk-cell.pk-chosen.pk-hold .pk-tilt {
+    animation: pkBreathe 1.8s ease-in-out infinite, pkTiltShake 2.4s ease-in-out infinite;
+  }
+  @keyframes pkBreathe {
+    0%, 100% { filter: drop-shadow(0 0 18px var(--pk-acc, #38BDF8)) brightness(1); }
+    50% { filter: drop-shadow(0 0 36px var(--pk-acc, #38BDF8)) brightness(1.25); }
+  }
+  @keyframes pkTiltShake {
+    0%, 100% { transform: perspective(500px) rotate(0deg); }
+    25% { transform: perspective(500px) rotate(-1.2deg); }
+    75% { transform: perspective(500px) rotate(1.2deg); }
+  }
+
+  .pk-plates {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 8;
+    overflow: hidden;
+  }
+  .pk-plate {
+    position: absolute;
+    background: rgba(15, 23, 42, 0.82);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 2px solid var(--pk-acc, #38BDF8);
+    border-radius: 18px;
+    padding: 10px 16px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.65), 0 0 24px rgba(var(--pk-acc-rgb, 56, 189, 248), 0.5), inset 0 0 14px rgba(var(--pk-acc-rgb, 56, 189, 248), 0.2);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    opacity: 0;
+    will-change: transform, opacity;
+    box-sizing: border-box;
+    min-width: 120px;
+    text-align: center;
+    transition: opacity 0.3s ease;
+  }
+  .pk-plate.pk-plate-in {
+    opacity: 1;
+    animation: pkPlateBounceIn 0.5s cubic-bezier(0.18, 1.25, 0.4, 1) both;
+  }
+  @keyframes pkPlateBounceIn {
+    from {
+      opacity: 0;
+      transform: scale(0.6) translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+  }
+  .pk-plate.pk-plate-sucked {
+    opacity: 0 !important;
+    transform: translate(var(--suck-x, 0), var(--suck-y, 0)) scale(0.05) !important;
+    filter: brightness(3.5) blur(6px) !important;
+    transition: transform 0.4s cubic-bezier(0.7, 0, 0.3, 1), opacity 0.4s ease, filter 0.4s ease !important;
+  }
+  .pk-plate-sub {
+    font-size: clamp(10px, 2.2vmin, 13px);
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--pk-acc, #fff);
+    margin-bottom: 4px;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.8);
+  }
+  .pk-plate-pos b {
+    font-size: clamp(42px, 10vmin, 76px);
+    font-weight: 900;
+    line-height: 1;
+    text-shadow: 0 0 24px var(--pk-acc, #fff);
+    display: block;
+  }
+  .pk-plate img {
+    height: clamp(80px, 14vmin, 120px);
+    min-height: 64px;
+    width: auto;
+    max-width: 140px;
+    object-fit: contain;
+    display: block;
+    margin: 0 auto;
+    filter: drop-shadow(0 6px 20px rgba(0,0,0,0.6));
+  }
+  .pk-plate-name {
+    font-size: clamp(13px, 3vmin, 18px);
+    font-weight: 800;
+    margin-top: 5px;
+    display: block;
+    text-align: center;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.85);
+    max-width: 150px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* Responsive trên điện thoại dọc: tấm thông tin thu gọn tối đa 28vw, không đè lên pack */
+  @media (max-width: 600px), (orientation: portrait) {
+    .pk-plate {
+      max-width: 28vw !important;
+      padding: 6px 8px !important;
+      border-radius: 12px !important;
+      min-width: 85px !important;
+    }
+    .pk-plate-sub {
+      font-size: 9.5px !important;
+      letter-spacing: 0.06em !important;
+      margin-bottom: 2px !important;
+    }
+    .pk-plate-pos b {
+      font-size: clamp(28px, 7.5vmin, 44px) !important;
+    }
+    .pk-plate img {
+      height: clamp(48px, 10vmin, 68px) !important;
+      min-height: 44px !important;
+      max-width: 100% !important;
+    }
+    .pk-plate-name {
+      font-size: clamp(10.5px, 2.5vmin, 13px) !important;
+      max-width: 26vw !important;
+      margin-top: 2px !important;
+    }
+  }
+
+  /* Nút Bỏ qua */
+  .pk-skip {
+    position: absolute;
+    top: max(16px, env(safe-area-inset-top, 16px));
+    right: 16px;
+    z-index: 20;
+    pointer-events: auto;
+    background: rgba(15, 23, 42, 0.75);
+    color: #E2E8F0;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-radius: 99px;
+    padding: 8px 20px;
+    font-size: 13.5px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+    transition: transform 0.15s ease, background 0.15s ease, opacity 0.3s ease;
+  }
+  .pk-skip:hover {
+    background: rgba(30, 41, 59, 0.95);
+    transform: scale(1.05);
+    color: #fff;
+  }
+
+  /* Màn kết quả kết nối sigRun (mode: result) */
+  #sig-ov.rs .sg-card,
+  #sig-ov.rs .sg-card * {
+    transition: none !important;
+  }
+  #sig-ov.rs .sg-flip {
+    transform: rotateY(180deg) !important;
+  }
+  #sig-ov.rs.ls.info .sg-info {
+    animation: sgInfoSlideInRight 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) 0.25s both !important;
+  }
+  #sig-ov.rs.pt.info .sg-info {
+    animation: sgInfoSlideInBottom 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) 0.25s both !important;
+  }
+  @keyframes sgInfoSlideInRight {
+    from { opacity: 0; transform: translateX(50px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+  @keyframes sgInfoSlideInBottom {
+    from { opacity: 0; transform: translateY(40px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* NÚT CHUYỂN MẢNH & CON DẤU ĐỔI MẢNH */
+  .sg-sign-zone {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    width: 100% !important;
+    margin-top: 12px !important;
+  }
+  .sg-sign-actions {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 12px !important;
+    flex-wrap: wrap !important;
+    width: 100% !important;
+  }
+  .sg-sign-btn,
+  .sg-frag-btn {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    min-height: 44px !important;
+    padding: 10px 22px !important;
+    font-family: inherit !important;
+    font-weight: 900 !important;
+    font-size: clamp(13px, 1.8vmin, 15px) !important;
+    border-radius: 99px !important;
+    cursor: pointer !important;
+    white-space: nowrap !important;
+    box-sizing: border-box !important;
+    transition: transform 0.15s ease, box-shadow 0.2s ease, filter 0.15s ease !important;
+  }
+  .sg-sign-btn {
+    background: linear-gradient(135deg, #10B981 0%, #059669 100%) !important;
+    border: 2px solid #6EE7B7 !important;
+    color: #fff !important;
+    box-shadow: 0 4px 18px rgba(16, 185, 129, 0.45), 0 0 10px rgba(110, 231, 183, 0.3) !important;
+    animation: sgSignPulse 2s ease-in-out infinite !important;
+  }
+  .sg-frag-btn {
+    background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 50%, #0369a1 100%) !important;
+    border: 2px solid #7DD3FC !important;
+    color: #fff !important;
+    box-shadow: 0 4px 18px rgba(14, 165, 233, 0.45) !important;
+  }
+  .sg-sign-btn:hover,
+  .sg-frag-btn:hover {
+    transform: scale(1.04) !important;
+    filter: brightness(1.1) !important;
+  }
+  .sg-sign-btn:active,
+  .sg-frag-btn:active {
+    transform: scale(0.96) !important;
+  }
+  .sg-tap-sub {
+    font-size: clamp(10.5px, 1.4vmin, 12px) !important;
+    font-weight: 600 !important;
+    color: rgba(255, 255, 255, 0.65) !important;
+    text-align: center !important;
+    width: 100% !important;
+    margin-top: 2px !important;
+    display: block !important;
+  }
+  @media (max-width: 520px), (orientation: portrait) {
+    .sg-sign-actions {
+      flex-direction: column !important;
+      gap: 8px !important;
+      width: 100% !important;
+    }
+    .sg-sign-btn,
+    .sg-frag-btn {
+      width: 100% !important;
+      max-width: 320px !important;
+    }
+  }
+  .sg-stamp.frag-stamped {
+    border-color: #38BDF8 !important;
+    color: #38BDF8 !important;
+    box-shadow: 0 0 28px rgba(56, 189, 248, 0.75), inset 0 0 16px rgba(56, 189, 248, 0.35) !important;
+    opacity: 1 !important;
+    transform: translate(-50%, -50%) rotate(-12deg) scale(1) !important;
+  }
+  .sg-frag-fly {
+    position: absolute;
+    font-size: 26px;
+    pointer-events: none;
+    z-index: 100;
+    animation: sgFragBurst 1.2s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+  }
+  @keyframes sgFragBurst {
+    0% { opacity: 1; transform: translate(0, 0) scale(0.5); }
+    50% { opacity: 1; transform: translate(var(--fx), var(--fy)) scale(1.3) rotate(var(--fr)); }
+    100% { opacity: 0; transform: translate(var(--tx), var(--ty)) scale(0.2) rotate(calc(var(--fr) * 2)); }
+  }
+
+</style>
+
 <div id="dbcd-pl" role="status" aria-live="polite" hidden><div class="pl-box"><div class="pl-row"><p class="pl-s" id="dbcd-pl-s">Đang tải ảnh sân và thẻ cầu thủ…</p><p class="pl-pct" id="dbcd-pl-p">0%</p></div><div class="pl-bar"><div class="pl-fill" id="dbcd-pl-f"></div><span class="pl-ball" id="dbcd-pl-b">⚽</span></div></div></div>
 <script>
 /* Tải trước ảnh/âm thanh để app chạy mượt. Nhóm 1 (bắt buộc, có thanh tiến trình): ảnh sân 6 thời tiết, ảnh khung thành, thẻ của bé.
@@ -8452,6 +9253,27 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
       <input type="number" id="settings-daily-goal" min="1" max="10" step="1">
     </label>
     <p class="hint-text" style="margin:-6px 0 0">VD: nhập 9 nghĩa là đạt 9/10 điểm trong ngày sẽ mở được hộp quà.</p>
+        <div class="ap-packmix-wrap" style="margin-top:12px;padding-top:10px;border-top:1px dashed rgba(255,255,255,0.15)">
+          <h5 style="margin:0 0 8px;font-size:13.5px;color:#FBBF24">🎲 Tỷ lệ lưới 9 thẻ (Tổng phải bằng 9)</h5>
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;align-items:end">
+            <label style="font-size:12px;margin:0">LIVE (Thường)
+              <input type="number" id="settings-packmix-live" min="0" max="9" step="1" style="width:100%">
+            </label>
+            <label style="font-size:12px;margin:0">RARE (Hiếm)
+              <input type="number" id="settings-packmix-rare" min="0" max="9" step="1" style="width:100%">
+            </label>
+            <label style="font-size:12px;margin:0">ICON (H.Thoại)
+              <input type="number" id="settings-packmix-icon" min="0" max="9" step="1" style="width:100%">
+            </label>
+            <label style="font-size:12px;margin:0">SIG (C.Ký)
+              <input type="number" id="settings-packmix-sig" min="0" max="9" step="1" style="width:100%">
+            </label>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-top:8px">
+            <span id="settings-packmix-sum" style="font-size:12px;font-weight:700;color:#38BDF8">Tổng: 9/9 thẻ</span>
+            <button type="button" class="btn-secondary" id="settings-packmix-reset" style="padding:4px 10px;font-size:12px">Mặc định (2-3-3-1)</button>
+          </div>
+        </div>
       </div>
       <div class="ap-card" data-save="1">
         <h4>🥇 Điểm thưởng Play Style (Phòng Kỹ Năng)</h4>
@@ -9025,6 +9847,15 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
 </div>
 
 
+<svg width="0" height="0" style="position:absolute;visibility:hidden" aria-hidden="true">
+  <filter id="pk-wrinkle-f" x="0" y="0" width="100%" height="100%">
+    <feTurbulence type="fractalNoise" baseFrequency="0.018 0.05" numOctaves="3" seed="4" result="n"/>
+    <feSpecularLighting in="n" surfaceScale="5" specularConstant=".9" specularExponent="22" lighting-color="#fff" result="s">
+      <feDistantLight azimuth="235" elevation="42"/>
+    </feSpecularLighting>
+    <feComposite in="s" in2="SourceGraphic" operator="in"/>
+  </filter>
+</svg>
 <div id="daily-box-modal" class="modal">
   <div id="daily-box-backdrop" class="modal-backdrop"></div>
   <div class="modal-box daily-box-modal">
@@ -9974,6 +10805,20 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
     return total > 0 ? out : Object.assign({}, QUIZ_MIX_DEFAULT);
   }
   settings.quizMix = quizMixClean(settings.quizMix);
+  var PACK_MIX_KEYS = ['LIVE', 'RARE', 'ICON', 'SIG'];
+  var PACK_MIX_DEFAULT = {LIVE: 2, RARE: 3, ICON: 3, SIG: 1};
+  function packMixClean(m){
+    var out = {}, sum = 0;
+    PACK_MIX_KEYS.forEach(function(k){
+      var v = m ? parseInt(m[k], 10) : NaN;
+      if(isNaN(v) || v < 0) v = PACK_MIX_DEFAULT[k];
+      out[k] = v;
+      sum += v;
+    });
+    return sum === 9 ? out : Object.assign({}, PACK_MIX_DEFAULT);
+  }
+  settings.packMix = packMixClean(settings.packMix);
+
   /* ===== GIAO HỮU PvP (Mùa giải): tham số cấu hình, lưu trong settings.friendly (tự đồng bộ Firebase như quizSeconds) =====
      quizSecsET: 0 = bằng thời gian câu hỏi thường (quizSeconds); 5–60 = rút ngắn ở hiệp phụ / luân lưu. */
   var FRIENDLY_DEFAULT = {enabled:true, breakSecs:30, maxSubs:5, etSituations:4, quizSecsET:0, perDay:5, heartbeatSecs:20, dropAfterSecs:45, forfeitAfter:3, fragWin:3, fragDraw:2, fragLose:1};
@@ -12465,21 +13310,1029 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
   var dbxBoltRaf = 0;      /* vòng lặp riêng cho hiệu ứng tia sét nền, chạy suốt lúc thẻ showoff */
   var dbxBoltStop = null;  /* hàm dừng vòng lặp tia sét hiện tại, gọi khi đóng/đổi sân khấu */
 
+    /* ===== PACK FX (Mở thẻ kiểu bóc pack - Phiên bản 2.0 clip 16:9) ===== */
+    var PACK_FX = {
+    enabled: true,
+    assets: {
+      pack: 'https://res.cloudinary.com/tgvj8prc/image/upload/v1793785106/Glossy_Blue_and_Gold_Football_Pack.png',
+      stadium: 'https://res.cloudinary.com/tgvj8prc/image/upload/v1793786154/Cinematic_Nighttime_Football_Stadium.png',
+      video: 'https://res.cloudinary.com/tgvj8prc/video/upload/v1793847524/kling_20261105_VIDEO_T_o_Video__2734_0.mp4',
+      spot: {
+        LIVE: 'https://res.cloudinary.com/tgvj8prc/image/upload/v1793787192/CITYPNG.COM_PNG_Light_Spot_Spotlight_-_1500x1500.png',
+        RARE: 'https://res.cloudinary.com/tgvj8prc/image/upload/v1793787191/CITYPNG.COM_HD_Blue_Turquoise_Light_Spot_Spotlight_PNG_-_1500x1500.png',
+        ICON: 'https://res.cloudinary.com/tgvj8prc/image/upload/v1793787192/CITYPNG.COM_HD_Purple_Light_Spot_Spotlight_PNG_-_1500x1500.png',
+        SIG:  'https://res.cloudinary.com/tgvj8prc/image/upload/v1793787192/CITYPNG.COM_Yellow_Light_Spot_Spotlight_-_1500x1500.png'
+      }
+    },
+    packAspect: 0.6667,
+    videoAR: 16 / 9,
+    cardRatio: 0.74,
+    videoPack: {
+      imageBox: {cx: 0.507, cy: 0.5037, h: 0.844},
+      visible: {cx: 0.507, cy: 0.512, h: 0.614, w: 0.2156}
+    },
+    videoCard: {x0: 0.3386, y0: 0.0705, x1: 0.6501, y1: 0.8949},
+    clipCardRatio: 0.6704,
+    cover: {inflate: 1.06, padPx: 3, edgePadPx: 10},
+    bgAt: 3.69,
+    edgeAt: [3.6667, 4.2917],
+    fullAt: 4.30,
+    holdAt: 6.6,
+    clipEnd: 7.04,
+    timing: {
+      dim: 500,
+      clearStart: 500,
+      clearStagger: 40,
+      centerAt: 1100,
+      center: 700,
+      infoStart: 1800,
+      infoStep: 900,
+      infoHold: 400,
+      suckDuration: 400,
+      handoff: 300,
+      move: 700
+    },
+    spotColors: {
+      LIVE: { hex: '#FFFFFF', rgb: '255, 255, 255' },
+      RARE: { hex: '#38BDF8', rgb: '56, 189, 248' },
+      ICON: { hex: '#A855F7', rgb: '168, 85, 247' },
+      SIG:  { hex: '#FBBF24', rgb: '251, 191, 36' }
+    },
+    spotCore: {
+      LIVE: {x: 0.5, y: 0.5}, RARE: {x: 0.5, y: 0.5}, ICON: {x: 0.5, y: 0.5}, SIG: {x: 0.5, y: 0.5}
+    },
+    debugRarity: ''
+  };
+
+  try{
+    var _pkm = /[?&]pkdebug=(LIVE|RARE|ICON|SIG)/.exec(location.search);
+    if(_pkm) PACK_FX.debugRarity = _pkm[1];
+  }catch(e){}
+
+  var PACK_CARD_TRACK = [{"t":3.5833,"q":[0.4469,0.2306,0.5602,0.1806,0.525,0.8278,0.4453,0.75],"w":0.0965,"face":"back"},{"t":3.625,"q":[0.4883,0.2014,0.5289,0.1778,0.5203,0.8028,0.4805,0.7458],"w":0.0402,"face":"edge"},{"t":3.6667,"q":[0.4977,0.1902,0.5237,0.1904,0.5219,0.7975,0.4959,0.7972],"w":0.026,"face":"edge"},{"t":3.7083,"q":[0.4523,0.1833,0.5656,0.2514,0.5641,0.7167,0.4484,0.7417],"w":0.1145,"face":"back"},{"t":3.75,"q":[0.4203,0.1917,0.5859,0.1986,0.5789,0.7444,0.4172,0.7722],"w":0.1637,"face":"back"},{"t":3.7917,"q":[0.4023,0.1962,0.5969,0.1951,0.5965,0.7455,0.4061,0.7747],"w":0.1925,"face":"back"},{"t":3.8333,"q":[0.3924,0.1948,0.6057,0.199,0.6051,0.7542,0.3953,0.7726],"w":0.2115,"face":"back"},{"t":3.875,"q":[0.3871,0.1944,0.6092,0.1983,0.6086,0.7615,0.3898,0.7719],"w":0.2204,"face":"back"},{"t":3.9167,"q":[0.3844,0.1962,0.6084,0.192,0.6113,0.7646,0.3896,0.7743],"w":0.2229,"face":"back"},{"t":3.9583,"q":[0.3854,0.1958,0.6064,0.1865,0.6127,0.7684,0.391,0.776],"w":0.2214,"face":"back"},{"t":4.0,"q":[0.3887,0.1955,0.6033,0.1806,0.6117,0.7743,0.3939,0.7771],"w":0.2162,"face":"back"},{"t":4.0417,"q":[0.3934,0.1969,0.5975,0.1733,0.6074,0.7806,0.3992,0.7781],"w":0.2062,"face":"back"},{"t":4.0833,"q":[0.4002,0.1997,0.5883,0.1667,0.599,0.7854,0.4074,0.7788],"w":0.1898,"face":"back"},{"t":4.125,"q":[0.4111,0.2017,0.5752,0.1604,0.5867,0.7906,0.4203,0.7799],"w":0.1652,"face":"back"},{"t":4.1667,"q":[0.4266,0.2014,0.5594,0.1528,0.5719,0.7972,0.4367,0.7806],"w":0.134,"face":"back"},{"t":4.2083,"q":[0.4469,0.2014,0.5414,0.1486,0.5367,0.8194,0.4492,0.7694],"w":0.091,"face":"back"},{"t":4.25,"q":[0.4688,0.1972,0.5117,0.1472,0.5219,0.8222,0.4695,0.7667],"w":0.0477,"face":"edge"},{"t":4.2917,"q":[0.493,0.1486,0.5016,0.1542,0.5008,0.825,0.5008,0.825],"w":0.0043,"face":"edge"},{"t":4.3333,"q":[0.4789,0.1417,0.518,0.1903,0.5227,0.7486,0.475,0.825],"w":0.0434,"face":"edge"},{"t":4.375,"q":[0.4508,0.1375,0.5461,0.1806,0.5508,0.7542,0.4469,0.8292],"w":0.0996,"face":"front"},{"t":4.4167,"q":[0.418,0.15,0.5617,0.1681,0.5734,0.7681,0.4281,0.8306],"w":0.1445,"face":"front"},{"t":4.4583,"q":[0.4027,0.1431,0.5838,0.1726,0.5842,0.7892,0.4033,0.8247],"w":0.181,"face":"front"},{"t":4.5,"q":[0.3908,0.1399,0.5994,0.1694,0.5961,0.8007,0.3875,0.8229],"w":0.2086,"face":"front"},{"t":4.5417,"q":[0.3826,0.1396,0.6088,0.1642,0.6051,0.8087,0.3779,0.8226],"w":0.2267,"face":"front"},{"t":4.5833,"q":[0.3771,0.1385,0.6156,0.1608,0.6105,0.8174,0.3707,0.8222],"w":0.2392,"face":"front"},{"t":4.625,"q":[0.3711,0.1403,0.6189,0.1535,0.617,0.8212,0.3674,0.826],"w":0.2487,"face":"front"},{"t":4.6667,"q":[0.3637,0.1458,0.6188,0.1431,0.6236,0.8222,0.3678,0.8344],"w":0.2555,"face":"front"},{"t":4.7083,"q":[0.3617,0.1431,0.6215,0.1396,0.6252,0.8299,0.3656,0.8372],"w":0.2597,"face":"front"},{"t":4.75,"q":[0.3645,0.1323,0.6275,0.1424,0.625,0.8389,0.3602,0.8333],"w":0.264,"face":"front"},{"t":4.7917,"q":[0.3645,0.1257,0.6312,0.1417,0.6271,0.8438,0.357,0.834],"w":0.2685,"face":"front"},{"t":4.8333,"q":[0.3605,0.1264,0.6312,0.1347,0.6293,0.8479,0.3576,0.8424],"w":0.2712,"face":"front"},{"t":4.875,"q":[0.3551,0.1309,0.6297,0.1253,0.6322,0.8486,0.359,0.8521],"w":0.2739,"face":"front"},{"t":4.9167,"q":[0.3516,0.1319,0.6293,0.1187,0.6355,0.8479,0.3586,0.8583],"w":0.2773,"face":"front"},{"t":4.9583,"q":[0.35,0.1295,0.6307,0.1153,0.6371,0.8514,0.3568,0.8622],"w":0.2805,"face":"front"},{"t":5.0,"q":[0.351,0.1226,0.6338,0.1149,0.6371,0.858,0.3541,0.8635],"w":0.2829,"face":"front"},{"t":5.0417,"q":[0.3523,0.1146,0.6361,0.1139,0.6379,0.8618,0.3518,0.8646],"w":0.285,"face":"front"},{"t":5.0833,"q":[0.351,0.1115,0.6371,0.1111,0.6396,0.8632,0.3504,0.8667],"w":0.2877,"face":"front"},{"t":5.125,"q":[0.3514,0.1052,0.6396,0.1111,0.6393,0.8694,0.3479,0.866],"w":0.2898,"face":"front"},{"t":5.1667,"q":[0.3529,0.0979,0.6422,0.1108,0.6389,0.875,0.3453,0.8649],"w":0.2914,"face":"front"},{"t":5.2083,"q":[0.3529,0.0941,0.6439,0.1104,0.6398,0.8767,0.3445,0.8674],"w":0.2932,"face":"front"},{"t":5.25,"q":[0.3523,0.091,0.6453,0.1104,0.6406,0.8792,0.3445,0.8719],"w":0.2945,"face":"front"},{"t":5.2917,"q":[0.3516,0.0882,0.6459,0.1076,0.6412,0.8819,0.3436,0.8736],"w":0.296,"face":"front"},{"t":5.3333,"q":[0.3482,0.0899,0.6449,0.1007,0.6432,0.8819,0.3441,0.8767],"w":0.2979,"face":"front"},{"t":5.375,"q":[0.3428,0.0958,0.6426,0.0917,0.6469,0.8792,0.3467,0.8847],"w":0.3,"face":"front"},{"t":5.4167,"q":[0.3418,0.0941,0.6434,0.0903,0.6479,0.8812,0.3449,0.8854],"w":0.3022,"face":"front"},{"t":5.4583,"q":[0.3428,0.0896,0.6453,0.0917,0.6469,0.8858,0.3414,0.8819],"w":0.304,"face":"front"},{"t":5.5,"q":[0.3424,0.0882,0.6453,0.0882,0.6477,0.8865,0.3404,0.8826],"w":0.3051,"face":"front"},{"t":5.5417,"q":[0.3449,0.0813,0.6477,0.0889,0.6473,0.8885,0.3393,0.8819],"w":0.3054,"face":"front"},{"t":5.5833,"q":[0.3467,0.0753,0.6504,0.091,0.6461,0.892,0.3381,0.8812],"w":0.3059,"face":"front"},{"t":5.625,"q":[0.3457,0.0747,0.6508,0.0896,0.6461,0.8938,0.3379,0.8833],"w":0.3066,"face":"front"},{"t":5.6667,"q":[0.3453,0.0736,0.6508,0.0882,0.6457,0.8951,0.3375,0.8847],"w":0.3068,"face":"front"},{"t":5.7083,"q":[0.343,0.076,0.649,0.0833,0.6473,0.8941,0.3385,0.8875],"w":0.3074,"face":"front"},{"t":5.75,"q":[0.3404,0.0785,0.6473,0.0785,0.6496,0.8924,0.3398,0.8913],"w":0.3083,"face":"front"},{"t":5.7917,"q":[0.342,0.074,0.649,0.0806,0.6492,0.8941,0.3381,0.8899],"w":0.3091,"face":"front"},{"t":5.8333,"q":[0.3412,0.074,0.6496,0.0802,0.6492,0.8951,0.3381,0.8906],"w":0.3098,"face":"front"},{"t":5.875,"q":[0.3389,0.0767,0.6484,0.0764,0.6496,0.8951,0.3396,0.8934],"w":0.3098,"face":"front"},{"t":5.9167,"q":[0.3416,0.0712,0.6496,0.0774,0.649,0.8965,0.3381,0.8917],"w":0.3095,"face":"front"},{"t":5.9583,"q":[0.3439,0.0667,0.6508,0.0785,0.6496,0.8965,0.3371,0.8917],"w":0.3097,"face":"front"},{"t":6.0,"q":[0.3414,0.0698,0.6496,0.0757,0.6506,0.8958,0.3387,0.8948],"w":0.3101,"face":"front"},{"t":6.0417,"q":[0.3371,0.076,0.6473,0.0715,0.6508,0.8958,0.3406,0.8979],"w":0.3102,"face":"front"},{"t":6.0833,"q":[0.335,0.0795,0.6461,0.0694,0.6508,0.8958,0.3412,0.8993],"w":0.3104,"face":"front"},{"t":6.125,"q":[0.3369,0.0764,0.6473,0.0712,0.6508,0.8958,0.3402,0.8979],"w":0.3104,"face":"front"},{"t":6.1667,"q":[0.3414,0.0691,0.6496,0.0743,0.6508,0.8958,0.3379,0.8934],"w":0.3105,"face":"front"},{"t":6.2083,"q":[0.3434,0.0656,0.6508,0.0753,0.6508,0.8958,0.3359,0.8892],"w":0.3111,"face":"front"},{"t":6.25,"q":[0.3426,0.0663,0.6508,0.075,0.6508,0.8958,0.3357,0.8885],"w":0.3116,"face":"front"},{"t":6.2917,"q":[0.3422,0.0667,0.6512,0.0764,0.6496,0.8972,0.3359,0.8889],"w":0.3113,"face":"front"},{"t":6.3333,"q":[0.3422,0.0667,0.6516,0.0778,0.6473,0.9,0.3355,0.8885],"w":0.3105,"face":"front"},{"t":6.375,"q":[0.3426,0.0663,0.6516,0.0778,0.6461,0.9014,0.3348,0.8878],"w":0.3102,"face":"front"},{"t":6.4167,"q":[0.3438,0.0653,0.6523,0.0806,0.6461,0.9014,0.3344,0.8875],"w":0.3102,"face":"front"},{"t":6.4583,"q":[0.3438,0.0653,0.6484,0.0694,0.6461,0.9014,0.3344,0.8875],"w":0.3082,"face":"front"},{"t":6.5,"q":[0.3352,0.0778,0.6453,0.0667,0.6508,0.8958,0.3422,0.9014],"w":0.3094,"face":"front"},{"t":6.5417,"q":[0.3352,0.0778,0.6453,0.0667,0.6508,0.8958,0.3422,0.9014],"w":0.3094,"face":"front"},{"t":6.5833,"q":[0.3386,0.0731,0.6477,0.0705,0.6501,0.8946,0.3386,0.8949],"w":0.3103,"face":"front"},{"t":6.625,"q":[0.3386,0.0731,0.6477,0.0705,0.6501,0.8946,0.3386,0.8949],"w":0.3103,"face":"front"},{"t":6.6667,"q":[0.3386,0.0731,0.6477,0.0705,0.6501,0.8946,0.3386,0.8949],"w":0.3103,"face":"front"},{"t":6.7083,"q":[0.3386,0.0731,0.6477,0.0705,0.6501,0.8946,0.3386,0.8949],"w":0.3103,"face":"front"},{"t":6.75,"q":[0.3386,0.0731,0.6477,0.0705,0.6501,0.8946,0.3386,0.8949],"w":0.3103,"face":"front"},{"t":6.7917,"q":[0.3386,0.0731,0.6477,0.0705,0.6501,0.8946,0.3386,0.8949],"w":0.3103,"face":"front"},{"t":6.8333,"q":[0.3386,0.0731,0.6477,0.0705,0.6501,0.8946,0.3386,0.8949],"w":0.3103,"face":"front"},{"t":6.875,"q":[0.3386,0.0731,0.6477,0.0705,0.6501,0.8946,0.3386,0.8949],"w":0.3103,"face":"front"},{"t":6.9167,"q":[0.3386,0.0731,0.6477,0.0705,0.6501,0.8946,0.3386,0.8949],"w":0.3103,"face":"front"},{"t":6.9583,"q":[0.3386,0.0731,0.6477,0.0705,0.6501,0.8946,0.3386,0.8949],"w":0.3103,"face":"front"},{"t":7.0,"q":[0.3386,0.0731,0.6477,0.0705,0.6501,0.8946,0.3386,0.8949],"w":0.3103,"face":"front"}];
+
+  var pkWobbleTimers = [];
+  var pkVideoRaf = 0;
+  var pkVideoCbId = 0;
+  var pkFxInst = null;
+
+  /* BỐN HÀM QUAN TRỌNG ĐIỀU KHIỂN ÂM THANH & VIDEO */
+  function pkSoundOn(){
+    try{
+      if(typeof seSfxOn === 'function') return seSfxOn();
+      return localStorage.getItem('se_sfx') !== '0';
+    }catch(e){
+      return true;
+    }
+  }
+
+  function pkTickSound(){
+    if(!pkSoundOn()) return;
+    try{
+      if(typeof seTick === 'function'){ seTick(); return; }
+      if(typeof beep === 'function'){
+        beep(1046, 0.04, 'triangle', 0, 0.08);
+        beep(1568, 0.06, 'sine', 0.02, 0.06);
+      }
+    }catch(e){}
+  }
+
+  function pkUnlockVideo(v){
+    if(!v) return;
+    try{
+      v.muted = true;
+      var pr = v.play();
+      if(pr && pr.then){
+        pr.then(function(){ v.pause(); v.currentTime = 0; }).catch(function(){});
+      }
+    }catch(e){}
+  }
+
+  function pkPlayVideo(v, onFail){
+    if(!v) return;
+    v.currentTime = 0;
+    v.muted = !pkSoundOn();
+    var pr = v.play();
+    if(pr && pr.catch){
+      pr.catch(function(){
+        v.muted = true;
+        v.play().catch(function(err){
+          if(onFail) onFail(err);
+        });
+      });
+    }
+  }
+
+  function packCellHTML(i){
+    var ph = (Math.random()*2.4).toFixed(2);
+    return '<button type="button" class="daily-box-cell pk-cell" data-box-index="'+i+'" style="--i:'+i+';--ph:'+ph+'s" aria-label="Pack bí ẩn số '+(i+1)+'">'
+      + '<span class="pk-float"><span class="pk-tilt">'
+      +   '<img class="pk-img" src="'+PACK_FX.assets.pack+'" alt="" draggable="false">'
+      +   '<span class="pk-sheen"></span><span class="pk-wrinkle"></span><span class="pk-spark"></span>'
+      + '</span></span></button>';
+  }
+
+  function pkWireGridTilt(grid){
+    if(!grid || grid._pkTiltWired) return;
+    grid._pkTiltWired = true;
+    grid.addEventListener('pointermove', function(e){
+      var cell = e.target.closest && e.target.closest('.pk-cell');
+      if(!cell || cell.classList.contains('pk-chosen') || cell.classList.contains('pk-away')) return;
+      var r = cell.getBoundingClientRect();
+      if(!r.width || !r.height) return;
+      var px = (e.clientX - r.left)/r.width - 0.5;
+      var py = (e.clientY - r.top)/r.height - 0.5;
+      var t = cell.querySelector('.pk-tilt');
+      if(t){
+        t.style.transform = 'perspective(500px) rotateY('+(px*16)+'deg) rotateX('+(-py*16)+'deg)';
+      }
+      cell.style.setProperty('--sx', (50 + px*60)+'%');
+    });
+    grid.addEventListener('pointerleave', function(){
+      grid.querySelectorAll('.pk-tilt').forEach(function(t){
+        if(!t.closest('.pk-chosen')) t.style.transform = '';
+      });
+    });
+  }
+
+  function pkClearWobbles(){
+    pkWobbleTimers.forEach(function(id){ clearTimeout(id); });
+    pkWobbleTimers = [];
+  }
+
+  function pkScheduleWobbles(grid){
+    pkClearWobbles();
+    if(!grid) return;
+    var cells = grid.querySelectorAll('.pk-cell');
+    cells.forEach(function(cell){
+      function scheduleNext(){
+        var delay = 4000 + Math.random() * 3000;
+        var tid = setTimeout(function(){
+          if(!cell.isConnected || cell.classList.contains('pk-chosen') || cell.classList.contains('pk-away')) return;
+          cell.classList.add('wobbling');
+          var resetTid = setTimeout(function(){
+            cell.classList.remove('wobbling');
+            scheduleNext();
+          }, 360);
+          pkWobbleTimers.push(resetTid);
+        }, delay);
+        pkWobbleTimers.push(tid);
+      }
+      scheduleNext();
+    });
+  }
+
+  function pkPreload(base){
+    try{
+      if(PACK_FX && PACK_FX.assets){
+        var urls = [PACK_FX.assets.pack, PACK_FX.assets.stadium];
+        if(PACK_FX.assets.spot){
+          for(var k in PACK_FX.assets.spot){
+            if(PACK_FX.assets.spot[k]) urls.push(PACK_FX.assets.spot[k]);
+          }
+        }
+        urls.forEach(function(u){
+          var im = new Image();
+          im.src = u;
+          if(im.decode) im.decode().catch(function(){});
+        });
+        if(PACK_FX.assets.video){
+          var v = document.createElement('video');
+          v.preload = 'auto';
+          v.src = PACK_FX.assets.video;
+          v.load();
+        }
+      }
+      if(base && cdnReady()){
+        [base.background, base.image, base.nationFlag, base.clubLogo].forEach(function(f){
+          if(f){
+            var im = new Image();
+            im.src = cdnUrl(f);
+            if(im.decode) im.decode().catch(function(){});
+          }
+        });
+      }
+    }catch(e){}
+  }
+
+  function pkSpotKey(base){
+    if(PACK_FX.debugRarity) return PACK_FX.debugRarity;
+    var r = cardRarityCode(base);
+    return (PACK_FX.assets.spot && PACK_FX.assets.spot[r]) ? r : 'LIVE';
+  }
+
+  function pkAttachSpot(cell, key){
+    var core = (PACK_FX.spotCore && PACK_FX.spotCore[key]) || {x: 0.5, y: 0.5};
+    var s = document.createElement('img');
+    s.className = 'pk-spot'; s.alt = ''; s.src = PACK_FX.assets.spot[key];
+    s.style.setProperty('--cx', (core.x * 100) + '%');
+    s.style.setProperty('--cy', (core.y * 100) + '%');
+    cell.appendChild(s);
+  }
+
+  function pkBuildFx(box){
+    var old = box.querySelector('.pk-fx');
+    if(old) old.remove();
+    var oldPlates = box.querySelector('.pk-plates');
+    if(oldPlates) oldPlates.remove();
+
+    var root = document.createElement('div');
+    root.className = 'pk-fx';
+    root.innerHTML = '<div class="pk-dim"></div>'
+      + '<video class="pk-video" playsinline webkit-playsinline preload="auto"></video>'
+      + '<div class="pk-qwrap">'
+      +   '<div class="pk-bg-layer"></div>'
+      +   '<div class="pk-card-layer"></div>'
+      + '</div>'
+      + '<button type="button" class="pk-skip" aria-label="Bỏ qua hiệu ứng">Bỏ qua ⏭</button>';
+
+    // Tạo lớp .pk-plates đính thẳng vào box với z-index 60 để luôn nằm ở FRONT đè lên pack
+    var plates = document.createElement('div');
+    plates.className = 'pk-plates';
+    plates.style.cssText = 'position:absolute;inset:0;pointer-events:none;z-index:60;overflow:hidden;';
+
+    box.appendChild(root);
+    box.appendChild(plates);
+
+    var video = root.querySelector('.pk-video');
+    video.src = PACK_FX.assets.video;
+    video.muted = !pkSoundOn();
+    video.controls = false;
+    video.disablePictureInPicture = true;
+
+    pkFxInst = {
+      root: root,
+      dim: root.querySelector('.pk-dim'),
+      plates: plates,
+      video: video,
+      qwrap: root.querySelector('.pk-qwrap'),
+      bgLayer: root.querySelector('.pk-bg-layer'),
+      cardLayer: root.querySelector('.pk-card-layer'),
+      skip: root.querySelector('.pk-skip')
+    };
+    return pkFxInst;
+  }
+
+  function pkLayoutVideo(box, fx){
+    var b = box.getBoundingClientRect(), W = b.width, H = b.height, vc = PACK_FX.videoCard;
+    var Hc = Math.min(H * 0.84, (W * 0.84) / PACK_FX.cardRatio);
+    var vh = Hc / (vc.y1 - vc.y0);
+    var vw = vh * PACK_FX.videoAR;
+    var left = (W / 2 - vw * (vc.x0 + vc.x1) / 2);
+    var top  = (H / 2 - vh * (vc.y0 + vc.y1) / 2);
+
+    fx.video.style.width = vw + 'px';
+    fx.video.style.height = vh + 'px';
+    fx.video.style.left = left + 'px';
+    fx.video.style.top  = top + 'px';
+
+    fx.qwrap.style.width = vw + 'px';
+    fx.qwrap.style.height = vh + 'px';
+    fx.qwrap.style.left = left + 'px';
+    fx.qwrap.style.top  = top + 'px';
+
+    fx.vw = vw;
+    fx.vh = vh;
+    fx.left = left;
+    fx.top = top;
+  }
+
+    function pkInitCellOrigin(cell){
+    if(!cell) return { x: window.innerWidth / 2, y: window.innerHeight / 2, h: 180 };
+    if(cell._pkOrigin) return cell._pkOrigin;
+    var cr = cell.getBoundingClientRect();
+    var img = cell.querySelector('.pk-img') || cell;
+    var ir = img.getBoundingClientRect();
+    cell._pkOrigin = {
+      x: cr.left + cr.width / 2,
+      y: cr.top + cr.height / 2,
+      h: ir.height || cell.offsetHeight || 180
+    };
+    return cell._pkOrigin;
+  }
+
+  function pkGlideToCenter(box, cell, ms){
+    var orig = pkInitCellOrigin(cell);
+    var br = box.getBoundingClientRect();
+    var targetX = br.left + br.width / 2;
+    var targetY = br.top + br.height / 2;
+    var dx = targetX - orig.x;
+    var dy = targetY - orig.y;
+    cell.style.transition = 'transform ' + ms + 'ms cubic-bezier(.25,.8,.25,1), opacity 0.3s ease';
+    cell.style.transform = 'translate(' + dx + 'px, ' + dy + 'px) scale(1.15)';
+  }
+
+  function pkGlideToVideoPack(box, fx, cell, ms){
+    var orig = pkInitCellOrigin(cell);
+    var vp = PACK_FX.videoPack.imageBox || PACK_FX.videoPack;
+    var wr = (fx.video && fx.video.getBoundingClientRect) ? fx.video.getBoundingClientRect() : box.getBoundingClientRect();
+    var targetX = wr.left + wr.width * vp.cx;
+    var targetY = wr.top + wr.height * vp.cy;
+    var sc = (wr.height * vp.h) / (orig.h || 1);
+    var dx = targetX - orig.x;
+    var dy = targetY - orig.y;
+    cell.style.transition = 'transform ' + ms + 'ms cubic-bezier(.25,.8,.25,1), opacity 0.25s ease';
+    cell.style.transform = 'translate(' + dx + 'px, ' + dy + 'px) scale(' + sc + ')';
+  }
+
+  function pkPlateItems(base){
+    var list = [];
+    if(base.pos){
+      list.push({
+        id: 'pos',
+        sub: 'VỊ TRÍ THI ĐẤU',
+        html: '<div class="pk-plate-pos"><b>' + escHtml(base.pos) + '</b></div>'
+      });
+    }
+    if(cdnReady() && base.nationFlag){
+      list.push({
+        id: 'nation',
+        sub: 'QUỐC GIA',
+        html: '<img src="' + cdnUrl(base.nationFlag) + '" alt="' + escHtml(base.nation || '') + '">'
+          + (base.nation ? '<span class="pk-plate-name">' + escHtml(base.nation) + '</span>' : '')
+      });
+    }
+    if(cdnReady() && base.clubLogo){
+      list.push({
+        id: 'club',
+        sub: 'CÂU LẠC BỘ',
+        html: '<img src="' + cdnUrl(base.clubLogo) + '" alt="' + escHtml(base.club || '') + '">'
+          + (base.club ? '<span class="pk-plate-name">' + escHtml(base.club) + '</span>' : '')
+      });
+    }
+    return list;
+  }
+
+  function pkLayoutPlates(box, fx, plateEls){
+    var b = box.getBoundingClientRect(), W = b.width, H = b.height;
+    var isNarrow = (W < 600) || (W < H);
+    var vpVis = (PACK_FX.videoPack && PACK_FX.videoPack.visible) ? PACK_FX.videoPack.visible : {cx: 0.507, cy: 0.512, h: 0.614, w: 0.2156};
+    var vpH = fx.vh * vpVis.h;
+    var vpW = fx.vw * vpVis.w;
+    var vpCX = fx.left + fx.vw * vpVis.cx;
+    var vpCY = fx.top + fx.vh * vpVis.cy;
+
+    plateEls.forEach(function(pObj){
+      var el = pObj.el;
+      if(!el) return;
+      if(isNarrow){
+        if(pObj.id === 'pos'){
+          el.style.left = '10px';
+          el.style.right = 'auto';
+          el.style.top = Math.max(16, vpCY - vpH * 0.40) + 'px';
+        } else if(pObj.id === 'nation'){
+          el.style.right = '10px';
+          el.style.left = 'auto';
+          el.style.top = Math.max(16, vpCY - 25) + 'px';
+        } else if(pObj.id === 'club'){
+          el.style.left = '10px';
+          el.style.right = 'auto';
+          el.style.top = Math.min(H - 130, vpCY + vpH * 0.16) + 'px';
+        }
+      } else {
+        if(pObj.id === 'pos'){
+          el.style.left = Math.max(18, vpCX - vpW / 2 - 175) + 'px';
+          el.style.right = 'auto';
+          el.style.top = Math.max(20, vpCY - vpH * 0.35) + 'px';
+        } else if(pObj.id === 'nation'){
+          el.style.left = Math.min(W - 185, vpCX + vpW / 2 + 30) + 'px';
+          el.style.right = 'auto';
+          el.style.top = Math.max(20, vpCY - 40) + 'px';
+        } else if(pObj.id === 'club'){
+          el.style.left = Math.max(18, vpCX - vpW / 2 - 175) + 'px';
+          el.style.right = 'auto';
+          el.style.top = Math.min(H - 160, vpCY + vpH * 0.15) + 'px';
+        }
+      }
+    });
+  }
+
+  function pkShowPlates(box, fx, base, key, onDone){
+    var c = fx.plates;
+    c.innerHTML = '';
+    var colCfg = (PACK_FX.spotColors && PACK_FX.spotColors[key]) || { hex: '#FFFFFF', rgb: '255, 255, 255' };
+    c.style.setProperty('--pk-acc', colCfg.hex);
+    c.style.setProperty('--pk-acc-rgb', colCfg.rgb);
+
+    var items = pkPlateItems(base);
+    var plateEls = [];
+
+    items.forEach(function(it){
+      var el = document.createElement('div');
+      el.className = 'pk-plate pk-plate-' + it.id;
+      el.innerHTML = '<div class="pk-plate-sub">' + it.sub + '</div>' + it.html;
+      c.appendChild(el);
+      plateEls.push({ id: it.id, el: el });
+    });
+
+    pkLayoutPlates(box, fx, plateEls);
+
+    var T = PACK_FX.timing;
+    var stepMs = T.infoStep || 900;
+
+    plateEls.forEach(function(pObj, idx){
+      dbxLater(function(){
+        pkLayoutPlates(box, fx, plateEls);
+        pObj.el.classList.add('pk-plate-in');
+        pkTickSound();
+      }, idx * stepMs);
+    });
+
+    var holdAt = plateEls.length * stepMs + (T.infoHold || 400);
+
+    dbxLater(function(){
+      var b = box.getBoundingClientRect();
+      var cx = b.width / 2, cy = b.height / 2;
+
+      plateEls.forEach(function(pObj){
+        var pr = pObj.el.getBoundingClientRect();
+        var elCenterX = pr.left - b.left + pr.width / 2;
+        var elCenterY = pr.top - b.top + pr.height / 2;
+        pObj.el.style.setProperty('--suck-x', (cx - elCenterX) + 'px');
+        pObj.el.style.setProperty('--suck-y', (cy - elCenterY) + 'px');
+        pObj.el.classList.add('pk-plate-sucked');
+      });
+
+      dbxLater(function(){
+        c.innerHTML = '';
+        if(onDone) onDone();
+      }, T.suckDuration || 400);
+    }, holdAt);
+  }
+
+  function pkQuadMatrix(w, h, q){
+    var sx = [0, w, w, 0], sy = [0, 0, h, h], A = [], b = [], n = 8, i, j, k, r;
+    for(i = 0; i < 4; i++){
+      var X = sx[i], Y = sy[i], U = q[i*2], V = q[i*2+1];
+      A.push([X, Y, 1, 0, 0, 0, -X*U, -Y*U]); b.push(U);
+      A.push([0, 0, 0, X, Y, 1, -X*V, -Y*V]); b.push(V);
+    }
+    for(k = 0; k < n; k++){
+      var piv = k; for(r = k+1; r < n; r++) if(Math.abs(A[r][k]) > Math.abs(A[piv][k])) piv = r;
+      var tA = A[k]; A[k] = A[piv]; A[piv] = tA; var tb = b[k]; b[k] = b[piv]; b[piv] = tb;
+      for(r = k+1; r < n; r++){ var f = A[r][k]/A[k][k]; for(j = k; j < n; j++) A[r][j] -= f*A[k][j]; b[r] -= f*b[k]; }
+    }
+    var s = new Array(n);
+    for(i = n-1; i >= 0; i--){ var acc = b[i]; for(j = i+1; j < n; j++) acc -= A[i][j]*s[j]; s[i] = acc/A[i][i]; }
+    return 'matrix3d(' + [s[0], s[3], 0, s[6],  s[1], s[4], 0, s[7],  0, 0, 1, 0,  s[2], s[5], 0, 1].join(',') + ')';
+  }
+
+  function pkQuadAt(t){
+    var TR = PACK_CARD_TRACK;
+    if(!TR || !TR.length) return [0,0,1,0,1,1,0,1];
+    if(t <= TR[0].t) return TR[0].q;
+    if(t >= TR[TR.length-1].t) return TR[TR.length-1].q;
+    var lo = 0, hi = TR.length - 1;
+    while(hi - lo > 1){
+      var mid = (lo + hi) >> 1;
+      if(TR[mid].t <= t) lo = mid; else hi = mid;
+    }
+    var a = TR[lo], b = TR[hi];
+    var span = b.t - a.t;
+    var k = span ? ((t - a.t) / span) : 0;
+    var q = [];
+    for(var i = 0; i < 8; i++) q.push(a.q[i] + (b.q[i] - a.q[i]) * k);
+    return q;
+  }
+
+  /* Nới quad theo cả chiều ngang (khớp tỉ lệ 0.74) và chiều cao (inflate 6%) */
+  function pkWidenQuad(q, k, inflate){
+    if(inflate == null) inflate = 1.06;
+    var mt = [(q[0] + q[2]) / 2, (q[1] + q[3]) / 2];
+    var mb = [(q[6] + q[4]) / 2, (q[7] + q[5]) / 2];
+    var wTop = (q[2] - q[0]) * k;
+    var wBot = (q[4] - q[6]) * k;
+
+    var pTL = [mt[0] - wTop / 2, q[1]];
+    var pTR = [mt[0] + wTop / 2, q[3]];
+    var pBR = [mb[0] + wBot / 2, q[5]];
+    var pBL = [mb[0] - wBot / 2, q[7]];
+
+    var cx = (pTL[0] + pTR[0] + pBR[0] + pBL[0]) / 4;
+    var cy = (pTL[1] + pTR[1] + pBR[1] + pBL[1]) / 4;
+
+    return [
+      cx + (pTL[0] - cx) * inflate, cy + (pTL[1] - cy) * inflate,
+      cx + (pTR[0] - cx) * inflate, cy + (pTR[1] - cy) * inflate,
+      cx + (pBR[0] - cx) * inflate, cy + (pBR[1] - cy) * inflate,
+      cx + (pBL[0] - cx) * inflate, cy + (pBL[1] - cy) * inflate
+    ];
+  }
+
+  function pkSyncCard(fx, cw, ch, t){
+    if(t < PACK_FX.bgAt){
+      if(fx.bgLayer) fx.bgLayer.style.opacity = 0;
+      if(fx.cardLayer) fx.cardLayer.style.opacity = 0;
+      return;
+    }
+    var rawQ = pkQuadAt(t);
+    var k = PACK_FX.cardRatio / PACK_FX.clipCardRatio;
+    var inflate = (PACK_FX.cover && PACK_FX.cover.inflate) || 1.06;
+    var widenedQ = pkWidenQuad(rawQ, k, inflate);
+    var px = widenedQ.map(function(n, i){
+      return i % 2 === 0 ? n * fx.vw : n * fx.vh;
+    });
+    var matrix = pkQuadMatrix(cw, ch, px);
+
+    if(t < PACK_FX.fullAt){
+      if(fx.cardLayer) fx.cardLayer.style.opacity = 0;
+      if(fx.bgLayer){
+        var bgFade = Math.min(1, (t - PACK_FX.bgAt) / 0.10);
+        fx.bgLayer.style.transform = matrix;
+        fx.bgLayer.style.opacity = bgFade;
+      }
+    } else {
+      var cardFade = Math.min(1, (t - PACK_FX.fullAt) / 0.10);
+      if(fx.cardLayer){
+        fx.cardLayer.style.transform = matrix;
+        fx.cardLayer.style.opacity = cardFade;
+      }
+      if(fx.bgLayer){
+        fx.bgLayer.style.transform = matrix;
+        fx.bgLayer.style.opacity = Math.max(0, 1 - cardFade);
+      }
+    }
+  }
+
+  function playPackOpening(base, p, cell, opts){
+    opts = opts || {};
+    var context = opts.context || 'dailyBox';
+    var onComplete = opts.onDone || null;
+
+    var box = null;
+    if(context === 'dailyBox'){
+      var modal = document.getElementById('daily-box-modal');
+      box = modal ? modal.querySelector('.modal-box') : null;
+    }
+
+    if(!box){
+      var stage = document.getElementById('pk-stage');
+      if(!stage){
+        stage = document.createElement('div');
+        stage.id = 'pk-stage';
+        stage.className = 'pk-stage';
+        document.body.appendChild(stage);
+      }
+      stage.style.display = 'block';
+      stage.classList.add('pk-mode');
+      box = stage;
+    }
+
+    var fx = pkBuildFx(box);
+    var key = pkSpotKey(base);
+    var colCfg = (PACK_FX.spotColors && PACK_FX.spotColors[key]) || { hex: '#FFFFFF', rgb: '255, 255, 255' };
+    box.style.setProperty('--pk-acc', colCfg.hex);
+    box.style.setProperty('--pk-acc-rgb', colCfg.rgb);
+
+    var grid = document.getElementById('daily-box-grid');
+    var others = (grid && cell) ? [].slice.call(grid.querySelectorAll('.pk-cell')).filter(function(c){ return c !== cell; }) : [];
+
+    function phase(n){
+      try{ box.dataset.pkPhase = n; }catch(e){}
+    }
+
+    var skipped = false;
+    var done = false;
+
+    function doSkip(){
+      if(skipped || done) return;
+      skipped = true;
+      done = true;
+      phase('skipped');
+      try{ fx.video.pause(); }catch(e){}
+      if(pkVideoRaf){ cancelAnimationFrame(pkVideoRaf); pkVideoRaf = 0; }
+      if(fx.video.cancelVideoFrameCallback && pkVideoCbId){
+        try{ fx.video.cancelVideoFrameCallback(pkVideoCbId); }catch(e){}
+        pkVideoCbId = 0;
+      }
+      if(fx.root){
+        fx.root.style.transition = 'opacity 0.3s ease';
+        fx.root.style.opacity = 0;
+        setTimeout(function(){ try{ if(fx.root) fx.root.remove(); }catch(e){} }, 350);
+      }
+
+      sigRun(base, function(){
+        pkCleanup();
+        if(onComplete) onComplete();
+      }, false, 'result', { context: context, playerObj: p });
+    }
+
+    fx.skip.onclick = function(e){
+      e.stopPropagation();
+      doSkip();
+    };
+    fx.root.onclick = function(e){
+      doSkip();
+    };
+
+    pkUnlockVideo(fx.video);
+    pkLayoutVideo(box, fx);
+
+    var onWinResize = function(){
+      if(box && fx && fx.video){
+        pkLayoutVideo(box, fx);
+      }
+    };
+    window.addEventListener('resize', onWinResize);
+    window.addEventListener('orientationchange', onWinResize);
+
+    var bgImg = (cdnReady() && base.background)
+      ? '<img class="fc-bg" src="' + cdnUrl(base.background) + '" alt="" draggable="false">'
+      : '<div class="fc-bg" style="width:100%;height:100%;background:linear-gradient(135deg,#1E293B,#0F172A)"></div>';
+    fx.bgLayer.innerHTML = '<div class="fc-card" style="width:100%;height:100%;margin:0">' + bgImg + '</div>';
+
+    fx.cardLayer.innerHTML = dbxCardHTML(base);
+    var cw = 300;
+    var ch = Math.round(cw / PACK_FX.cardRatio);
+    fx.bgLayer.style.width = cw + 'px'; fx.bgLayer.style.height = ch + 'px';
+    fx.cardLayer.style.width = cw + 'px'; fx.cardLayer.style.height = ch + 'px';
+
+    pkPreload(base);
+
+    function pkShowCenterItem(html){
+      if(!fx || !fx.plates) return;
+      var el = document.createElement('div');
+      el.className = 'pk-big-item';
+      el.innerHTML = html;
+      fx.plates.appendChild(el);
+      setTimeout(function(){
+        try{ el.remove(); }catch(e){}
+      }, 1550);
+    }
+
+    // BƯỚC 1: Sau khi chọn pack thì pack đấy di chuyển vào vị trí trung tâm của màn hình với tốc độ vừa phải
+    phase('glide-center');
+    fx.dim.style.opacity = 0.85;
+
+    var glideToCenterMs = 700; // tốc độ vừa phải
+
+    if(cell){
+      // Lưu lại tọa độ ban đầu chính xác của ô pack trên màn hình trước khi áp transform
+      pkInitCellOrigin(cell);
+      cell.classList.add('pk-chosen');
+
+      // 8 ô còn lại mờ dần và ẩn đi ngay lập tức
+      others.forEach(function(c){
+        c.style.transition = 'opacity 0.35s ease';
+        c.style.opacity = 0;
+        c.style.pointerEvents = 'none';
+      });
+
+      // Di chuyển pack vào chính giữa màn hình (nằm dưới các thông tin nở ra)
+      pkGlideToCenter(box, cell, glideToCenterMs);
+      cell.classList.add('pk-hold');
+    } else {
+      var dummyPack = document.createElement('div');
+      dummyPack.className = 'daily-box-cell pk-cell pk-chosen pk-hold';
+      var dW = 120, dH = dW / PACK_FX.packAspect;
+      var bRect = box.getBoundingClientRect();
+      var dX = bRect.width / 2;
+      var dY = bRect.height / 2;
+      dummyPack.style.cssText = 'position:absolute;left:' + (dX - dW/2) + 'px;top:' + (dY - dH/2) + 'px;width:' + dW + 'px;height:' + dH + 'px;z-index:10;pointer-events:none;transform-origin:50% 50%;';
+      dummyPack.innerHTML = '<span class="pk-float" style="width:100%;height:100%"><span class="pk-tilt" style="width:100%;height:100%;display:block"><img class="pk-img" src="' + PACK_FX.assets.pack + '" alt="" style="width:100%;height:100%;object-fit:contain"></span></span>';
+      box.appendChild(dummyPack);
+      cell = dummyPack;
+      cell._pkOrigin = { x: bRect.left + dX, y: bRect.top + dY, h: dH };
+    }
+
+    // BƯỚC 2: Khi đã ở vị trí chính giữa màn hình, hiệu ứng nằm phía trên của ảnh pack gồm:
+    // - Vị trí: to dần rồi mờ đi trong 1,5s
+    // - Quốc gia: to dần rồi mờ đi trong 1,5s
+    // - CLB: to dần rồi mờ đi trong 1,5s
+    var infoItems = [];
+    if(base.pos){
+      infoItems.push({
+        html: '<div class="pk-big-sub">VỊ TRÍ THI ĐẤU</div><div class="pk-big-pos"><b>' + escHtml(base.pos) + '</b></div>'
+      });
+    }
+    if(cdnReady() && base.nationFlag){
+      infoItems.push({
+        html: '<div class="pk-big-sub">QUỐC GIA</div><img src="' + cdnUrl(base.nationFlag) + '" alt="' + escHtml(base.nation || '') + '">'
+          + (base.nation ? '<span class="pk-big-name">' + escHtml(base.nation) + '</span>' : '')
+      });
+    }
+    if(cdnReady() && base.clubLogo){
+      infoItems.push({
+        html: '<div class="pk-big-sub">CÂU LẠC BỘ</div><img class="pk-big-logo" src="' + cdnUrl(base.clubLogo) + '" alt="' + escHtml(base.club || '') + '">'
+          + (base.club ? '<span class="pk-big-name">' + escHtml(base.club) + '</span>' : '')
+      });
+    }
+
+    var itemDuration = 1500; // 1.5s mỗi mục theo yêu cầu
+    var infoStartTime = glideToCenterMs + 50; // bắt đầu ngay khi pack đã ở giữa màn hình
+
+    infoItems.forEach(function(it, idx){
+      dbxLater(function(){
+        if(skipped || done) return;
+        pkShowCenterItem(it.html);
+        pkTickSound();
+      }, infoStartTime + idx * itemDuration);
+    });
+
+    var totalInfoTime = infoStartTime + infoItems.length * itemDuration;
+
+    // BƯỚC 3: Sau đó pack từ từ zoom to lên vào đúng vị trí khớp với vị trí pack trong clip
+    var zoomDuration = 850; // từ từ zoom to lên trong 850ms
+    dbxLater(function(){
+      if(skipped || done) return;
+      phase('zoom-pack');
+      pkGlideToVideoPack(box, fx, cell, zoomDuration);
+    }, totalInfoTime);
+
+    // BƯỚC 4: Sau khi pack đã zoom to vào đúng vị trí khớp trong clip -> Clip mới chạy
+    dbxLater(function(){
+      if(skipped || done) return;
+      phase('handoff');
+
+      fx.video.style.opacity = 1;
+      if(cell){
+        cell.style.transition = 'opacity 0.25s ease';
+        cell.style.opacity = 0;
+      }
+
+      var checkVideoReady = function(){
+        if(skipped || done) return;
+        if(fx.video.readyState >= 3){
+          startVideoPlay();
+        } else {
+          setTimeout(checkVideoReady, 40);
+        }
+      };
+      checkVideoReady();
+    }, totalInfoTime + zoomDuration);
+
+    function startVideoPlay(){
+      if(skipped || done) return;
+      phase('video');
+      pkPlayVideo(fx.video, function(){
+        if(!done && !skipped) doSkip();
+      });
+
+      var clipEnded = false;
+
+      function onVideoFrame(t){
+        if(skipped || done || clipEnded) return;
+        pkSyncCard(fx, cw, ch, t);
+        if(t >= (PACK_FX.clipEnd || 7.04)){
+          onClipFinished();
+        }
+      }
+
+      if(fx.video.requestVideoFrameCallback){
+        function vfcCb(now, meta){
+          if(skipped || done || clipEnded) return;
+          onVideoFrame(meta.mediaTime || fx.video.currentTime);
+          if(!done && !skipped && !clipEnded){
+            pkVideoCbId = fx.video.requestVideoFrameCallback(vfcCb);
+          }
+        }
+        pkVideoCbId = fx.video.requestVideoFrameCallback(vfcCb);
+      } else {
+        function rafCb(){
+          if(skipped || done || clipEnded) return;
+          onVideoFrame(fx.video.currentTime);
+          if(!done && !skipped && !clipEnded){
+            pkVideoRaf = requestAnimationFrame(rafCb);
+          }
+        }
+        pkVideoRaf = requestAnimationFrame(rafCb);
+      }
+
+      fx.video.onended = function(){
+        onClipFinished();
+      };
+
+      function onClipFinished(){
+        if(clipEnded || done || skipped) return;
+        clipEnded = true;
+
+        if(pkVideoRaf){ cancelAnimationFrame(pkVideoRaf); pkVideoRaf = 0; }
+        if(fx.video.cancelVideoFrameCallback && pkVideoCbId){
+          try{ fx.video.cancelVideoFrameCallback(pkVideoCbId); }catch(e){}
+          pkVideoCbId = 0;
+        }
+
+        pkSyncCard(fx, cw, ch, PACK_FX.clipEnd || 7.04);
+        try{ fx.video.pause(); }catch(e){}
+
+        fx.video.style.transition = 'opacity 0.4s ease';
+        fx.video.style.opacity = 0;
+
+        dbxLater(function(){
+          if(skipped || done) return;
+          finishClip();
+        }, 450);
+      }
+    }
+
+    function finishClip(){
+      if(done || skipped) return;
+      done = true;
+      phase('move');
+      window.removeEventListener('resize', onWinResize);
+      window.removeEventListener('orientationchange', onWinResize);
+
+      try{ fx.video.pause(); }catch(e){}
+      if(pkVideoRaf){ cancelAnimationFrame(pkVideoRaf); pkVideoRaf = 0; }
+      if(fx.video.cancelVideoFrameCallback && pkVideoCbId){
+        try{ fx.video.cancelVideoFrameCallback(pkVideoCbId); }catch(e){}
+        pkVideoCbId = 0;
+      }
+
+      var fromRect = fx.cardLayer ? fx.cardLayer.getBoundingClientRect() : null;
+
+      sigRun(base, function(){
+        pkCleanup();
+        if(onComplete) onComplete();
+      }, false, 'result', {
+        context: context,
+        playerObj: p,
+        fromRect: fromRect,
+        onCardPlaced: function(){
+          if(fx.cardLayer) fx.cardLayer.style.opacity = 0;
+          if(fx.bgLayer) fx.bgLayer.style.opacity = 0;
+        }
+      });
+
+      dbxLater(function(){
+        if(fx.root){
+          fx.root.style.transition = 'opacity 0.45s ease';
+          fx.root.style.opacity = 0;
+          setTimeout(function(){
+            try{ if(fx.root) fx.root.remove(); }catch(e){}
+          }, 500);
+        }
+      }, 200);
+    }
+  }
+
+  function openCardFlow(base, opts){
+    opts = opts || {};
+    if(!base){
+      if(opts.onDone) opts.onDone();
+      return;
+    }
+    var p = opts.playerObj || ownedPlayerFromBase(base);
+    var originCell = opts.originCell || null;
+    var onDone = opts.onDone || null;
+    var context = opts.context || 'dailyBox';
+
+    if(typeof PACK_FX === 'undefined' || !PACK_FX.enabled || reducedMotion()){
+      sigRun(base, function(){
+        if(onDone) onDone();
+      }, false, 'result', {
+        context: context,
+        playerObj: p
+      });
+      return;
+    }
+
+    playPackOpening(base, p, originCell, {
+      context: context,
+      playerObj: p,
+      skipPackSelect: !!opts.skipPackSelect,
+      onDone: onDone
+    });
+  }
+
+  function pkCleanup(){
+    pkClearWobbles();
+    if(pkVideoRaf){ cancelAnimationFrame(pkVideoRaf); pkVideoRaf = 0; }
+
+    var stage = document.getElementById('pk-stage');
+    if(stage){
+      stage.style.display = 'none';
+      stage.classList.remove('pk-mode');
+      stage.innerHTML = '';
+    }
+
+    var modal = document.getElementById('daily-box-modal');
+    if(modal){
+      modal.classList.remove('pk-mode');
+      var box = modal.querySelector('.modal-box');
+      if(box){
+        box.classList.remove('pk-mode');
+        box.style.backgroundImage = '';
+        box.removeAttribute('data-pk-phase');
+        var oldPlates = box.querySelector('.pk-plates');
+        if(oldPlates) oldPlates.remove();
+        var oldFx = box.querySelector('.pk-fx');
+        if(oldFx){
+          try{
+            var v = oldFx.querySelector('.pk-video');
+            if(v){
+              v.pause();
+              v.removeAttribute('src');
+              v.load();
+            }
+          }catch(e){}
+          oldFx.remove();
+        }
+      }
+      var grid = document.getElementById('daily-box-grid');
+      if(grid){
+        grid.querySelectorAll('.pk-cell').forEach(function(c){
+          c.classList.remove('pk-chosen', 'pk-away', 'pk-hold');
+          c.style.transform = '';
+          c.style.opacity = '';
+          c.style.transition = '';
+          var spot = c.querySelector('.pk-spot');
+          if(spot) spot.remove();
+        });
+      }
+    }
+  }
+
+  try{
+    if(/[?&]pkcal=1/.test(location.search)){
+      window.pkCalibrate = function(){
+        console.log('--- PK CALIBRATION ---');
+        console.log('PACK_FX.videoPack:', PACK_FX.videoPack);
+        console.log('PACK_FX.videoCard:', PACK_FX.videoCard);
+      };
+    }
+  }catch(e){}
+
   function pickNinePlayers(){
-    var pool = PLAYER_DB.slice();
-    var picks = [];
-    while(picks.length < 9 && pool.length){
-      var idx = Math.floor(Math.random()*pool.length);
-      picks.push(pool[idx]);
-      pool.splice(idx, 1);
+    var mix = (settings && settings.packMix) ? Object.assign({}, settings.packMix) : {LIVE: 2, RARE: 3, ICON: 3, SIG: 1};
+    var groups = { LIVE: [], RARE: [], ICON: [], SIG: [] };
+
+    PLAYER_DB.forEach(function(p){
+      var r = cardRarityCode(p);
+      if(groups[r]) groups[r].push(p);
+      else groups.LIVE.push(p);
+    });
+
+    var chosen = [];
+    var seenKeys = {};
+
+    function pKey(p){
+      if(!p) return '';
+      if(typeof playerIdentityKey === 'function') return playerIdentityKey(p) || (p.dbId || p.id || p.name);
+      return ((p.name || '').trim().toLowerCase() + '|' + (p.birthDate || ''));
     }
-    while(picks.length < 9 && PLAYER_DB.length){
-      picks.push(PLAYER_DB[Math.floor(Math.random()*PLAYER_DB.length)]);
+
+    var tiers = ['SIG', 'ICON', 'RARE', 'LIVE'];
+    tiers.forEach(function(tier){
+      var needed = parseInt(mix[tier], 10) || 0;
+      var pool = groups[tier] ? groups[tier].slice() : [];
+      pool = pool.filter(function(p){ return !seenKeys[pKey(p)]; });
+
+      for(var i = pool.length - 1; i > 0; i--){
+        var j = Math.floor(Math.random() * (i + 1));
+        var temp = pool[i]; pool[i] = pool[j]; pool[j] = temp;
+      }
+
+      var picked = 0;
+      while(picked < needed && pool.length){
+        var cand = pool.pop();
+        var k = pKey(cand);
+        if(!seenKeys[k]){
+          seenKeys[k] = true;
+          chosen.push(cand);
+          picked++;
+        }
+      }
+
+      if(picked < needed){
+        var shortfall = needed - picked;
+        console.warn('Hang ' + tier + ' khong du the (' + picked + '/' + needed + '), se lay bu ' + shortfall + ' the tu hang ke duoi (LIVE).');
+        if(tier !== 'LIVE'){
+          mix.LIVE = (parseInt(mix.LIVE, 10) || 0) + shortfall;
+        }
+      }
+    });
+
+    // Fallback if still under 9: pick unique from entire PLAYER_DB
+    if(chosen.length < 9){
+      var fallbackPool = PLAYER_DB.filter(function(p){ return !seenKeys[pKey(p)]; });
+      for(var i = fallbackPool.length - 1; i > 0; i--){
+        var j = Math.floor(Math.random() * (i + 1));
+        var tmp = fallbackPool[i]; fallbackPool[i] = fallbackPool[j]; fallbackPool[j] = tmp;
+      }
+      while(chosen.length < 9 && fallbackPool.length){
+        var cand = fallbackPool.pop();
+        seenKeys[pKey(cand)] = true;
+        chosen.push(cand);
+      }
     }
-    return picks;
+
+    // In case PLAYER_DB is very small, duplicate as last resort
+    while(chosen.length < 9 && PLAYER_DB.length){
+      chosen.push(PLAYER_DB[Math.floor(Math.random() * PLAYER_DB.length)]);
+    }
+
+    // Shuffle 9 cards so positions in the 3x3 grid are completely random
+    for(var i = chosen.length - 1; i > 0; i--){
+      var j = Math.floor(Math.random() * (i + 1));
+      var t = chosen[i]; chosen[i] = chosen[j]; chosen[j] = t;
+    }
+
+    return chosen;
   }
   function dbxLater(fn, ms){ var id = setTimeout(fn, ms); dbxTimers.push(id); return id; }
   function dbxStop(){
+    pkClearWobbles();
     dbxTimers.forEach(function(id){ clearTimeout(id); });
     dbxTimers = [];
     if(dbxRaf){ cancelAnimationFrame(dbxRaf); dbxRaf = 0; }
@@ -12496,6 +14349,7 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
     stage.innerHTML = '';
   }
   function closeDailyBoxModal(){
+    pkCleanup();
     dbxStop();
     dbxResetStage();
     document.getElementById('daily-box-modal').classList.remove('open');
@@ -12511,15 +14365,38 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
     dailyBoxBusy = false;
     dailyBoxContext = {monthKey: monthKey, dk: dk};
     dailyBoxPicks = pickNinePlayers();
+    var modal = document.getElementById('daily-box-modal');
+    var box = modal ? modal.querySelector('.modal-box') : null;
     var grid = document.getElementById('daily-box-grid');
     grid.className = 'daily-box-grid';
     grid.style.display = '';
-    grid.innerHTML = dailyBoxPicks.map(function(p, i){
-      var art = (cdnReady() && p.background)
-        ? '<img src="'+cdnUrl(p.background)+'" alt="" loading="lazy" draggable="false" onerror="this.remove()">'
-        : '';
-      return '<button type="button" class="daily-box-cell" data-box-index="'+i+'" aria-label="Ô bí ẩn số '+(i+1)+'">'+art+'</button>';
-    }).join('');
+
+    var usePackFx = (typeof PACK_FX !== 'undefined' && PACK_FX.enabled && !reducedMotion());
+    if(usePackFx && modal && box){
+      pkPreload();
+      modal.classList.add('pk-mode');
+      box.classList.add('pk-mode');
+      box.style.setProperty('--pk-stadium', 'url("' + PACK_FX.assets.stadium + '")');
+      box.style.backgroundImage = 'url("' + PACK_FX.assets.stadium + '")';
+      box.style.backgroundSize = 'cover';
+      box.style.backgroundPosition = 'center';
+      box.style.setProperty('--pk-mask', 'url("' + PACK_FX.assets.pack + '")');
+      box.style.setProperty('--pk-ar', PACK_FX.packAspect || 0.75);
+      grid.innerHTML = dailyBoxPicks.map(function(p, i){
+        return packCellHTML(i);
+      }).join('');
+      pkWireGridTilt(grid);
+      pkScheduleWobbles(grid);
+    } else {
+      if(modal) modal.classList.remove('pk-mode');
+      if(box) box.classList.remove('pk-mode');
+      grid.innerHTML = dailyBoxPicks.map(function(p, i){
+        var art = (cdnReady() && p.background)
+          ? '<img src="'+cdnUrl(p.background)+'" alt="" loading="lazy" draggable="false" onerror="this.remove()">'
+          : '';
+        return '<button type="button" class="daily-box-cell" data-box-index="'+i+'" aria-label="Ô bí ẩn số '+(i+1)+'">'+art+'</button>';
+      }).join('');
+    }
     var boxDateLabel = fmtDDMM(new Date(monthKey+'-'+dk+'T00:00:00'));
     document.getElementById('daily-box-lead').textContent = 'Ngày '+boxDateLabel+' đã đạt '+settings.dailyGoal+'/10 điểm! Chọn 1 trong 9 ô bí ẩn để nhận cầu thủ nhé!';
     openModalTop('daily-box-modal');
@@ -12586,12 +14463,17 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
     }catch(err){ console.warn('Khong danh dau da nhan qua', err); }
     try{ renderWeek(); }catch(err){ console.warn('renderWeek loi', err); }
 
-    lead.innerHTML = '🎉 Con đã nhận được <b>'+escHtml(base.name)+'</b>! Vào "Kho cầu thủ" để xem thẻ nhé.';
-    try{ playDailyBoxReveal(base, p, 'dbx-stage', null, false, true); }
-    catch(err){
-      // Hiệu ứng lỗi thì vẫn phải cho con thấy thẻ.
+    lead.innerHTML = '🎉 Con đã mở được <b>' + escHtml(base.name) + '</b>! Hãy ký hợp đồng hoặc chuyển thành mảnh nhé.';
+    try{
+      openCardFlow(base, {
+        originCell: cell,
+        playerObj: p,
+        context: 'dailyBox',
+        onDone: function(){ closeDailyBoxModal(); }
+      });
+    }catch(err){
       console.warn('Hieu ung mo the loi', err);
-      dbxShowPlain(base, p);
+      sigRun(base, function(){ closeDailyBoxModal(); }, false, 'result', { context: 'dailyBox', playerObj: p });
     }
   }
 
@@ -12694,7 +14576,7 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
     s.textContent = `
 #sig-ov{
   position:fixed; inset:0; z-index:100000;
-  background:radial-gradient(circle at 50% 50%, #0d1527 0%, #030712 100%);
+  background-image: var(--pk-stadium); background-size: cover; background-position: center; background-repeat: no-repeat;
   opacity:0; transition:opacity .45s; overflow:hidden;
   font-family:var(--font-display, inherit); user-select:none; -webkit-user-select:none;
 }
@@ -12751,16 +14633,20 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
 #sig-ov.ls .sg-showcase{
   flex:none; display:flex; align-items:center; justify-content:center;
 }
+#sig-ov.ls .sg-stage{
+  gap:clamp(24px, 4vw, 56px) !important;
+}
 #sig-ov.ls .sg-card-slot{
-  flex:none; height:min(78vh, 480px); width:auto; aspect-ratio:var(--fc-ar, 0.74);
+  flex:none; height:min(64vh, 430px) !important; width:auto; aspect-ratio:var(--fc-ar, 0.74);
   display:flex; align-items:center; justify-content:center; position:relative;
+  filter:drop-shadow(0 14px 35px rgba(0,0,0,0.85));
 }
 #sig-ov.ls .sg-team-slot{
-  flex:none; height:min(78vh, 480px); width:auto; aspect-ratio:var(--fc-ar, 0.74);
+  flex:none; height:min(78vh, 600px); width:auto; aspect-ratio:var(--fc-ar, 0.74);
   display:none; align-items:center; justify-content:center; position:relative;
 }
 #sig-ov.ls .sg-info{
-  flex:none; width:min(48vw, 480px); max-height:86vh;
+  flex:none; width:min(44vw, 540px); max-height:86vh;
 }
 
 /* Tinh chỉnh riêng cho iPhone quay ngang (màn hình <= 520px height) */
@@ -12796,15 +14682,20 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
   width:100%; height:100%; margin:0 auto;
 }
 #sig-ov.pt .sg-card-slot{
-  flex:none; height:min(40vh, 320px); width:auto; aspect-ratio:var(--fc-ar, 0.74);
+  flex:none; height:min(36vh, 320px) !important; width:auto; aspect-ratio:var(--fc-ar, 0.74);
   display:flex; align-items:center; justify-content:center; position:relative;
+  filter:drop-shadow(0 10px 25px rgba(0,0,0,0.8));
 }
 #sig-ov.pt .sg-team-slot{
-  flex:none; height:min(40vh, 320px); width:auto; aspect-ratio:var(--fc-ar, 0.74);
+  flex:none; height:min(42vh, 480px); width:auto; aspect-ratio:var(--fc-ar, 0.74);
   display:none; align-items:center; justify-content:center; position:relative;
 }
 #sig-ov.pt .sg-info{
-  flex:none; width:min(94vw, 440px); max-height:51vh;
+  flex:none; width:min(86vw, 580px); max-height:54vh;
+}
+#sig-ov.pt .sg-sign-zone{
+  position:sticky !important; bottom:0 !important;
+  padding-bottom:calc(env(safe-area-inset-bottom, 12px) + 4px) !important;
 }
 
 /* 3. GIAI ĐOẠN ĐÃ KÝ HỢP ĐỒNG (SIGNED):
@@ -12833,10 +14724,13 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
   gap:clamp(14px, 3.5vw, 32px) !important;
   margin:0 auto !important; width:auto !important;
 }
-#sig-ov.ls.signed .sg-card-slot,
-#sig-ov.ls.signed .sg-team-slot{
-  height:min(74vh, 480px) !important; width:auto !important; aspect-ratio:var(--fc-ar, 0.74) !important;
+#sig-ov.ls.signed .sg-card-slot{
+  height:min(60vh, 400px) !important; width:auto !important; aspect-ratio:var(--fc-ar, 0.74) !important;
   margin:0 !important;
+}
+#sig-ov.ls.signed .sg-team-slot{
+  height:min(50vh, 320px) !important; width:min(50vh, 320px) !important; aspect-ratio:1 / 1 !important;
+  margin:0 !important; align-self:center !important;
 }
 
 /* Tinh chỉnh 2 thẻ khi đã ký trên iPhone quay ngang (<= 520px height) */
@@ -12868,10 +14762,13 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
   gap:clamp(8px, 2.8vw, 16px) !important; width:100% !important;
   max-width:min(96vw, 480px) !important; margin:0 auto !important;
 }
-#sig-ov.pt.signed .sg-card-slot,
-#sig-ov.pt.signed .sg-team-slot{
-  width:min(45vw, 215px) !important; height:auto !important; aspect-ratio:var(--fc-ar, 0.74) !important;
+#sig-ov.pt.signed .sg-card-slot{
+  width:min(44vw, 210px) !important; height:auto !important; aspect-ratio:var(--fc-ar, 0.74) !important;
   margin:0 !important;
+}
+#sig-ov.pt.signed .sg-team-slot{
+  width:min(42vw, 185px) !important; height:min(42vw, 185px) !important; aspect-ratio:1 / 1 !important;
+  margin:0 !important; align-self:center !important;
 }
 
 /* Hoạt ảnh Logo đội bóng bay vào đứng cạnh thẻ */
@@ -12883,7 +14780,24 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
 }
 
 /* Thẻ cầu thủ ăn mừng tỏa sáng khi đã ký */
-#sig-ov.signed .sg-card{
+#sig-ov.signed 
+/* Tinh chỉnh hiển thị ảnh thẻ sắc nét nhất, không bị vỡ hình */
+#sig-ov .sg-card,
+#sig-ov .fc-card {
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+}
+#sig-ov .fc-bg,
+#sig-ov .fc-render {
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+  transform: translateZ(0);
+}
+
+.sg-card{
   animation:sgCardCelebrate 1s cubic-bezier(.2, .8, .2, 1) forwards !important;
 }
 @keyframes sgCardCelebrate{
@@ -12929,12 +14843,13 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
 
 /* Thiết kế thẻ Khiên CLB Chủ Quản (Team Crest Card) */
 .sg-crest-card{
-  width:100%; height:100%; position:relative;
-  background:radial-gradient(circle at 50% 28%, color-mix(in srgb, var(--tm-c, #10B981) 42%, #0F172A) 0%, #0B1120 70%, #030712 100%);
-  border:2.5px solid #FDE047; border-radius:18px;
-  box-shadow:0 14px 40px rgba(0,0,0,0.85), 0 0 28px var(--tm-c, rgba(16, 185, 129, 0.55)), inset 0 0 20px rgba(253, 224, 71, 0.25);
+  width:100% !important; height:100% !important; position:relative;
+  aspect-ratio:1 / 1 !important;
+  background:radial-gradient(circle at 50% 32%, color-mix(in srgb, var(--tm-c, #10B981) 48%, #0F172A) 0%, #0B1120 72%, #030712 100%);
+  border:2.5px solid #FDE047; border-radius:20px;
+  box-shadow:0 14px 40px rgba(0,0,0,0.85), 0 0 30px var(--tm-c, rgba(16, 185, 129, 0.6)), inset 0 0 20px rgba(253, 224, 71, 0.28);
   display:flex; flex-direction:column; align-items:center; justify-content:space-between;
-  padding:clamp(12px, 2.5vh, 22px) clamp(10px, 2vw, 16px);
+  padding:clamp(10px, 2.2vmin, 16px) clamp(10px, 2vmin, 15px);
   box-sizing:border-box; overflow:hidden;
 }
 .sg-crest-shimmer{
@@ -12977,9 +14892,10 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
   display:flex; flex-direction:column; align-items:center; gap:4px; z-index:2; width:100%;
 }
 .sg-crest-name{
-  font-size:clamp(14px, 2.6vw, 22px); font-weight:900; color:#FFFBEB;
-  text-align:center; line-height:1.15; text-shadow:0 2px 8px rgba(0,0,0,0.9), 0 0 14px var(--tm-c, #10B981);
-  white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:96%;
+  font-size:clamp(15px, 3.2vmin, 22px) !important; font-weight:900 !important; color:#FFFFFF !important;
+  text-align:center !important; line-height:1.2 !important;
+  text-shadow:0 2px 8px rgba(0,0,0,0.95), 0 0 16px var(--tm-c, #10B981) !important;
+  white-space:normal !important; word-break:break-word !important; max-width:98% !important;
 }
 .sg-crest-tag{
   background:linear-gradient(90deg, #F59E0B, #FDE047, #F59E0B);
@@ -13166,30 +15082,46 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
 }
 .sg-el-badge svg{ width:16px; height:16px; fill:currentColor; }
 
-/* Nút Ký Hợp Đồng */
+/* Nút Ký Hợp Đồng & Chuyển Mảnh: Căn chỉnh 2 nút thẳng hàng, ghi chú xuống dưới */
 .sg-sign-zone{
-  display:flex; flex-direction:column; align-items:center; gap:4px; margin-top:2px;
+  display:flex !important; flex-direction:column !important; align-items:center !important; justify-content:center !important; gap:8px !important; width:100% !important; margin-top:12px !important;
+}
+.sg-sign-actions{
+  display:flex !important; flex-direction:row !important; align-items:center !important; justify-content:center !important; gap:12px !important; flex-wrap:wrap !important; width:100% !important;
+}
+.sg-sign-btn, .sg-frag-btn{
+  display:inline-flex !important; align-items:center !important; justify-content:center !important; gap:8px !important;
+  min-height:44px !important; padding:10px 22px !important; font-family:inherit !important; font-weight:900 !important;
+  font-size:clamp(13px, 1.8vmin, 15px) !important; border-radius:99px !important; cursor:pointer !important;
+  white-space:nowrap !important; box-sizing:border-box !important;
+  transition:transform .15s ease, box-shadow .2s ease, filter .15s ease !important;
 }
 .sg-sign-btn{
-  display:inline-flex; align-items:center; justify-content:center; gap:8px;
-  background:linear-gradient(135deg, #10B981 0%, #059669 100%);
-  border:2px solid #6EE7B7; border-radius:99px;
-  padding:clamp(8px, 1.5vh, 11px) clamp(18px, 4vw, 32px);
-  color:#fff; font-family:inherit; font-weight:900; font-size:clamp(13px, 2vw, 16px);
-  cursor:pointer; box-shadow:0 4px 18px rgba(16, 185, 129, 0.45), 0 0 10px rgba(110, 231, 183, 0.3);
-  transition:transform .15s, box-shadow .2s;
-  animation:sgSignPulse 2s ease-in-out infinite;
+  background:linear-gradient(135deg, #10B981 0%, #059669 100%) !important;
+  border:2px solid #6EE7B7 !important; color:#fff !important;
+  box-shadow:0 4px 18px rgba(16, 185, 129, 0.45), 0 0 10px rgba(110, 231, 183, 0.3) !important;
+  animation:sgSignPulse 2s ease-in-out infinite !important;
 }
-.sg-sign-btn:hover{
-  transform:scale(1.04); box-shadow:0 6px 24px rgba(16, 185, 129, 0.65);
+.sg-frag-btn{
+  background:linear-gradient(135deg, #0ea5e9 0%, #0284c7 50%, #0369a1 100%) !important;
+  border:2px solid #7DD3FC !important; color:#fff !important;
+  box-shadow:0 4px 18px rgba(14, 165, 233, 0.45) !important;
 }
-.sg-sign-btn:active{ transform:scale(0.96); }
+.sg-sign-btn:hover, .sg-frag-btn:hover{
+  transform:scale(1.04) !important; filter:brightness(1.1) !important;
+}
+.sg-sign-btn:active, .sg-frag-btn:active{ transform:scale(0.96) !important; }
 @keyframes sgSignPulse{
   0%,100%{ box-shadow:0 4px 18px rgba(16, 185, 129, 0.45); }
   50%{ box-shadow:0 4px 26px rgba(16, 185, 129, 0.8), 0 0 16px #6EE7B7; }
 }
 .sg-tap-sub{
-  font-size:clamp(10px, 1.4vw, 11.5px); font-weight:600; color:rgba(255,255,255,.6);
+  font-size:clamp(10.5px, 1.4vmin, 12px) !important; font-weight:600 !important; color:rgba(255,255,255,.65) !important;
+  text-align:center !important; width:100% !important; margin-top:2px !important; display:block !important;
+}
+@media (max-width: 520px), (orientation: portrait){
+  .sg-sign-actions{ flex-direction:column !important; gap:8px !important; width:100% !important; }
+  .sg-sign-btn, .sg-frag-btn{ width:100% !important; max-width:320px !important; }
 }
 
 /* Con dấu Đã Ký Hợp Đồng */
@@ -13238,8 +15170,10 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
     document.head.appendChild(s);
   }
 
-  function sigRun(base, done, isRare){
+  function sigRun(base, done, isRare, mode, extra){
     sigCss(); window.__sigBusy = true;
+    var resultMode = (mode === 'result');
+    var fromRect = extra && extra.fromRect;
     if(isRare === undefined) isRare = isSpotlightRare(base);
 
     var W = innerWidth, H = innerHeight, land = W > H, ox = W/2, oy = H/2;
@@ -13372,13 +15306,17 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
       +     '</div>'
       +     '<div class="sg-grid">' + chipsHTML + '</div>'
       +     '<div class="sg-sign-zone">'
-      +       '<button type="button" class="sg-sign-btn" id="sg-sign-btn">✍️ Ký Hợp Đồng Gia Nhập Đội</button>'
-      +       '<span class="sg-tap-sub">(hoặc chạm màn hình để nhận thẻ)</span>'
+      +       '<div class="sg-sign-actions">'
+      +         '<button type="button" class="sg-sign-btn" id="sg-sign-btn">✍️ Ký Hợp Đồng Gia Nhập Đội</button>'
+      +         '<button type="button" class="sg-frag-btn" id="sg-frag-btn">🧩 Chuyển thành +' + fragPrice(base) + ' mảnh</button>'
+      +       '</div>'
+      +       '<div class="sg-tap-sub">(hoặc chạm màn hình để nhận thẻ)</div>'
       +     '</div>'
       +   '</div>'
       + '</div>'
       + buildFlagsRow('bottom')
       + '<div class="sg-stamp" id="sg-stamp"><div class="sg-stamp-inner">✓ ĐÃ KÝ HỢP ĐỒNG<small>CHÍNH THỨC GIA NHẬP</small></div></div>'
+      + '<div class="sg-stamp" id="sg-frag-stamp"><div class="sg-stamp-inner">🧩 ĐÃ CHUYỂN MẢNH<small>+' + fragPrice(base) + ' MẢNH GHÉP</small></div></div>'
       + '<div class="sg-join-banner" id="sg-join-banner">🎉 Chào mừng ' + escHtml(base.name || 'Cầu thủ') + ' chính thức gia nhập ' + escHtml(myTeamName) + '!</div>'
       + '<canvas class="sg-f"></canvas>';
 
@@ -13396,13 +15334,64 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
     window.addEventListener('resize', onSigResize);
     window.addEventListener('orientationchange', onSigResize);
 
+    // YÊU CẦU 2: KHI ẤN HOÀN TẤT, MÀN HÌNH SÁNG TRẮNG LÊN THÌ HÌNH ẢNH THẺ VÀ LOGO CLB
+    // ĐỒNG THỜI RÚT LUÔN KHÔNG XUẤT HIỆN LẠI NỮA, CHƯƠNG TRÌNH TRỞ VỀ MÀN HÌNH CHỨC NĂNG BÌNH THƯỜNG
     function end(){
       if(ended) return; ended = true; cancelAnimationFrame(raf); run = false;
-      if(flTimer) clearInterval(flTimer);
+      if(flTimer){ clearInterval(flTimer); flTimer = null; }
       window.removeEventListener('resize', onSigResize);
       window.removeEventListener('orientationchange', onSigResize);
+
+      // 1. Màn hình sáng trắng lên
       ov.classList.add('out');
-      setTimeout(function(){ finish(); ov.classList.add('clear'); setTimeout(function(){ ov.remove(); window.__sigBusy = false; }, 1000); }, 450);
+
+      // 2. Thẻ và logo CLB đồng thời rút luôn (thu nhỏ và biến mất hoàn toàn ngay trong ánh sáng trắng)
+      var showcase = ov.querySelector('.sg-showcase');
+      if(showcase){
+        showcase.style.transition = 'transform 0.25s ease-in, opacity 0.22s ease-in';
+        showcase.style.transform = 'scale(0.7) translateY(-30px)';
+        showcase.style.opacity = '0';
+      }
+      var cardSlot = ov.querySelector('.sg-card-slot');
+      if(cardSlot) cardSlot.style.opacity = '0';
+      var teamSlot = ov.querySelector('.sg-team-slot');
+      if(teamSlot) teamSlot.style.opacity = '0';
+      var info = ov.querySelector('.sg-info');
+      if(info) info.style.opacity = '0';
+      var banner = document.getElementById('sg-join-banner');
+      if(banner) banner.style.opacity = '0';
+      var stamps = ov.querySelectorAll('.sg-stamp');
+      stamps.forEach(function(s){ s.style.opacity = '0'; });
+      var flags = ov.querySelectorAll('.sg-flags-row');
+      flags.forEach(function(fl){ fl.style.opacity = '0'; });
+
+      // 3. Đóng ngay lập tức các modal mở thẻ phía sau (Hộp quà ngày, Skill, VMG, #pk-stage)
+      try{ closeDailyBoxModal(); }catch(e){}
+      try{
+        var pkStage = document.getElementById('pk-stage');
+        if(pkStage){
+          pkStage.style.display = 'none';
+          pkStage.classList.remove('pk-mode');
+          pkStage.innerHTML = '';
+        }
+      }catch(e){}
+      try{
+        var skpModal = document.getElementById('skill-player-modal');
+        if(skpModal) skpModal.classList.remove('open');
+      }catch(e){}
+
+      // 4. Khi ánh sáng trắng đạt đỉnh (350ms): gọi finish() và làm mờ màn trắng để lộ màn hình bình thường
+      setTimeout(function(){
+        finish();
+        ov.classList.add('clear');
+        setTimeout(function(){
+          try{ ov.remove(); }catch(e){}
+          window.__sigBusy = false;
+          try{ renderWeek(); }catch(e){}
+          try{ renderCollection(); }catch(e){}
+          try{ renderSquad(); }catch(e){}
+        }, 450);
+      }, 350);
     }
 
     /* Pháo giấy & Cánh hoa chúc mừng */
@@ -13492,6 +15481,27 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
     /* Hiệu ứng ký hợp đồng & Logo đội bóng bay vào đứng cạnh thẻ + cờ quạt tung hoa */
     function signContract(){
       if(signed) return; signed = true;
+
+      // Đảm bảo thẻ được lưu vào kho đội hình
+      var pObj = (extra && extra.playerObj) || ownedPlayerFromBase(base);
+      try{
+        var players = loadPlayers();
+        if(!players.some(function(x){ return x && x.id === pObj.id; })){
+          players.push(pObj);
+          savePlayers(players);
+        }
+      }catch(e){}
+
+      // Đánh dấu hộp quà ngày đã nhận nếu mở từ Hộp quà ngày
+      if(dailyBoxContext && dailyBoxContext.monthKey && dailyBoxContext.dk){
+        try{
+          var month = loadMonth(dailyBoxContext.monthKey);
+          if(!month.days[dailyBoxContext.dk]) month.days[dailyBoxContext.dk] = {};
+          month.days[dailyBoxContext.dk]._dailyBoxClaimed = true;
+          saveMonth(dailyBoxContext.monthKey);
+        }catch(err){ console.warn('Khong danh dau da nhan qua', err); }
+      }
+
       try{
         beep(260, .14, 'sawtooth'); beep(330, .14, 'triangle', .08); beep(392, .18, 'sine', .16); beep(523, .45, 'triangle', .24);
         if(navigator.vibrate) navigator.vibrate([80, 50, 160]);
@@ -13500,22 +15510,96 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
       var stamp = document.getElementById('sg-stamp'); if(stamp) stamp.classList.add('stamped');
       var banner = document.getElementById('sg-join-banner'); if(banner) banner.classList.add('show');
 
-      // Tung hoa chúc mừng và pháo giấy rực rỡ
       flowerShower(); cannon(); rain();
       flTimer = setInterval(function(){
         if(!ended && signed){ flowerShower(); cannon(); }
         else if(flTimer){ clearInterval(flTimer); flTimer = null; }
       }, 1300);
 
-      // Chạm màn hình để hoàn thành bất cứ lúc nào, hoặc tự động kết thúc sau 5.2 giây
       setTimeout(function(){
         if(flTimer){ clearInterval(flTimer); flTimer = null; }
         end();
       }, 5200);
     }
 
+    /* Hiệu ứng Chuyển thành mảnh cầu thủ (100% fragPrice) */
+    function convertContractToFrags(){
+      if(signed) return;
+      var nFrags = fragPrice(base);
+      if(!confirm('Bạn có chắc muốn chuyển thẻ này thành ' + nFrags + ' 🧩 mảnh cầu thủ không?\n\nThao tác này không thể hoàn tác và thẻ sẽ không vào kho đội hình.')) return;
+      signed = true;
+
+      // 1. Cộng N mảnh vào roadmapRaw().frags
+      try{
+        var r = roadmapRaw();
+        r.frags = (parseInt(r.frags, 10) || 0) + nFrags;
+        r.earned = (parseInt(r.earned, 10) || 0) + nFrags;
+        safeSet(ROADMAP_KEY, r);
+      }catch(e){}
+
+      // 2. Đánh dấu hộp quà ngày đã nhận nếu mở từ Hộp quà ngày
+      if(dailyBoxContext && dailyBoxContext.monthKey && dailyBoxContext.dk){
+        try{
+          var month = loadMonth(dailyBoxContext.monthKey);
+          if(!month.days[dailyBoxContext.dk]) month.days[dailyBoxContext.dk] = {};
+          month.days[dailyBoxContext.dk]._dailyBoxClaimed = true;
+          saveMonth(dailyBoxContext.monthKey);
+        }catch(err){ console.warn('Khong danh dau da nhan qua', err); }
+      }
+
+      // 3. Đảm bảo thẻ KHÔNG nằm trong kho cầu thủ
+      var pObj = extra && extra.playerObj;
+      if(pObj && pObj.id){
+        try{
+          var players = loadPlayers().filter(function(x){ return x && x.id !== pObj.id; });
+          savePlayers(players);
+        }catch(e){}
+      }
+
+      // 4. Âm thanh & con dấu ĐÃ CHUYỂN MẢNH
+      try{
+        beep(523, .12, 'sine'); beep(659, .15, 'sine', .08); beep(784, .2, 'sine', .16); beep(1046, .35, 'triangle', .24);
+        if(navigator.vibrate) navigator.vibrate([60, 40, 100]);
+      }catch(e){}
+
+      ov.classList.add('signed');
+      var fragStamp = document.getElementById('sg-frag-stamp');
+      if(fragStamp) fragStamp.classList.add('stamped', 'frag-stamped');
+
+      // Hạt mảnh bay ra từ thẻ
+      try{
+        var cardSlot = ov.querySelector('.sg-card-slot');
+        var cr = cardSlot ? cardSlot.getBoundingClientRect() : {left: innerWidth/2 - 100, top: innerHeight/2 - 140, width: 200, height: 280};
+        for(var k = 0; k < 20; k++){
+          var pEl = document.createElement('div');
+          pEl.className = 'sg-frag-fly';
+          pEl.textContent = '🧩';
+          pEl.style.left = (cr.left + Math.random() * cr.width) + 'px';
+          pEl.style.top = (cr.top + Math.random() * cr.height) + 'px';
+          var ang = Math.random() * 6.28;
+          var dist = 80 + Math.random() * 150;
+          pEl.style.setProperty('--fx', (Math.cos(ang) * dist) + 'px');
+          pEl.style.setProperty('--fy', (Math.sin(ang) * dist - 30) + 'px');
+          pEl.style.setProperty('--tx', (Math.cos(ang) * (dist + 60)) + 'px');
+          pEl.style.setProperty('--ty', (-180 - Math.random() * 140) + 'px');
+          pEl.style.setProperty('--fr', (Math.random() * 360) + 'deg');
+          ov.appendChild(pEl);
+        }
+      }catch(e){}
+
+      triggerToast('high', '🧩 Đã chuyển thành +' + nFrags + ' mảnh cầu thủ!');
+
+      setTimeout(function(){
+        end();
+      }, 3800);
+    }
+
     var signBtn = document.getElementById('sg-sign-btn');
     if(signBtn) signBtn.onclick = function(e){ e.stopPropagation(); signContract(); };
+
+    var fragBtn = document.getElementById('sg-frag-btn');
+    if(fragBtn) fragBtn.onclick = function(e){ e.stopPropagation(); convertContractToFrags(); };
+
     ov.onclick = function(){
       if(signed) end();
       else if(ov.classList.contains('flip') || ov.classList.contains('info')) signContract();
@@ -13537,7 +15621,56 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
 
     requestAnimationFrame(function(){ ov.classList.add('on'); });
 
-    if(isRare){
+    if(resultMode){
+      var cCanvas = ov.querySelector('.sg-c'); if(cCanvas) cCanvas.style.display = 'none';
+      ov.classList.add('rs');
+      ov.classList.add('boom'); ov.classList.add('zo');
+      ov.classList.add('flip');
+      run = true;
+      try{ music(false); }catch(e){}
+
+      var cardSlot = ov.querySelector('.sg-card-slot');
+
+      if(fromRect && cardSlot){
+        // Kỹ thuật FLIP chuẩn:
+        // 1. Thêm info và xóa transform cũ để đo vị trí đích r1 trong bố cục hợp đồng
+        cardSlot.style.transition = 'none';
+        cardSlot.style.transform = 'none';
+        ov.classList.add('info');
+
+        var r1 = cardSlot.getBoundingClientRect();
+
+        // 2. Tính độ lệch từ fromRect (vị trí cuối video) đến r1 (vị trí đích hợp đồng)
+        var sc0 = fromRect.height / (r1.height || 1);
+        var dx0 = (fromRect.left + fromRect.width / 2) - (r1.left + r1.width / 2);
+        var dy0 = (fromRect.top + fromRect.height / 2) - (r1.top + r1.height / 2);
+
+        // 3. Đặt transform đảo (Invert) để thẻ khớp ngay với vị trí fromRect
+        cardSlot.style.transformOrigin = '50% 50%';
+        cardSlot.style.transform = 'translate(' + dx0 + 'px, ' + dy0 + 'px) scale(' + sc0 + ')';
+        void cardSlot.offsetHeight; // ép reflow
+
+        if(extra && typeof extra.onCardPlaced === 'function'){
+          try{ extra.onCardPlaced(); }catch(e){}
+        }
+
+        // 4. Kích hoạt Play: trượt mượt về transform none trong 0.7s
+        requestAnimationFrame(function(){
+          cardSlot.style.transition = 'transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1)';
+          cardSlot.style.transform = 'none';
+
+          setTimeout(function(){
+            conf(); cannon();
+            cardSlot.style.transition = '';
+            cardSlot.style.transform = '';
+            cardSlot.style.transformOrigin = '';
+          }, 700);
+        });
+      } else {
+        ov.classList.add('info');
+        conf(); cannon();
+      }
+    } else if(isRare){
       /* 1. THẺ HUYỀN THOẠI & SIÊU HIẾM ĐẶC BIỆT & THẺ MAX OVR: Hiệu ứng 5 Spotlight quét hội tụ -> Lóe trắng -> Zoom in -> Lật 3D -> Thông tin */
       var c = ov.querySelector('.sg-c'), x = c.getContext('2d'); c.width = W; c.height = H;
       var src = [[0,0],[W,0],[0,H],[W,H],[W/2,0]], t0 = performance.now();
@@ -14037,10 +16170,15 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
     document.getElementById('skp-lead').innerHTML = '🎉 Con đã nhận được <b>'+escHtml(base.name)+'</b>!'
       + (isLast ? ' Vào "Kho cầu thủ" để xem thẻ nhé.' : ' Còn '+(skpNeeded - skpFlipped)+' thẻ nữa để lật!');
     try{
-      playDailyBoxReveal(base, p, 'skp-stage', function(){ skpAfterReveal(isLast); }, true, true);
+      openCardFlow(base, {
+        originCell: cell,
+        playerObj: p,
+        context: 'skill',
+        onDone: function(){ skpAfterReveal(isLast); }
+      });
     }catch(err){
       console.warn('Hieu ung mo the loi (skill)', err);
-      dbxShowPlain(base, p, 'skp-stage', function(){ skpAfterReveal(isLast); }, true);
+      sigRun(base, function(){ skpAfterReveal(isLast); }, false, 'result', { context: 'skill', playerObj: p });
     }
   }
 
@@ -20392,7 +22530,39 @@ function roadmapIcon(def, locked){
   var AP_TABS = ['system','tasks','points','rewards','battle','data','notice','wtour','stats'];
   var apTab = 'system', apDirty = false, apRewardsBackup = null, apOpener = null;
 
+  
+  function updatePackMixSum(){
+    var elL = document.getElementById('settings-packmix-live'), elR = document.getElementById('settings-packmix-rare');
+    var elI = document.getElementById('settings-packmix-icon'), elS = document.getElementById('settings-packmix-sig');
+    var elSum = document.getElementById('settings-packmix-sum');
+    if(!elL || !elSum) return 9;
+    var l = parseInt(elL.value, 10) || 0, r = parseInt(elR.value, 10) || 0;
+    var i = parseInt(elI.value, 10) || 0, s = parseInt(elS.value, 10) || 0;
+    var sum = l + r + i + s;
+    elSum.textContent = 'Tổng: ' + sum + '/9 thẻ' + (sum === 9 ? ' ✓' : ' ⚠️ (Phải bằng 9)');
+    elSum.style.color = (sum === 9) ? '#38BDF8' : '#EF4444';
+    return sum;
+  }
+  document.addEventListener('input', function(e){
+    if(e.target && e.target.id && e.target.id.indexOf('settings-packmix-') === 0){
+      updatePackMixSum();
+      if(typeof apSetDirty === 'function') apSetDirty(true);
+    }
+  });
+  document.addEventListener('click', function(e){
+    if(e.target && e.target.id === 'settings-packmix-reset'){
+      var def = PACK_MIX_DEFAULT;
+      var elL = document.getElementById('settings-packmix-live'), elR = document.getElementById('settings-packmix-rare');
+      var elI = document.getElementById('settings-packmix-icon'), elS = document.getElementById('settings-packmix-sig');
+      if(elL) elL.value = def.LIVE; if(elR) elR.value = def.RARE;
+      if(elI) elI.value = def.ICON; if(elS) elS.value = def.SIG;
+      updatePackMixSum();
+      if(typeof apSetDirty === 'function') apSetDirty(true);
+    }
+  });
+
   function fillAdminFields(){
+
     document.getElementById('settings-goal').value = settings.monthlyGoal;
     document.getElementById('settings-skill-gold').value = settings.skillGoldPts;
     document.getElementById('settings-skill-silver').value = settings.skillSilverPts;
@@ -20400,6 +22570,12 @@ function roadmapIcon(def, locked){
     document.getElementById('settings-cheer-max').value = settings.cheerMax;
     document.getElementById('settings-period-start').value = settings.periodStartDay;
     document.getElementById('settings-daily-goal').value = settings.dailyGoal;
+    var pm = packMixClean(settings.packMix);
+    var elLive = document.getElementById('settings-packmix-live'); if(elLive) elLive.value = pm.LIVE;
+    var elRare = document.getElementById('settings-packmix-rare'); if(elRare) elRare.value = pm.RARE;
+    var elIcon = document.getElementById('settings-packmix-icon'); if(elIcon) elIcon.value = pm.ICON;
+    var elSig = document.getElementById('settings-packmix-sig'); if(elSig) elSig.value = pm.SIG;
+    if(typeof updatePackMixSum === 'function') updatePackMixSum();
     var elMaxOvr = document.getElementById('settings-max-ovr'); if(elMaxOvr) elMaxOvr.value = (typeof settings.maxOverall === 'number') ? settings.maxOverall : 124;
     document.getElementById('settings-quiz-on').value = settings.quizEnabled ? '1' : '0';
     document.getElementById('settings-quiz-seconds').value = settings.quizSeconds;
@@ -21963,17 +24139,24 @@ function roadmapIcon(def, locked){
       return;
     }
 
-    // Chiếu hiệu ứng mở thẻ trên stage riêng #vmg-stage
+    // Chiếu hiệu ứng mở thẻ trên stage riêng #vmg-stage bằng openCardFlow
     try {
       dbxResetStage('vmg-stage');
-      playDailyBoxReveal(base, p, 'vmg-stage', function(){
-        dbxResetStage('vmg-stage');
-        if(onComplete) onComplete();
-      }, false, true);
+      openCardFlow(base, {
+        skipPackSelect: true,
+        playerObj: p,
+        context: 'vmg',
+        onDone: function(){
+          dbxResetStage('vmg-stage');
+          if(onComplete) onComplete();
+        }
+      });
     } catch(err){
       console.warn('Loi hieu ung mo the vmg', err);
-      dbxResetStage('vmg-stage');
-      if(onComplete) onComplete();
+      sigRun(base, function(){
+        dbxResetStage('vmg-stage');
+        if(onComplete) onComplete();
+      }, false, 'result', { context: 'vmg', playerObj: p });
     }
   }
 
@@ -22773,6 +24956,16 @@ function roadmapIcon(def, locked){
     if(!isNaN(psd) && psd>=1 && psd<=31) settings.periodStartDay = psd;
     var dg = parseInt(document.getElementById('settings-daily-goal').value, 10);
     if(!isNaN(dg) && dg>=1 && dg<=10) settings.dailyGoal = dg;
+    var pLive = parseInt((document.getElementById('settings-packmix-live')||{}).value, 10) || 0;
+    var pRare = parseInt((document.getElementById('settings-packmix-rare')||{}).value, 10) || 0;
+    var pIcon = parseInt((document.getElementById('settings-packmix-icon')||{}).value, 10) || 0;
+    var pSig = parseInt((document.getElementById('settings-packmix-sig')||{}).value, 10) || 0;
+    var pSum = pLive + pRare + pIcon + pSig;
+    if(pSum !== 9){
+      alert('Tổng tỷ lệ lưới 9 thẻ phải bằng đúng 9 thẻ (hiện tại là ' + pSum + ' thẻ). Hãy chỉnh lại để lưu nhé!');
+      return;
+    }
+    settings.packMix = {LIVE: pLive, RARE: pRare, ICON: pIcon, SIG: pSig};
     var elMaxOvr = document.getElementById('settings-max-ovr'); if(elMaxOvr){ var mo = parseInt(elMaxOvr.value, 10); if(!isNaN(mo) && mo>=50 && mo<=200) settings.maxOverall = mo; }
     settings.quizEnabled = document.getElementById('settings-quiz-on').value !== '0';
     var qs = parseInt(document.getElementById('settings-quiz-seconds').value, 10);
@@ -22998,14 +25191,75 @@ function roadmapIcon(def, locked){
     return list;
   }
 
-  function fuseDetailButtonHTML(p){
-    if(!p || !p.id || !p.dbId) return '';
-    return '<div class="fuse-cta"><button type="button" class="btn-gold" id="pd-fuse-btn">⬆️ Nâng cấp</button></div>';
+  
+  function isPlayerLockedFromFrag(p){
+    if(!p || !p.id) return { locked: false };
+    try{
+      var sq = loadSquad();
+      var inPitch = sq && sq.pitch && sq.pitch.indexOf(p.id) >= 0;
+      var inBench = sq && sq.bench && sq.bench.indexOf(p.id) >= 0;
+      if(inPitch || inBench){
+        return { locked: true, reason: 'Thẻ đang nằm trong sơ đồ đội hình (hãy gỡ khỏi đội hình chính hoặc dự bị trước khi đổi mảnh nhé).' };
+      }
+    }catch(e){}
+    try{
+      if(typeof pickTeam3 !== 'undefined' && Array.isArray(pickTeam3) && pickTeam3.indexOf(p.id) >= 0){
+        return { locked: true, reason: 'Thẻ đang được chọn trong đội hình 3v3 Đấu Trường (hãy bỏ chọn khỏi đội 3v3 trước khi đổi mảnh nhé).' };
+      }
+    }catch(e){}
+    return { locked: false };
+  }
+
+    function fuseDetailButtonHTML(p){
+    if(!p || !p.id) return '';
+    var n = fragPrice(p);
+    var upBtn = p.dbId ? '<button type="button" class="btn-gold" id="pd-fuse-btn">⬆️ Nâng cấp</button>' : '';
+    var fragBtn = '<button type="button" class="btn-secondary pd-frag-btn" id="pd-frag-btn" style="background:linear-gradient(135deg,#0284c7,#0369a1);color:#fff;border-color:rgba(255,255,255,0.3);min-height:38px;padding:6px 14px;font-weight:700">🧩 Đổi mảnh +' + n + '</button>';
+    return '<div class="fuse-cta" style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:10px">' + upBtn + fragBtn + '</div>';
   }
   function wireFuseDetailButton(p){
     var b = document.getElementById('pd-fuse-btn');
-    if(!b) return;
-    b.addEventListener('click', function(){ openFuseModal(p.id); });
+    if(b){
+      b.addEventListener('click', function(){ openFuseModal(p.id); });
+    }
+    var fb = document.getElementById('pd-frag-btn');
+    if(fb){
+      fb.addEventListener('click', function(){
+        if(!p || !p.id) return;
+        var lock = isPlayerLockedFromFrag(p);
+        if(lock.locked){
+          alert(lock.reason);
+          return;
+        }
+        var n = fragPrice(p);
+        var isUp = (p.ovrBonus && p.ovrBonus > 0) || (p.fuseLevel && p.fuseLevel > 1);
+        var msg = isUp
+          ? 'Thẻ này đã được nâng cấp (+ ' + (p.ovrBonus || 0) + ' OVR).\n\nKhi đổi mảnh, bạn sẽ mất toàn bộ phần nâng cấp và chỉ nhận được ' + n + ' 🧩 mảnh theo chỉ số gốc. Bạn có chắc chắn muốn đổi không?'
+          : 'Bạn có chắc chắn muốn đổi thẻ «' + (p.name || 'cầu thủ') + '» lấy ' + n + ' 🧩 mảnh ghép không?\n\nThao tác này không thể hoàn tác và thẻ sẽ rời khỏi kho đội hình.';
+        if(!confirm(msg)) return;
+
+        try{
+          var players = loadPlayers().filter(function(x){ return x && x.id !== p.id; });
+          savePlayers(players);
+        }catch(e){
+          alert('Không thể cập nhật kho thẻ: ' + e.message);
+          return;
+        }
+
+        try{
+          var r = roadmapRaw();
+          r.frags = (parseInt(r.frags, 10) || 0) + n;
+          r.earned = (parseInt(r.earned, 10) || 0) + n;
+          safeSet(ROADMAP_KEY, r);
+        }catch(e){}
+
+        try{ seSfx('win'); }catch(e){}
+        triggerToast('high', '🧩 Đã đổi thẻ thành +' + n + ' mảnh cầu thủ!');
+        closeModalTop('player-detail-modal');
+        try{ renderCollection(); }catch(e){}
+        try{ renderSquad(); }catch(e){}
+      });
+    }
   }
 
   function openFuseModal(targetId){
