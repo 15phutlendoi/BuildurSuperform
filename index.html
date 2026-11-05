@@ -961,7 +961,7 @@
 
   .des-grid-wrap{ margin:10px 0; overflow-x:auto; padding:4px 2px 10px 2px; -webkit-overflow-scrolling:touch; }
   .des-grid{
-    display:grid; grid-template-columns:repeat(5, minmax(88px, 1fr)); gap:8px;
+    display:grid; grid-template-columns:repeat(3, minmax(88px, 1fr)); gap:10px; max-width:380px;
     width:max-content; min-width:100%; max-width:680px; margin:0 auto;
   }
   .des-cell{
@@ -3237,7 +3237,7 @@
   #skill-player-modal{ padding:8px; }
   .skp-box{ width:min(920px,100%); padding:16px 10px 16px; overflow-x:hidden; overflow-y:auto; max-height:96vh; max-height:96dvh; }
   #skp-grid{
-    grid-template-columns:repeat(5,minmax(0,1fr));   /* lưới 5x5 = 25 thẻ úp */
+    grid-template-columns:repeat(3,minmax(0,1fr)); max-width:380px; margin:0 auto; /* lưới 3x3 = 9 thẻ úp */
     gap:6px;
     margin:12px auto 8px;
     align-items:start;
@@ -5017,6 +5017,115 @@
     }
     .vmg-add-form button {
       grid-column: span 2;
+    }
+  }
+
+
+  /* iPad & Tablet Ngang (>= 900px landscape): Khung sân lớn theo chuẩn khung đỏ (~380x585px), 7 dự bị dàn đều */
+  @media (min-width: 900px) and (orientation: landscape){
+    .panel.squad-body{
+      padding: 8px 12px 10px !important;
+    }
+    .squad-head{
+      margin-bottom: 6px !important;
+    }
+    .squad-power-bar{
+      padding: 6px 12px !important;
+      margin-bottom: 6px !important;
+      font-size: 13px !important;
+    }
+    .squad-power-bar b{
+      font-size: 17px !important;
+    }
+    .formation-select-row{
+      margin-bottom: 6px !important;
+      padding: 0 2px !important;
+    }
+    .formation-select{
+      padding: 4px 8px !important;
+      font-size: 12px !important;
+    }
+    .pitch-layout{
+      grid-template-columns: var(--pw, 380px) minmax(0, 1fr) !important;
+      gap: 16px !important;
+      align-items: start !important;
+    }
+    .pitch-scroll{
+      width: var(--pw, 380px) !important;
+      height: var(--ph, 585px) !important;
+      max-width: 100% !important;
+      margin: 0 !important;
+      border: 1px solid #334155 !important;
+      border-radius: 16px !important;
+      overflow: hidden !important;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4) !important;
+    }
+    .pitch-wrap{
+      width: var(--pw, 380px) !important;
+      height: var(--ph, 585px) !important;
+    }
+    .pitch-side{
+      max-height: var(--ph, 585px) !important;
+      overflow-y: auto !important;
+      overflow-x: hidden !important;
+      padding-right: 4px !important;
+      display: flex !important;
+      flex-direction: column !important;
+      gap: 10px !important;
+    }
+    .bench-row{
+      display: grid !important;
+      grid-template-columns: repeat(7, minmax(0, 1fr)) !important;
+      gap: 6px !important;
+      padding: 8px 6px !important;
+      background: rgba(15, 23, 42, 0.6) !important;
+      border: 1px solid #334155 !important;
+      border-radius: 14px !important;
+      justify-items: center !important;
+      align-items: center !important;
+      margin-bottom: 8px !important;
+      overflow: visible !important;
+    }
+    .bench-slot{
+      width: 100% !important;
+      max-width: var(--card-w, 64px) !important;
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: center !important;
+      margin: 0 auto !important;
+    }
+    .bench-slot .slot-circle.small{
+      width: 100% !important;
+      max-width: var(--card-w, 64px) !important;
+    }
+    .bench-slot .slot-label{
+      font-size: 10px !important;
+      padding: 1px 4px !important;
+      margin-top: 2px !important;
+      white-space: nowrap !important;
+    }
+    .pitch-slot{
+      width: var(--card-w, 64px) !important;
+      height: calc(var(--card-w, 64px) * 1.35) !important;
+    }
+    .cp{
+      padding: 10px 12px !important;
+      border-radius: 14px !important;
+    }
+  }
+
+  /* iPhone Dọc: khung HLV xếp dưới và gập lại được */
+  @media (max-width: 768px){
+    .pitch-layout{ grid-template-columns: 1fr !important; }
+    .bench-row{
+      display: flex !important;
+      overflow-x: auto !important;
+      gap: 8px !important;
+      padding: 6px 2px !important;
+    }
+    .pitch-slot, .bench-slot{
+      width: var(--card-w, 58px);
+      height: calc(var(--card-w, 58px) * 1.35);
     }
   }
 
@@ -9166,6 +9275,7 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
       <button type="button" class="ap-tab" role="tab" id="aptab-rewards" data-ap="rewards" aria-controls="appane-rewards" aria-selected="false" tabindex="-1"><span class="ap-tab-ico" aria-hidden="true">🎁</span><span>Phần thưởng</span></button>
       <button type="button" class="ap-tab" role="tab" id="aptab-battle" data-ap="battle" aria-controls="appane-battle" aria-selected="false" tabindex="-1"><span class="ap-tab-ico" aria-hidden="true">⚔️</span><span>Đấu Trường</span></button>
       <button type="button" class="ap-tab" role="tab" id="aptab-data" data-ap="data" aria-controls="appane-data" aria-selected="false" tabindex="-1"><span class="ap-tab-ico" aria-hidden="true">🗂️</span><span>Dữ liệu</span></button>
+      <button type="button" class="ap-tab" role="tab" id="aptab-coaches" data-ap="coaches" aria-controls="appane-coaches" aria-selected="false" tabindex="-1"><span class="ap-tab-ico" aria-hidden="true">🧭</span><span>HLV</span></button>
       <button type="button" class="ap-tab" role="tab" id="aptab-notice" data-ap="notice" aria-controls="appane-notice" aria-selected="false" tabindex="-1"><span class="ap-tab-ico" aria-hidden="true">📣</span><span>Thông báo</span></button>
       <button type="button" class="ap-tab" role="tab" id="aptab-wtour" data-ap="wtour" aria-controls="appane-wtour" aria-selected="false" tabindex="-1"><span class="ap-tab-ico" aria-hidden="true">🌍</span><span>World Tour</span></button>
       <button type="button" class="ap-tab" role="tab" id="aptab-stats" data-ap="stats" aria-controls="appane-stats" aria-selected="false" tabindex="-1"><span class="ap-tab-ico" aria-hidden="true">📊</span><span>Thống kê</span></button>
@@ -9474,6 +9584,88 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
         </div>
       </div>
     </section>
+    <section class="ap-pane" id="appane-coaches" role="tabpanel" aria-labelledby="aptab-coaches" hidden>
+      <div>
+        <h3 class="ap-pane-title">🧭 Quản trị Huấn Luyện Viên (HLV)</h3>
+        <p class="ap-pane-desc">Quản lý danh sách 18 HLV, HLV mặc định, định giá mảnh ghép, phân chương chiến dịch, link ảnh Cloudinary và đồng bộ lên Firebase.</p>
+      </div>
+
+      <div class="ap-card">
+        <h4>☁️ Đồng bộ & Nhập / Xuất Dữ liệu HLV <span class="ap-chip-now">Firebase</span></h4>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin:8px 0">
+          <button type="button" id="btn-coach-export" class="btn-secondary">📥 Xuất coaches.json</button>
+          <button type="button" id="btn-coach-import" class="btn-secondary">📤 Nhập coaches.json</button>
+          <input type="file" id="coach-file-input" accept=".json,application/json" style="display:none">
+          <button type="button" id="btn-coach-save-firebase" class="btn-primary" style="background:#16A34A;border-color:#22C55E">☁️ Lưu lên Firebase</button>
+        </div>
+        <p class="hint-text" id="coach-admin-status" style="margin:4px 0 0">Đang sử dụng dữ liệu HLV cục bộ.</p>
+      </div>
+
+      <div class="ap-card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <h4 style="margin:0">📋 Danh Sách Huấn Luyện Viên</h4>
+          <button type="button" id="btn-add-coach" class="btn-secondary" style="font-size:12px;padding:4px 10px">+ Thêm HLV Mới</button>
+        </div>
+        <div id="admin-coaches-list" style="display:grid;gap:10px"></div>
+      </div>
+
+      <!-- Modal Chỉnh sửa / Thêm HLV -->
+      <div id="admin-coach-edit-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:9999;align-items:center;justify-content:center;padding:12px">
+        <div style="background:#0F172A;border:1.5px solid #F59E0B;border-radius:16px;max-width:580px;width:100%;max-height:90vh;overflow-y:auto;padding:18px;color:#F8FAFC">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+            <h3 id="coach-modal-title" style="margin:0;font-size:18px;color:#FDE047">Chỉnh sửa HLV</h3>
+            <button type="button" id="btn-coach-modal-close" style="background:none;border:none;color:#94A3B8;font-size:20px;cursor:pointer">✕</button>
+          </div>
+          <form id="coach-edit-form" style="display:grid;gap:10px">
+            <input type="hidden" id="cedit-id">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+              <div>
+                <label style="font-size:12px;font-weight:700;color:#CBD5E1">Tên HLV:</label>
+                <input type="text" id="cedit-name" required style="width:100%;background:#1E293B;border:1px solid #475569;color:#fff;border-radius:6px;padding:6px">
+              </div>
+              <div>
+                <label style="font-size:12px;font-weight:700;color:#CBD5E1">Mã định danh (ID):</label>
+                <input type="text" id="cedit-id-display" required style="width:100%;background:#1E293B;border:1px solid #475569;color:#fff;border-radius:6px;padding:6px">
+              </div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
+              <div>
+                <label style="font-size:12px;font-weight:700;color:#CBD5E1">Chương mở (1-18):</label>
+                <input type="number" id="cedit-chapter" min="0" max="18" required style="width:100%;background:#1E293B;border:1px solid #475569;color:#fff;border-radius:6px;padding:6px">
+              </div>
+              <div>
+                <label style="font-size:12px;font-weight:700;color:#CBD5E1">Giá mảnh ghép:</label>
+                <input type="number" id="cedit-price" min="0" max="2000" step="5" required style="width:100%;background:#1E293B;border:1px solid #475569;color:#fff;border-radius:6px;padding:6px">
+              </div>
+              <div>
+                <label style="font-size:12px;font-weight:700;color:#CBD5E1">Thứ tự sắp xếp:</label>
+                <input type="number" id="cedit-order" min="0" max="99" required style="width:100%;background:#1E293B;border:1px solid #475569;color:#fff;border-radius:6px;padding:6px">
+              </div>
+            </div>
+            <div>
+              <label style="font-size:12px;font-weight:700;color:#CBD5E1">Nhãn phiên bản / Thời kỳ:</label>
+              <input type="text" id="cedit-label" placeholder="VD: Arsenal 1996–2018" style="width:100%;background:#1E293B;border:1px solid #475569;color:#fff;border-radius:6px;padding:6px">
+            </div>
+            <div>
+              <label style="font-size:12px;font-weight:700;color:#CBD5E1">Link ảnh Cloudinary (Thẻ HLV):</label>
+              <input type="url" id="cedit-image" placeholder="https://res.cloudinary.com/.../coach.png" style="width:100%;background:#1E293B;border:1px solid #475569;color:#fff;border-radius:6px;padding:6px">
+              <div id="coach-image-preview-wrap" style="margin-top:6px;display:flex;align-items:center;gap:10px">
+                <img id="coach-image-preview" src="" alt="Xem trước ảnh HLV" style="width:60px;height:60px;border-radius:8px;object-fit:cover;border:1.5px solid #F59E0B;display:none">
+                <span id="coach-image-status" style="font-size:12px;color:#94A3B8">Chưa có ảnh (sẽ dùng huy hiệu mặc định)</span>
+              </div>
+            </div>
+            <div>
+              <label style="font-size:12px;font-weight:700;color:#CBD5E1">Mô tả chiến thuật:</label>
+              <textarea id="cedit-desc" rows="2" style="width:100%;background:#1E293B;border:1px solid #475569;color:#fff;border-radius:6px;padding:6px"></textarea>
+            </div>
+            <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:8px">
+              <button type="button" id="btn-coach-modal-cancel" class="btn-secondary">Hủy</button>
+              <button type="submit" class="btn-primary" style="background:#F59E0B;border-color:#FDE047;color:#0F172A;font-weight:800">Lưu HLV</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
     <section class="ap-pane" id="appane-notice" role="tabpanel" aria-labelledby="aptab-notice" hidden>
       <div><h3 class="ap-pane-title">📣 Thông báo chào mừng</h3><p class="ap-pane-desc">Soạn popup hiện ra cho Người dùng ngay khi đăng nhập — ví dụ giới thiệu cầu thủ mới của phiên bản mới. Dùng chung cho mọi hồ sơ.</p></div>
       <div class="ap-card">
@@ -9681,41 +9873,12 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
       </div>
 
       <div class="des-filter-col">
-        <label for="des-team-filter">🌍 Quốc gia / 🛡️ CLB:</label>
+        <label for="des-team-filter">🌍 Khu vực địa lý:</label>
         <select id="des-team-filter">
-          <option value="all">🌟 Tất cả Quốc gia &amp; CLB</option>
-          <optgroup label="🌍 Theo Quốc gia">
-            <option value="nat:Argentina">🇦🇷 Argentina</option>
-            <option value="nat:Brazil">🇧🇷 Brazil</option>
-            <option value="nat:England">🏴󠁧󠁢󠁥󠁮󠁧󠁿 Anh (England)</option>
-            <option value="nat:France">🇫🇷 Pháp (France)</option>
-            <option value="nat:Germany">🇩🇪 Đức (Germany)</option>
-            <option value="nat:Netherlands">🇳🇱 Hà Lan (Netherlands)</option>
-            <option value="nat:Portugal">🇵🇹 Bồ Đào Nha (Portugal)</option>
-            <option value="nat:Spain">🇪🇸 Tây Ban Nha (Spain)</option>
-            <option value="nat:Italy">🇮🇹 Ý (Italy)</option>
-            <option value="nat:Belgium">🇧🇪 Bỉ (Belgium)</option>
-            <option value="nat:Croatia">🇭🇷 Croatia</option>
-            <option value="nat:Uruguay">🇺🇾 Uruguay</option>
-          </optgroup>
-          <optgroup label="🛡️ Theo CLB / Đội bóng">
-            <option value="club:club_23_243.png">⚪ Real Madrid</option>
-            <option value="club:club_23_241.png">🔵🔴 FC Barcelona</option>
-            <option value="club:club_23_10.png">🩵 Manchester City</option>
-            <option value="club:club_23_1.png">🔴 Arsenal</option>
-            <option value="club:club_23_9.png">🔴 Liverpool</option>
-            <option value="club:club_23_11.png">🔴 Manchester United</option>
-            <option value="club:club_23_5.png">🔵 Chelsea</option>
-            <option value="club:club_23_21.png">🔴 Bayern Munich</option>
-            <option value="club:club_23_73.png">🔵🔴 Paris Saint-Germain</option>
-            <option value="club:club_23_45.png">⚪⚫ Juventus</option>
-            <option value="club:club_23_22.png">🟡 Borussia Dortmund</option>
-            <option value="club:club_23_240.png">🔴⚪ Atlético Madrid</option>
-            <option value="club:club_23_112893.png">🩷 Inter Miami</option>
-            <option value="club:club_23_112139.png">💛 Al Nassr</option>
-            <option value="rarity:icon">👑 Huyền Thoại (Icons)</option>
-            <option value="rarity:rare">🌟 Đặc Biệt Hiếm (Heroes)</option>
-          </optgroup>
+          <option value="all">🌟 Tất cả khu vực</option>
+          <option value="europe">🏰 Châu Âu</option>
+          <option value="americas">🌎 Châu Mỹ</option>
+          <option value="asia_africa_oceania">🌏 Châu Phi-Á-Úc</option>
         </select>
       </div>
     </div>
@@ -10208,7 +10371,7 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
      không phải dữ liệu riêng của từng hồ sơ nên không được seed/ghi vào bên trong kidchart/{mã hồ sơ}/. */
   function allLocalKidchartKeys(){
     var keys = [];
-    var SHARED_KEYS = {kidchart_player_db:1, kidchart_battle_config:1, kidchart_question_bank:1, kidchart_vocab_bank:1};
+    var SHARED_KEYS = {kidchart_player_db:1, kidchart_battle_config:1, kidchart_question_bank:1, kidchart_vocab_bank:1, kidchart_coaches:1};
     try{
       for(var i=0;i<localStorage.length;i++){
         var k = localStorage.key(i);
@@ -12530,7 +12693,7 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
     return name + (grade === 'G' ? ' (Vàng)' : ' (Bạc)');
   }
 
-  PLAYER_DB = await loadPlayerDb();
+  PLAYER_DB = await loadPlayerDb(); loadCoaches(); setTimeout(autoCompletePendingSkills, 1500);
   registerPlayerDb(PLAYER_DB);
   BATTLE_CONFIG = await loadBattleConfig();
 
@@ -15991,7 +16154,7 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
   var skpOpenedIdx = [];
   var skpReceived = [];   /* các thẻ (base) vừa nhận trong lượt này, để hiện ảnh khi mở hết */
   var skpBusy = false;
-  var SKP_GRID_N = 25;   /* số thẻ úp hiện ra: lưới 5x5 (số thẻ được lật vẫn theo hạng skill: Vàng 3, Bạc 1) */
+  var SKP_GRID_N = 9;   /* số thẻ úp hiện ra: lưới 5x5 (số thẻ được lật vẫn theo hạng skill: Vàng 3, Bạc 1) */
   var skpDeal = false;   /* true ở lần vẽ đầu: thẻ "chia" lần lượt xuống lưới, các lần vẽ lại sau mỗi lượt lật không chia lại */
   var SKP_CTX = null; /* {monthKey,key} của skill đang gắn với minigame lật thẻ, để lưu tiến độ nhận thẻ */
 
@@ -16078,10 +16241,77 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
     return true;
   }
 
+  function autoPickRemainingSkillCards(){
+    if(!SKP_CTX || !skpPicks) return;
+    var st = skillState(SKP_CTX.monthKey, SKP_CTX.key);
+    if(!st) return;
+    var total = st.cardsTotal || (st.tier === 'gold' ? 3 : 1);
+    var got = st.cardsGot || 0;
+    var needed = Math.max(0, total - got);
+    if(needed <= 0) return;
+
+    // Tìm các ô chưa lật
+    var unpicked = [];
+    skpPicks.forEach(function(p, i){
+      if(skpOpenedIdx.indexOf(i) < 0 && p && p.dbId){
+        unpicked.push({ p: p, idx: i });
+      }
+    });
+
+    // Lấy đủ số lượt còn thiếu
+    var toAward = unpicked.slice(0, needed);
+    toAward.forEach(function(item){
+      ownedPlayerFromBase(item.p);
+      skpOpenedIdx.push(item.idx);
+    });
+
+    st.cardsGot = total;
+    st.cardsDone = true;
+    setSkillState(SKP_CTX.monthKey, SKP_CTX.key, st);
+    if(toAward.length){
+      triggerToast('low', '🎁 Đã tự động nhận ' + toAward.length + ' thẻ cầu thủ còn lại của kỹ năng!');
+    }
+  }
+
+  function autoCompletePendingSkills(){
+    try{
+      if(!PLAYER_DB || !PLAYER_DB.length) return;
+      var curKey = (typeof currentPeriod !== 'undefined' && currentPeriod && currentPeriod.key) ? currentPeriod.key : ymd(new Date()).slice(0,7);
+      var month = (typeof loadMonth === 'function') ? loadMonth(curKey) : null;
+      if(!month || !month.skills) return;
+      var awarded = 0;
+      Object.keys(month.skills).forEach(function(skKey){
+        var st = month.skills[skKey];
+        if(!st || !st.activated || st.cardsDone) return;
+        if(st.tier !== 'gold' && st.tier !== 'silver') return;
+        var total = st.cardsTotal || (st.tier === 'gold' ? 3 : 1);
+        var got = st.cardsGot || 0;
+        var diff = total - got;
+        if(diff > 0){
+          var res = pickPlayersWithPlaystyle('', diff);
+          (res.picks || []).forEach(function(p){
+            ownedPlayerFromBase(p);
+            awarded++;
+          });
+          st.cardsGot = total;
+          st.cardsDone = true;
+          setSkillState(curKey, skKey, st);
+        }
+      });
+      if(awarded > 0){
+        triggerToast('low', '✨ Đã tự động hoàn tất ' + awarded + ' thẻ kỹ năng còn dang dở!');
+      }
+    }catch(err){
+      console.warn('autoCompletePendingSkills error', err);
+    }
+  }
+
   function closeSkillPlayerModal(){
+    autoPickRemainingSkillCards();
     dbxStop();
     dbxResetStage('skp-stage');
-    document.getElementById('skill-player-modal').classList.remove('open');
+    var m = document.getElementById('skill-player-modal');
+    if(m) m.classList.remove('open');
     skpPicks = null;
     SKP_CTX = null;
   }
@@ -16340,33 +16570,141 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
   }
   function cpSize(){
     var lay = document.querySelector('.pitch-layout'), tab = document.getElementById('tab-pitch'); if(!lay || !tab) return;
-    if(!window._cpSizeOn){ window._cpSizeOn = 1; window.addEventListener('resize', cpSize); if(window.ResizeObserver) new ResizeObserver(cpSize).observe(tab); }
+    if(!window._cpSizeOn){
+      window._cpSizeOn = 1;
+      window.addEventListener('resize', cpSize);
+      if(window.ResizeObserver) new ResizeObserver(cpSize).observe(tab);
+    }
     if(!tab.offsetWidth) return;
-    if(window.innerWidth < 760){ lay.style.removeProperty('--pw'); lay.style.removeProperty('--ph'); return; }
-    var hd = document.querySelector('.app-header'), hh = (hd && getComputedStyle(hd).position === 'sticky') ? hd.offsetHeight : 0, dock = document.querySelector('.tab-bar'), dt = window.innerHeight;
-    if(dock && getComputedStyle(dock).display !== 'none'){ var dr = dock.getBoundingClientRect(); if(dr.height > 0) dt = dr.top; }
-    var H = Math.max(440, Math.floor(dt - hh - 24)), W = Math.round(Math.max(280, Math.min(H * 68 / 105, tab.clientWidth * 0.56)));
-    lay.style.setProperty('--pw', W + 'px'); lay.style.setProperty('--ph', Math.round(W * 105 / 68) + 'px');
+
+    var isLandscape = (window.innerWidth >= 900 && (window.innerWidth > window.innerHeight || (window.matchMedia && window.matchMedia('(orientation: landscape)').matches)));
+
+    if(!isLandscape){
+      // Chế độ iPad Dọc và Điện thoại dọc (giữ nguyên tỷ lệ chuẩn đẹp sẵn có)
+      if(window.innerWidth < 760){
+        lay.style.removeProperty('--pw');
+        lay.style.removeProperty('--ph');
+        var curW = tab.clientWidth;
+        var cardW = Math.round(Math.max(46, Math.min(62, curW * 0.165)));
+        lay.style.setProperty('--card-w', cardW + 'px');
+        return;
+      }
+      var W = Math.round(Math.min(440, tab.clientWidth * 0.50));
+      var H = Math.round(W * 105 / 68);
+      lay.style.setProperty('--pw', W + 'px');
+      lay.style.setProperty('--ph', H + 'px');
+      var cardW = Math.round(Math.max(48, Math.min(66, W * 0.165)));
+      lay.style.setProperty('--card-w', cardW + 'px');
+      return;
+    }
+
+    // Chế độ iPad Xoay Ngang (Landscape >= 900px):
+    // Tối ưu kích thước sân chuẩn xác theo khung đỏ (~380x585px) để vừa vặn trọn 1 màn hình
+    var winH = window.innerHeight;
+    var layRect = lay.getBoundingClientRect();
+    var topPos = (layRect && layRect.top > 10) ? layRect.top : 170;
+    var bottomMargin = 20;
+    var maxPitchH = Math.max(380, Math.floor(winH - topPos - bottomMargin));
+
+    // Tính bề rộng theo tỷ lệ sân chuẩn 68 / 105
+    var calcW = Math.round(maxPitchH * 68 / 105);
+    // Bề rộng tối đa theo khung đỏ: chiếm ~45% chiều ngang tab, tối đa 385px
+    var maxW = Math.round(Math.min(385, tab.clientWidth * 0.46));
+    var finalW = Math.max(280, Math.min(calcW, maxW));
+    var finalH = Math.round(finalW * 105 / 68);
+
+    lay.style.setProperty('--pw', finalW + 'px');
+    lay.style.setProperty('--ph', finalH + 'px');
+
+    // Cỡ thẻ trên sân tỷ lệ thuận theo sân lớn (~62px - 66px)
+    var cardW = Math.round(Math.max(50, Math.min(66, finalW * 0.17)));
+    lay.style.setProperty('--card-w', cardW + 'px');
   }
   function cpFit(id, f){ return Math.round(seFormFit(id, f.positions.map(function(x){ return x.pos; })) * 100); }
   function renderCoachPanel(){
     var box = document.getElementById('coach-panel'); if(!box) return;
-    var f = currentFormation(loadSquad()), st = sLoad(), cur = (st.styleBy && st.styleBy[f.id]) || 'flex';
-    if(!SE_STYLE[cur]) cur = 'flex';
-    var nw = SE_NEWS[cur] || SE_NEWS.flex, pc = SEASON_STYLE_PC[cur] || {}, open = !SE_STYLE[cur].ideal, fit = cpFit(cur, f);
-    var ranked = SEASON_STYLES.map(function(x, i){ var op = !SE_STYLE[x.id].ideal; return {x:x, op:op, p:op ? 50 : cpFit(x.id, f), a:cpAlt(x.id, f), i:i}; }).sort(function(a, b){ return (b.p - a.p) || (a.a - b.a) || (a.i - b.i); });
-    var opts = ranked.map(function(r){ return '<option value="' + r.x.id + '"' + (r.x.id === cur ? ' selected' : '') + '>' + r.x.ic + ' ' + escHtml(r.x.name) + (r.op ? ' — hợp mọi sơ đồ' : ' — hợp ' + r.p + '%' + (r.p === 100 ? ' ★' : '')) + '</option>'; }).join('');
+    var f = currentFormation(loadSquad()), st = sLoad(), cur = (st.styleBy && st.styleBy[f.id]) || 'default';
+    if(!isCoachUnlocked(cur)) cur = 'default';
+    if(!SE_STYLE[cur]) cur = 'default';
+
+    var ranked = SEASON_STYLES.map(function(x, i){
+      var un = isCoachUnlocked(x.id);
+      var op = (!SE_STYLE[x.id] || !SE_STYLE[x.id].ideal);
+      return {x:x, un:un, op:op, p:op ? 50 : cpFit(x.id, f), a:cpAlt(x.id, f), i:i};
+    }).sort(function(a, b){
+      if(a.un !== b.un) return a.un ? -1 : 1;
+      return (b.p - a.p) || (a.a - b.a) || (a.i - b.i);
+    });
+
+    var opts = ranked.map(function(r){
+      if(!r.un){
+        var chNeed = r.x.chapter || '?';
+        return '<option value="' + r.x.id + '" disabled style="color:#94A3B8">🔒 ' + escHtml(r.x.name) + ' — Mở ở Chương ' + chNeed + '</option>';
+      }
+      return '<option value="' + r.x.id + '"' + (r.x.id === cur ? ' selected' : '') + '>'
+        + (r.x.id === 'default' ? '📋 ' : r.x.ic + ' ')
+        + escHtml(r.x.name)
+        + (r.x.id === 'default' ? ' (Chưa chọn HLV chiến thuật)' : (r.op ? ' — hợp mọi sơ đồ' : ' — hợp ' + r.p + '%' + (r.p === 100 ? ' ★' : '')))
+        + '</option>';
+    }).join('');
+
+    // Kiểm tra đã chọn HLV chiến thuật chưa (khác 'default')
+    var isChosen = (cur !== 'default' && !!SE_STYLE[cur]);
+
+    if(!isChosen){
+      // Khi CHƯA chọn HLV: Ẩn toàn bộ thông tin chi tiết HLV, chỉ hiển thị dropdown chọn
+      box.innerHTML = '<div class="cp-h" style="display:flex;align-items:center;justify-content:space-between"><span>🧭 HLV &amp; Phong Cách Thi Đấu</span><span style="font-size:11px;font-weight:700;color:#94A3B8;background:rgba(15,23,42,0.6);padding:2px 8px;border-radius:6px">Chưa chọn HLV</span></div>'
+        + '<select class="cp-sel" id="cp-style" aria-label="Chọn phong cách thi đấu">' + opts + '</select>'
+        + '<div class="cp-empty-hint" style="font-size:12px;color:#94A3B8;padding:4px 2px;line-height:1.4">👉 Chọn một HLV trong danh sách trên để kích hoạt phong cách thi đấu và nhận điểm thưởng đồng đội cho sơ đồ <b>' + escHtml(f.name) + '</b>.</div>';
+
+      box.onchange = function(e){
+        if(e.target && e.target.id === 'cp-style'){
+          var s3 = sLoad(); if(!s3.styleBy) s3.styleBy = {};
+          s3.styleBy[f.id] = e.target.value; sSave(s3);
+          renderCoachPanel();
+          cpSize();
+        }
+      };
+      return;
+    }
+
+    // Khi ĐÃ có HLV được chọn:
+    var nw = SE_NEWS[cur] || SE_NEWS['default'] || SE_NEWS.flex, pc = SEASON_STYLE_PC[cur] || {}, open = (!SE_STYLE[cur] || !SE_STYLE[cur].ideal), fit = cpFit(cur, f);
     var fitTxt = open ? 'Linh hoạt: hợp với mọi sơ đồ' : (fit >= 100 ? '✅ Hợp 100% – HLV phát huy tối đa sức mạnh' : (fit >= 75 ? '👍 Hợp ' + fit + '% – khá tốt' : '⚠️ Hợp ' + fit + '% – hãy thử sơ đồ tối ưu bên dưới'));
-    box.innerHTML = '<div class="cp-h">🧭 HLV & phong cách thi đấu</div>'
+
+    box.innerHTML = '<div class="cp-h" style="display:flex;align-items:center;justify-content:space-between"><span>🧭 HLV &amp; Phong Cách Thi Đấu</span><button type="button" id="btn-unselect-coach" class="btn-secondary" style="font-size:11px;padding:2px 8px;color:#94A3B8" title="Bỏ chọn HLV này về cơ bản">Bỏ chọn</button></div>'
       + '<select class="cp-sel" id="cp-style" aria-label="Chọn phong cách thi đấu">' + opts + '</select>'
       + '<div class="cp-fit ' + (open || fit >= 100 ? 'g' : (fit >= 75 ? 'm' : 'b')) + '">Sơ đồ <b>' + escHtml(f.name) + '</b>: ' + fitTxt + '</div>'
-      + '<div class="cp-coach"><div class="cp-av">' + escHtml(nw.i) + '</div><div><b>' + escHtml(nw.c) + '</b><span>' + escHtml(nw.b) + '</span><small>' + escHtml(nw.cl) + '</small></div></div>'
-      + '<p class="cp-lead">' + escHtml(SEASON_STYLE_DESC[cur] || '') + '</p>'
-      + '<ol class="cp-steps">' + nw.st.map(function(t){ return '<li>' + escHtml(t) + '</li>'; }).join('') + '</ol>'
-      + '<div class="cp-pc"><span class="p">＋ ' + escHtml(pc.pro || '') + '</span><span class="c">－ ' + escHtml(pc.con || '') + '</span></div>'
-      + '<ul class="cp-hn">' + nw.hn.map(function(t){ return '<li>🏆 ' + escHtml(t) + '</li>'; }).join('') + '</ul>'
-      + '<details class="cp-bd" open><summary>📋 Sơ đồ tập luyện mẫu ' + nw.fm.join('-') + '</summary><div class="cp-board">' + sNewsSVG(nw) + '</div></details>';
-    box.onchange = function(e){ if(e.target && e.target.id === 'cp-style'){ var s3 = sLoad(); if(!s3.styleBy) s3.styleBy = {}; s3.styleBy[f.id] = e.target.value; sSave(s3); renderCoachPanel(); } };
+      + '<div class="cp-coach"><div class="cp-av">' + escHtml(nw.i || 'HLV') + '</div><div><b>' + escHtml(nw.c || '') + '</b><span>' + escHtml(nw.b || '') + '</span><small>' + escHtml(nw.cl || '') + '</small></div></div>'
+      + '<p class="cp-lead" style="margin:4px 0;font-size:12px;color:#CBD5E1">' + escHtml(SEASON_STYLE_DESC[cur] || '') + '</p>'
+      + '<details class="cp-details" style="background:rgba(15,23,42,0.35);border:1px solid rgba(148,163,184,0.2);border-radius:10px;padding:6px 10px;font-size:12px;margin-top:4px">'
+      +   '<summary style="font-weight:700;color:#FDE047;cursor:pointer;user-select:none">📋 Cẩm nang chiến thuật &amp; sơ đồ mẫu ▼</summary>'
+      +   '<div style="margin-top:8px">'
+      +     '<ol class="cp-steps" style="margin:4px 0 8px 16px;padding:0">' + (nw.st || []).map(function(t){ return '<li>' + escHtml(t) + '</li>'; }).join('') + '</ol>'
+      +     '<div class="cp-pc"><span class="p">＋ ' + escHtml(pc.pro || '') + '</span><span class="c">－ ' + escHtml(pc.con || '') + '</span></div>'
+      +     '<ul class="cp-hn" style="margin:6px 0;padding-left:16px">' + (nw.hn || []).map(function(t){ return '<li>🏆 ' + escHtml(t) + '</li>'; }).join('') + '</ul>'
+      +     '<div class="cp-board" style="margin-top:6px">' + sNewsSVG(nw) + '</div>'
+      +   '</div>'
+      + '</details>';
+
+    box.onchange = function(e){
+      if(e.target && e.target.id === 'cp-style'){
+        var s3 = sLoad(); if(!s3.styleBy) s3.styleBy = {};
+        s3.styleBy[f.id] = e.target.value; sSave(s3);
+        renderCoachPanel();
+        cpSize();
+      }
+    };
+
+    var unBtn = document.getElementById('btn-unselect-coach');
+    if(unBtn){
+      unBtn.onclick = function(){
+        var s3 = sLoad(); if(!s3.styleBy) s3.styleBy = {};
+        s3.styleBy[f.id] = 'default'; sSave(s3);
+        renderCoachPanel();
+        cpSize();
+      };
+    }
   }
 
   function playerCardHTML(p, removable, extraAttr){
@@ -16497,14 +16835,42 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
       + '<rect x="22" y="82" width="56" height="16" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width="0.5"/>'
       + '<rect x="38" y="92" width="24" height="6" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width="0.5"/>'
       + '</svg>';
+    // Kẹp lề 9% và giãn cách chống chồng thẻ
+    var safePositions = formation.positions.map(function(p){
+      return {
+        x: Math.max(9, Math.min(91, p.x)),
+        y: Math.max(9, Math.min(91, p.y)),
+        pos: p.pos
+      };
+    });
+    for(var iter = 0; iter < 4; iter++){
+      for(var si = 0; si < safePositions.length; si++){
+        for(var sj = si + 1; sj < safePositions.length; sj++){
+          var dx = safePositions[sj].x - safePositions[si].x;
+          var dy = safePositions[sj].y - safePositions[si].y;
+          var dist = Math.sqrt(dx * dx + dy * dy);
+          var minDist = 12.0;
+          if(dist < minDist && dist > 0.001){
+            var overlap = (minDist - dist) / 2;
+            var nx = dx / dist, ny = dy / dist;
+            safePositions[si].x = Math.max(9, Math.min(91, safePositions[si].x - nx * overlap));
+            safePositions[si].y = Math.max(9, Math.min(91, safePositions[si].y - ny * overlap));
+            safePositions[sj].x = Math.max(9, Math.min(91, safePositions[sj].x + nx * overlap));
+            safePositions[sj].y = Math.max(9, Math.min(91, safePositions[sj].y + ny * overlap));
+          }
+        }
+      }
+    }
+
     var slotsHtml = formation.positions.map(function(posObj, i){
+      var sp = safePositions[i] || posObj;
       var id = squad.pitch[i];
       var filled = !!id;
       var main = filled ? players.find(function(p){ return p.id===id; }) : null;
       var hasArt = !!(filled && cdnReady() && main);
       var inner = filled ? (hasArt ? slotArtHTML(main) : '') : '<span class="slot-plus">+</span>';
       var fx = filled ? playerFx(main) : [], pen = main ? posPen(main, posObj.pos) : 0;
-      return '<div class="pitch-slot'+(filled?' filled':'')+(fx.length?' has-fx fx-'+fx[0]:'')+'" data-slot-type="pitch" data-slot-index="'+i+'" style="left:'+posObj.x+'%;top:'+posObj.y+'%">'
+      return '<div class="pitch-slot'+(filled?' filled':'')+(fx.length?' has-fx fx-'+fx[0]:'')+'" data-slot-type="pitch" data-slot-index="'+i+'" style="left:'+sp.x+'%;top:'+sp.y+'%">'
         + '<div class="slot-circle'+(hasArt?' has-art':'')+'">'+inner+'</div>'
         + (pen ? '<div class="slot-off '+posSev(pen)+'" title="Chơi lệch vị trí: trừ '+pen+'% sức mạnh">−'+pen+'%</div>' : '')
         + '<div class="slot-label">'+posObj.pos+'</div>'
@@ -17319,8 +17685,8 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
        cho đối thủ và Boss theo cơ chế World Tour (cho phép tùy chỉnh thêm qua settings.roadmapOvrPlus).
      • Kệ đổi thưởng: Cho phép đổi thẻ của các chương đã hạ Boss, đồng thời xem trước (Preview) mục tiêu thẻ của chương hiện tại. */
   var ROADMAP_KEY = 'kidchart_battle_roadmap';
-  var ROADMAP_VISION = 150;
-  var ROADMAP_OPEN = 150;     // Mở rộng toàn bộ 15 chương (150 ải)
+  var ROADMAP_VISION = 180;
+  var ROADMAP_OPEN = 180;     // Mở rộng toàn bộ 18 chương (180 ải)
   /* Tên 10 ải của MỖI chương (9 thử thách + trận Boss CHUNG KẾT) */
   var ROADMAP_NAMES = ['Giao hữu khởi động','Vòng bảng · Lượt 1','Vòng bảng · Lượt 2','Vòng bảng · Lượt 3','Vòng 1/16',
                        'Vòng 1/8','Tứ kết','Bán kết lượt đi','Bán kết lượt về','CHUNG KẾT'];
@@ -17448,6 +17814,31 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
         { type: 'nation', key: 'argentina', name: 'Đội tuyển Argentina', short: 'Argentina', icon: '🇦🇷', logo: 'flags_23_128x128_52.png', color: '#67E8F9' },
         { type: 'nation', key: 'france', name: 'Đội tuyển Pháp', short: 'Pháp', icon: '🇫🇷', logo: 'flags_23_128x128_18.png', color: '#3B82F6' }
       ]
+    },
+    {
+      ch: 16, name: 'Bức Tường Thép Lục Địa', short: 'Ý, Đức & Juventus', icon: '🧱', color: '#64748B',
+      desc: 'Kỷ luật thép và phòng tuyến bê tông kiên cố không thể xuyên thủng', logo: 'flags_23_128x128_31.png',
+      teams: [
+        { type: 'nation', key: 'italy', name: 'Đội tuyển Ý', short: 'Ý', icon: '🇮🇹', logo: 'flags_23_128x128_31.png', color: '#0284C7' },
+        { type: 'nation', key: 'germany', name: 'Đội tuyển Đức', short: 'Đức', icon: '🇩🇪', logo: 'flags_23_128x128_21.png', color: '#E2E8F0' },
+        { type: 'club', key: 'juventus', name: 'Juventus FC', short: 'Juventus', icon: '⚪⚫', logo: 'club_23_45.png', color: '#64748B' }
+      ]
+    },
+    {
+      ch: 17, name: 'Vương Triều Ngoại Hạng Bất Diệt', short: 'Man Utd & Liverpool', icon: '💪', color: '#DC2626',
+      desc: 'Tinh thần không bỏ cuộc và bản lĩnh quật khởi của các chiến binh đỏ', logo: 'club_23_11.png',
+      teams: [
+        { type: 'club', key: 'manutd', name: 'Manchester United', short: 'Man United', icon: '🔴', logo: 'club_23_11.png', color: '#EF4444' },
+        { type: 'club', key: 'liverpool', name: 'Liverpool FC', short: 'Liverpool', icon: '🔴', logo: 'club_23_9.png', color: '#DC2626' }
+      ]
+    },
+    {
+      ch: 18, name: 'Dải Ngân Hà Thập Kỷ', short: 'Real Madrid & Man City', icon: '👑', color: '#FACC15',
+      desc: 'Tập hợp những nhà vô địch đỉnh cao và chiến thuật biến hóa vô song', logo: 'club_23_243.png',
+      teams: [
+        { type: 'club', key: 'real', name: 'Real Madrid CF', short: 'Real Madrid', icon: '👑', logo: 'club_23_243.png', color: '#38BDF8' },
+        { type: 'club', key: 'mancity', name: 'Manchester City', short: 'Man City', icon: '🩵', logo: 'club_23_10.png', color: '#0EA5E9' }
+      ]
     }
   ];
 
@@ -17536,16 +17927,31 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
     return Math.max(2, Math.round(nodeBase * chMult));
   }
 
-  /* Yêu cầu 2: Cấu trúc mảnh đổi phù hợp với Overall và Rarity của toàn bộ số lượng thẻ */
+  /* YÊU CẦU 7: Tách fragRefund và fragBuyPrice (= 4 * fragRefund)
+     Dải OVR CSDL từ 118 đến 124. Thẻ SIG cao nhất (~492) cao hơn Chương 15 (466) khoảng 5%. */
+  function fragRefund(p){
+    if(!p) return 8;
+    var ovr = p.realOvr || p.ovr || 118;
+    var rar = (p.battle && p.battle.rarity) || p.rarity || 'LIVE';
+    var minOvr = 118, maxOvr = 124;
+    var pct = Math.max(0, Math.min(1, (ovr - minOvr) / (maxOvr - minOvr || 1)));
+    var ranges = {
+      LIVE: [8, 13],
+      RARE: [16, 24],
+      ICON: [30, 45],
+      SIG:  [90, 123]
+    };
+    var r = ranges[rar] || ranges.LIVE;
+    return Math.round(r[0] + pct * (r[1] - r[0]));
+  }
+
+  function fragBuyPrice(p){
+    return fragRefund(p) * 4;
+  }
+
+  // Tương thích ngược: fragPrice trả về giá hoàn lại
   function fragPrice(p){
-    if(!p) return 30;
-    var ovr = p.realOvr || p.ovr || 75;
-    var rar = (p.battle && p.battle.rarity) || 'LIVE';
-    var rMult = (rar === 'SIG') ? 1.55 : ((rar === 'ICON') ? 1.35 : ((rar === 'RARE') ? 1.15 : 1.0));
-    var diff = Math.max(0, ovr - 68);
-    var raw = 25 + Math.pow(diff / 27, 2.1) * 200;
-    var finalP = Math.round((raw * rMult) / 5) * 5;
-    return Math.max(25, Math.min(350, finalP));
+    return fragRefund(p);
   }
   function roadmapRaw(){ var p = safeGet(ROADMAP_KEY); return (p && typeof p === 'object') ? p : {}; }
   function roadmapProgress(){
@@ -17616,7 +18022,7 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
   /* ---- Chủ đề 15 chương: gom cầu thủ theo Quốc gia & CLB tương ứng ---- */
   function roadmapThemes(){
     var R = roadmapRef();
-    if(_rmTh && _rmTh.length >= 15) return _rmTh;
+    if(_rmTh && _rmTh.length >= ROADMAP_15_CAMPAIGNS.length) return _rmTh;
 
     var res = [];
     ROADMAP_15_CAMPAIGNS.forEach(function(camp, cIdx){
@@ -18070,9 +18476,14 @@ function roadmapIcon(def, locked){
 
     var chTotal = Math.ceil(ROADMAP_OPEN/10);
     var chOptions = '';
+    var clearedNum = parseInt(prog.cleared, 10) || 0;
     for(var c = 1; c <= chTotal; c++){
       var cth = roadmapTheme(c);
-      chOptions += '<option value="' + c + '"' + (c === ch ? ' selected' : '') + '>' + cth.icon + ' Chương ' + c + ': ' + escHtml(cth.short || cth.name) + '</option>';
+      var isChUnlocked = clearedNum >= c * 10;
+      var chLabel = isChUnlocked
+        ? (cth.icon + ' Chương ' + c + ': ' + escHtml(cth.short || cth.name))
+        : ('🔒 Chương ' + c + ': Hạ boss chặng ' + c + ' để mở');
+      chOptions += '<option value="' + c + '"' + (c === ch ? ' selected' : '') + '>' + chLabel + '</option>';
     }
 
     html += '<div class="cm-shop-box">'
@@ -18093,15 +18504,53 @@ function roadmapIcon(def, locked){
       +   '</div>'
       + '</div>';
 
+    // Kệ HLV cố định của chương
+    var chCoachInfo = getCoachForChapter(ch);
+    if(chCoachInfo){
+      var coach = chCoachInfo.coach;
+      var cVer = chCoachInfo.version;
+      var cPrice = cVer.price || 400;
+      var isChLocked = clearedNum < ch * 10;
+      var isUn = isCoachUnlocked(chCoachInfo.coachId, chCoachInfo.vId);
+      var canBuyCoach = !isChLocked && !isUn && (prog.frags >= cPrice);
+
+      var coachBtn = '';
+      if(isUn){
+        coachBtn = '<button type="button" class="cm-buy-btn no" disabled style="background:#16A34A;color:#fff;border-color:#22C55E;cursor:default">✅ Đã mở khóa</button>';
+      } else if(isChLocked){
+        coachBtn = '<button type="button" class="cm-buy-btn no" disabled style="opacity:0.5;cursor:not-allowed">🔒 Chưa hạ Boss chặng ' + ch + '</button>';
+      } else {
+        coachBtn = '<button type="button" class="cm-buy-btn ' + (canBuyCoach ? 'can' : 'no') + '" data-cm="buy-coach" data-cid="' + escHtml(chCoachInfo.coachId) + '" data-vid="' + escHtml(chCoachInfo.vId) + '" data-price="' + cPrice + '">'
+          + '🧩 ' + cPrice + (canBuyCoach ? ' · Mở khóa HLV' : ' · Thiếu ' + (cPrice - prog.frags))
+          + '</button>';
+      }
+
+      var coachImgHtml = cVer.image
+        ? ('<img src="' + escHtml(cVer.image) + '" alt="' + escHtml(coach.name) + '" style="width:72px;height:72px;border-radius:12px;object-fit:cover;border:2px solid #F59E0B">')
+        : ('<div style="width:72px;height:72px;border-radius:12px;background:linear-gradient(135deg,#1E293B,#0F172A);border:2px solid #F59E0B;display:flex;align-items:center;justify-content:center;font-size:32px">🧭</div>');
+
+      html += '<div class="cm-shop-coach-shelf" style="margin-bottom:16px;background:linear-gradient(135deg,rgba(30,41,59,0.85),rgba(15,23,42,0.95));border:1.5px solid rgba(245,158,11,0.4);border-radius:14px;padding:12px 14px;display:flex;align-items:center;gap:14px;box-shadow:0 6px 18px rgba(0,0,0,0.4)">'
+        + coachImgHtml
+        + '<div style="flex:1;min-width:0">'
+        +   '<div style="font-size:11px;font-weight:800;color:#F59E0B;text-transform:uppercase;letter-spacing:0.5px">🎖️ Huấn Luyện Viên Độc Quyền Chương ' + ch + '</div>'
+        +   '<div style="font-size:16px;font-weight:900;color:#F8FAFC;margin:2px 0">' + escHtml(coach.name) + ' <span style="font-size:12px;font-weight:600;color:#94A3B8">(' + escHtml(cVer.label || '') + ')</span></div>'
+        +   '<div style="font-size:12px;color:#CBD5E1;line-height:1.3">' + escHtml(cVer.desc || '') + '</div>'
+        + '</div>'
+        + '<div style="min-width:140px;text-align:right">'
+        +   coachBtn
+        + '</div>'
+        + '</div>';
+    }
+
     // Hiển thị 5 thẻ
     if(fiveCards.length){
       html += '<div class="cm-shop-grid5">';
       fiveCards.forEach(function(p){
-        var price = fragPrice(p);
-        var have = owned[p.dbId];
-        var can = prog.frags >= price;
-        var btn = have
-          ? '<button type="button" class="cm-buy-btn have" disabled>✓ Đã sở hữu</button>'
+        var price = fragBuyPrice(p);
+        var isChLocked = (parseInt(prog.cleared, 10) || 0) < ch * 10;
+        var can = !isChLocked && (prog.frags >= price);
+        var btn = isChLocked
+          ? '<button type="button" class="cm-buy-btn no" disabled style="opacity:0.5;cursor:not-allowed">🔒 Chưa hạ Boss chặng ' + ch + '</button>'
           : '<button type="button" class="cm-buy-btn ' + (can ? 'can' : 'no') + '" data-cm="buy" data-db="' + escHtml(p.dbId) + '">'
             + '🧩 ' + price + (can ? ' · Đổi ngay' : ' · Thiếu ' + (price - prog.frags))
             + '</button>';
@@ -18182,14 +18631,50 @@ function roadmapIcon(def, locked){
     document.body.appendChild(o);
   }
 
+    function cmBuyCoach(coachId, vId, price){
+    var cInfo = COACHES_DB[coachId];
+    if(!cInfo) return;
+    var v = cInfo.versions && cInfo.versions[vId];
+    if(!v) return;
+    price = price || v.price || 400;
+    var ch = v.chapter || 1;
+    var prog = roadmapProgress();
+    var clearedNum = parseInt(prog.cleared, 10) || 0;
+    if(clearedNum < ch * 10){
+      triggerToast('low', '🔒 Bạn cần hoàn thành Chương ' + ch + ' để mở khóa HLV này!');
+      return;
+    }
+    if(prog.frags < price){
+      triggerToast('low', '🧩 Bạn không đủ mảnh ghép để đổi HLV này!');
+      return;
+    }
+    if(isCoachUnlocked(coachId, vId)){
+      triggerToast('low', 'Bạn đã sở hữu HLV này rồi!');
+      return;
+    }
+    prog.frags -= price;
+    saveRoadmapProgress(prog);
+    unlockCoach(coachId, vId);
+    triggerToast('high', '🎉 Chúc mừng bạn đã mở khóa thành công HLV ' + cInfo.name + ' (' + v.label + ')!');
+    cmShopRender(ch);
+    renderCoachPanel();
+  }
+
   function cmBuy(dbId){
     var base = PLAYER_DB_BY_ID[dbId]; if(!base) return;
-    var price = fragPrice(base);
+    var prog = roadmapProgress();
+    var curCh = rmCurShopCh || 1;
+    // YÊU CẦU 4: Chặn cứng nếu chưa hạ boss chặng đó (cleared < ch * 10)
+    if((parseInt(prog.cleared, 10) || 0) < curCh * 10){
+      alert('🔒 Bạn chưa mở khóa đổi thưởng của Chương ' + curCh + '. Hãy hạ gục Boss ải ' + (curCh * 10) + ' trong Hành trình để mở nhé!');
+      return;
+    }
+    var price = fragBuyPrice(base);
     var p = roadmapRaw(), bal = parseInt(p.frags, 10) || 0;
-    if(bal < price){ triggerToast('low', '🧩 Con cần thêm '+(price-bal)+' mảnh ghép nữa nhé!'); return; }
+    if(bal < price){ triggerToast('low', '🧩 Con cần thêm ' + (price - bal) + ' mảnh ghép nữa nhé!'); return; }
+    // YÊU CẦU 4: Bỏ kiểm tra trùng, cho phép mua thêm bản thứ hai
     var players = loadPlayers();
-    if(players.some(function(x){ return x && x.dbId === dbId; })){ triggerToast('low', 'Con đã có cầu thủ này trong đội hình rồi!'); return; }
-    if(!confirm('Đổi '+price+' 🧩 lấy cầu thủ '+(base.name || '')+' (OVR '+(base.realOvr||base.ovr||'?')+')?')) return;
+    if(!confirm('Đổi ' + price + ' 🧩 lấy cầu thủ ' + (base.name || '') + ' (OVR ' + (base.realOvr || base.ovr || '?') + ')?')) return;
     players.push(ownedPlayerFromBase(base));
     if(savePlayers(players) === false){ alert('Chưa lưu được thẻ vào máy. Con thử lại nhé!'); return; }
     p.frags = bal - price; p.spent = (parseInt(p.spent, 10) || 0) + price;
@@ -18234,6 +18719,7 @@ function roadmapIcon(def, locked){
       var act = a.getAttribute('data-cm');
       if(act === 'close'){ var s0 = document.getElementById('cm-shop'); if(s0) s0.classList.remove('on'); }
       else if(act === 'buy') cmBuy(a.getAttribute('data-db'));
+      else if(act === 'buy-coach') cmBuyCoach(a.getAttribute('data-cid'), a.getAttribute('data-vid'), parseInt(a.getAttribute('data-price'), 10));
       else if(act === 'rv-ok'){ var rv = a.closest('.cm-reveal'); if(rv) rv.remove(); }
       return;
     }
@@ -18322,27 +18808,35 @@ function roadmapIcon(def, locked){
     var oppOvr = opp ? (opp.realOvr || opp.ovr || 0) : 0;
     var oppEl = (opp && opp.battle && opp.battle.element) ? (' · ' + elementName(opp.battle.element)) : '';
 
+    var userSlotHTML = myCard ? playerCardHTML(myCard, false) : '<div class="t1-card-placeholder">Chưa chọn</div>';
+    var userDescHTML = myCard ? ('<b>' + escHtml(myCard.name || '') + '</b><small>OVR ' + myOvr + myEl + '</small>') : '<b>Chưa chọn thẻ</b><small>Chạm thẻ bên dưới</small>';
+    var matchupHTML = myCard ? t1MatchupBadgeHTML(myCard, opp) : '<span class="t1-matchup-pending" style="font-size:11px;color:#94A3B8">Chọn thẻ để so tài</span>';
+    var oppSlotHTML = myCard ? playerCardHTML(opp, false) : '<div class="t1-card-placeholder">❓ Đối thủ ải</div>';
+    var oppDescHTML = myCard ? ('<b>' + escHtml(opp.name || '') + '</b><small>OVR ' + oppOvr + oppEl + '</small>') : ('<b>Ải ' + def.k + '/10</b><small>Hiện khi bạn chọn thẻ</small>');
+    var goDisabled = !myCard ? ' disabled style="opacity:0.45;cursor:not-allowed;pointer-events:none"' : '';
+    var goSub = myCard ? 'VÀO TRẬN 1V1' : 'HÃY CHỌN THẺ';
+
     return '<button type="button" class="btn-secondary rm-back" id="rm-back">← Về bản đồ Hành trình</button>'
       + '<div class="t1-vs-banner" id="t1-vs-banner">'
       // Bên trái: Thẻ của người chơi
       + '<div class="t1-vs-side user">'
       +   '<div class="t1-vs-tag">🔵 Đội của bạn</div>'
-      +   '<div class="t1-card-slot" id="t1-user-card-slot">' + (myCard ? playerCardHTML(myCard, false) : '<div class="t1-card-placeholder">Chưa chọn</div>') + '</div>'
-      +   '<div class="t1-card-desc" id="t1-user-desc"><b>' + escHtml(myCard ? (myCard.name || '') : '') + '</b><small>OVR ' + myOvr + myEl + '</small></div>'
+      +   '<div class="t1-card-slot" id="t1-user-card-slot">' + userSlotHTML + '</div>'
+      +   '<div class="t1-card-desc" id="t1-user-desc">' + userDescHTML + '</div>'
       + '</div>'
       // Ở giữa: Thông tin ải, Khắc chế, Nút CHIẾN ĐẤU
       + '<div class="t1-vs-mid">'
       +   '<div class="t1-mid-stage">' + (def.boss ? '👑 BOSS · ' : '') + 'Chương ' + def.ch + ' · Ải ' + def.k + '/10</div>'
       +   (teamLabel ? '<div class="t1-mid-team" title="' + escHtml(teamLabel) + '">🛡️ ' + teamLabel + '</div>' : '')
-      +   '<div class="t1-mid-vs-row"><span class="t1-mid-vs">VS</span><span id="t1-matchup-slot">' + t1MatchupBadgeHTML(myCard, opp) + '</span></div>'
-      +   '<button type="button" class="t1-go-btn" id="t1-go"><span class="t1-go-title">⚔️ CHIẾN ĐẤU</span><span class="t1-go-sub">VÀO TRẬN 1V1</span></button>'
+      +   '<div class="t1-mid-vs-row"><span class="t1-mid-vs">VS</span><span id="t1-matchup-slot">' + matchupHTML + '</span></div>'
+      +   '<button type="button" class="t1-go-btn" id="t1-go"' + goDisabled + '><span class="t1-go-title">⚔️ CHIẾN ĐẤU</span><span class="t1-go-sub">' + goSub + '</span></button>'
       +   '<div class="t1-mid-hint">👇 Chạm thẻ dưới để đổi</div>'
       + '</div>'
-      // Bên phải: Thẻ đối thủ
+      // Bên phải: Thẻ đối thủ (chỉ hiện khi đã chọn thẻ)
       + '<div class="t1-vs-side opp">'
       +   '<div class="t1-vs-tag">🔴 Đối thủ</div>'
-      +   '<div class="t1-card-slot">' + playerCardHTML(opp, false) + '</div>'
-      +   '<div class="t1-card-desc"><b>' + escHtml(opp.name || '') + '</b><small>OVR ' + oppOvr + oppEl + '</small></div>'
+      +   '<div class="t1-card-slot" id="t1-opp-card-slot">' + oppSlotHTML + '</div>'
+      +   '<div class="t1-card-desc" id="t1-opp-desc">' + oppDescHTML + '</div>'
       + '</div>'
       + '</div>';
   }
@@ -18444,25 +18938,33 @@ function roadmapIcon(def, locked){
     var oppOvr = opp ? (opp.realOvr || opp.ovr || 0) : 0;
     var oppEl = (opp && opp.battle && opp.battle.element) ? (' · ' + elementName(opp.battle.element)) : '';
 
+    var userSlotHTML = myCard ? playerCardHTML(myCard, false) : '<div class="t1-card-placeholder">Chưa chọn</div>';
+    var userDescHTML = myCard ? ('<b>' + escHtml(myCard.name || '') + '</b><small>OVR ' + myOvr + myEl + '</small>') : '<b>Chưa chọn thẻ</b><small>Chạm thẻ bên dưới</small>';
+    var matchupHTML = myCard ? t1MatchupBadgeHTML(myCard, opp) : '<span class="t1-matchup-pending" style="font-size:11px;color:#94A3B8">Chọn thẻ để so tài</span>';
+    var oppSlotHTML = myCard ? playerCardHTML(opp, false) : '<div class="t1-card-placeholder">❓ Đối thủ ẩn</div>';
+    var oppDescHTML = myCard ? ('<b>' + escHtml(opp.name || '') + '</b><small>OVR ' + oppOvr + oppEl + '</small>') : '<b>Đối thủ bí ẩn</b><small>Hiện khi bạn chọn thẻ</small>';
+    var goDisabled = !myCard ? ' disabled style="opacity:0.45;cursor:not-allowed;pointer-events:none"' : '';
+    var goSub = myCard ? 'VÀO TRẬN 1V1' : 'HÃY CHỌN THẺ';
+
     return '<div class="t1-vs-banner" id="t1-vs-banner">'
       // Bên trái: Thẻ của người chơi
       + '<div class="t1-vs-side user">'
       +   '<div class="t1-vs-tag">🔵 Đội của bạn</div>'
-      +   '<div class="t1-card-slot" id="t1-user-card-slot">' + (myCard ? playerCardHTML(myCard, false) : '<div class="t1-card-placeholder">Chưa chọn</div>') + '</div>'
-      +   '<div class="t1-card-desc" id="t1-user-desc"><b>' + escHtml(myCard ? (myCard.name || '') : '') + '</b><small>OVR ' + myOvr + myEl + '</small></div>'
+      +   '<div class="t1-card-slot" id="t1-user-card-slot">' + userSlotHTML + '</div>'
+      +   '<div class="t1-card-desc" id="t1-user-desc">' + userDescHTML + '</div>'
       + '</div>'
       // Ở giữa: Tiêu đề Đấu nhanh, Khắc chế, Nút CHIẾN ĐẤU
       + '<div class="t1-vs-mid">'
       +   '<div class="t1-mid-stage">🎲 Đấu Nhanh 1v1</div>'
-      +   '<div class="t1-mid-vs-row"><span class="t1-mid-vs">VS</span><span id="t1-matchup-slot">' + t1MatchupBadgeHTML(myCard, opp) + '</span></div>'
-      +   '<button type="button" class="t1-go-btn" id="t1-go"><span class="t1-go-title">⚔️ CHIẾN ĐẤU</span><span class="t1-go-sub">VÀO TRẬN 1V1</span></button>'
+      +   '<div class="t1-mid-vs-row"><span class="t1-mid-vs">VS</span><span id="t1-matchup-slot">' + matchupHTML + '</span></div>'
+      +   '<button type="button" class="t1-go-btn" id="t1-go"' + goDisabled + '><span class="t1-go-title">⚔️ CHIẾN ĐẤU</span><span class="t1-go-sub">' + goSub + '</span></button>'
       +   '<div class="t1-mid-hint">👇 Chạm thẻ dưới để đổi</div>'
       + '</div>'
-      // Bên phải: Thẻ đối thủ
+      // Bên phải: Thẻ đối thủ (chỉ hiện khi đã chọn thẻ)
       + '<div class="t1-vs-side opp">'
       +   '<div class="t1-vs-tag">🔴 Đối thủ</div>'
-      +   '<div class="t1-card-slot">' + playerCardHTML(opp, false) + '</div>'
-      +   '<div class="t1-card-desc"><b>' + escHtml(opp.name || '') + '</b><small>OVR ' + oppOvr + oppEl + '</small></div>'
+      +   '<div class="t1-card-slot" id="t1-opp-card-slot">' + oppSlotHTML + '</div>'
+      +   '<div class="t1-card-desc" id="t1-opp-desc">' + oppDescHTML + '</div>'
       + '</div>'
       + '</div>';
   }
@@ -18544,20 +19046,40 @@ function roadmapIcon(def, locked){
     syncBattleSortUI();
 
     var sorted = sortBattleCards(cards, battleSort.key, battleSort.desc, scores);
-    if(!window.__pickCard1 || !cards.some(function(c){ return c.dbId === window.__pickCard1.dbId; })){
-      window.__pickCard1 = (bestId && cards.find(function(c){ return c.dbId === bestId; })) || sorted[0];
+    // YÊU CẦU 8: Không tự động gán thẻ khi vừa vào chế độ, bắt buộc người chơi tự chọn thẻ
+    if(window.__lastBattleModeRendered !== battleMode + '_' + (roadPickStage || 0)){
+      window.__lastBattleModeRendered = battleMode + '_' + (roadPickStage || 0);
+      window.__pickCard1 = null;
+    }
+    if(window.__pickCard1 && !cards.some(function(c){ return c.dbId === window.__pickCard1.dbId; })){
+      window.__pickCard1 = null;
     }
 
-    // Vẽ khung đối đầu 1v1 trên cùng 1 hàng: Thẻ user bên trái, Đối thủ bên phải
+    // Vẽ khung đối đầu 1v1: Ô user placeholder 'Chưa chọn', đối thủ và nhãn so sánh chỉ hiện khi đã chọn
     pickHead.innerHTML = (battleMode === 'road' && roadPickStage) ? roadHeadHTML(roadPickStage, window.__pickCard1) : quickHeadHTML(window.__pickCard1);
 
     function wireT1Go(card){
       var btn = document.getElementById('t1-go');
-      if(btn && card){
+      if(!btn) return;
+      if(card){
+        btn.removeAttribute('disabled');
+        btn.style.opacity = '1';
+        btn.style.cursor = 'pointer';
+        btn.style.pointerEvents = 'auto';
+        var sub = btn.querySelector('.t1-go-sub');
+        if(sub) sub.textContent = 'VÀO TRẬN 1V1';
         btn.onclick = function(e){
           e.stopPropagation();
           startBattle(card);
         };
+      } else {
+        btn.setAttribute('disabled', 'disabled');
+        btn.style.opacity = '0.45';
+        btn.style.cursor = 'not-allowed';
+        btn.style.pointerEvents = 'none';
+        var sub = btn.querySelector('.t1-go-sub');
+        if(sub) sub.textContent = 'HÃY CHỌN THẺ';
+        btn.onclick = null;
       }
     }
 
@@ -18570,6 +19092,13 @@ function roadmapIcon(def, locked){
       if(desc){
         var elTxt = card.battle && card.battle.element ? (' · ' + elementName(card.battle.element)) : '';
         desc.innerHTML = '<b>' + escHtml(card.name || '') + '</b><small>OVR ' + (card.realOvr || card.ovr || 0) + elTxt + '</small>';
+      }
+      var oppSlot = document.getElementById('t1-opp-card-slot');
+      if(oppSlot && opp) oppSlot.innerHTML = playerCardHTML(opp, false);
+      var oppDesc = document.getElementById('t1-opp-desc');
+      if(oppDesc && opp){
+        var oppElTxt = opp.battle && opp.battle.element ? (' · ' + elementName(opp.battle.element)) : '';
+        oppDesc.innerHTML = '<b>' + escHtml(opp.name || '') + '</b><small>OVR ' + (opp.realOvr || opp.ovr || 0) + oppElTxt + '</small>';
       }
       var mSlot = document.getElementById('t1-matchup-slot');
       if(mSlot && opp) mSlot.innerHTML = t1MatchupBadgeHTML(card, opp);
@@ -22177,6 +22706,41 @@ function roadmapIcon(def, locked){
     }
   }
 
+    /* Phân loại khu vực cầu thủ: Châu Âu, Châu Mỹ, Châu Phi-Á-Úc (Châu Phi + Châu Á + Châu Đại Dương + ngoài Âu-Mỹ) */
+  function getPlayerRegion(p){
+    if(!p) return 'asia_africa_oceania';
+    var nat = ((p.nation || '') + ' ' + (p.nationFlag || '') + ' ' + ((p.battle && p.battle.nationName) || '')).toLowerCase();
+
+    var europeKw = [
+      'france', 'pháp', '_18.', 'england', 'anh', '_14.', 'germany', 'đức', '_21.',
+      'spain', 'tây ban nha', '_45.', 'portugal', 'bồ đào nha', '_38.',
+      'netherlands', 'hà lan', '_34.', 'italy', 'ý', '_31.', 'belgium', 'bỉ', '_7.',
+      'croatia', '_10.', 'denmark', 'đan mạch', '_13.', 'norway', 'na uy', '_36.',
+      'sweden', 'thụy điển', '_46.', 'poland', 'ba lan', '_37.', 'austria', 'áo', '_4.',
+      'switzerland', 'thụy sĩ', '_47.', 'scotland', '_42.', 'wales', '_50.',
+      'serbia', '_43.', 'czech', 'séc', '_12.', 'turkey', 'thổ nhĩ kỳ', '_48.',
+      'georgia', '_19.', 'russia', 'nga', '_40.', 'ukraine', '_49.',
+      'hungary', 'hung-ga-ri', '_26.', 'greece', 'hy lạp', '_22.',
+      'romania', '_39.', 'slovakia', '_44.', 'slovenia', 'finland', 'ireland'
+    ];
+    for(var i = 0; i < europeKw.length; i++){
+      if(nat.indexOf(europeKw[i]) >= 0) return 'europe';
+    }
+
+    var americasKw = [
+      'brazil', '_54.', 'argentina', '_52.', 'uruguay', '_60.',
+      'colombia', '_55.', 'chile', '_56.', 'mexico', '_58.',
+      'usa', 'united states', 'mỹ', '_59.', 'canada', '_53.',
+      'peru', '_61.', 'ecuador', '_57.', 'paraguay', 'venezuela',
+      'costa rica', 'jamaica'
+    ];
+    for(var j = 0; j < americasKw.length; j++){
+      if(nat.indexOf(americasKw[j]) >= 0) return 'americas';
+    }
+
+    return 'asia_africa_oceania';
+  }
+
   function getMatchingDesignatedCards(posFilter, teamFilter, month){
     var picks = (month && month.designatedPicks) || [];
     var pickedDbIds = picks.map(function(x){ return x.dbId; });
@@ -22202,19 +22766,10 @@ function roadmapIcon(def, locked){
         }
       }
 
-      // 2. Quốc gia / CLB
+      // 2. Khu vực: Tất cả, Châu Âu, Châu Mỹ, Châu Phi-Á-Úc
       if(teamFilter && teamFilter !== 'all'){
-        if(teamFilter.indexOf('nat:') === 0){
-          var nat = teamFilter.slice(4);
-          if(p.nation !== nat && (!p.battle || p.battle.nationName !== nat)) return false;
-        } else if(teamFilter.indexOf('club:') === 0){
-          var cl = teamFilter.slice(5);
-          if(p.clubLogo !== cl && p.club !== cl) return false;
-        } else if(teamFilter === 'rarity:icon'){
-          if(String(p.rarity).toLowerCase() !== 'icon' && (!p.battle || !p.battle.isLegend)) return false;
-        } else if(teamFilter === 'rarity:rare'){
-          if(String(p.rarity).toLowerCase() !== 'rare') return false;
-        }
+        var reg = getPlayerRegion(p);
+        if(reg !== teamFilter) return false;
       }
 
       return true;
@@ -22233,7 +22788,17 @@ function roadmapIcon(def, locked){
 
     // Xáo trộn ngẫu nhiên để tăng tính may mắn / thú vị
     pool = pool.slice().sort(function(){ return Math.random() - 0.5; });
-    var displayCards = pool.slice(0, 25);
+    var displayCards = [];
+    if(pool.length >= 9){
+      displayCards = pool.slice(0, 9);
+    } else if(pool.length > 0){
+      // Cho trùng lặp để đủ 9 ô thẻ
+      while(displayCards.length < 9){
+        for(var pi = 0; pi < pool.length && displayCards.length < 9; pi++){
+          displayCards.push(pool[pi]);
+        }
+      }
+    }
     desGridCards = displayCards;
 
     var elMatch = document.getElementById('des-match-count');
@@ -22247,7 +22812,7 @@ function roadmapIcon(def, locked){
     grid.classList.toggle('locked', left <= 0);
 
     var html = '';
-    for(var i = 0; i < 25; i++){
+    for(var i = 0; i < 9; i++){
       if(i < displayCards.length){
         var card = displayCards[i];
         html += '<div class="des-cell" data-slot="' + i + '">'
@@ -22260,11 +22825,11 @@ function roadmapIcon(def, locked){
           + '</div>'
           + '</div>';
       } else {
-        // Ô thừa bỏ trống theo đúng yêu cầu
         html += '<div class="des-cell empty"></div>';
       }
     }
     grid.innerHTML = html;
+    if(typeof pkWireGridTilt === 'function') pkWireGridTilt(grid);
 
     renderDesignatedPickedList(picks);
   }
@@ -22527,7 +23092,7 @@ function roadmapIcon(def, locked){
      - Mọi cấu hình nằm ở đây, chia tab theo nhóm chức năng. Chỉ phiên đăng nhập Quản trị viên mới mở được.
      - Quản trị viên đăng nhập xong vào thẳng trang này (cờ phiên 'dbcd_admin_landing'); nút 🛡️ trên đầu trang để quay lại.
      - Thẻ có data-save="1" cần bấm "Lưu cài đặt"; các thẻ "Có tác dụng ngay" (dữ liệu, hồ sơ, mật khẩu) thực hiện tức thì. */
-  var AP_TABS = ['system','tasks','points','rewards','battle','data','notice','wtour','stats'];
+  var AP_TABS = ['system','tasks','points','rewards','battle','data','coaches','notice','wtour','stats'];
   var apTab = 'system', apDirty = false, apRewardsBackup = null, apOpener = null;
 
   
@@ -22605,6 +23170,7 @@ function roadmapIcon(def, locked){
     });
     var body = document.getElementById('ap-body'); if(body) body.scrollTop = 0;
     if(key === 'stats' && typeof stOpen === 'function') stOpen();
+    if(key === 'coaches'){ renderAdminCoaches(); initCoachAdminEvents(); }
   }
   
   /* ===== CẤU HÌNH PLAYSTYLE FX TRONG TAB ADMIN (Giai đoạn 6) ===== */
@@ -22712,6 +23278,244 @@ function roadmapIcon(def, locked){
     if(host){
       host.addEventListener('change', function(){ if(typeof apSetDirty === 'function') apSetDirty(true); });
       host.addEventListener('input', function(){ if(typeof apSetDirty === 'function') apSetDirty(true); });
+    }
+  }
+
+  
+  /* ===== QUẢN TRỊ VIÊN: QUẢN LÝ HUẤN LUYỆN VIÊN (COACHES ADMIN) ===== */
+  function renderAdminCoaches(){
+    var listEl = document.getElementById('admin-coaches-list');
+    if(!listEl) return;
+    var keys = Object.keys(COACHES_DB || {});
+    keys.sort(function(a, b){
+      var oa = (COACHES_DB[a] && COACHES_DB[a].order != null) ? COACHES_DB[a].order : 99;
+      var ob = (COACHES_DB[b] && COACHES_DB[b].order != null) ? COACHES_DB[b].order : 99;
+      return oa - ob;
+    });
+
+    listEl.innerHTML = keys.map(function(cid){
+      var c = COACHES_DB[cid];
+      var mv = c.mainVersion || 'v1';
+      var v = (c.versions && c.versions[mv]) || {};
+      var imgHtml = v.image
+        ? ('<img src="' + escHtml(v.image) + '" style="width:40px;height:40px;border-radius:8px;object-fit:cover;border:1px solid #F59E0B">')
+        : ('<div style="width:40px;height:40px;border-radius:8px;background:#1E293B;border:1px solid #475569;display:flex;align-items:center;justify-content:center;font-size:18px">🧭</div>');
+
+      return '<div style="display:flex;align-items:center;gap:12px;background:rgba(30,41,59,0.7);border:1px solid rgba(148,163,184,0.2);padding:10px 14px;border-radius:10px">'
+        + imgHtml
+        + '<div style="flex:1;min-width:0">'
+        +   '<div style="font-weight:800;color:#F8FAFC">' + escHtml(c.name || cid) + ' <small style="color:#94A3B8">(' + escHtml(v.label || '') + ')</small></div>'
+        +   '<div style="font-size:12px;color:#CBD5E1">Chương ' + (v.chapter || 0) + ' · 🧩 ' + (v.price || 0) + ' mảnh · Mã: ' + escHtml(cid) + '</div>'
+        + '</div>'
+        + '<div style="display:flex;gap:6px">'
+        +   '<button type="button" class="btn-secondary" style="font-size:11px;padding:3px 8px" onclick="editCoachAdmin(\'' + escHtml(cid) + '\')">Sửa</button>'
+        +   (cid === 'default' ? '' : '<button type="button" class="btn-secondary" style="font-size:11px;padding:3px 8px;color:#EF4444" onclick="deleteCoachAdmin(\'' + escHtml(cid) + '\')">Xóa</button>')
+        + '</div>'
+        + '</div>';
+    }).join('');
+  }
+
+  function editCoachAdmin(cid){
+    var c = COACHES_DB[cid];
+    if(!c) return;
+    var mv = c.mainVersion || 'v1';
+    var v = (c.versions && c.versions[mv]) || {};
+
+    document.getElementById('coach-modal-title').textContent = 'Chỉnh sửa HLV: ' + c.name;
+    document.getElementById('cedit-id').value = cid;
+    document.getElementById('cedit-id-display').value = cid;
+    document.getElementById('cedit-id-display').readOnly = true;
+    document.getElementById('cedit-name').value = c.name || '';
+    document.getElementById('cedit-chapter').value = v.chapter != null ? v.chapter : 1;
+    document.getElementById('cedit-price').value = v.price != null ? v.price : 400;
+    document.getElementById('cedit-order').value = c.order != null ? c.order : 1;
+    document.getElementById('cedit-label').value = v.label || '';
+    document.getElementById('cedit-image').value = v.image || '';
+    document.getElementById('cedit-desc').value = v.desc || '';
+
+    updateCoachImagePreview(v.image);
+    document.getElementById('admin-coach-edit-modal').style.display = 'flex';
+  }
+
+  function updateCoachImagePreview(url){
+    var img = document.getElementById('coach-image-preview');
+    var st = document.getElementById('coach-image-status');
+    if(!img || !st) return;
+    if(url && url.indexOf('http') === 0){
+      img.src = url;
+      img.style.display = 'block';
+      img.onerror = function(){
+        img.style.display = 'none';
+        st.textContent = '⚠️ Không tải được ảnh từ link này';
+        st.style.color = '#EF4444';
+      };
+      img.onload = function(){
+        st.textContent = '✅ Ảnh hợp lệ (Cloudinary)';
+        st.style.color = '#22C55E';
+      };
+    } else {
+      img.style.display = 'none';
+      st.textContent = 'Chưa có ảnh (sẽ dùng huy hiệu mặc định)';
+      st.style.color = '#94A3B8';
+    }
+  }
+
+  function deleteCoachAdmin(cid){
+    if(cid === 'default'){
+      alert('Không thể xóa HLV mặc định!');
+      return;
+    }
+    if(!confirm('Bạn có chắc chắn muốn xóa HLV ' + (COACHES_DB[cid] ? COACHES_DB[cid].name : cid) + '?')){
+      return;
+    }
+    delete COACHES_DB[cid];
+    buildCoachRuntimeTables();
+    renderAdminCoaches();
+  }
+
+  function initCoachAdminEvents(){
+    var btnExport = document.getElementById('btn-coach-export');
+    if(btnExport){
+      btnExport.onclick = function(){
+        var blob = new Blob([JSON.stringify(COACHES_DB, null, 2)], {type: 'application/json'});
+        var a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'coaches.json';
+        a.click();
+      };
+    }
+
+    var btnImport = document.getElementById('btn-coach-import');
+    var fileInput = document.getElementById('coach-file-input');
+    if(btnImport && fileInput){
+      btnImport.onclick = function(){ fileInput.click(); };
+      fileInput.onchange = function(e){
+        var f = e.target.files && e.target.files[0];
+        if(!f) return;
+        var reader = new FileReader();
+        reader.onload = function(evt){
+          try{
+            var parsed = JSON.parse(evt.target.result);
+            if(parsed && typeof parsed === 'object' && Object.keys(parsed).length){
+              COACHES_DB = parsed;
+              try{ localStorage.setItem('kidchart_coaches', JSON.stringify(parsed)); }catch(err){}
+              buildCoachRuntimeTables();
+              renderAdminCoaches();
+              document.getElementById('coach-admin-status').textContent = '✅ Đã nhập thành công ' + Object.keys(parsed).length + ' HLV từ file!';
+            }
+          }catch(err){
+            alert('File JSON không hợp lệ: ' + err.message);
+          }
+        };
+        reader.readAsText(f);
+      };
+    }
+
+    var btnSaveFb = document.getElementById('btn-coach-save-firebase');
+    if(btnSaveFb){
+      btnSaveFb.onclick = function(){
+        btnSaveFb.disabled = true;
+        btnSaveFb.textContent = '⏳ Đang lưu...';
+        fetch(FIREBASE_BASE + '/kidchart_coaches.json', {
+          method: 'PUT',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify(COACHES_DB)
+        }).then(function(r){
+          btnSaveFb.disabled = false;
+          btnSaveFb.textContent = '☁️ Lưu lên Firebase';
+          if(r.ok){
+            document.getElementById('coach-admin-status').textContent = '✅ Đã lưu thành công dữ liệu HLV lên Firebase!';
+            try{ localStorage.setItem('kidchart_coaches', JSON.stringify(COACHES_DB)); }catch(e){}
+            alert('Đã lưu thành công dữ liệu HLV lên Firebase!');
+          } else {
+            var msg = 'Không ghi được lên Firebase (HTTP ' + r.status + ').\n\nNguyên nhân: Nhánh kidchart_coaches chưa được cấp quyền ghi trong Firebase Console.\n\nGiải pháp: Vào Firebase Console > Realtime Database > Rules, thêm nhánh kidchart_coaches.';
+            alert(msg);
+          }
+        }).catch(function(err){
+          btnSaveFb.disabled = false;
+          btnSaveFb.textContent = '☁️ Lưu lên Firebase';
+          alert('Mất kết nối: ' + err.message);
+        });
+      };
+    }
+
+    var btnAdd = document.getElementById('btn-add-coach');
+    if(btnAdd){
+      btnAdd.onclick = function(){
+        document.getElementById('coach-modal-title').textContent = 'Thêm HLV Mới';
+        document.getElementById('cedit-id').value = '';
+        document.getElementById('cedit-id-display').value = '';
+        document.getElementById('cedit-id-display').readOnly = false;
+        document.getElementById('cedit-name').value = '';
+        document.getElementById('cedit-chapter').value = 1;
+        document.getElementById('cedit-price').value = 400;
+        document.getElementById('cedit-order').value = Object.keys(COACHES_DB).length;
+        document.getElementById('cedit-label').value = '';
+        document.getElementById('cedit-image').value = '';
+        document.getElementById('cedit-desc').value = '';
+        updateCoachImagePreview('');
+        document.getElementById('admin-coach-edit-modal').style.display = 'flex';
+      };
+    }
+
+    var btnCloseModal = document.getElementById('btn-coach-modal-close');
+    var btnCancelModal = document.getElementById('btn-coach-modal-cancel');
+    if(btnCloseModal) btnCloseModal.onclick = function(){ document.getElementById('admin-coach-edit-modal').style.display = 'none'; };
+    if(btnCancelModal) btnCancelModal.onclick = function(){ document.getElementById('admin-coach-edit-modal').style.display = 'none'; };
+
+    var imgInput = document.getElementById('cedit-image');
+    if(imgInput){
+      imgInput.oninput = function(){ updateCoachImagePreview(imgInput.value.trim()); };
+    }
+
+    var editForm = document.getElementById('coach-edit-form');
+    if(editForm){
+      editForm.onsubmit = function(e){
+        e.preventDefault();
+        var origId = document.getElementById('cedit-id').value;
+        var newId = document.getElementById('cedit-id-display').value.trim().toLowerCase();
+        if(!newId){ alert('Vui lòng nhập ID hợp lệ'); return; }
+        var id = origId || newId;
+
+        var c = COACHES_DB[id] || {
+          id: id,
+          born: '',
+          country: 'Quốc tế',
+          clubs: '',
+          bio: '',
+          active: true,
+          mainVersion: id,
+          versions: {}
+        };
+
+        c.name = document.getElementById('cedit-name').value.trim();
+        c.order = parseInt(document.getElementById('cedit-order').value, 10) || 1;
+        c.active = true;
+
+        var mv = c.mainVersion || id;
+        var v = (c.versions && c.versions[mv]) || {
+          vId: mv,
+          active: true,
+          style: { poss: 0.5, attN: 4, defN: 4, cnt: 0.4, sig: 0.9, drain: 1.0, att: [0,0,0], stop: [0,0,0] },
+          proCon: { pro: 'Cân bằng', con: 'Ổn định' },
+          news: { i: 'HLV', c: c.name, b: '', cl: '', fm: [4,3,3], st: ['Triển khai bóng tiêu chuẩn.'], hn: ['Chứng chỉ HLV Chuyên nghiệp'] }
+        };
+
+        v.label = document.getElementById('cedit-label').value.trim();
+        v.chapter = parseInt(document.getElementById('cedit-chapter').value, 10) || 1;
+        v.price = parseInt(document.getElementById('cedit-price').value, 10) || 400;
+        v.image = document.getElementById('cedit-image').value.trim();
+        v.desc = document.getElementById('cedit-desc').value.trim();
+
+        c.versions = c.versions || {};
+        c.versions[mv] = v;
+        c.mainVersion = mv;
+        COACHES_DB[id] = c;
+
+        buildCoachRuntimeTables();
+        renderAdminCoaches();
+        document.getElementById('admin-coach-edit-modal').style.display = 'none';
+      };
     }
   }
 
@@ -27351,6 +28155,117 @@ function roadmapIcon(def, locked){
   ];
   var SEASON_TEAM_POOL = ['Shooting Star FC','Baby Dragons United','Panda City','Rainbow Dolphins','Hanoi Leopards','Paper Tigers Athletic',
     'Snow Wolves Rovers','Blue Eagles','Little Unicorns','Baby Elephants Sporting','Owl Town','Dragonflies FC'];
+    /* ===== HỆ THỐNG HUẤN LUYỆN VIÊN (COACHES) FIREBASE & BẢN ĐỒ CHIẾN THUẬT ===== */
+  var BUILTIN_COACHES = {"default": {"id": "default", "name": "HLV Cơ Bản", "born": "", "country": "Toàn Cầu", "clubs": "Học Viện Bóng Đá", "bio": "Huấn luyện viên nền tảng với phong cách chiến thuật cân bằng, phù hợp với các đội bóng mới thành lập.", "order": 0, "active": true, "mainVersion": "v1", "versions": {"v1": {"vId": "v1", "label": "Chiến thuật Tiêu chuẩn", "image": "", "chapter": 0, "price": 0, "active": true, "style": {"poss": 0.5, "attN": 4, "defN": 4, "cnt": 0.4, "sig": 0.9, "drain": 1, "att": [0, 0, 0], "stop": [0, 0, 0]}, "desc": "Phong cách chiến thuật cân bằng, ổn định, không đòi hỏi sơ đồ lý tưởng.", "proCon": {"pro": "Cân bằng, không trừ điểm khi lệch sơ đồ", "con": "Không có điểm thưởng chiến thuật đặc biệt"}, "news": {"i": "CB", "c": "HLV Cơ Bản", "b": "Đào tạo trẻ", "cl": "Học Viện Bóng Đá", "fm": [4, 3, 3], "st": ["Đội hình giữ cự ly cơ bản, phân phối bóng đều khắp các tuyến.", "Cầu thủ tập trung vào nhiệm vụ cá nhân, duy trì nhịp độ ổn định."], "ar": [], "hn": ["Nền tảng đào tạo trẻ"]}}}}};
+  var COACHES_DB = BUILTIN_COACHES;
+  var DEFAULT_COACH_SYN = -0.3;
+
+  function getCoachUnlocks(){
+    try{
+      var d = JSON.parse(localStorage.getItem('kidchart_coach_unlocks') || '{}');
+      return (d && typeof d === 'object') ? d : {};
+    }catch(e){ return {}; }
+  }
+
+  function saveCoachUnlocks(obj){
+    try{ localStorage.setItem('kidchart_coach_unlocks', JSON.stringify(obj)); }catch(e){}
+    if(typeof cloudPush === 'function') cloudPush('kidchart_coach_unlocks', obj);
+  }
+
+  function isCoachUnlocked(coachId, vId){
+    if(coachId === 'default') return true;
+    var un = getCoachUnlocks();
+    var k = coachId + '~' + (vId || coachId);
+    return !!(un[k] || un[coachId]);
+  }
+
+  function unlockCoach(coachId, vId){
+    var un = getCoachUnlocks();
+    var k = coachId + '~' + (vId || coachId);
+    un[k] = Date.now();
+    saveCoachUnlocks(un);
+  }
+
+  function getCoachForChapter(ch){
+    for(var cid in COACHES_DB){
+      var c = COACHES_DB[cid];
+      if(!c || !c.active) continue;
+      var mv = c.mainVersion;
+      if(mv && c.versions && c.versions[mv]){
+        var v = c.versions[mv];
+        if(v.active && v.chapter === ch){
+          return { coach: c, version: v, coachId: cid, vId: mv };
+        }
+      }
+    }
+    return null;
+  }
+
+  function buildCoachRuntimeTables(){
+    try{
+      var stylesList = [];
+      for(var cid in COACHES_DB){
+        var c = COACHES_DB[cid];
+        if(!c || !c.active) continue;
+        var mv = c.mainVersion;
+        if(!mv || !c.versions || !c.versions[mv]) continue;
+        var v = c.versions[mv];
+        if(!v.active) continue;
+
+        if(v.style) SE_STYLE[cid] = v.style;
+        if(v.desc) SEASON_STYLE_DESC[cid] = v.desc;
+        if(v.proCon) SEASON_STYLE_PC[cid] = v.proCon;
+        if(v.news) SE_NEWS[cid] = v.news;
+
+        var ic = (v.news && v.news.i) ? (v.news.i.indexOf(' ') >= 0 ? v.news.i : (cid === 'default' ? '📋' : '🎯')) : '🎯';
+        if(cid === 'default') ic = '📋';
+        stylesList.push({
+          id: cid,
+          ic: ic,
+          name: c.name + (cid === 'default' ? '' : (' (' + (v.label || '') + ')')),
+          order: c.order != null ? c.order : 99,
+          chapter: v.chapter || 0,
+          price: v.price || 0
+        });
+      }
+      stylesList.sort(function(a, b){ return a.order - b.order; });
+      if(stylesList.length) SEASON_STYLES = stylesList;
+    }catch(err){
+      console.warn('buildCoachRuntimeTables error', err);
+    }
+  }
+
+  function loadCoaches(){
+    // 1. Đọc ngay từ bộ nhớ đệm cục bộ (localStorage) để nạp tức thì không chờ mạng
+    try{
+      var local = JSON.parse(localStorage.getItem('kidchart_coaches') || 'null');
+      if(local && typeof local === 'object' && Object.keys(local).length){
+        COACHES_DB = local;
+      } else {
+        COACHES_DB = BUILTIN_COACHES;
+      }
+    }catch(e){
+      COACHES_DB = BUILTIN_COACHES;
+    }
+    buildCoachRuntimeTables();
+
+    // 2. Tải bản mới nhất từ Firebase node /kidchart_coaches.json và cập nhật tự động
+    try{
+      if(typeof fetch === 'function' && typeof FIREBASE_BASE !== 'undefined'){
+        fetch(FIREBASE_BASE + '/kidchart_coaches.json').then(function(r){
+          return r.ok ? r.json() : null;
+        }).then(function(data){
+          if(data && typeof data === 'object' && Object.keys(data).length){
+            COACHES_DB = data;
+            try{ localStorage.setItem('kidchart_coaches', JSON.stringify(data)); }catch(e){}
+            buildCoachRuntimeTables();
+            if(typeof renderCoachPanel === 'function') renderCoachPanel();
+          }
+        }).catch(function(e){});
+      }
+    }catch(e){}
+  }
+
   var SEASON_STYLES = [{id:'tiki', ic:'🎯', name:'Tiki-Taka (Guardiola)'}, {id:'press', ic:'⚡', name:'Gegenpressing (Klopp)'}, {id:'counter', ic:'🛡️', name:'Phản công (Mourinho)'}, {id:'flex', ic:'🧠', name:'Linh hoạt (Ancelotti)'}, {id:'choli', ic:'🔥', name:'Cholismo (Simeone)'}, {id:'never', ic:'💪', name:'Không bỏ cuộc (Ferguson)'}, {id:'total', ic:'🌀', name:'Tổng lực (Cruyff)'}, {id:'steel', ic:'🧱', name:'Kỷ luật thép (Park Hang-seo)'}, {id:'conte', ic:'🦅', name:'3 trung vệ, cánh dâng (Conte)'}, {id:'wenger', ic:'🎼', name:'Chuyền tấn công (Wenger)'}, {id:'tuchel', ic:'🧩', name:'3 hậu vệ linh hoạt (Tuchel)'}, {id:'guttmann', ic:'🚀', name:'Tấn công 4-2-4 (Guttmann)'}, {id:'herrera', ic:'🔒', name:'Catenaccio (Herrera)'}, {id:'sacchi', ic:'🧲', name:'Ép khu vực (Sacchi)'}, {id:'bielsa', ic:'🐺', name:'Cuồng nhiệt (Bielsa)'}, {id:'delbosque', ic:'🎻', name:'Kiểm soát cân bằng (Del Bosque)'}, {id:'scolari', ic:'👨‍👩‍👧‍👦', name:'Gia đình Scolari'}, {id:'sebes', ic:'✨', name:'Số 9 lùi sâu (Sebes)'}];
   var SEASON_GROUPS = [
     {k:'GK',  ic:'🧤', n:'Thủ môn',  pos:['GK']},
@@ -27426,6 +28341,11 @@ function roadmapIcon(def, locked){
     if(!s.tier || s.tier < 1) s.tier = 1;
     if(s.tier > 10) s.tier = 10;
     if(!s.watch || typeof s.watch !== 'object') s.watch = {d:'', n:0};
+    if(!s.coachMigrated){   // một lần: chuyển đổi HLV về mặc định
+      s.styleBy = {};
+      s.coachMigrated = 1;
+      safeSet(SEASON_KEY, s);
+    }
     if(!s._en){   // một lần: đổi tên đội trong các mùa giải đã lưu sang tiếng Anh
       var raw = JSON.stringify(s), mp = {"Sao Băng FC":"Shooting Star FC","Rồng Con United":"Baby Dragons United","Gấu Trúc City":"Panda City","Cá Heo Ngũ Sắc":"Rainbow Dolphins","Báo Đốm Hà Nội":"Hanoi Leopards","Hổ Giấy Athletic":"Paper Tigers Athletic","Sói Tuyết Rovers":"Snow Wolves Rovers","Đại Bàng Xanh":"Blue Eagles","Kỳ Lân Tí Hon":"Little Unicorns","Voi Con Sporting":"Baby Elephants Sporting","Cú Mèo Town":"Owl Town","Chuồn Chuồn Kim":"Dragonflies FC","Đội của bé":"My Team"}, ch = false;
       Object.keys(mp).forEach(function(k){ if(raw.indexOf(k) >= 0){ raw = raw.split(k).join(mp[k]); ch = true; } });
@@ -28003,7 +28923,7 @@ function roadmapIcon(def, locked){
     var pts = sRoundPts(se, r, true); sSave(st);
     var ids = lu.starters.map(function(x){ return x.id; }).concat(lu.bench.map(function(x){ return x.id; }));
     var form = sPlayerForm(se, r, ids, pts), ar = sArrow(form.team, SE_FORM_MAX / 15);
-    var cur = (st.styleBy && st.styleBy[lu.f.id]) || 'flex', wxo = {wx:rd.wx}, w0 = sWx(wxo);
+    var cur = (st.styleBy && st.styleBy[lu.f.id]) || 'default', wxo = {wx:rd.wx}, w0 = sWx(wxo);
     var h = '<div class="lp-head"><h3>Vòng ' + (r + 1) + ' · ' + escHtml(sMyName()) + ' VS ' + escHtml(opp.team.name) + '</h3>'
       + '<div class="lp-sub">' + (opp.home ? '🏠 Sân nhà' : '✈️ Sân khách') + ' · ' + w0.ic + ' ' + w0.name + ' · Sơ đồ <b>' + escHtml(lu.f.name) + '</b> · ' + sStyleInfo(cur).ic + ' ' + escHtml(sStyleInfo(cur).name) + ' <span class="lp-hint">(đổi ở tab Sơ đồ thi đấu)</span></div>'
       + '<div class="lp-stats"><span>Điểm tuần <b>' + pts + '</b></span><span>Mốc 0% = <b>' + sFormBase() + '</b> (' + (sFormBase() / 7) + '/ngày)</span><span>Phong độ đội <b class="se-f ' + ar.cls + '">' + ar.ic + ' ' + (form.team >= 0 ? '+' : '') + form.team.toFixed(1).replace('.', ',') + '%</b></span></div></div>';
@@ -28171,10 +29091,10 @@ function roadmapIcon(def, locked){
     return n ? Math.max(-1, Math.min(1, tot / n)) : 0;
   }
   function seSynergy(team, styleId){
-    styleId = styleId || team.style;
+    styleId = styleId || team.style || 'default';
+    if(styleId === 'default') return {form:0.5, stat:0, bonus:DEFAULT_COACH_SYN};
     var f = seFormFit(styleId, team.slots), sf = seStatFit(styleId, team.pitch);
-    if(styleId === 'flex') return {form:0.5, stat:0, bonus:0.5};   // linh hoạt: hợp mọi sơ đồ, không hợp lắm cũng không lệch
-    return {form:f, stat:sf, bonus:(f - 0.5) * SE_P.synF + sf * SE_P.synS - (f < 0.5 ? (0.5 - f) * 2 : 0)};   // sơ đồ lệch hẳn với phong cách → cả đội vướng víu
+    return {form:f, stat:sf, bonus:(f - 0.5) * SE_P.synF + sf * SE_P.synS - (f < 0.5 ? (0.5 - f) * 2 : 0)};
   }
 
   /* ---------- tạo trận ---------- */
@@ -28911,7 +29831,7 @@ function roadmapIcon(def, locked){
   }
   function sTeamFromLineup(lu, form, styleId, name, human, idPrefix){   // name/human/idPrefix: dùng cho đội bạn bè (máy điều khiển, id có tiền tố để không trùng với đội mình)
     function pc(x){ return form && form.per[x.id] ? form.per[x.id].pct : 0; }
-    return {name:name || sMyName(), human:human !== false, style:styleId || 'flex', fid:lu.f.id, slots:lu.f.positions.map(function(x){ return x.pos; }),
+    return {name:name || sMyName(), human:human !== false, style:styleId || 'default', fid:lu.f.id, slots:lu.f.positions.map(function(x){ return x.pos; }),
       pitch:lu.starters.map(function(x){ return sSePlayer(x.p, pc(x), idPrefix); }), bench:lu.bench.map(function(x){ return sSePlayer(x.p, pc(x), idPrefix); }), out:[]};
   }
   /* Đội máy: 11 + 7 lấy từ kho cầu thủ chung (PLAYER_DB), OVR bám theo OVR đội, sơ đồ hợp phong cách. Cố định theo mùa (lưu ở se.teams[i].sq). */
@@ -28946,7 +29866,7 @@ function roadmapIcon(def, locked){
   function sBuildMatch(st, se, r, lu){
     var opp = sOpp(se, r), pts = sRoundPts(se, r, true);
     var all = lu.starters.concat(lu.bench), ids = all.map(function(x){ return x.id; }), form = sPlayerForm(se, r, ids, pts);
-    var styleId = (st.styleBy && st.styleBy[lu.f.id]) || 'flex';
+    var styleId = (st.styleBy && st.styleBy[lu.f.id]) || 'default';
     var mine = sTeamFromLineup(lu, form, styleId), theirs = sOppTeam(se, opp.team.id, all.map(function(x){ return x.p.name; }), r);
     var m = seCreate({seed:hashStr(se.id + ':live:' + r), N:12, gx:sCfg().gx, teams:[mine, theirs], qT:Math.min(1, (se.tier - 1) / 9 * 0.6), secs:settings.quizSeconds || 15});
     m.r = r; m.home = opp.home; m.wx = (function(){ var q = sRd(se, r); return (q && typeof q.wx === 'number') ? q.wx : sRollWx(); })(); SE_WX_CUR = m.wx; m.phase = 'break'; m.halfDone = false; m.pts = pts;
@@ -29089,7 +30009,7 @@ function roadmapIcon(def, locked){
   }
   function sStyleBox(team, cur, extra, mode){
     var sy = seSynergy(team, cur), fl = sy.form >= 0.75 ? 'rất hợp' : (sy.form >= 0.5 ? 'tạm ổn' : 'lệch'), sl = sy.stat > 0.25 ? 'hợp' : (sy.stat > -0.25 ? 'tạm ổn' : 'chưa hợp'), si = sStyleInfo(cur), dr = SE_STYLE[cur].drain;
-    var nw = SE_NEWS[cur] || SE_NEWS.flex, pc = SEASON_STYLE_PC[cur] || {};
+    var nw = SE_NEWS[cur] || SE_NEWS['default'] || SE_NEWS.flex, pc = SEASON_STYLE_PC[cur] || {};
     function fitOf(id){ var bn = seSynergy(team, id).bonus, pc = Math.round(Math.max(0, Math.min(100, 50 + bn * 25))); return {pct:pc, cls:(pc >= 65 ? 'g' : (pc >= 45 ? 'm' : 'b'))}; }
     var fc = fitOf(cur), oc = (sMC && sMC.m) ? sMC.m.teams[1] : seOppNow;   // đối thủ: trong trận lấy từ trận, ngoài trận là đối thủ vòng sắp tới
     var ranked = SEASON_STYLES.map(function(s, i){ var f = fitOf(s.id); return {s:s, f:f, i:i}; }).sort(function(a, b){ return (b.f.pct - a.f.pct) || (a.i - b.i); });   // phù hợp đội hình nhất lên đầu
@@ -29112,7 +30032,7 @@ function roadmapIcon(def, locked){
       + (sMC ? '<details class="nw-d"><summary>📰 Bản tin chiến thuật</summary>' + paper + '</details>' : paper) + '</div>';
   }
   function sStyleHTML(lu, st){
-    var sid = (st.styleBy && st.styleBy[lu.f.id]) || 'flex', t = sTeamFromLineup(lu, null, sid); t.fidName = lu.f.name;
+    var sid = (st.styleBy && st.styleBy[lu.f.id]) || 'default', t = sTeamFromLineup(lu, null, sid); t.fidName = lu.f.name;
     seOppNow = null;
     try{ var se0 = sCurrent(st, sCfg()), r0 = se0 ? sNextRound(se0) : -1, op0 = r0 >= 0 ? sOpp(se0, r0) : null; if(op0) seOppNow = sOppTeam(se0, op0.team.id, lu.starters.concat(lu.bench).map(function(x){ return x.p.name; }), r0); }catch(e){ seOppNow = null; }
     return '<div id="st-wrap">' + sStyleBox(t, sid, '', 'plan') + '</div>';
@@ -31743,10 +32663,10 @@ function roadmapIcon(def, locked){
     var bench = bi.map(function(id){ id = id || ''; return {id:id, p:id ? (by[id] || null) : null}; });
     var missS = starters.filter(function(x){ return !x.p; }).length, missB = bench.filter(function(x){ return !x.p; }).length;
     if(missS || missB) return {ok:false, msg:'Đội hình của đội bạn chưa đủ (còn thiếu ' + missS + ' đá chính, ' + missB + ' dự bị) nên chưa đấu được.'};
-    return {ok:true, lu:{f:f, starters:starters, bench:bench}, style:(styleBy && styleBy[f.id]) || 'flex'};
+    return {ok:true, lu:{f:f, starters:starters, bench:bench}, style:(styleBy && styleBy[f.id]) || 'default'};
   }
   function sFrBuildMatch(st, lu, fl, code, name){
-    var styleId = (st.styleBy && st.styleBy[lu.f.id]) || 'flex';
+    var styleId = (st.styleBy && st.styleBy[lu.f.id]) || 'default';
     var mine = sTeamFromLineup(lu, null, styleId), theirs = sTeamFromLineup(fl.lu, null, fl.style, name, false, 'f:');   // phong độ tuần trung tính cho cả hai
     var seed = hashStr(syncId + ':fr:' + code + ':' + Date.now());
     var m = seCreate(friendlyMatchSetup({mode:'ghost', seed:seed, N:12, gx:sCfg().gx, teams:[mine, theirs], qT:Math.min(1, ((st.tier || 1) - 1) / 9 * 0.6), secs:settings.quizSeconds || 15, me:0}));
@@ -32254,7 +33174,7 @@ function roadmapIcon(def, locked){
     return seHash(ids.map(function(id){ var b = PLAYER_DB_BY_ID[id]; return b ? [id, b.realOvr, b.pos, b.battle && b.battle.element, JSON.stringify(b.realStats)].join(':') : id + ':?'; }).join('|') + '#' + frnCfgHash());
   }
   async function frnRefreshData(){   // tải lại kho cầu thủ + luật dùng chung rồi dựng lại chỉ mục
-    try{ var l = await loadPlayerDb(); if(l && l.length){ PLAYER_DB = l; registerPlayerDb(PLAYER_DB); } var bc = await loadBattleConfig(); if(bc) BATTLE_CONFIG = bc; }catch(e){}
+    try{ var l = await loadPlayerDb(); loadCoaches(); setTimeout(autoCompletePendingSkills, 1500); if(l && l.length){ PLAYER_DB = l; registerPlayerDb(PLAYER_DB); } var bc = await loadBattleConfig(); if(bc) BATTLE_CONFIG = bc; }catch(e){}
   }
   function frnDataBad(d){ var bad = false; ['host', 'guest'].forEach(function(k){ var sn = frlGet(d, 'lineup', k); if(sn && sn.dv != null && String(frnDataFp(sn.pl)) !== String(sn.dv)) bad = true; }); return bad; }
   async function frnDataCheck(R){   // phòng chờ: nếu dữ liệu hai máy lệch → tự làm mới một lần, còn lệch thì báo
@@ -32267,9 +33187,9 @@ function roadmapIcon(def, locked){
     var pl = {}, sum = 0, n = 0;
     lu.starters.concat(lu.bench).forEach(function(x){ if(x.p) pl[x.id] = {d:x.p.dbId || '', b:x.p.ovrBonus || 0, e:x.p.energy || 0}; });
     lu.starters.forEach(function(x){ if(x.p){ sum += (x.p.ovr || x.p.realOvr || 0); n++; } });
-    return {fid:lu.f.id, pitch:lu.starters.map(function(x){ return x.id; }), bench:lu.bench.map(function(x){ return x.id; }), style:styleId || 'flex', pl:pl, avg:n ? Math.round(sum / n * 10) / 10 : 0, tn:teamGet().name || '', dv:frnDataFp(pl)};
+    return {fid:lu.f.id, pitch:lu.starters.map(function(x){ return x.id; }), bench:lu.bench.map(function(x){ return x.id; }), style:styleId || 'default', pl:pl, avg:n ? Math.round(sum / n * 10) / 10 : 0, tn:teamGet().name || '', dv:frnDataFp(pl)};
   }
-  function frnMyStyle(lu){ var st = sLoad(); return (st.styleBy && st.styleBy[lu.f.id]) || 'flex'; }
+  function frnMyStyle(lu){ var st = sLoad(); return (st.styleBy && st.styleBy[lu.f.id]) || 'default'; }
   function frnNotReadyMsg(lu){ return 'Đội hình của ' + escHtml(sMyName()) + ' chưa đủ 11 cầu thủ đá chính (còn thiếu ' + lu.missS + ' vị trí trên sân). Vào Đội hình Trong Mơ xếp đủ 11 cầu thủ trước khi thi đấu nhé!'; }
   async function frnInvite(code){
     if(!frnEligible()) return;
@@ -32977,7 +33897,7 @@ function roadmapIcon(def, locked){
   function frlBuildMatch(R){
     var d = R.d, rs = d.settings || {}, sh = frlGet(d, 'lineup', 'host'), sg = frlGet(d, 'lineup', 'guest'), lh = frlLineup(sh), lg = frlLineup(sg);
     if(!lh || !lg) return null;
-    var tH = sTeamFromLineup(lh, null, (sh && sh.style) || 'flex', (sh && sh.tn) || frnWho(d, 'host'), true, ''), tG = sTeamFromLineup(lg, null, (sg && sg.style) || 'flex', (sg && sg.tn) || frnWho(d, 'guest'), true, '');
+    var tH = sTeamFromLineup(lh, null, (sh && sh.style) || 'default', (sh && sh.tn) || frnWho(d, 'host'), true, ''), tG = sTeamFromLineup(lg, null, (sg && sg.style) || 'flex', (sg && sg.tn) || frnWho(d, 'guest'), true, '');
     var ex = {mode:'live', seed:d.seed, N:12, gx:(typeof rs.gx === 'number' ? rs.gx : 3.25), teams:[tH, tG], qT:(typeof rs.qT === 'number' ? rs.qT : 0.3), secs:rs.quizSecs || 15, me:frlSide(R)};
     if(rs.maxSubs) ex.maxSubs = rs.maxSubs; if(rs.etSituations) ex.etN = rs.etSituations;
     var m = seCreate(friendlyMatchSetup(ex));
