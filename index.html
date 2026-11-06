@@ -5710,6 +5710,15 @@
   }
   .market-search-clear:hover{ color: #F8FAFC; }
 
+  /* ===== Sàn giao dịch: mọi thẻ (cầu thủ / HLV / thẻ dự phòng) cùng 1 kích thước ===== */
+  #market-grid.market-grid{ grid-template-columns:repeat(auto-fill,116px) !important; justify-content:center; gap:10px !important; }
+  @media (min-width:1024px){ #market-grid.market-grid{ grid-template-columns:repeat(8,minmax(0,116px)) !important; } }
+  #market-grid .mkt-card-wrap{ width:100%; max-width:116px; min-width:0; margin:0 auto; }
+  #market-grid .mkt-card-wrap > .player-card{ width:100%; aspect-ratio:var(--fc-ar,.74); height:auto; padding:0; overflow:hidden; border-radius:10px; }
+  #market-grid .mkt-card-wrap > .player-card .fc-card{ width:100%; height:100%; }
+  #market-grid .mkt-badge{ min-height:24px; box-sizing:border-box; }
+
+
   /* Lưới hiển thị thẻ Sàn giao dịch: Bảng 8x3 mặc định trên màn hình rộng */
   .market-grid{
     display: grid;
@@ -18406,6 +18415,23 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
     }
   }
   function cpFit(id, f){ return Math.round(seFormFit(id, f.positions.map(function(x){ return x.pos; })) * 100); }
+  /* Hồ sơ đầy đủ của HLV (dữ liệu Firebase /kidchart_coaches) hiển thị trong Sân đấu */
+  function coachProfileHTML(cid){
+    var c = (COACHES_DB && COACHES_DB[cid]); if(!c) return '';
+    var mv = c.mainVersion || Object.keys(c.versions || {})[0] || 'v1';
+    var v = (c.versions && c.versions[mv]) || {};
+    var rows = [];
+    if(c.country) rows.push(['🌍 Quốc tịch', c.country]);
+    if(c.born) rows.push(['🎂 Sinh', c.born]);
+    if(c.clubs) rows.push(['🛡️ CLB', c.clubs]);
+    if(v.label) rows.push(['🎯 Chiến thuật', v.label]);
+    var img = v.image ? '<img src="' + escHtml(v.image) + '" alt="" referrerpolicy="no-referrer" style="width:46px;height:46px;border-radius:10px;object-fit:cover;flex:none" onerror="this.remove()">' : '';
+    return '<div class="cp-prof" style="display:flex;gap:8px;align-items:flex-start;background:rgba(15,23,42,.4);border:1px solid rgba(148,163,184,.2);border-radius:10px;padding:6px 8px;margin:6px 0;font-size:11.5px;line-height:1.35">'
+      + img + '<div style="min-width:0"><b style="font-size:13px;color:#FDE047">' + escHtml(c.name || '') + '</b>'
+      + rows.map(function(r){ return '<div><span style="color:#94A3B8">' + r[0] + ':</span> ' + escHtml(String(r[1])) + '</div>'; }).join('')
+      + (c.bio ? '<div style="color:#CBD5E1;margin-top:2px"><i>' + escHtml(c.bio) + '</i></div>' : '')
+      + '</div></div>';
+  }
   function renderCoachPanel(){
     var box = document.getElementById('coach-panel'); if(!box) return;
     var f = currentFormation(loadSquad()), st = sLoad(), cur = (st.styleBy && st.styleBy[f.id]) || 'default';
@@ -18421,11 +18447,7 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
       return (b.p - a.p) || (a.a - b.a) || (a.i - b.i);
     });
 
-    var opts = ranked.map(function(r){
-      if(!r.un){
-        var chNeed = r.x.chapter || '?';
-        return '<option value="' + r.x.id + '" disabled style="color:#94A3B8">🔒 ' + escHtml(r.x.name) + ' — Mở ở Chương ' + chNeed + '</option>';
-      }
+    var opts = ranked.filter(function(r){ return r.un; }).map(function(r){
       return '<option value="' + r.x.id + '"' + (r.x.id === cur ? ' selected' : '') + '>'
         + (r.x.id === 'default' ? '📋 ' : r.x.ic + ' ')
         + escHtml(r.x.name)
@@ -18435,11 +18457,13 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
 
     // Kiểm tra đã chọn HLV chiến thuật chưa (khác 'default')
     var isChosen = (cur !== 'default' && !!SE_STYLE[cur]);
+    var profHtml = coachProfileHTML(cur);
 
     if(!isChosen){
       // Khi CHƯA chọn HLV: Ẩn toàn bộ thông tin chi tiết HLV, chỉ hiển thị dropdown chọn
       box.innerHTML = '<div class="cp-h" style="display:flex;align-items:center;justify-content:space-between"><span>🧭 HLV &amp; Phong Cách Thi Đấu</span><span style="font-size:11px;font-weight:700;color:#94A3B8;background:rgba(15,23,42,0.6);padding:2px 8px;border-radius:6px">Chưa chọn HLV</span></div>'
         + '<select class="cp-sel" id="cp-style" aria-label="Chọn phong cách thi đấu">' + opts + '</select>'
+        + profHtml
         + '<div class="cp-empty-hint" style="font-size:12px;color:#94A3B8;padding:4px 2px;line-height:1.4">👉 Chọn một HLV trong danh sách trên để kích hoạt phong cách thi đấu và nhận điểm thưởng đồng đội cho sơ đồ <b>' + escHtml(f.name) + '</b>.</div>';
 
       box.onchange = function(e){
@@ -18466,6 +18490,7 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
 
       box.innerHTML = '<div class="cp-h" style="display:flex;align-items:center;justify-content:space-between"><span>🧭 HLV &amp; Phong Cách Thi Đấu</span><button type="button" id="btn-unselect-coach" class="btn-secondary" style="font-size:11px;padding:2px 8px;color:#94A3B8" title="Bỏ chọn HLV này về cơ bản">Bỏ chọn</button></div>'
         + '<select class="cp-sel" id="cp-style" aria-label="Chọn phong cách thi đấu">' + opts + '</select>'
+        + profHtml
         + '<div class="cp-fit ' + (open || fit >= 100 ? 'g' : (fit >= 75 ? 'm' : 'b')) + '">Sơ đồ <b>' + escHtml(f.name) + '</b>: ' + fitTxt + '</div>'
         + '<div class="cp-coach"><div class="cp-av" style="overflow:hidden">' + avHtml + '</div><div><b>' + escHtml(nw.c || '') + '</b><span>' + escHtml(nw.b || '') + '</span><small>' + escHtml(nw.cl || '') + '</small></div></div>'
       + '<p class="cp-lead" style="margin:4px 0;font-size:12px;color:#CBD5E1">' + escHtml(SEASON_STYLE_DESC[cur] || '') + '</p>'
@@ -27925,11 +27950,14 @@ function roadmapIcon(def, locked){
     return str.replace(/\s*\(\d{4}[^\)]*\)/g, '').trim();
   }
 
+  function marketClubList(str){
+    return String(str || '').split(/[·|;]/).map(function(x){ return marketNormalizeClub(x); }).filter(Boolean);
+  }
+  /* Khớp CHÍNH XÁC từng CLB (không khớp chuỗi con): chọn "Chelsea FC" chỉ ra cầu thủ có dữ liệu CLB đó */
   function marketClubMatches(itemClub, filterClub){
     if(!itemClub || !filterClub) return false;
-    var ic = removeVietnameseTones(itemClub).toLowerCase();
-    var fc = removeVietnameseTones(filterClub).toLowerCase();
-    return ic.indexOf(fc) !== -1 || fc.indexOf(ic) !== -1;
+    var fc = removeVietnameseTones(marketNormalizeClub(filterClub));
+    return marketClubList(itemClub).some(function(c){ return removeVietnameseTones(c) === fc; });
   }
 
   function getMarketFilterOptions(){
@@ -27938,7 +27966,7 @@ function roadmapIcon(def, locked){
     allP.forEach(function(p){
       if(p.nation) nations.add(p.nation.trim());
       var cName = p.club || (p.clubLogo && typeof CLUB_NAME_MAP !== 'undefined' ? CLUB_NAME_MAP[p.clubLogo] : '') || '';
-      if(cName) clubs.add(cName.trim());
+      marketClubList(cName).forEach(function(cl){ clubs.add(cl); });
     });
     for(var cid in COACHES_DB){
       if(cid === 'default') continue;
@@ -27947,12 +27975,6 @@ function roadmapIcon(def, locked){
       else if(c.born && c.born.indexOf('·') !== -1){
         var n = c.born.split('·')[1].trim();
         if(n) nations.add(n);
-      }
-      if(c.clubs){
-        c.clubs.split('·').forEach(function(cl){
-          var clClean = marketNormalizeClub(cl);
-          if(clClean) clubs.add(clClean);
-        });
       }
     }
     return {
@@ -28014,7 +28036,7 @@ function roadmapIcon(def, locked){
     var searchNorm = removeVietnameseTones(searchVal);
 
     // 1. Quét HLV
-    if(!posVal || posVal === 'HLV'){
+    if((!posVal && !clubVal) || posVal === 'HLV'){
       for(var cid in COACHES_DB){
         if(cid === 'default') continue;
         var c = COACHES_DB[cid];
@@ -30975,6 +30997,8 @@ function roadmapIcon(def, locked){
           return r.ok ? r.json() : null;
         }).then(function(data){
           if(data && typeof data === 'object' && Object.keys(data).length){
+            if(Array.isArray(data)){ var _o = {}; data.forEach(function(x){ if(x && x.id) _o[x.id] = x; }); data = _o; }
+            if(!data['default']) data['default'] = BUILTIN_COACHES['default'];   // mỗi user luôn có HLV mặc định
             COACHES_DB = data;
             try{
               localStorage.setItem('kidchart_coaches', JSON.stringify(data));
