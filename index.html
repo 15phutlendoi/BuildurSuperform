@@ -5603,6 +5603,353 @@
     }
   }
 
+
+  /* =====================================================================
+     SÀN GIAO DỊCH (TRANSFER MARKET / SHOP ĐỔI THƯỞNG TRONG TAB ĐỘI HÌNH)
+     ===================================================================== */
+  .market-toolbar{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+    padding: 10px 14px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, rgba(30,41,59,0.85), rgba(15,23,42,0.95));
+    border: 1.5px solid rgba(245,158,11,0.35);
+    box-shadow: 0 4px 14px rgba(0,0,0,0.3);
+  }
+  .market-bal-badge{
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13.5px;
+    font-weight: 800;
+    color: #F8FAFC;
+  }
+  .market-bal-badge b{
+    font-size: 16px;
+    color: #FDE047;
+    text-shadow: 0 0 10px rgba(250,204,21,0.5);
+  }
+  .market-actions{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .market-count{
+    font-size: 12px;
+    font-weight: 800;
+    color: #94A3B8;
+    background: rgba(15,23,42,0.6);
+    padding: 4px 10px;
+    border-radius: 99px;
+    border: 1px solid #334155;
+  }
+
+  /* Bộ lọc tiêu chí và tìm kiếm */
+  .market-filters{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 10px;
+    margin-bottom: 16px;
+    padding: 12px 14px;
+    border-radius: 14px;
+    background: rgba(15,23,42,0.65);
+    border: 1px solid var(--line);
+  }
+  .market-filter-group{
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .market-filter-group label{
+    font-size: 11.5px;
+    font-weight: 800;
+    color: #CBD5E1;
+  }
+  .market-filter-group select, .market-search-wrap input{
+    width: 100%;
+    min-height: 38px;
+    background: #0F172A;
+    border: 1.5px solid #334155;
+    border-radius: 10px;
+    padding: 6px 10px;
+    color: #F8FAFC;
+    font-family: inherit;
+    font-size: 12.5px;
+    font-weight: 700;
+    box-sizing: border-box;
+    outline: none;
+    transition: border-color .15s, box-shadow .15s;
+  }
+  .market-filter-group select:focus, .market-search-wrap input:focus{
+    border-color: #F59E0B;
+    box-shadow: 0 0 0 2px rgba(245,158,11,0.25);
+  }
+  .market-search-wrap{
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+  .market-search-wrap input{
+    padding-right: 28px;
+  }
+  .market-search-clear{
+    position: absolute;
+    right: 6px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #94A3B8;
+    font-size: 14px;
+    cursor: pointer;
+    padding: 2px 6px;
+    border-radius: 50%;
+  }
+  .market-search-clear:hover{ color: #F8FAFC; }
+
+  /* Lưới hiển thị thẻ Sàn giao dịch: Bảng 8x3 mặc định trên màn hình rộng */
+  .market-grid{
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(116px, 1fr));
+    gap: 12px;
+    min-height: 200px;
+  }
+  @media (min-width: 1024px){
+    .market-grid{
+      grid-template-columns: repeat(8, 1fr) !important;
+      gap: 10px;
+    }
+  }
+  @media (max-width: 1023px) and (min-width: 680px){
+    .market-grid{
+      grid-template-columns: repeat(6, 1fr);
+      gap: 10px;
+    }
+  }
+
+  .mkt-card-wrap{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 14px;
+    padding: 6px 6px 8px;
+    background: rgba(15,23,42,0.45);
+    border: 1px solid rgba(51,65,85,0.7);
+    cursor: pointer;
+    transition: transform 0.14s ease, border-color 0.15s ease, box-shadow 0.18s ease;
+    box-sizing: border-box;
+  }
+  .mkt-card-wrap:hover{
+    transform: translateY(-4px) scale(1.02);
+    border-color: #F59E0B;
+    box-shadow: 0 8px 22px rgba(0,0,0,0.5), 0 0 14px rgba(245,158,11,0.35);
+  }
+  .mkt-card-wrap:active{ transform: scale(0.97); }
+
+  .mkt-card-wrap .player-card{
+    margin: 0;
+    width: 100%;
+    pointer-events: none;
+  }
+  .mkt-badge{
+    margin-top: 6px;
+    width: 100%;
+    text-align: center;
+    padding: 4px 6px;
+    border-radius: 8px;
+    font-size: 11.5px;
+    font-weight: 800;
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .mkt-badge.buy{
+    background: linear-gradient(135deg, #FBBF24, #D97706);
+    color: #3D2500;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.35);
+  }
+  .mkt-badge.owned{
+    background: rgba(34,197,94,0.22);
+    border: 1px solid rgba(34,197,94,0.55);
+    color: #86EFAC;
+  }
+
+  /* Thẻ Huấn Luyện Viên trong Sàn giao dịch */
+  .player-card.coach-card .fc-card{
+    background: radial-gradient(circle at 50% 30%, #1e3a8a 0%, #0f172a 75%);
+    border-color: #F59E0B;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.45);
+  }
+  .fc-coach-avatar{
+    position: absolute;
+    inset: 18% 10% 25% 10%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 42px;
+    filter: drop-shadow(0 4px 10px rgba(0,0,0,0.7));
+  }
+  .fc-coach-style{
+    position: absolute;
+    left: 4px;
+    right: 4px;
+    bottom: 22px;
+    text-align: center;
+    font-size: 9.5px;
+    font-weight: 800;
+    color: #FDE047;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-shadow: 0 1px 3px #000;
+  }
+  .fc-flag-txt{
+    font-size: 9.5px;
+    font-weight: 800;
+    color: #E2E8F0;
+    text-shadow: 0 1px 3px #000;
+  }
+
+  /* Modal Xác nhận Đổi Thẻ */
+  .market-confirm-box{
+    width: min(520px, 94vw);
+    max-height: 90vh;
+    max-height: 90dvh;
+    overflow-y: auto;
+    padding: 18px 20px;
+    border-radius: 20px;
+    background: linear-gradient(160deg, #1e293b 0%, #0f172a 100%);
+    border: 2px solid #F59E0B;
+    box-shadow: 0 12px 36px rgba(0,0,0,0.75), 0 0 20px rgba(245,158,11,0.3);
+    color: #F8FAFC;
+  }
+  .mc-head{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 14px;
+    border-bottom: 1px solid rgba(255,255,255,0.12);
+    padding-bottom: 10px;
+  }
+  .mc-head h3{
+    margin: 0;
+    font-size: 16.5px;
+    font-weight: 900;
+    color: #FDE047;
+  }
+  .mc-body{
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    margin-bottom: 16px;
+  }
+  @media (max-width: 480px){
+    .mc-body{ flex-direction: column; text-align: center; }
+  }
+  .mc-card-preview{
+    flex: none;
+    width: 120px;
+  }
+  .mc-card-preview .player-card{
+    margin: 0 auto;
+    width: 100%;
+    pointer-events: none;
+  }
+  .mc-info{
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .mc-info h4{
+    margin: 0;
+    font-size: 17px;
+    font-weight: 900;
+    color: #fff;
+  }
+  .mc-meta-row{
+    font-size: 12.5px;
+    font-weight: 700;
+    color: #94A3B8;
+    line-height: 1.35;
+  }
+  .mc-meta-row b{ color: #E2E8F0; }
+  .mc-price-box{
+    margin-top: 4px;
+    background: rgba(15,23,42,0.7);
+    border: 1px solid #334155;
+    border-radius: 12px;
+    padding: 10px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    font-size: 12.5px;
+    font-weight: 700;
+  }
+  .mc-price-row{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #CBD5E1;
+  }
+  .mc-price-row.total{
+    border-top: 1px dashed #475569;
+    padding-top: 5px;
+    margin-top: 2px;
+    font-size: 13.5px;
+  }
+  .mc-cost{ color: #FDE047; font-size: 14.5px; }
+  .mc-alert{
+    font-size: 12px;
+    font-weight: 800;
+    color: #F87171;
+    background: rgba(239,68,68,0.14);
+    border: 1px solid rgba(239,68,68,0.4);
+    border-radius: 8px;
+    padding: 6px 10px;
+    display: none;
+  }
+  .mc-actions{
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 14px;
+  }
+  .mc-actions .btn-primary{
+    background: linear-gradient(135deg, #FBBF24, #D97706);
+    color: #3D2500;
+    font-weight: 900;
+    border: none;
+    padding: 9px 18px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 13.5px;
+  }
+  .mc-actions .btn-primary:disabled{
+    opacity: 0.5;
+    cursor: not-allowed;
+    background: #475569;
+    color: #94A3B8;
+  }
+  .empty-market{
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 36px 16px;
+    color: #94A3B8;
+    font-size: 13.5px;
+    font-weight: 700;
+    background: rgba(15,23,42,0.45);
+    border: 1.5px dashed #334155;
+    border-radius: 14px;
+  }
 </style>
 <style id="welcome-notice-css">
   /* ===== Thông báo chào mừng: popup cho User + tab soạn thảo trong Trang quản trị ===== */
@@ -9559,6 +9906,7 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
         <div class="squad-tabs">
           <button type="button" class="squad-tab-btn active" id="tab-pitch-btn">⚽ Sân đấu</button>
           <button type="button" class="squad-tab-btn" id="tab-collection-btn">🗂️ Kho cầu thủ</button>
+          <button type="button" class="squad-tab-btn" id="tab-market-btn">🏛️ Sàn giao dịch</button>
           <button type="button" class="rules-btn" data-rules="squad">❓ Luật chơi</button>
         </div>
       </div>
@@ -9591,6 +9939,64 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
           <span class="collection-count" id="collection-count"></span>
         </div>
         <div class="collection-grid" id="collection-grid"></div>
+      </div>
+      <div id="tab-market" style="display:none">
+        <div class="market-toolbar">
+          <div class="market-bal-badge">
+            <span class="m-bal-icon">🧩</span>
+            <span>Số mảnh hiện có: <b id="market-user-frags">0</b></span>
+          </div>
+          <div class="market-actions">
+            <button type="button" id="market-refresh-btn" class="btn-secondary" title="Đổi sang danh sách 24 thẻ ngẫu nhiên khác">
+              🔄 Đổi 24 thẻ ngẫu nhiên
+            </button>
+            <span class="market-count" id="market-count">24 thẻ</span>
+          </div>
+        </div>
+
+        <div class="market-filters">
+          <div class="market-filter-group search-group" style="grid-column: 1 / -1">
+            <label for="market-search">🔍 Tìm kiếm chính xác tên cầu thủ hoặc Huấn luyện viên</label>
+            <div class="market-search-wrap">
+              <input type="text" id="market-search" placeholder="Nhập tên cầu thủ hoặc HLV cần tìm (ví dụ: Messi, Ronaldo, Ancelotti, Sebes...)" autocomplete="off">
+              <button type="button" id="market-search-clear" class="market-search-clear" style="display:none" title="Xóa tìm kiếm">✕</button>
+            </div>
+          </div>
+
+          <div class="market-filter-group">
+            <label for="market-filter-pos">📍 Vị trí / HLV</label>
+            <select id="market-filter-pos">
+              <option value="">Tất cả vị trí &amp; HLV</option>
+              <option value="HLV">🧭 Huấn Luyện Viên (HLV)</option>
+              <option value="FW">⚡ Tiền đạo (ST, CF, LW, RW)</option>
+              <option value="MF">🎯 Tiền vệ (CM, CAM, CDM, LM, RM)</option>
+              <option value="DF">🛡️ Hậu vệ (CB, LB, RB)</option>
+              <option value="GK">🧤 Thủ môn (GK)</option>
+            </select>
+          </div>
+
+          <div class="market-filter-group">
+            <label for="market-filter-nation">🌍 Quốc gia</label>
+            <select id="market-filter-nation">
+              <option value="">Tất cả quốc gia</option>
+            </select>
+          </div>
+
+          <div class="market-filter-group">
+            <label for="market-filter-club">🛡️ Câu lạc bộ</label>
+            <select id="market-filter-club">
+              <option value="">Tất cả CLB</option>
+            </select>
+          </div>
+
+          <div class="market-filter-group" style="justify-content: flex-end">
+            <button type="button" id="market-filter-reset" class="btn-secondary" style="min-height:38px;padding:6px 12px;font-weight:800">
+              🧹 Xóa lọc
+            </button>
+          </div>
+        </div>
+
+        <div class="market-grid" id="market-grid"></div>
       </div>
     </div>
   </section>
@@ -10571,6 +10977,42 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
     </div>
     <div id="rules-body" class="rules-body"></div>
     <div class="modal-actions center"><button type="button" id="rules-close" class="btn-gold">Đã hiểu</button></div>
+  </div>
+</div>
+
+<div id="market-confirm-modal" class="modal">
+  <div id="market-confirm-backdrop" class="modal-backdrop"></div>
+  <div class="modal-box market-confirm-box">
+    <div class="mc-head">
+      <h3>🏛️ Sàn Giao Dịch · Đổi Thẻ Cầu Thủ / HLV</h3>
+      <button type="button" class="btn-close" id="mc-close-btn" aria-label="Đóng">✕</button>
+    </div>
+    <div class="mc-body">
+      <div class="mc-card-preview" id="mc-card-preview"></div>
+      <div class="mc-info">
+        <h4 id="mc-item-title"></h4>
+        <div class="mc-meta-row" id="mc-item-meta"></div>
+        <div class="mc-price-box">
+          <div class="mc-price-row">
+            <span>Chi phí đổi:</span>
+            <b class="mc-cost" id="mc-price-val">🧩 0 mảnh</b>
+          </div>
+          <div class="mc-price-row">
+            <span>Số mảnh hiện có trong ví:</span>
+            <b id="mc-user-bal">🧩 0 mảnh</b>
+          </div>
+          <div class="mc-price-row total" id="mc-remain-row">
+            <span>Số mảnh còn lại sau khi đổi:</span>
+            <b id="mc-remain-val">🧩 0 mảnh</b>
+          </div>
+        </div>
+        <div class="mc-alert" id="mc-alert"></div>
+      </div>
+    </div>
+    <div class="mc-actions">
+      <button type="button" class="btn-secondary" id="mc-cancel-btn">Hủy bỏ</button>
+      <button type="button" class="btn-primary" id="mc-confirm-btn">✓ Xác nhận đổi</button>
+    </div>
   </div>
 </div>
 
@@ -15046,6 +15488,9 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
   /* Thẻ dùng để hiện: luôn là fc-card (giống mọi nơi khác). Nếu cầu thủ không có ảnh
      (danh sách dự phòng) thì vẫn dựng bằng khung fc-card + chữ cái đầu để không bị trống. */
   function dbxCardHTML(base){
+    if(base && (base.isCoach || base.pos === 'HLV')){
+      if(typeof marketCoachCardHTML === 'function') return marketCoachCardHTML(base);
+    }
     var html = fcCardHTML(base);
     if(html) return html;
     return '<div class="fc-card no-bg">'
@@ -15870,6 +16315,10 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
       var stStr = (b.cp ? 'CP ' + b.cp : '') + (b.hp ? ' · HP ' + b.hp : '') + (b.armor ? ' · Giáp ' + b.armor : '');
       chips.push({ lbl:'Chiến Lực', val:stStr, ico:'⚔️', full:true });
     }
+    if(base.isCoach){
+      chips.push({ lbl:'Vai trò', val:'Huấn Luyện Viên', ico:'🧭' });
+      if(base.label) chips.push({ lbl:'Chiến thuật', val:escHtml(base.label), ico:'📋' });
+    }
 
     var ov = document.createElement('div'); ov.id = 'sig-ov'; ov.className = land ? 'ls' : 'pt';
     ov.style.setProperty('--sg-glow', rarCfg.c || '#F59E0B');
@@ -15949,7 +16398,7 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
       +     '<div class="sg-sign-zone">'
       +       '<div class="sg-sign-actions">'
       +         '<button type="button" class="sg-sign-btn" id="sg-sign-btn">✍️ Ký Hợp Đồng Gia Nhập Đội</button>'
-      +         '<button type="button" class="sg-frag-btn" id="sg-frag-btn">🧩 Chuyển thành +' + fragPrice(base) + ' mảnh</button>'
+      +         (extra && extra.noFragBtn ? '' : '<button type="button" class="sg-frag-btn" id="sg-frag-btn">🧩 Chuyển thành +' + fragPrice(base) + ' mảnh</button>')
       +       '</div>'
       +       '<div class="sg-tap-sub">(hoặc chạm màn hình để nhận thẻ)</div>'
       +     '</div>'
@@ -16123,15 +16572,17 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
     function signContract(){
       if(signed) return; signed = true;
 
-      // Đảm bảo thẻ được lưu vào kho đội hình
-      var pObj = (extra && extra.playerObj) || ownedPlayerFromBase(base);
-      try{
-        var players = loadPlayers();
-        if(!players.some(function(x){ return x && x.id === pObj.id; })){
-          players.push(pObj);
-          savePlayers(players);
-        }
-      }catch(e){}
+      // Đảm bảo thẻ được lưu vào kho đội hình (bỏ qua nếu là HLV vì HLV lưu ở unlockCoach)
+      if(!base.isCoach){
+        var pObj = (extra && extra.playerObj) || ownedPlayerFromBase(base);
+        try{
+          var players = loadPlayers();
+          if(!players.some(function(x){ return x && x.id === pObj.id; })){
+            players.push(pObj);
+            savePlayers(players);
+          }
+        }catch(e){}
+      }
 
       // Đánh dấu hộp quà ngày đã nhận nếu mở từ Hộp quà ngày
       if(dailyBoxContext && dailyBoxContext.monthKey && dailyBoxContext.dk){
@@ -19146,8 +19597,10 @@ function roadmapIcon(def, locked){
     }
     var fb = t.closest('#cm-frag-btn');
     if(fb){
-      var targetCh = parseInt(fb.getAttribute('data-ch'), 10) || rmChapter || 1;
-      cmShopRender(targetCh);
+      var tabSquad = document.getElementById('tabBtn-squad');
+      if(tabSquad) tabSquad.click();
+      switchSquadTab('market');
+      renderMarket();
       return;
     }
     if(t.closest('#cm-shop-refresh')){
@@ -21877,12 +22330,20 @@ function roadmapIcon(def, locked){
     else { renderPitch(); renderCollection(); }
   }
   /* Mục "Đội Hình Trong Mơ" là một tab: mỗi lần mở tab sẽ vẽ lại sân đấu + kho cầu thủ */
-  window.appRenderSquad = function(){ renderPitch(); renderCollection(); };
+  window.appRenderSquad = function(){ renderPitch(); renderCollection(); if(typeof renderMarket === 'function') renderMarket(); };
   function switchSquadTab(tab){
-    document.getElementById('tab-pitch').style.display = tab==='pitch' ? '' : 'none';
-    document.getElementById('tab-collection').style.display = tab==='collection' ? '' : 'none';
-    document.getElementById('tab-pitch-btn').classList.toggle('active', tab==='pitch');
-    document.getElementById('tab-collection-btn').classList.toggle('active', tab==='collection');
+    var p = document.getElementById('tab-pitch');
+    var c = document.getElementById('tab-collection');
+    var m = document.getElementById('tab-market');
+    if(p) p.style.display = tab==='pitch' ? '' : 'none';
+    if(c) c.style.display = tab==='collection' ? '' : 'none';
+    if(m) m.style.display = tab==='market' ? '' : 'none';
+    var pb = document.getElementById('tab-pitch-btn');
+    var cb = document.getElementById('tab-collection-btn');
+    var mb = document.getElementById('tab-market-btn');
+    if(pb) pb.classList.toggle('active', tab==='pitch');
+    if(cb) cb.classList.toggle('active', tab==='collection');
+    if(mb) mb.classList.toggle('active', tab==='market');
   }
 
   /* ============ HIỂN THỊ PHÒNG KỸ NĂNG ============ */
@@ -26337,8 +26798,601 @@ function roadmapIcon(def, locked){
     document.getElementById('prize-modal').classList.remove('open');
   });
 
+
+  /* =====================================================================
+     SÀN GIAO DỊCH (TRANSFER MARKET) - LOGIC VÀ XỬ LÝ SỰ KIỆN
+     ===================================================================== */
+  var marketDefaultPool = [];
+  var marketPendingItem = null;
+  var marketFilterOptionsLoaded = false;
+
+  function removeVietnameseTones(str){
+    if(!str) return '';
+    str = String(str).normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    str = str.replace(/[đĐ]/g, 'd');
+    return str.toLowerCase().trim();
+  }
+
+  function marketCoachCardHTML(c){
+    var cid = c.cid || c.id || c.dbId?.replace('coach_', '');
+    var coach = (COACHES_DB && COACHES_DB[cid]) || {};
+    var mv = c.vid || coach.mainVersion || (coach.versions ? Object.keys(coach.versions)[0] : '');
+    var cVer = (coach.versions && coach.versions[mv]) || {};
+    var chNum = (cVer && cVer.chapter) ? cVer.chapter : (c.chapter || '★');
+    var cImg = (cVer && cVer.image) || c.image || '';
+    var imgHtml = cImg
+      ? ('<img class="fc-photo" src="' + escHtml(cImg) + '" alt="' + escHtml(c.name) + '" loading="lazy" onerror="this.outerHTML=\'<div class=\\\'fc-coach-avatar\\\'>🧭</div>\'">')
+      : '<div class="fc-coach-avatar">🧭</div>';
+
+    var cNat = c.nation || coach.country || (coach.born && coach.born.indexOf('·') !== -1 ? coach.born.split('·')[1].trim() : '') || '';
+    var footHtml = cNat ? ('<div class="fc-foot"><span class="fc-flag-txt">🌍 ' + escHtml(cNat) + '</span></div>') : '';
+
+    return '<div class="player-card fc-only coach-card" data-market-item="coach" data-cid="' + escHtml(cid) + '" data-vid="' + escHtml(mv) + '">'
+      + '<div class="fc-card icon">'
+      +   '<div class="fc-ovr"><b>HLV</b><span>CH.' + chNum + '</span></div>'
+      +   imgHtml
+      +   '<div class="fc-name">' + escHtml(c.name || coach.name || 'HLV') + '</div>'
+      +   '<div class="fc-coach-style">' + escHtml(c.label || cVer.label || 'Chiến thuật') + '</div>'
+      +   footHtml
+      +   '<svg class="fc-icon-beam" viewBox="0 0 100 135" preserveAspectRatio="none" aria-hidden="true"><rect class="fc-beam-track" x="1.5" y="1.5" width="97" height="132" rx="7.5" ry="6.5"/><rect class="fc-beam-line fc-beam-gold" x="1.5" y="1.5" width="97" height="132" rx="7.5" ry="6.5"/><rect class="fc-beam-line fc-beam-diamond" x="1.5" y="1.5" width="97" height="132" rx="7.5" ry="6.5"/></svg>'
+      + '</div>'
+      + '</div>';
+  }
+
+  function generateMarketDefaultPool(){
+    var pool = [];
+    var coachesList = [];
+    for(var cid in COACHES_DB){
+      if(cid !== 'default' && COACHES_DB[cid].active !== false){
+        coachesList.push(cid);
+      }
+    }
+    // Lấy ngẫu nhiên 3 HLV
+    coachesList.sort(function(){ return 0.5 - Math.random(); });
+    var pickC = coachesList.slice(0, 3);
+    pickC.forEach(function(cid){
+      var c = COACHES_DB[cid];
+      var mv = c.mainVersion || Object.keys(c.versions)[0];
+      var cVer = (c.versions && c.versions[mv]) || {};
+      pool.push({
+        isCoach: true,
+        cid: cid,
+        vid: mv,
+        dbId: 'coach_' + cid,
+        name: c.name,
+        pos: 'HLV',
+        ovr: 120,
+        realOvr: 120,
+        price: cVer.price || 400,
+        nation: c.country || (c.born && c.born.indexOf('·') !== -1 ? c.born.split('·')[1].trim() : '') || '',
+        club: c.clubs || '',
+        image: cVer.image || '',
+        desc: cVer.desc || c.bio || '',
+        label: cVer.label || '',
+        unlocked: isCoachUnlocked(cid, mv)
+      });
+    });
+
+    // Lấy 21 cầu thủ ngẫu nhiên từ CSDL để đủ đúng bảng 8x3 (24 thẻ)
+    var allP = (PLAYER_DB && PLAYER_DB.length) ? PLAYER_DB.slice() : [];
+    if(!allP.length){
+      allP = Object.values(PLAYER_DB_BY_ID || {});
+    }
+    if(!allP.length && typeof loadPlayers === 'function'){
+      allP = loadPlayers();
+    }
+
+    if(allP.length){
+      var shuffledP = allP.slice().sort(function(){ return 0.5 - Math.random(); });
+      var targetP = 24 - pool.length; // 21 cầu thủ
+      var seen = {};
+      for(var i = 0; i < shuffledP.length && targetP > 0; i++){
+        var p = shuffledP[i];
+        if(!p || !p.name) continue;
+        var id = p.dbId || p.id;
+        if(id && !seen[id]){
+          seen[id] = 1;
+          pool.push({
+            isCoach: false,
+            dbId: id,
+            name: p.name,
+            pos: p.pos || 'ST',
+            ovr: p.realOvr || p.ovr || 118,
+            realOvr: p.realOvr || p.ovr || 118,
+            price: fragBuyPrice(p),
+            nation: p.nation || '',
+            club: p.club || '',
+            image: p.image || '',
+            rarity: (p.battle && p.battle.rarity) || p.rarity || 'LIVE',
+            owned: loadPlayers().some(function(x){ return x && (x.dbId === id || x.id === id); }),
+            raw: p
+          });
+          targetP--;
+        }
+      }
+    }
+
+    pool.sort(function(){ return 0.5 - Math.random(); });
+    marketDefaultPool = pool;
+    return pool;
+  }
+
+  function getMarketFilterOptions(){
+    var nations = new Set(), clubs = new Set();
+    var allP = (PLAYER_DB && PLAYER_DB.length) ? PLAYER_DB : Object.values(PLAYER_DB_BY_ID || {});
+    allP.forEach(function(p){
+      if(p.nation) nations.add(p.nation.trim());
+      if(p.club) clubs.add(p.club.trim());
+    });
+    for(var cid in COACHES_DB){
+      var c = COACHES_DB[cid];
+      if(c.country) nations.add(c.country.trim());
+      else if(c.born && c.born.indexOf('·') !== -1){
+        var n = c.born.split('·')[1].trim();
+        if(n) nations.add(n);
+      }
+      if(c.clubs){
+        c.clubs.split('·').forEach(function(cl){
+          var clTr = cl.trim();
+          if(clTr) clubs.add(clTr);
+        });
+      }
+    }
+    return {
+      nations: Array.from(nations).filter(Boolean).sort(),
+      clubs: Array.from(clubs).filter(Boolean).sort()
+    };
+  }
+
+  function populateMarketFilterDropdowns(){
+    if(marketFilterOptionsLoaded) return;
+    var opts = getMarketFilterOptions();
+    var natSel = document.getElementById('market-filter-nation');
+    var clubSel = document.getElementById('market-filter-club');
+    if(!natSel || !clubSel) return;
+    if(opts.nations.length){
+      var curNat = natSel.value;
+      natSel.innerHTML = '<option value="">Tất cả quốc gia (' + opts.nations.length + ')</option>'
+        + opts.nations.map(function(n){ return '<option value="' + escHtml(n) + '"' + (n === curNat ? ' selected' : '') + '>' + escHtml(n) + '</option>'; }).join('');
+    }
+    if(opts.clubs.length){
+      var curClub = clubSel.value;
+      clubSel.innerHTML = '<option value="">Tất cả CLB (' + opts.clubs.length + ')</option>'
+        + opts.clubs.map(function(cl){ return '<option value="' + escHtml(cl) + '"' + (cl === curClub ? ' selected' : '') + '>' + escHtml(cl) + '</option>'; }).join('');
+    }
+    marketFilterOptionsLoaded = true;
+  }
+
+  function getMarketItemsToDisplay(){
+    var searchEl = document.getElementById('market-search');
+    var posEl = document.getElementById('market-filter-pos');
+    var natEl = document.getElementById('market-filter-nation');
+    var clubEl = document.getElementById('market-filter-club');
+
+    var searchVal = (searchEl ? searchEl.value : '').trim();
+    var posVal = posEl ? posEl.value : '';
+    var nationVal = natEl ? natEl.value : '';
+    var clubVal = clubEl ? clubEl.value : '';
+
+    var isFiltering = !!(searchVal || posVal || nationVal || clubVal);
+
+    var clearBtn = document.getElementById('market-search-clear');
+    if(clearBtn) clearBtn.style.display = searchVal ? 'block' : 'none';
+
+    // Mặc định: Hiển thị bảng 8x3 (24 thẻ) ngẫu nhiên
+    if(!isFiltering){
+      if(!marketDefaultPool || !marketDefaultPool.length){
+        generateMarketDefaultPool();
+      }
+      var myPlayers = loadPlayers();
+      marketDefaultPool.forEach(function(item){
+        if(item.isCoach) item.unlocked = isCoachUnlocked(item.cid, item.vid);
+        else item.owned = myPlayers.some(function(x){ return x && (x.dbId === item.dbId || x.id === item.dbId); });
+      });
+      return { items: marketDefaultPool, isFiltering: false };
+    }
+
+    // Khi lọc hoặc tìm kiếm: Tìm kiếm đầy đủ trong toàn bộ CSDL Cầu thủ + HLV
+    var results = [];
+    var searchNorm = removeVietnameseTones(searchVal);
+
+    // 1. Quét HLV
+    if(!posVal || posVal === 'HLV'){
+      for(var cid in COACHES_DB){
+        if(cid === 'default') continue;
+        var c = COACHES_DB[cid];
+        if(c.active === false) continue;
+        var mv = c.mainVersion || Object.keys(c.versions)[0];
+        var cVer = (c.versions && c.versions[mv]) || {};
+        var cNation = c.country || (c.born && c.born.indexOf('·') !== -1 ? c.born.split('·')[1].trim() : '') || '';
+        var cClub = c.clubs || '';
+
+        if(nationVal && cNation.toLowerCase().indexOf(nationVal.toLowerCase()) === -1) continue;
+        if(clubVal && cClub.toLowerCase().indexOf(clubVal.toLowerCase()) === -1) continue;
+        if(searchVal){
+          var cNameNorm = removeVietnameseTones(c.name);
+          if(cNameNorm.indexOf(searchNorm) === -1) continue;
+        }
+
+        results.push({
+          isCoach: true,
+          cid: cid,
+          vid: mv,
+          dbId: 'coach_' + cid,
+          name: c.name,
+          pos: 'HLV',
+          ovr: 120,
+          realOvr: 120,
+          price: cVer.price || 400,
+          nation: cNation,
+          club: cClub,
+          image: cVer.image || '',
+          desc: cVer.desc || c.bio || '',
+          label: cVer.label || '',
+          unlocked: isCoachUnlocked(cid, mv)
+        });
+      }
+    }
+
+    // 2. Quét Cầu thủ
+    if(posVal !== 'HLV'){
+      var allP = (PLAYER_DB && PLAYER_DB.length) ? PLAYER_DB : Object.values(PLAYER_DB_BY_ID || {});
+      var myP = loadPlayers();
+      for(var i = 0; i < allP.length; i++){
+        var p = allP[i];
+        if(!p || !p.name) continue;
+
+        // Lọc vị trí
+        if(posVal){
+          if(posVal === 'FW' && !['ST','CF','LW','RW'].includes(p.pos)) continue;
+          if(posVal === 'MF' && !['CM','CAM','CDM','LM','RM'].includes(p.pos)) continue;
+          if(posVal === 'DF' && !['CB','LB','RB'].includes(p.pos)) continue;
+          if(posVal === 'GK' && p.pos !== 'GK') continue;
+          if(!['FW','MF','DF','GK'].includes(posVal) && p.pos !== posVal) continue;
+        }
+
+        // Lọc quốc gia
+        if(nationVal && (p.nation || '').toLowerCase().indexOf(nationVal.toLowerCase()) === -1) continue;
+
+        // Lọc CLB
+        if(clubVal && (p.club || '').toLowerCase().indexOf(clubVal.toLowerCase()) === -1) continue;
+
+        // Tìm kiếm tên
+        if(searchVal){
+          var pNameNorm = removeVietnameseTones(p.name);
+          if(pNameNorm.indexOf(searchNorm) === -1) continue;
+        }
+
+        var id = p.dbId || p.id;
+        results.push({
+          isCoach: false,
+          dbId: id,
+          name: p.name,
+          pos: p.pos || 'ST',
+          ovr: p.realOvr || p.ovr || 118,
+          realOvr: p.realOvr || p.ovr || 118,
+          price: fragBuyPrice(p),
+          nation: p.nation || '',
+          club: p.club || '',
+          image: p.image || '',
+          rarity: (p.battle && p.battle.rarity) || p.rarity || 'LIVE',
+          owned: myP.some(function(x){ return x && (x.dbId === id || x.id === id); }),
+          raw: p
+        });
+      }
+    }
+
+    return { items: results, isFiltering: true };
+  }
+
+  function renderMarketCardItem(item){
+    var cardHtml = '';
+    if(item.isCoach){
+      cardHtml = marketCoachCardHTML(item);
+    } else {
+      cardHtml = playerCardHTML(item.raw, false, 'data-market-item="player" data-dbid="' + escHtml(item.dbId) + '"');
+    }
+
+    var tagHtml = '';
+    if(item.isCoach){
+      if(item.unlocked){
+        tagHtml = '<div class="mkt-badge owned">✅ Đã mở khóa</div>';
+      } else {
+        tagHtml = '<div class="mkt-badge buy">🧩 ' + item.price + ' mảnh</div>';
+      }
+    } else {
+      if(item.owned){
+        tagHtml = '<div class="mkt-badge owned">✅ Đã có · 🧩 ' + item.price + '</div>';
+      } else {
+        tagHtml = '<div class="mkt-badge buy">🧩 ' + item.price + ' mảnh</div>';
+      }
+    }
+
+    return '<div class="mkt-card-wrap" data-market-type="' + (item.isCoach ? 'coach' : 'player') + '" data-id="' + escHtml(item.isCoach ? item.cid : item.dbId) + '">'
+      + cardHtml
+      + tagHtml
+      + '</div>';
+  }
+
+  function renderMarket(){
+    var grid = document.getElementById('market-grid');
+    if(!grid) return;
+
+    var prog = roadmapProgress();
+    var balEl = document.getElementById('market-user-frags');
+    if(balEl) balEl.textContent = prog.frags;
+
+    populateMarketFilterDropdowns();
+
+    var res = getMarketItemsToDisplay();
+    var items = res.items || [];
+    var countEl = document.getElementById('market-count');
+    if(countEl){
+      countEl.textContent = res.isFiltering
+        ? ('Tìm thấy: ' + items.length + ' thẻ')
+        : ('Bảng mặc định: ' + items.length + ' thẻ (8x3)');
+    }
+
+    if(!items.length){
+      grid.innerHTML = '<div class="empty-market">🔍 Không tìm thấy cầu thủ hoặc HLV nào phù hợp với bộ lọc hiện tại.<br><small style="color:#64748B;margin-top:6px;display:inline-block">Hãy thử chọn lại tiêu chí khác hoặc bấm "Xóa lọc".</small></div>';
+      return;
+    }
+
+    grid.innerHTML = items.map(function(it){
+      return renderMarketCardItem(it);
+    }).join('');
+  }
+
+  function marketOpenConfirm(type, id){
+    var prog = roadmapProgress();
+    var userFrags = parseInt(prog.frags, 10) || 0;
+    var price = 0, name = '', metaHtml = '', previewHtml = '', isOwned = false;
+
+    if(type === 'player'){
+      var base = PLAYER_DB_BY_ID[id];
+      if(!base){
+        var found = (PLAYER_DB || []).find(function(x){ return x && (x.dbId === id || x.id === id); });
+        if(found) base = found;
+      }
+      if(!base) return;
+      price = fragBuyPrice(base);
+      name = base.name || 'Cầu thủ';
+      isOwned = loadPlayers().some(function(x){ return x && (x.dbId === base.dbId || x.id === base.dbId); });
+      previewHtml = playerCardHTML(base, false);
+      metaHtml = '<div>Vị trí: <b>' + (base.pos || 'ST') + '</b> · OVR: <b>' + (base.realOvr || base.ovr || '?') + '</b></div>'
+        + (base.club ? '<div>CLB: <b>' + escHtml(base.club) + '</b></div>' : '')
+        + (base.nation ? '<div>Quốc gia: <b>' + escHtml(base.nation) + '</b></div>' : '')
+        + (isOwned ? '<div style="color:#86EFAC;margin-top:4px">✓ Bạn đã sở hữu cầu thủ này (vẫn có thể đổi thêm)</div>' : '');
+
+      marketPendingItem = {
+        type: 'player',
+        base: base,
+        price: price
+      };
+    } else {
+      var coach = COACHES_DB[id];
+      if(!coach) return;
+      var mv = coach.mainVersion || Object.keys(coach.versions)[0];
+      var cVer = (coach.versions && coach.versions[mv]) || {};
+      price = cVer.price || 400;
+      name = coach.name || 'Huấn luyện viên';
+      isOwned = isCoachUnlocked(id, mv);
+      var coachObj = {
+        cid: id,
+        vid: mv,
+        name: coach.name,
+        nation: coach.country || (coach.born && coach.born.indexOf('·') !== -1 ? coach.born.split('·')[1].trim() : ''),
+        label: cVer.label || ''
+      };
+      previewHtml = marketCoachCardHTML(coachObj);
+      metaHtml = '<div>Vai trò: <b>Huấn Luyện Viên</b> · Phong cách: <b>' + escHtml(cVer.label || coach.bio || '') + '</b></div>'
+        + (cVer.desc ? '<div style="font-size:11.5px;color:#CBD5E1;margin-top:4px">' + escHtml(cVer.desc) + '</div>' : '')
+        + (isOwned ? '<div style="color:#86EFAC;margin-top:4px">✓ Bạn đã mở khóa HLV này rồi</div>' : '');
+
+      marketPendingItem = {
+        type: 'coach',
+        coach: coach,
+        cVer: cVer,
+        cid: id,
+        vid: mv,
+        price: price,
+        isOwned: isOwned
+      };
+    }
+
+    var titleEl = document.getElementById('mc-item-title');
+    var metaEl = document.getElementById('mc-item-meta');
+    var prevEl = document.getElementById('mc-card-preview');
+    var costEl = document.getElementById('mc-price-val');
+    var balEl = document.getElementById('mc-user-bal');
+    var remEl = document.getElementById('mc-remain-val');
+    var alertEl = document.getElementById('mc-alert');
+    var confirmBtn = document.getElementById('mc-confirm-btn');
+
+    if(titleEl) titleEl.textContent = name;
+    if(metaEl) metaEl.innerHTML = metaHtml;
+    if(prevEl) prevEl.innerHTML = previewHtml;
+    if(costEl) costEl.textContent = '🧩 ' + price + ' mảnh';
+    if(balEl) balEl.textContent = '🧩 ' + userFrags + ' mảnh';
+
+    var canAfford = userFrags >= price;
+    if(canAfford){
+      if(remEl) remEl.textContent = '🧩 ' + (userFrags - price) + ' mảnh';
+      if(alertEl){ alertEl.style.display = 'none'; alertEl.innerHTML = ''; }
+      if(confirmBtn){
+        confirmBtn.disabled = (type === 'coach' && isOwned);
+        confirmBtn.innerHTML = (type === 'coach' && isOwned) ? 'Đã mở khóa HLV này' : ('✓ Xác nhận đổi (-' + price + ' 🧩)');
+      }
+    } else {
+      if(remEl) remEl.textContent = 'Thiếu ' + (price - userFrags) + ' mảnh';
+      if(alertEl){
+        alertEl.style.display = 'block';
+        alertEl.innerHTML = '⚠️ Ví của bạn không đủ mảnh ghép! Còn thiếu <b>' + (price - userFrags) + '</b> mảnh nữa.';
+      }
+      if(confirmBtn){
+        confirmBtn.disabled = true;
+        confirmBtn.textContent = 'Không đủ mảnh ghép';
+      }
+    }
+
+    openModalTop('market-confirm-modal');
+  }
+
+  function marketConfirmBuy(){
+    if(!marketPendingItem) return;
+    var prog = roadmapProgress();
+    var userFrags = parseInt(prog.frags, 10) || 0;
+    var price = marketPendingItem.price;
+
+    if(userFrags < price){
+      alert('Bạn không đủ mảnh ghép để đổi thẻ này!');
+      return;
+    }
+
+    // Trừ mảnh trong ví
+    var p = roadmapRaw();
+    p.frags = userFrags - price;
+    p.spent = (parseInt(p.spent, 10) || 0) + price;
+    safeSet(ROADMAP_KEY, p);
+    if(typeof cloudPush === 'function') cloudPush('kidchart_roadmap', p);
+
+    // Đóng popup xác nhận
+    var modal = document.getElementById('market-confirm-modal');
+    if(modal) modal.classList.remove('open');
+
+    if(marketPendingItem.type === 'player'){
+      var base = marketPendingItem.base;
+      var newP = ownedPlayerFromBase(base);
+      var players = loadPlayers();
+      players.push(newP);
+      savePlayers(players);
+      if(typeof cloudPush === 'function') cloudPush('kidchart_players', players);
+
+      // Kích hoạt quy trình mở pack từ bước ký hợp đồng
+      sigRun(base, function(){
+        renderCollection();
+        renderMarket();
+        if(typeof renderPitch === 'function') renderPitch();
+      }, false, 'result', {
+        context: 'market',
+        playerObj: newP,
+        noFragBtn: true
+      });
+    } else {
+      var coach = marketPendingItem.coach;
+      var cVer = marketPendingItem.cVer;
+      var cid = marketPendingItem.cid;
+      var vid = marketPendingItem.vid;
+
+      unlockCoach(cid, vid);
+      if(typeof renderCoachPanel === 'function') renderCoachPanel();
+      if(typeof saveCoachUnlocks === 'function') saveCoachUnlocks(getCoachUnlocks());
+
+      var coachBase = {
+        id: cid,
+        dbId: 'coach_' + cid,
+        name: coach.name,
+        pos: 'HLV',
+        realOvr: 120,
+        ovr: 120,
+        rarity: 'ICON',
+        image: (cVer && cVer.image) || '',
+        background: 'pack_gold.png',
+        club: coach.clubs ? coach.clubs.split('·')[0].trim() : '',
+        nation: coach.country || (coach.born && coach.born.indexOf('·') !== -1 ? coach.born.split('·')[1].trim() : '') || '',
+        age: coach.born ? coach.born.split('·')[0].trim() : '',
+        label: (cVer && cVer.label) || '',
+        battle: { element: 'kim', rarity: 'ICON', cp: 9999, hp: 9999 },
+        playstyleIcons: [],
+        isCoach: true,
+        coachId: cid,
+        vId: vid
+      };
+
+      sigRun(coachBase, function(){
+        renderMarket();
+        if(typeof renderCoachPanel === 'function') renderCoachPanel();
+      }, false, 'result', {
+        context: 'market',
+        noFragBtn: true
+      });
+    }
+
+    marketPendingItem = null;
+  }
+
   document.getElementById('tab-pitch-btn').addEventListener('click', function(){ switchSquadTab('pitch'); });
   document.getElementById('tab-collection-btn').addEventListener('click', function(){ switchSquadTab('collection'); renderCollection(); });
+  var mktBtn = document.getElementById('tab-market-btn');
+  if(mktBtn) mktBtn.addEventListener('click', function(){ switchSquadTab('market'); renderMarket(); });
+
+  // Bộ lọc & tìm kiếm Sàn giao dịch
+  var mSearch = document.getElementById('market-search');
+  if(mSearch){
+    mSearch.addEventListener('input', function(){ renderMarket(); });
+  }
+  var mClear = document.getElementById('market-search-clear');
+  if(mClear){
+    mClear.addEventListener('click', function(){
+      if(mSearch) mSearch.value = '';
+      renderMarket();
+    });
+  }
+  ['market-filter-pos', 'market-filter-nation', 'market-filter-club'].forEach(function(fid){
+    var el = document.getElementById(fid);
+    if(el) el.addEventListener('change', function(){ renderMarket(); });
+  });
+  var mReset = document.getElementById('market-filter-reset');
+  if(mReset){
+    mReset.addEventListener('click', function(){
+      if(mSearch) mSearch.value = '';
+      var pEl = document.getElementById('market-filter-pos'); if(pEl) pEl.value = '';
+      var nEl = document.getElementById('market-filter-nation'); if(nEl) nEl.value = '';
+      var cEl = document.getElementById('market-filter-club'); if(cEl) cEl.value = '';
+      renderMarket();
+    });
+  }
+  var mRefresh = document.getElementById('market-refresh-btn');
+  if(mRefresh){
+    mRefresh.addEventListener('click', function(){
+      if(mSearch) mSearch.value = '';
+      var pEl = document.getElementById('market-filter-pos'); if(pEl) pEl.value = '';
+      var nEl = document.getElementById('market-filter-nation'); if(nEl) nEl.value = '';
+      var cEl = document.getElementById('market-filter-club'); if(cEl) cEl.value = '';
+      generateMarketDefaultPool();
+      renderMarket();
+    });
+  }
+
+  // Click card trong Sàn giao dịch
+  var mGrid = document.getElementById('market-grid');
+  if(mGrid){
+    mGrid.addEventListener('click', function(e){
+      var wrap = e.target.closest('.mkt-card-wrap');
+      if(!wrap) return;
+      var type = wrap.getAttribute('data-market-type');
+      var id = wrap.getAttribute('data-id');
+      marketOpenConfirm(type, id);
+    });
+  }
+
+  // Sự kiện modal xác nhận đổi
+  var mcClose = document.getElementById('mc-close-btn');
+  if(mcClose) mcClose.addEventListener('click', function(){
+    var m = document.getElementById('market-confirm-modal'); if(m) m.classList.remove('open');
+  });
+  var mcCancel = document.getElementById('mc-cancel-btn');
+  if(mcCancel) mcCancel.addEventListener('click', function(){
+    var m = document.getElementById('market-confirm-modal'); if(m) m.classList.remove('open');
+  });
+  var mcBackdrop = document.getElementById('market-confirm-backdrop');
+  if(mcBackdrop) mcBackdrop.addEventListener('click', function(){
+    var m = document.getElementById('market-confirm-modal'); if(m) m.classList.remove('open');
+  });
+  var mcConfirm = document.getElementById('mc-confirm-btn');
+  if(mcConfirm) mcConfirm.addEventListener('click', function(){
+    marketConfirmBuy();
+  });
   wireDailyBox();
   wireSkillPlayerModal();
   document.getElementById('pos-picker-close').addEventListener('click', function(){
