@@ -6450,9 +6450,16 @@
     display: flex;
     justify-content: flex-end;
     gap: 12px;
-    margin-top: 16px;
+    /* Neo cố định ở đáy khung popup: nội dung cuộn phía trên, nút luôn thấy được */
+    position: sticky;
+    bottom: -20px;
+    z-index: 5;
+    margin: 16px -24px -20px;
+    padding: 12px 24px 16px;
+    background: #0f172a;
     border-top: 1px solid rgba(255,255,255,0.08);
-    padding-top: 12px;
+    border-radius: 0 0 20px 20px;
+    box-shadow: 0 -8px 16px rgba(15,23,42,0.85);
   }
   .mc-actions .btn-secondary{
     background: #334155;
@@ -28541,7 +28548,7 @@ function roadmapIcon(def, locked){
         ownTagEl.innerHTML = isOwned ? '✅ Đã mở khóa HLV này' : '✨ HLV mới chưa mở khóa';
       } else {
         ownTagEl.className = 'mc-ownership-tag ' + (isOwned ? 'owned' : 'unowned');
-        ownTagEl.innerHTML = isOwned ? '✅ Đã có trong đội hình' : '✨ Cầu thủ mới chưa sở hữu';
+        ownTagEl.innerHTML = isOwned ? '✅ Đã có trong đội hình · vẫn đổi thêm bằng mảnh được' : '✨ Cầu thủ mới chưa sở hữu';
       }
     }
     if(subTagsEl) subTagsEl.innerHTML = subtagsHtml;
@@ -28573,7 +28580,7 @@ function roadmapIcon(def, locked){
 
     if(confirmBtn){
       confirmBtn.disabled = !canAfford;
-      confirmBtn.textContent = canAfford ? '✓ Xác nhận đổi thẻ' : 'Không đủ mảnh ghép';
+      confirmBtn.textContent = canAfford ? ((type === 'player' && isOwned) ? '✓ Đổi thêm 1 thẻ nữa' : '✓ Xác nhận đổi thẻ') : 'Không đủ mảnh ghép';
     }
 
     openModalTop('market-confirm-modal');
