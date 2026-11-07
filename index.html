@@ -4988,7 +4988,7 @@
     border-radius: 8px;
   }
 
-  /* 4x5 GRID CHƠI */
+  /* GRID CHƠI: 4 cột x 5 hàng (màn dọc) · 5 cột x 4 hàng (màn ngang) */
   .vmg-grid-wrap {
     flex: 1;
     display: flex;
@@ -5011,6 +5011,18 @@
     aspect-ratio: calc(4 * 0.74) / 5;
     margin: auto;
     perspective: 1000px;
+  }
+  /* Màn hình ngang (iPad / iPhone xoay ngang): đổi lưới 4 cột x 5 hàng thành 5 cột x 4 hàng */
+  @media (orientation: landscape) {
+    .vmg-grid {
+      grid-template-columns: repeat(5, 1fr);
+      grid-template-rows: repeat(4, 1fr);
+      max-width: min(96vw, calc((98vh - 120px) * 5 / 4 * 0.74));
+      aspect-ratio: calc(5 * 0.74) / 4;
+    }
+  }
+  @media (orientation: landscape) and (max-height: 520px) {
+    .vmg-grid { gap: 4px; }
   }
   .vmg-cell {
     position: relative;
