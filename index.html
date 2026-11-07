@@ -32722,7 +32722,7 @@ function roadmapIcon(def, locked){
   function sTeamFromLineup(lu, form, styleId, name, human, idPrefix){   // name/human/idPrefix: dùng cho đội bạn bè (máy điều khiển, id có tiền tố để không trùng với đội mình)
     function pc(x){ return form && form.per[x.id] ? form.per[x.id].pct : 0; }
     return {name:name || sMyName(), human:human !== false, style:styleId || 'default', fid:lu.f.id, slots:lu.f.positions.map(function(x){ return x.pos; }),
-      pitch:lu.starters.map(function(x){ return sSePlayer(x.p, pc(x), idPrefix); }), bench:lu.bench.map(function(x){ return sSePlayer(x.p, pc(x), idPrefix); }), out:[]};
+      pitch:lu.starters.map(function(x){ return sSePlayer(x.p, pc(x), idPrefix); }), bench:lu.bench.filter(function(x){ return x && x.p; }).map(function(x){ return sSePlayer(x.p, pc(x), idPrefix); }), out:[]};
   }
   /* Đội máy: 11 + 7 lấy từ kho cầu thủ chung (PLAYER_DB), OVR bám theo OVR đội, sơ đồ hợp phong cách. Cố định theo mùa (lưu ở se.teams[i].sq). */
   function sOppTeam(se, idx, mineNames, r){
@@ -36078,7 +36078,7 @@ function roadmapIcon(def, locked){
     var pl = {}, sum = 0, n = 0;
     lu.starters.concat(lu.bench).forEach(function(x){ if(x.p) pl[x.id] = {d:x.p.dbId || '', b:x.p.ovrBonus || 0, e:x.p.energy || 0}; });
     lu.starters.forEach(function(x){ if(x.p){ sum += (x.p.ovr || x.p.realOvr || 0); n++; } });
-    return {fid:lu.f.id, pitch:lu.starters.map(function(x){ return x.id; }), bench:lu.bench.map(function(x){ return x.id; }), style:styleId || 'default', pl:pl, avg:n ? Math.round(sum / n * 10) / 10 : 0, tn:teamGet().name || '', dv:frnDataFp(pl)};
+    return {fid:lu.f.id, pitch:lu.starters.map(function(x){ return x.id; }), bench:lu.bench.map(function(x){ return x.id; }), style:styleId || 'default', sd:(SE_STYLE[styleId] && styleId !== 'default' ? JSON.parse(JSON.stringify(SE_STYLE[styleId])) : null), pl:pl, avg:n ? Math.round(sum / n * 10) / 10 : 0, tn:teamGet().name || '', dv:frnDataFp(pl)};
   }
   function frnMyStyle(lu){ var st = sLoad(); return (st.styleBy && st.styleBy[lu.f.id]) || 'default'; }
   function frnNotReadyMsg(lu){ return 'Đội hình của ' + escHtml(sMyName()) + ' chưa đủ 11 cầu thủ đá chính (còn thiếu ' + lu.missS + ' vị trí trên sân). Vào Đội hình Trong Mơ xếp đủ 11 cầu thủ trước khi thi đấu nhé!'; }
@@ -36788,7 +36788,13 @@ function roadmapIcon(def, locked){
   function frlBuildMatch(R){
     var d = R.d, rs = d.settings || {}, sh = frlGet(d, 'lineup', 'host'), sg = frlGet(d, 'lineup', 'guest'), lh = frlLineup(sh), lg = frlLineup(sg);
     if(!lh || !lg) return null;
-    var tH = sTeamFromLineup(lh, null, (sh && sh.style) || 'default', (sh && sh.tn) || frnWho(d, 'host'), true, ''), tG = sTeamFromLineup(lg, null, (sg && sg.style) || 'flex', (sg && sg.tn) || frnWho(d, 'guest'), true, '');
+    function okStyle(sn, dflt){   // phong cách HLV có thể chưa nạp ở máy này: lấy định nghĩa từ ảnh chụp đội hình; vẫn thiếu thì dùng phong cách mặc định (cả hai máy cùng quy tắc)
+      var id = (sn && sn.style) || dflt;
+      if(!SE_STYLE[id] && sn && sn.sd && typeof sn.sd === 'object'){ var sd = sn.sd; sd.attMod = sd.attMod || {}; sd.defMod = sd.defMod || {}; SE_STYLE[id] = sd; }
+      if(!SE_STYLE[id]) id = SE_STYLE['default'] ? 'default' : 'flex';
+      return id;
+    }
+    var tH = sTeamFromLineup(lh, null, okStyle(sh, 'default'), (sh && sh.tn) || frnWho(d, 'host'), true, ''), tG = sTeamFromLineup(lg, null, okStyle(sg, 'flex'), (sg && sg.tn) || frnWho(d, 'guest'), true, '');
     var ex = {mode:'live', seed:d.seed, N:12, gx:(typeof rs.gx === 'number' ? rs.gx : 3.25), teams:[tH, tG], qT:(typeof rs.qT === 'number' ? rs.qT : 0.3), secs:rs.quizSecs || 15, me:frlSide(R)};
     if(rs.maxSubs) ex.maxSubs = rs.maxSubs; if(rs.etSituations) ex.etN = rs.etSituations;
     var m = seCreate(friendlyMatchSetup(ex));
@@ -36965,7 +36971,11 @@ function roadmapIcon(def, locked){
       await frlResync(R, c); return;
     }
     if(recon){ await recon; if(!sAlive(tok)) return; }
-    frlRun(R, c, i, false);
+    try{ await frlRun(R, c, i, false); }
+    catch(err){
+      console.error('frlRun lỗi', err);
+      if(sAlive(tok)){ c.busy = false; if(c.lv) c.lv.stage = 'break'; frMsg('🤝 Giao hữu', 'Không vào được diễn biến tình huống (' + escHtml(String(err && err.message || err)) + '). Bấm \"Vào lại trận\" hoặc thử lại nhé.'); try{ sMatchRender(); }catch(e2){} }
+    }
   }
   function frlLost(c){
     c.busy = false; c.lv.stage = 'break';
