@@ -10538,6 +10538,15 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
             </select>
           </div>
 
+          <div class="market-filter-group">
+            <label for="market-sort">↕️ Sắp xếp theo mảnh</label>
+            <select id="market-sort">
+              <option value="">Mặc định</option>
+              <option value="desc">Mảnh nhiều nhất → ít nhất</option>
+              <option value="asc">Mảnh ít nhất → nhiều nhất</option>
+            </select>
+          </div>
+
           <div class="market-filter-group" style="justify-content: flex-end">
             <button type="button" id="market-filter-reset" class="btn-secondary" style="min-height:38px;padding:6px 12px;font-weight:800">
               🧹 Xóa lọc
@@ -28206,6 +28215,15 @@ function roadmapIcon(def, locked){
       return;
     }
 
+    var sortEl = document.getElementById('market-sort');
+    var sortDir = sortEl ? sortEl.value : '';
+    if(sortDir === 'asc' || sortDir === 'desc'){   // sắp xếp ổn định theo giá mảnh (cầu thủ + HLV)
+      items = items.map(function(it, i){ return {it: it, i: i}; }).sort(function(a, b){
+        var d = (Number(a.it.price) || 0) - (Number(b.it.price) || 0);
+        if(sortDir === 'desc') d = -d;
+        return d || (a.i - b.i);
+      }).map(function(x){ return x.it; });
+    }
     grid.innerHTML = items.map(function(it){
       return renderMarketCardItem(it);
     }).join('');
@@ -28594,7 +28612,7 @@ function roadmapIcon(def, locked){
       renderMarket();
     });
   }
-  ['market-filter-pos', 'market-filter-nation', 'market-filter-club'].forEach(function(fid){
+  ['market-filter-pos', 'market-filter-nation', 'market-filter-club', 'market-sort'].forEach(function(fid){
     var el = document.getElementById(fid);
     if(el) el.addEventListener('change', function(){ renderMarket(); });
   });
@@ -28605,6 +28623,7 @@ function roadmapIcon(def, locked){
       var pEl = document.getElementById('market-filter-pos'); if(pEl) pEl.value = '';
       var nEl = document.getElementById('market-filter-nation'); if(nEl) nEl.value = '';
       var cEl = document.getElementById('market-filter-club'); if(cEl) cEl.value = '';
+      var sEl2 = document.getElementById('market-sort'); if(sEl2) sEl2.value = '';
       renderMarket();
     });
   }
@@ -28615,6 +28634,7 @@ function roadmapIcon(def, locked){
       var pEl = document.getElementById('market-filter-pos'); if(pEl) pEl.value = '';
       var nEl = document.getElementById('market-filter-nation'); if(nEl) nEl.value = '';
       var cEl = document.getElementById('market-filter-club'); if(cEl) cEl.value = '';
+      var sEl2 = document.getElementById('market-sort'); if(sEl2) sEl2.value = '';
       generateMarketDefaultPool();
       renderMarket();
     });
