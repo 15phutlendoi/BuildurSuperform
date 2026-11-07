@@ -10539,11 +10539,13 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
           </div>
 
           <div class="market-filter-group">
-            <label for="market-sort">↕️ Sắp xếp theo mảnh</label>
+            <label for="market-sort">↕️ Sắp xếp</label>
             <select id="market-sort">
               <option value="">Mặc định</option>
               <option value="desc">Mảnh nhiều nhất → ít nhất</option>
               <option value="asc">Mảnh ít nhất → nhiều nhất</option>
+              <option value="az">Tên A → Z</option>
+              <option value="za">Tên Z → A</option>
             </select>
           </div>
 
@@ -28217,10 +28219,13 @@ function roadmapIcon(def, locked){
 
     var sortEl = document.getElementById('market-sort');
     var sortDir = sortEl ? sortEl.value : '';
-    if(sortDir === 'asc' || sortDir === 'desc'){   // sắp xếp ổn định theo giá mảnh (cầu thủ + HLV)
+    if(['asc', 'desc', 'az', 'za'].indexOf(sortDir) >= 0){   // sắp xếp ổn định: theo giá mảnh hoặc theo tên (cầu thủ + HLV)
+      var byName = (sortDir === 'az' || sortDir === 'za');
       items = items.map(function(it, i){ return {it: it, i: i}; }).sort(function(a, b){
-        var d = (Number(a.it.price) || 0) - (Number(b.it.price) || 0);
-        if(sortDir === 'desc') d = -d;
+        var d = byName
+          ? String(a.it.name || '').localeCompare(String(b.it.name || ''), 'vi', {sensitivity: 'base'})
+          : (Number(a.it.price) || 0) - (Number(b.it.price) || 0);
+        if(sortDir === 'desc' || sortDir === 'za') d = -d;
         return d || (a.i - b.i);
       }).map(function(x){ return x.it; });
     }
