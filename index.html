@@ -11833,6 +11833,9 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
 
   /* ---- Firebase Realtime Database sync ---- */
   var FIREBASE_BASE = 'https://buildursuperform-default-rtdb.asia-southeast1.firebasedatabase.app';
+  var COACHES_STATE = {ok:false, err:'', at:0, loading:false, pending:null};
+  var COACHES_READY = false;   // true khi các bảng SE_STYLE / SE_NEWS... đã được khai báo xong (cuối quá trình nạp script)
+  var CP_STYLE_LABELS = {poss:['Kiểm soát bóng', function(v){ return Math.round(v*100) + '%'; }], attN:['Người tấn công', String], defN:['Người phòng ngự', String], cnt:['Phản công', function(v){ return Math.round(v*100) + '%'; }], sig:['Tuyệt kỹ', function(v){ return Math.round(v*100) + '%'; }], drain:['Hao thể lực', function(v){ return 'x' + v; }]};
   var SYNC_KEYS = ['kidchart_settings', 'kidchart_badges'];
   function allLocalMonthKeys(){
     var keys = [];
@@ -18417,7 +18420,6 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
   }
   function cpFit(id, f){ return Math.round(seFormFit(id, f.positions.map(function(x){ return x.pos; })) * 100); }
   /* Hồ sơ đầy đủ HLV (Firebase /kidchart_coaches): thẻ ảnh như thẻ cầu thủ + thông tin + chiến thuật v1 + sơ đồ tối ưu */
-  var CP_STYLE_LABELS = {poss:['Kiểm soát bóng', function(v){ return Math.round(v*100) + '%'; }], attN:['Người tấn công', String], defN:['Người phòng ngự', String], cnt:['Phản công', function(v){ return Math.round(v*100) + '%'; }], sig:['Tuyệt kỹ', function(v){ return Math.round(v*100) + '%'; }], drain:['Hao thể lực', function(v){ return 'x' + v; }]};
   function coachProfileHTML(cid){
     var c = (COACHES_DB && COACHES_DB[cid]); if(!c) return '';
     var mv = c.mainVersion || Object.keys(c.versions || {})[0] || 'v1';
@@ -30989,20 +30991,22 @@ function roadmapIcon(def, locked){
 
   var COACHES_DB_VERSION = 'v3_20261106_img_upgrade';
   /* HLV luôn được tải từ Firebase /kidchart_coaches (không lưu cứng). Bản trong localStorage chỉ là bộ nhớ đệm để hiện tức thì. */
-  var COACHES_STATE = {ok:false, err:'', at:0, loading:false};
-  function applyCoachesData(data){
+  function coachUIRefresh(){
+    [function(){ if(typeof renderCoachPanel === 'function') renderCoachPanel(); },
+     function(){ if(typeof renderAdminCoaches === 'function') renderAdminCoaches(); },
+     function(){ marketFilterOptionsLoaded = false; populateMarketFilterDropdowns(); },
+     function(){ var mk = document.getElementById('tab-market'); if(mk && mk.style.display !== 'none') renderMarket(); }
+    ].forEach(function(f){ try{ f(); }catch(e){ console.warn('coachUIRefresh', e); } });
+  }
+  function applyCoachesData(data, deferUI){
     if(Array.isArray(data)){ var _o = {}; data.forEach(function(x){ if(x && x.id) _o[x.id] = x; }); data = _o; }
-    if(!data['default']) data['default'] = BUILTIN_COACHES['default'];   // mỗi user luôn có HLV mặc định
+    if(!data['default'] && BUILTIN_COACHES) data['default'] = BUILTIN_COACHES['default'];   // mỗi user luôn có HLV mặc định
     COACHES_DB = data;
+    COACHES_STATE.pending = null;
     try{ localStorage.setItem('kidchart_coaches', JSON.stringify(data)); }catch(e){}
     buildCoachRuntimeTables();
     marketDefaultPool = [];
-    if(typeof renderCoachPanel === 'function') renderCoachPanel();
-    if(typeof renderAdminCoaches === 'function') renderAdminCoaches();
-    marketFilterOptionsLoaded = false;
-    populateMarketFilterDropdowns();
-    var mktTab = document.getElementById('tab-market');
-    if(mktTab && mktTab.style.display !== 'none') renderMarket();
+    if(deferUI) setTimeout(coachUIRefresh, 300); else coachUIRefresh();
   }
   function fetchCoaches(){
     if(COACHES_STATE.loading || typeof fetch !== 'function') return;
@@ -31012,22 +31016,24 @@ function roadmapIcon(def, locked){
       return r.json();
     }).then(function(data){
       if(!data || typeof data !== 'object' || !Object.keys(data).length) throw new Error('Nhánh kidchart_coaches rỗng');
-      COACHES_STATE = {ok:true, err:'', at:Date.now(), loading:false};
-      applyCoachesData(data);
+      COACHES_STATE.ok = true; COACHES_STATE.err = ''; COACHES_STATE.at = Date.now(); COACHES_STATE.loading = false;
+      if(COACHES_READY) applyCoachesData(data); else COACHES_STATE.pending = data;   // gọi sớm: giữ lại, áp dụng khi script nạp xong
     }).catch(function(e){
-      COACHES_STATE = {ok:false, err:String(e && e.message || e), at:Date.now(), loading:false};
+      COACHES_STATE.ok = false; COACHES_STATE.err = String(e && e.message || e); COACHES_STATE.at = Date.now(); COACHES_STATE.loading = false;
       console.warn('Không tải được HLV từ Firebase:', COACHES_STATE.err);
-      var mk = document.getElementById('tab-market');
-      if(mk && mk.style.display !== 'none') renderMarket();
+      try{ var mk = document.getElementById('tab-market'); if(mk && mk.style.display !== 'none') renderMarket(); }catch(e2){}
     });
   }
   function loadCoaches(){
+    /* Lần gọi sớm (ngay sau await tải CSDL cầu thủ) chạy TRƯỚC khi các bảng HLV được khai báo → chỉ tải trước từ Firebase.
+       Lần gọi chính thức nằm ngay sau khối SE_NEWS (COACHES_READY = true). */
+    if(!COACHES_READY){ fetchCoaches(); return; }
     try{
       var local = JSON.parse(localStorage.getItem('kidchart_coaches') || 'null');
       COACHES_DB = (local && typeof local === 'object' && Object.keys(local).length > 1) ? local : BUILTIN_COACHES;
     }catch(e){ COACHES_DB = BUILTIN_COACHES; }
     buildCoachRuntimeTables();
-    fetchCoaches();
+    if(COACHES_STATE.pending) applyCoachesData(COACHES_STATE.pending, true); else fetchCoaches();
   }
 
   var SEASON_STYLES = [{id:'tiki', ic:'🎯', name:'Tiki-Taka (Guardiola)'}, {id:'press', ic:'⚡', name:'Gegenpressing (Klopp)'}, {id:'counter', ic:'🛡️', name:'Phản công (Mourinho)'}, {id:'flex', ic:'🧠', name:'Linh hoạt (Ancelotti)'}, {id:'choli', ic:'🔥', name:'Cholismo (Simeone)'}, {id:'never', ic:'💪', name:'Không bỏ cuộc (Ferguson)'}, {id:'total', ic:'🌀', name:'Tổng lực (Cruyff)'}, {id:'steel', ic:'🧱', name:'Kỷ luật thép (Park Hang-seo)'}, {id:'conte', ic:'🦅', name:'3 trung vệ, cánh dâng (Conte)'}, {id:'wenger', ic:'🎼', name:'Chuyền tấn công (Wenger)'}, {id:'tuchel', ic:'🧩', name:'3 hậu vệ linh hoạt (Tuchel)'}, {id:'guttmann', ic:'🚀', name:'Tấn công 4-2-4 (Guttmann)'}, {id:'herrera', ic:'🔒', name:'Catenaccio (Herrera)'}, {id:'sacchi', ic:'🧲', name:'Ép khu vực (Sacchi)'}, {id:'bielsa', ic:'🐺', name:'Cuồng nhiệt (Bielsa)'}, {id:'delbosque', ic:'🎻', name:'Kiểm soát cân bằng (Del Bosque)'}, {id:'scolari', ic:'👨‍👩‍👧‍👦', name:'Gia đình Scolari'}, {id:'sebes', ic:'✨', name:'Số 9 lùi sâu (Sebes)'}];
@@ -32754,6 +32760,7 @@ function roadmapIcon(def, locked){
       ar:[['m',8,0,10,1],['m',7,-10,-12,2],['m',10,10,-12,2],['p',5,8,3]],
       hn:['Huy chương vàng Olympic 1952 cùng Hungary', 'Thắng Anh 6-3 tại Wembley năm 1953', 'Dẫn dắt "Đội bóng vàng" Hungary bất bại nhiều năm']}
   };
+  COACHES_READY = true; loadCoaches();   // các bảng HLV đã khai báo xong → nạp HLV (bộ nhớ đệm + dữ liệu Firebase đã tải trước)
   function sNewsSVG(n){
     var ys = n.ys || [104,74,42], P = [[50,128]], inv = {}, ar = '', bd = '', col = {p:'#FBBF24', m:'#F8FAFC', d:'#F87171'};
     function bg(x, y, s){ return '<circle cx="' + x.toFixed(1) + '" cy="' + y.toFixed(1) + '" r="2.8" fill="#FBBF24"/><text x="' + x.toFixed(1) + '" y="' + (y + 1.3).toFixed(1) + '" text-anchor="middle" font-size="3.6" font-weight="900" fill="#1c1305">' + s + '</text>'; }
