@@ -5948,17 +5948,17 @@
     margin: 0 1% !important;
   }
 
-  /* Chân ảnh HLV: mờ dần (gradient) xuống đáy thẻ thay cho mảng đen đặc + bỏ đường vát cứng ở chân ảnh */
-  .fc-coach-frame{ clip-path: none; }
+  /* Chân ảnh HLV: ảnh trải hết thẻ, phần chân trong suốt rồi đậm dần (gradient) xuống đáy — không còn mảng đen đặc / đường cắt cứng */
+  .fc-coach-frame{ inset: 0; clip-path: none; }
   .fc-coach-fade{
     position: absolute;
     inset: 0;
     z-index: 3;
     pointer-events: none;
     background: linear-gradient(to bottom,
-      rgba(0,0,0,0) 0%, rgba(0,0,0,0) 40%,
-      rgba(0,0,0,.35) 56%, rgba(0,0,0,.78) 70%,
-      rgba(0,0,0,.93) 84%, #000 100%);
+      rgba(0,0,0,0) 0%, rgba(0,0,0,0) 48%,
+      rgba(0,0,0,.30) 60%, rgba(0,0,0,.68) 72%,
+      rgba(0,0,0,.90) 86%, rgba(0,0,0,.97) 100%);
   }
 
   /* Nhãn phong cách thi đấu độc quyền ở sát đáy chân thẻ */
@@ -14717,6 +14717,24 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
   // "Hydrate" một bản ghi cầu thủ đã sở hữu (có thể là bản ghi rút gọn {id, dbId, acquiredAt}
   // hoặc bản ghi đầy đủ kiểu cũ) thành đối tượng đầy đủ dữ liệu để hiển thị. Không ghi ngược
   // lại storage — chỉ dùng cho việc render, để tránh làm phình dữ liệu đã lưu.
+  /* 6 chỉ số HIỆN CÓ của thẻ: nếu user sở hữu thẻ đã nâng cấp OVR thì lấy chỉ số đã cộng (cấp cao nhất nếu có nhiều bản), ngược lại dùng chỉ số gốc */
+  function currentStatsOf(base){
+    try{
+      var key = base && (base.dbId || base.id), best = null;
+      if(key && typeof loadPlayers === 'function'){
+        (loadPlayers() || []).forEach(function(x){
+          if(!x || (x.dbId !== key && x.id !== key)) return;
+          var b = (typeof x.ovrBonus === 'number') ? x.ovrBonus : (x.star || 0);
+          if(!best || b > best.b) best = {b: b, x: x};
+        });
+      }
+      if(best && best.b > 0){
+        var h = hydratePlayer(Object.assign({}, best.x, {dbId: best.x.dbId || best.x.id}));
+        if(h && h.stats) return h.stats;
+      }
+    }catch(e){}
+    return (base && base.ovrBonus > 0 && base.stats) ? base.stats : ((base && (base.realStats || base.stats)) || {});
+  }
   function hydratePlayer(raw){
     if(!raw) return raw;
     if(!raw.dbId) return raw; // bản ghi đầy đủ kiểu cũ hoặc không xác định -> giữ nguyên
@@ -15060,7 +15078,7 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
       + '</div>';
 
     // 2. Bộ 6 chỉ số bóng đá thực tế
-    var statsSrc = base.realStats || base.stats || {};
+    var statsSrc = currentStatsOf(base);
     if(statsSrc && (statsSrc.pace || statsSrc.shooting || statsSrc.passing || statsSrc.dribbling || statsSrc.defending || statsSrc.physical)){
       metaHtml += '<div class="mc-sec-title" style="margin-top:12px">⚡ 6 Chỉ số bóng đá thực tế</div>'
         + '<div class="mc-stat-grid">'
@@ -28296,7 +28314,7 @@ function roadmapIcon(def, locked){
         + '</div>';
 
       // 2. Bộ 6 chỉ số bóng đá thực tế
-      var statsSrc = base.realStats || base.stats || {};
+      var statsSrc = currentStatsOf(base);
       if(statsSrc && (statsSrc.pace || statsSrc.shooting || statsSrc.passing || statsSrc.dribbling || statsSrc.defending || statsSrc.physical)){
         metaHtml += '<div class="mc-sec-title" style="margin-top:12px">⚡ 6 Chỉ số bóng đá thực tế</div>'
           + '<div class="mc-stat-grid">'
