@@ -14913,7 +14913,7 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
       var coach = (COACHES_DB && COACHES_DB[cid]) || item.coach || {};
       var mv = item.vid || coach.mainVersion || (coach.versions ? Object.keys(coach.versions)[0] : '');
       var cVer = (coach.versions && coach.versions[mv]) || item.cVer || {};
-      var price = cVer.price || 400;
+      var price = coachShardPrice(cVer, 400, cid === 'default');
       var name = coach.name || item.name || 'Huấn luyện viên';
       var isOwned = (typeof isCoachUnlocked === 'function') ? isCoachUnlocked(cid, mv) : false;
       var coachObj = {
@@ -19795,31 +19795,75 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
     return Math.max(2, Math.round(nodeBase * chMult));
   }
 
-  /* YÊU CẦU 7: Tách fragRefund và fragBuyPrice (= 4 * fragRefund)
-     Dải OVR CSDL từ 118 đến 124. Thẻ SIG cao nhất (~492) cao hơn Chương 15 (466) khoảng 5%. */
-  function fragRefund(p){
-    if(!p) return 8;
-    var ovr = p.realOvr || p.ovr || 118;
+  /* ===== GIÁ MẢNH CẦU THỦ (v2) — thay cho fragRefund / fragBuyPrice / fragPrice cũ ===== */
+  var SHARD_P_BAND = {1:[40,60], 2:[70,100], 3:[120,170], 4:[200,280], 5:[340,520], 6:[650,950]};
+  var SHARD_P_Q    = {1:[5,30], 2:[10,50], 3:[30,60], 4:[45,90], 5:[20,90], 6:[35,95]};
+  var SHARD_P_NAME = {1:'Thường', 2:'Trẻ tiềm năng', 3:'Đã khẳng định', 4:'Nổi tiếng', 5:'Huyền thoại', 6:'Chữ ký'};
+  var SHARD_P_OVERRIDE = {};   // ví dụ: {'p0123': 4} để ép 1 cầu thủ lên hạng "Nổi tiếng"
+
+  function shardQ(p){
+    var ovr = Math.min(1, Math.max(0, ((p.realOvr || p.ovr || 118) - 118) / 6));
+    var tot = Math.min(1, Math.max(0, ((p.total || 3000) - 3000) / 1500));
+    var sk = 0, arr = (p.battle && p.battle.skills) || [];
+    for(var i = 0; i < arr.length; i++){ sk += (arr[i].grade === 'S' ? 2 : arr[i].grade === 'G' ? 1 : 0.5); }
+    return 100 * (0.55 * ovr + 0.35 * tot + 0.10 * Math.min(1, sk / 4));
+  }
+  function shardTierP(p){
+    if(!p) return 1;
+    var id = p.dbId || p.id;
+    if(SHARD_P_OVERRIDE[id]) return SHARD_P_OVERRIDE[id];
     var rar = (p.battle && p.battle.rarity) || p.rarity || 'LIVE';
-    var minOvr = 118, maxOvr = 124;
-    var pct = Math.max(0, Math.min(1, (ovr - minOvr) / (maxOvr - minOvr || 1)));
-    var ranges = {
-      LIVE: [8, 13],
-      RARE: [16, 24],
-      ICON: [30, 45],
-      SIG:  [90, 123]
-    };
-    var r = ranges[rar] || ranges.LIVE;
-    return Math.round(r[0] + pct * (r[1] - r[0]));
+    if(rar === 'SIG') return 6;
+    if(rar === 'ICON') return 5;
+    var q = shardQ(p), young = (p.age || 27) <= 23;
+    if(rar === 'RARE') return young ? (q >= 50 ? 4 : 2) : (q >= 45 ? 4 : 3);
+    return young ? (q >= 45 ? 3 : 2) : (q >= 30 ? 3 : 1);
   }
-
   function fragBuyPrice(p){
-    return fragRefund(p) * 4;
+    var t = shardTierP(p), b = SHARD_P_BAND[t], r = SHARD_P_Q[t];
+    var pos = Math.min(1, Math.max(0, (shardQ(p) - r[0]) / (r[1] - r[0])));
+    return Math.round((b[0] + (b[1] - b[0]) * pos) / 5) * 5;
   }
+  function fragRefund(p){ return Math.round(fragBuyPrice(p) / 4); }   // chuyển thẻ thành mảnh = 25% giá mua
+  function fragPrice(p){ return fragRefund(p); }                       // tương thích ngược
 
-  // Tương thích ngược: fragPrice trả về giá hoàn lại
-  function fragPrice(p){
-    return fragRefund(p);
+  /* ===== GIÁ MẢNH HLV (v2) — tính tự động từ tier / label / series / news.hn ===== */
+  var SHARD_C_BAND = {1:[350,500], 2:[650,900], 3:[1100,1500], 4:[1800,2200], 5:[2600,3200]};
+  var SHARD_C_NAME = {1:'Thường', 2:'Phong cách đặc trưng', 3:'Đạt thành tích vô địch', 4:'Mùa giải huyền thoại', 5:'Huyền thoại có chữ ký'};
+  function shardTierC(v){
+    if(!v) return 1;
+    var t = String(v.tier || '').toUpperCase();
+    if(t === 'LIVE') return 1;
+    if(t === 'RARE') return 2;
+    if(t === 'ICON') return 3;
+    if(t === 'SIG'){
+      if(/^signature style/i.test(String(v.label || '').trim())) return 5;
+      return v.series ? 4 : 3;
+    }
+    return 1;
+  }
+  function shardHonorScore(v){
+    var hn = (v && v.news && v.news.hn) || [], total = 0;
+    var re3 = /champions league|cúp c1|world cup|\beuro\b|olympic|copa am[eé]rica|libertadores|quả bóng vàng|ăn ba/;
+    var re2 = /vô địch|huy chương vàng/;
+    var re1 = /á quân|chung kết|thăng hạng|top 4|bán kết|cúp|kỷ lục|bất bại|europa/;
+    for(var i = 0; i < hn.length; i++){
+      var line = String(hn[i] || '').toLowerCase().trim(), pts = 0;
+      if(re3.test(line)) pts = 3; else if(re2.test(line)) pts = 2; else if(re1.test(line)) pts = 1;
+      var m = line.match(/^(\d+)/);
+      if(pts > 0 && m && parseInt(m[1], 10) >= 2) pts += 1;
+      total += pts;
+    }
+    return Math.min(12, total);
+  }
+  /* Trả giá mảnh của 1 version HLV. HLV mặc định = 0. Version thiếu tier thì dùng price lưu sẵn (hoặc dflt). */
+  function coachShardPrice(v, dflt, isDefault){
+    if(isDefault) return 0;
+    if(!v) return dflt || 0;
+    if(!v.tier) return v.price || dflt || 0;
+    var t = shardTierC(v), b = SHARD_C_BAND[t], h = shardHonorScore(v);
+    if(t >= 4) h = Math.max(6, h);
+    return Math.round((b[0] + (b[1] - b[0]) * h / 12) / 10) * 10;
   }
   function roadmapRaw(){ var p = safeGet(ROADMAP_KEY); return (p && typeof p === 'object') ? p : {}; }
   function roadmapProgress(){
@@ -20377,7 +20421,7 @@ function roadmapIcon(def, locked){
     if(chCoachInfo){
       var coach = chCoachInfo.coach;
       var cVer = chCoachInfo.version;
-      var cPrice = cVer.price || 400;
+      var cPrice = coachShardPrice(cVer, 400, chCoachInfo.coachId === 'default');
       var isChLocked = clearedNum < ch * 10;
       var isUn = isCoachUnlocked(chCoachInfo.coachId, chCoachInfo.vId);
       var canBuyCoach = !isChLocked && !isUn && (prog.frags >= cPrice);
@@ -20504,7 +20548,7 @@ function roadmapIcon(def, locked){
     if(!cInfo) return;
     var v = cInfo.versions && cInfo.versions[vId];
     if(!v) return;
-    price = price || v.price || 400;
+    price = price || coachShardPrice(v, 400, coachId === 'default');
     var ch = v.chapter || 1;
     var prog = roadmapProgress();
     var clearedNum = parseInt(prog.cleared, 10) || 0;
@@ -25188,7 +25232,7 @@ function roadmapIcon(def, locked){
         + imgHtml
         + '<div style="flex:1;min-width:0">'
         +   '<div style="font-weight:800;color:#F8FAFC">' + escHtml(c.name || cid) + ' <small style="color:#94A3B8">(' + escHtml(v.label || '') + ')</small></div>'
-        +   '<div style="font-size:12px;color:#CBD5E1">Chương ' + (v.chapter || 0) + ' · 🧩 ' + (v.price || 0) + ' mảnh · Mã: ' + escHtml(cid) + '</div>'
+        +   '<div style="font-size:12px;color:#CBD5E1">Chương ' + (v.chapter || 0) + ' · 🧩 ' + coachShardPrice(v, 0, cid === 'default') + ' mảnh · Mã: ' + escHtml(cid) + '</div>'
         + '</div>'
         + '<div style="display:flex;gap:6px">'
         +   '<button type="button" class="btn-secondary" style="font-size:11px;padding:3px 8px" onclick="editCoachAdmin(\'' + escHtml(cid) + '\')">Sửa</button>'
@@ -27942,7 +27986,7 @@ function roadmapIcon(def, locked){
         pos: 'HLV',
         ovr: 120,
         realOvr: 120,
-        price: cVer.price || 400,
+        price: coachShardPrice(cVer, 400, cid === 'default'),
         nation: c.country || (c.born && c.born.indexOf('·') !== -1 ? c.born.split('·')[1].trim() : '') || '',
         club: c.clubs || '',
         image: cVer.image || '',
@@ -28113,7 +28157,7 @@ function roadmapIcon(def, locked){
           pos: 'HLV',
           ovr: 120,
           realOvr: 120,
-          price: cVer.price || 400,
+          price: coachShardPrice(cVer, 400, cid === 'default'),
           nation: cNation,
           club: cClub,
           image: cVer.image || '',
@@ -28364,7 +28408,7 @@ function roadmapIcon(def, locked){
       if(!coach) return;
       var mv = coach.mainVersion || (coach.versions ? Object.keys(coach.versions)[0] : '');
       var cVer = (coach.versions && coach.versions[mv]) || {};
-      price = cVer.price || 400;
+      price = coachShardPrice(cVer, 400, id === 'default');
       name = coach.name || 'Huấn luyện viên';
       isOwned = isCoachUnlocked(id, mv);
       var coachObj = {
@@ -31036,7 +31080,7 @@ function roadmapIcon(def, locked){
           name: c.name + (cid === 'default' ? '' : (' (' + (v.label || '') + ')')),
           order: c.order != null ? c.order : 99,
           chapter: v.chapter || 0,
-          price: v.price || 0
+          price: coachShardPrice(v, 0, cid === 'default')
         });
       }
       stylesList.sort(function(a, b){ return a.order - b.order; });
