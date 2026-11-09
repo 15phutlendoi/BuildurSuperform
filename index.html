@@ -5193,6 +5193,21 @@
     border-color: rgba(56, 189, 248, 0.5);
     background: rgba(15, 23, 42, 0.95);
   }
+  .vmg-review-item.is-reading {
+    border-color: #38BDF8 !important;
+    background: linear-gradient(135deg, rgba(56, 189, 248, 0.22), rgba(15, 23, 42, 0.95)) !important;
+    box-shadow: 0 0 18px rgba(56, 189, 248, 0.4);
+    animation: vmgPulseSpeaking 0.85s ease-in-out infinite alternate;
+  }
+  .vmg-review-item.is-reading .vmg-review-badge {
+    background: rgba(56, 189, 248, 0.3) !important;
+    color: #38BDF8 !important;
+    border-color: rgba(56, 189, 248, 0.5) !important;
+  }
+  @keyframes vmgPulseSpeaking {
+    0% { transform: scale(1); }
+    100% { transform: scale(1.02); }
+  }
   .vmg-review-item.is-checked {
     border-color: rgba(16, 185, 129, 0.65);
     background: linear-gradient(135deg, rgba(16, 185, 129, 0.12), rgba(15, 23, 42, 0.85));
@@ -11830,7 +11845,7 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
     </div>
     <div class="vmg-review-body">
       <div class="vmg-review-sub">
-        Con hãy chạm vào <b>từng từ bên dưới</b> để nghe phát âm, xem nghĩa và câu ví dụ để ghi nhớ nhé!
+        Con hãy chạm vào <b>từng từ bên dưới</b>, máy sẽ tự động đọc lặp lại <b>3 lần</b> để con ghi nhớ. Khi con nghe đọc hết tất cả các từ, cửa sổ sẽ tự động đóng lại nhé!
       </div>
       <div class="vmg-review-list" id="vmg-fail-review-list">
         <!-- Rendered by JS -->
@@ -26780,21 +26795,55 @@ function roadmapIcon(def, locked){
     safeSet('kidchart_vocab_progress', prog);
   }
 
-  /* ---- Phát âm qua Web Speech API (rate 0.90) ---- */
+  /* ---- PHÁT ÂM TIẾNG ANH (Hỗ trợ Promise & Fallback Safari) ---- */
+  var vmgActiveUtterance = null;
+  function vmgSpeakAsync(text){
+    return new Promise(function(resolve){
+      if(!('speechSynthesis' in window)){
+        resolve();
+        return;
+      }
+      try {
+        window.speechSynthesis.cancel();
+        if(window.speechSynthesis.paused){
+          try{ window.speechSynthesis.resume(); }catch(e){}
+        }
+        var clean = String(text).replace(/[^\w\s'\-.,!?]/g, '').trim();
+        if(!clean){ resolve(); return; }
+
+        var u = new SpeechSynthesisUtterance(clean);
+        u.lang = 'en-GB';
+        var v = (typeof comGetVoice === 'function') ? comGetVoice() : null;
+        if(v) u.voice = v;
+        u.rate = 0.88;
+        u.pitch = 1.0;
+
+        vmgActiveUtterance = u;
+        var finished = false;
+        var timer = null;
+        function finish(){
+          if(finished) return;
+          finished = true;
+          if(timer) clearTimeout(timer);
+          if(vmgActiveUtterance === u) vmgActiveUtterance = null;
+          resolve();
+        }
+
+        u.onend = finish;
+        u.onerror = finish;
+        // Fallback timer nếu Safari / Webkit nuốt sự kiện onend
+        var estDuration = Math.max(1100, Math.min(4500, clean.length * 150));
+        timer = setTimeout(finish, estDuration);
+
+        window.speechSynthesis.speak(u);
+      } catch(e){
+        resolve();
+      }
+    });
+  }
+
   function vmgSpeak(text){
-    if(!('speechSynthesis' in window)) return;
-    try {
-      window.speechSynthesis.cancel();
-      var clean = String(text).replace(/[^\w\s'\-.,!?]/g, '').trim();
-      if(!clean) return;
-      var u = new SpeechSynthesisUtterance(clean);
-      u.lang = 'en-GB';
-      var v = (typeof comGetVoice === 'function') ? comGetVoice() : null;
-      if(v) u.voice = v;
-      u.rate = 0.90;
-      u.pitch = 1.0;
-      window.speechSynthesis.speak(u);
-    } catch(e){}
+    vmgSpeakAsync(text);
   }
 
   /* ---- Render thẻ nhiệm vụ ngoài tab Nhiệm Vụ Ngày ---- */
@@ -27524,70 +27573,122 @@ function roadmapIcon(def, locked){
   /* ---- POPUP ÔN TẬP BẮT BUỘC Q5 (#vmg-review-modal) ---- */
   var vmgUnmatchedList = [];
   var vmgCheckedReviewCount = 0;
+  var vmgReviewSpeaking = false;
 
   function vmgTriggerMandatoryReview(){
-    // Thu thập các từ CHƯA nối được trong ván
+    // Thu thập các từ CHƯA nối được trong ván VÀ các từ bị nối sai
     var unmatchedMap = {};
-    vmgGame.cells.forEach(function(c){
-      if(!c.isMatched && c.word){
-        unmatchedMap[c.wordKey] = c.word;
-      }
-    });
+    if(vmgGame && vmgGame.cells){
+      vmgGame.cells.forEach(function(c){
+        if(!c.isMatched && c.word){
+          unmatchedMap[c.wordKey] = c.word;
+        }
+      });
+    }
+    if(vmgGame && vmgGame.words && vmgGame.wordsWithMistake){
+      vmgGame.words.forEach(function(w){
+        if(vmgGame.wordsWithMistake[w.k]){
+          unmatchedMap[w.k] = w;
+        }
+      });
+    }
 
     vmgUnmatchedList = Object.keys(unmatchedMap).map(function(k){ return unmatchedMap[k]; });
 
-    // Nếu không có từ nào sót (trường hợp hiếm) -> đóng về lobby
+    // Nếu không có từ nào sót -> đóng về lobby
     if(vmgUnmatchedList.length === 0){
       closeModal('vmg-game-modal');
+      closeModal('vmg-review-modal');
       vmgOpenLobby();
       return;
     }
 
     vmgCheckedReviewCount = 0;
+    vmgReviewSpeaking = false;
 
     var listEl = document.getElementById('vmg-fail-review-list');
     var countEl = document.getElementById('vmg-review-count');
     var closeBtn = document.getElementById('vmg-review-btn-close');
 
     if(countEl) countEl.textContent = 'Đã xác nhận: 0/' + vmgUnmatchedList.length + ' từ';
-    if(closeBtn) closeBtn.disabled = true;
+    if(closeBtn){
+      closeBtn.disabled = true;
+      closeBtn.textContent = 'Chờ nghe đọc hết các từ bên dưới...';
+      closeBtn.style.background = '';
+      closeBtn.classList.remove('pulse');
+    }
 
     if(listEl){
-      var html = '';
+      var htmlStr = '';
       vmgUnmatchedList.forEach(function(w, idx){
         var exText = w.ex ? ('“' + escHtml(w.ex) + '”') : '(chưa có câu ví dụ)';
-        html += '<div class="vmg-review-item" id="vmg-rev-item-' + idx + '" onclick="vmgToggleReviewItem(' + idx + ')">' +
-                  '<div class="vmg-review-word-row">' +
-                    '<span class="vmg-review-en">' + escHtml(w.en) +
-                      '<button type="button" class="vmg-speak-btn" onclick="event.stopPropagation(); vmgSpeak(\'' + escHtml(w.en).replace(/'/g, "\\'") + '\')">🔊</button>' +
-                    '</span>' +
-                    '<span class="vmg-review-vi">' + escHtml(w.vi) + '</span>' +
-                    '<span class="vmg-review-badge" id="vmg-rev-badge-' + idx + '">Chạm để xác nhận</span>' +
-                  '</div>' +
-                  '<div class="vmg-review-ex">' + exText + 
-                    (w.ex ? ('<button type="button" class="vmg-speak-btn" onclick="event.stopPropagation(); vmgSpeak(\'' + escHtml(w.ex).replace(/'/g, "\\'") + '\')">🔊</button>') : '') +
-                  '</div>' +
-                '</div>';
+        htmlStr += '<div class="vmg-review-item" id="vmg-rev-item-' + idx + '" data-rev-idx="' + idx + '" onclick="vmgToggleReviewItem(' + idx + ')">' +
+                    '<div class="vmg-review-word-row">' +
+                      '<span class="vmg-review-en">' + escHtml(w.en) +
+                        '<button type="button" class="vmg-speak-btn" data-action="toggle" title="Nghe đọc 3 lần">🔊</button>' +
+                      '</span>' +
+                      '<span class="vmg-review-vi">' + escHtml(w.vi) + '</span>' +
+                      '<span class="vmg-review-badge" id="vmg-rev-badge-' + idx + '">👉 Chạm để nghe đọc 3 lần</span>' +
+                    '</div>' +
+                    '<div class="vmg-review-ex">' + exText + 
+                      (w.ex ? ('<button type="button" class="vmg-speak-btn" data-action="speak-ex" title="Nghe câu ví dụ">🔊</button>') : '') +
+                    '</div>' +
+                  '</div>';
       });
-      listEl.innerHTML = html;
+      listEl.innerHTML = htmlStr;
+
+      // Gắn sự kiện click trực tiếp đảm bảo hoạt động mượt mà 100% trên mọi thiết bị
+      listEl.querySelectorAll('.vmg-review-item').forEach(function(itemEl){
+        var rIdx = parseInt(itemEl.getAttribute('data-rev-idx'), 10);
+        itemEl.addEventListener('click', function(e){
+          var btn = e.target.closest('button');
+          if(btn && btn.getAttribute('data-action') === 'speak-ex'){
+            e.stopPropagation();
+            var w = vmgUnmatchedList[rIdx];
+            if(w && w.ex) vmgSpeak(w.ex);
+            return;
+          }
+          vmgToggleReviewItem(rIdx);
+        });
+      });
     }
 
     openModalTop('vmg-review-modal');
   }
 
-  function vmgToggleReviewItem(idx){
+  async function vmgToggleReviewItem(idx){
     var itemEl = document.getElementById('vmg-rev-item-' + idx);
     var badgeEl = document.getElementById('vmg-rev-badge-' + idx);
     if(!itemEl || itemEl.classList.contains('is-checked')) return;
+    if(vmgReviewSpeaking) return; // Đang đọc một từ khác, chờ hoàn thành
 
+    var w = vmgUnmatchedList[idx];
+    if(!w || !w.en) return;
+
+    vmgReviewSpeaking = true;
+    itemEl.classList.add('is-reading');
+
+    try {
+      // Đọc tự động lặp lại 3 lần theo yêu cầu của người dùng
+      for(var rep = 1; rep <= 3; rep++){
+        if(badgeEl){
+          badgeEl.innerHTML = '🔊 Đang đọc lần ' + rep + '/3...';
+        }
+        await vmgSpeakAsync(w.en);
+        if(rep < 3){
+          await new Promise(function(r){ setTimeout(r, 400); });
+        }
+      }
+    } catch(err){}
+
+    vmgReviewSpeaking = false;
+    itemEl.classList.remove('is-reading');
     itemEl.classList.add('is-checked');
     if(badgeEl){
-      badgeEl.textContent = '✓ Đã hiểu';
+      badgeEl.innerHTML = '✓ Đã thuộc (3/3)';
     }
 
-    // Phát âm từ khi chạm
-    var w = vmgUnmatchedList[idx];
-    if(w && w.en) vmgSpeak(w.en);
+    try{ seSfx('click'); }catch(e){}
 
     vmgCheckedReviewCount++;
     var countEl = document.getElementById('vmg-review-count');
@@ -27595,11 +27696,30 @@ function roadmapIcon(def, locked){
 
     if(countEl) countEl.textContent = 'Đã xác nhận: ' + vmgCheckedReviewCount + '/' + vmgUnmatchedList.length + ' từ';
 
+    // Khi TOÀN BỘ từ sai đã được click và đọc 3 lần
     if(vmgCheckedReviewCount >= vmgUnmatchedList.length){
-      if(closeBtn) closeBtn.disabled = false;
-      try{ seSfx('click'); }catch(e){}
+      if(closeBtn){
+        closeBtn.disabled = false;
+        closeBtn.textContent = '✓ Đã hiểu tất cả & Đóng';
+        closeBtn.style.background = 'linear-gradient(135deg, #10B981, #059669)';
+        closeBtn.classList.add('pulse');
+      }
+      try{ seSfx('crowd_goal'); }catch(e){}
+
+      // Tự động đóng popup sau 800ms để hoàn tất ôn tập và chuyển về sảnh
+      setTimeout(function(){
+        closeModal('vmg-review-modal');
+        closeModal('vmg-game-modal');
+        if(typeof vmgOpenLobby === 'function') vmgOpenLobby();
+      }, 800);
     }
   }
+
+  // Đăng ký toàn cục (Window Scope) để đảm bảo inline onclick luôn gọi được
+  window.vmgToggleReviewItem = vmgToggleReviewItem;
+  window.vmgSpeak = vmgSpeak;
+  window.vmgSpeakAsync = vmgSpeakAsync;
+  window.vmgTriggerMandatoryReview = vmgTriggerMandatoryReview;
 
   /* ---- THOÁT VÁN GIỮA CHỪNG ---- */
   function vmgExitGame(){
@@ -28547,6 +28667,17 @@ function roadmapIcon(def, locked){
         closeModal('vmg-review-modal');
         closeModal('vmg-game-modal');
         vmgOpenLobby();
+      });
+    }
+    var backdropRev = document.getElementById('vmg-review-backdrop');
+    if(backdropRev){
+      backdropRev.addEventListener('click', function(){
+        var btn = document.getElementById('vmg-review-btn-close');
+        if(btn && !btn.disabled){
+          closeModal('vmg-review-modal');
+          closeModal('vmg-game-modal');
+          vmgOpenLobby();
+        }
       });
     }
 
