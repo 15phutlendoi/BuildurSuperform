@@ -4813,319 +4813,257 @@
     font-size: 13px;
   }
 
-  /* MÀN HÌNH CHƠI CHÍNH TOÀN MÀN HÌNH (GAME MODAL) */
+  /* ===== MÀN CHƠI NỐI TỪ – TOÀN MÀN HÌNH, NỀN SÂN VẬN ĐỘNG (giống màn mở pack) ===== */
+  .vmg-game-modal { padding: 0; }
+  .vmg-game-modal .modal-backdrop { display: none; }
   .vmg-game-modal .modal-box {
-    max-width: 900px;
-    width: 98%;
-    height: 96dvh;
-    max-height: 96dvh;
-    background: radial-gradient(circle at 50% 20%, #111C33 0%, #080D1A 85%);
-    border: 1px solid rgba(56,189,248,0.3);
-    border-radius: 18px;
+    width: 100%;
+    max-width: none;
+    height: 100vh;
+    height: 100dvh;
+    max-height: none;
+    border: 0;
+    border-radius: 0;
     padding: 0;
+    gap: 0;
     overflow: hidden;
     display: flex;
     flex-direction: column;
     position: relative;
-    box-shadow: 0 0 60px rgba(0,0,0,0.85);
+    background:
+      linear-gradient(180deg, rgba(3,7,18,0.50) 0%, rgba(3,7,18,0.72) 100%),
+      var(--pk-stadium, none) center / cover no-repeat,
+      #050912;
   }
   .vmg-game-header {
-    background: linear-gradient(180deg, rgba(15,23,42,0.95), rgba(15,23,42,0.8));
-    border-bottom: 1px solid rgba(148,163,184,0.18);
-    padding: 8px 16px;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
     flex-shrink: 0;
     z-index: 20;
-  }
-  .vmg-header-top {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
+    flex-direction: column;
+    gap: 8px;
+    padding: max(10px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) 10px max(16px, env(safe-area-inset-left));
+    background: linear-gradient(180deg, rgba(3,7,18,0.78), rgba(3,7,18,0.35));
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid rgba(255,255,255,0.10);
   }
+  .vmg-header-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .vmg-game-header .vmg-close-btn { width: 40px; height: 40px; font-size: 16px; flex-shrink: 0; }
   .vmg-timer-text {
-    font-size: 19px;
+    display: flex; align-items: center; gap: 6px;
+    font-size: clamp(20px, 3.3vmin, 30px);
     font-weight: 900;
-    color: #38BDF8;
+    color: #7DD3FC;
     font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    text-shadow: 0 0 10px rgba(56,189,248,0.4);
+    text-shadow: 0 0 14px rgba(56,189,248,0.55);
   }
-  .vmg-header-stats {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    flex-wrap: wrap;
-    justify-content: flex-end;
-  }
+  .vmg-header-stats { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
   .vmg-pair-count, .vmg-streak-badge, .vmg-card-badge {
-    background: rgba(30,41,59,0.7);
-    border: 1px solid rgba(148,163,184,0.25);
+    background: rgba(15,23,42,0.72);
+    border: 1px solid rgba(255,255,255,0.22);
     border-radius: 999px;
-    padding: 3px 8px;
-    font-size: 11.5px;
-    color: #E2E8F0;
-    font-weight: 700;
+    padding: 5px 12px;
+    font-size: clamp(12px, 1.7vmin, 15px);
+    font-weight: 800;
+    color: #F1F5F9;
     white-space: nowrap;
   }
-  .vmg-pair-count b {
-    color: #10B981;
-  }
-  .vmg-timer-bar-wrap {
-    width: 100%;
-    position: relative;
-  }
-  .vmg-timer-bar {
-    width: 100%;
-    height: 5px;
-    background: rgba(30,41,59,0.8);
-    border-radius: 999px;
-    overflow: hidden;
-  }
+  .vmg-pair-count b { color: #34D399; }
+  .vmg-timer-bar-wrap { width: 100%; position: relative; }
+  .vmg-timer-bar { width: 100%; height: 5px; background: rgba(255,255,255,0.14); border-radius: 999px; overflow: hidden; }
   .vmg-timer-fill {
     height: 100%;
     background: linear-gradient(90deg, #10B981 0%, #38BDF8 60%, #F59E0B 100%);
     border-radius: 999px;
     transition: width 0.25s linear;
   }
-  .vmg-timer-fill.is-warning {
-    background: linear-gradient(90deg, #F59E0B, #EF4444);
-  }
+  .vmg-timer-fill.is-warning { background: linear-gradient(90deg, #F59E0B, #EF4444); }
   .vmg-penalty-fly {
-    position: absolute;
-    right: 0;
-    top: -20px;
-    font-size: 13px;
-    font-weight: 900;
-    color: #EF4444;
-    text-shadow: 0 0 8px rgba(239,68,68,0.8);
+    position: absolute; right: 0; top: -26px;
+    font-size: 20px; font-weight: 900; color: #F87171;
+    text-shadow: 0 0 10px rgba(239,68,68,0.85);
     animation: vmg-fly-up 0.8s forwards;
     pointer-events: none;
   }
-  @keyframes vmg-fly-up {
-    0% { transform: translateY(0); opacity: 1; }
-    100% { transform: translateY(-16px); opacity: 0; }
-  }
+  @keyframes vmg-fly-up { 0% { transform: translateY(0); opacity: 1; } 100% { transform: translateY(-18px); opacity: 0; } }
 
-  /* LƯỚI 5x5 VMG v2: 24 Ô TỪ VỰNG + Ô TRUNG TÂM PACK BÍ ẨN (INDEX 12) */
+  /* LƯỚI 5x5: chiếm hết phần còn lại của màn hình; hàng/cột giữa to hơn để pack nổi bật */
   .vmg-grid-wrap {
     flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 6px;
     min-height: 0;
+    display: flex;
+    padding: clamp(18px, 4vmin, 48px) max(clamp(18px, 4vmin, 48px), env(safe-area-inset-right)) max(clamp(18px, 4vmin, 48px), env(safe-area-inset-bottom)) max(clamp(18px, 4vmin, 48px), env(safe-area-inset-left));
     position: relative;
     overflow: hidden;
   }
   .vmg-grid {
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    grid-template-rows: repeat(5, 1fr);
-    gap: 6px;
-    width: min(94vw, calc(100dvh - 120px));
-    height: min(94vw, calc(100dvh - 120px));
-    max-width: 540px;
-    max-height: 540px;
-    aspect-ratio: 1 / 1;
-    margin: 0 auto;
+    grid-template-columns: 1fr 1fr 1.15fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1.4fr 1fr 1fr;
+    gap: clamp(12px, 2.6vmin, 30px);
+    width: 100%;
+    height: 100%;
+    max-width: 1080px;
+    max-height: 780px;
+    margin: auto;
     position: relative;
     user-select: none;
     -webkit-user-select: none;
+    touch-action: manipulation;
   }
 
-  /* Ô TỪ TRONG LƯỚI */
   .vmg-cell {
-    background: rgba(15, 23, 42, 0.88);
-    border: 1.5px solid rgba(255, 255, 255, 0.12);
-    border-radius: 10px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 4px;
+    position: relative;
+    min-width: 0; min-height: 0;
+    display: flex; align-items: center; justify-content: center;
+    padding: 12px;
     text-align: center;
     cursor: pointer;
-    position: relative;
-    transition: transform 0.12s ease, border-color 0.15s ease, background-color 0.15s ease, opacity 0.3s ease;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.35);
     overflow: hidden;
-    min-width: 0;
-    min-height: 0;
+    border-radius: clamp(10px, 1.8vmin, 20px);
+    border: 1.5px solid rgba(255,255,255,0.14);
+    background: rgba(8,14,30,0.66);
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+    box-shadow: 0 4px 14px rgba(0,0,0,0.45);
+    transition: transform 0.12s ease, border-color 0.15s ease, background-color 0.15s ease, opacity 0.3s ease, box-shadow 0.15s ease;
   }
-  .vmg-cell:active {
-    transform: scale(0.96);
-  }
+  .vmg-cell:active { transform: scale(0.97); }
   .vmg-cell.is-en {
-    border-color: rgba(56, 189, 248, 0.42);
-    background: linear-gradient(135deg, rgba(14, 165, 233, 0.16), rgba(15, 23, 42, 0.92));
+    border-color: rgba(56,189,248,0.5);
+    background: linear-gradient(160deg, rgba(14,116,190,0.40), rgba(8,14,30,0.80) 78%);
   }
   .vmg-cell.is-vi {
-    border-color: rgba(245, 158, 11, 0.42);
-    background: linear-gradient(135deg, rgba(217, 119, 6, 0.16), rgba(15, 23, 42, 0.92));
+    border-color: rgba(251,191,36,0.48);
+    background: linear-gradient(160deg, rgba(180,100,10,0.36), rgba(8,14,30,0.80) 78%);
+  }
+  /* biểu tượng loa: ô tiếng Anh chạm là được nghe đọc */
+  .vmg-cell.is-en::before {
+    content: '🔊';
+    position: absolute; left: 9px; top: 7px;
+    font-size: clamp(10px, 1.5vmin, 14px);
+    opacity: 0.7;
+    pointer-events: none;
   }
   .vmg-cell.is-selected {
-    border-color: #38BDF8 !important;
-    background: linear-gradient(135deg, rgba(56,189,248,0.3), rgba(15,23,42,0.95)) !important;
-    box-shadow: 0 0 16px rgba(56, 189, 248, 0.7), inset 0 0 8px rgba(56, 189, 248, 0.35);
-    transform: scale(0.98);
+    border-color: #FFFFFF !important;
+    background: linear-gradient(160deg, rgba(255,255,255,0.34), rgba(255,255,255,0.14)) !important;
+    box-shadow: 0 0 0 3px rgba(255,255,255,0.75), 0 0 28px rgba(255,255,255,0.55);
+    transform: scale(1.02);
+    z-index: 3;
   }
   .vmg-cell.is-wrong {
     border-color: #EF4444 !important;
-    background: rgba(239, 68, 68, 0.3) !important;
+    background: rgba(239,68,68,0.38) !important;
     animation: vmg-shake 0.38s ease-in-out;
   }
+  /* ô đã nối: mờ đi nhưng vẫn chạm được để nghe lại từ tiếng Anh */
   .vmg-cell.is-matched {
-    opacity: 0.32 !important;
-    filter: grayscale(0.5);
-    pointer-events: none;
-    border-color: rgba(16, 185, 129, 0.45) !important;
-    background: rgba(16, 185, 129, 0.08) !important;
+    opacity: 0.42 !important;
+    filter: grayscale(0.4);
+    border-color: rgba(16,185,129,0.6) !important;
+    background: rgba(16,185,129,0.12) !important;
   }
   .vmg-cell.is-matched::after {
     content: '✓';
-    position: absolute;
-    right: 4px;
-    top: 2px;
-    color: #10B981;
-    font-size: 13px;
-    font-weight: 900;
+    position: absolute; right: 8px; top: 3px;
+    color: #34D399; font-size: clamp(14px, 2.2vmin, 22px); font-weight: 900;
   }
   @keyframes vmg-shake {
     0%, 100% { transform: translateX(0); }
-    20% { transform: translateX(-4px); }
-    40% { transform: translateX(4px); }
-    60% { transform: translateX(-3px); }
-    80% { transform: translateX(3px); }
+    20% { transform: translateX(-5px); }
+    40% { transform: translateX(5px); }
+    60% { transform: translateX(-4px); }
+    80% { transform: translateX(4px); }
   }
 
+  /* chữ: cỡ chữ do JS (vmgFitText) tự tính theo kích thước từng ô, không cắt bớt chữ */
   .vmg-word-text {
-    font-size: clamp(10px, 2.1vw, 13px);
+    display: block;
+    width: 100%;
+    font-size: 18px;
     font-weight: 700;
-    line-height: 1.22;
+    line-height: 1.25;
+    letter-spacing: 0.01em;
     color: #F8FAFC;
-    word-break: break-word;
-    overflow-wrap: anywhere;
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    max-height: 100%;
-    padding: 2px;
+    overflow-wrap: normal;
+    word-break: normal;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.6);
   }
-  .vmg-word-text.is-long-text {
-    font-size: clamp(8.5px, 1.8vw, 11px);
-    line-height: 1.15;
-    -webkit-line-clamp: 4;
-  }
-  .vmg-cell.is-en .vmg-word-text {
-    color: #E0F2FE;
-  }
-  .vmg-cell.is-vi .vmg-word-text {
-    color: #FEF3C7;
-  }
+  .vmg-cell.is-en .vmg-word-text { color: #F0F9FF; font-weight: 800; }
+  .vmg-cell.is-vi .vmg-word-text { color: #FFF4D1; font-weight: 600; }
 
-  /* Ô TRUNG TÂM PACK BÍ ẨN (INDEX 12 - ROW 3, COL 3) */
+  /* Ô PACK Ở GIỮA (hàng 3, cột 3) – ô lớn nhất lưới */
   .vmg-pack-cell {
-    grid-column: 3;
-    grid-row: 3;
+    grid-column: 3; grid-row: 3;
     position: relative;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    display: flex; align-items: center; justify-content: center;
+    min-width: 0; min-height: 0;
     overflow: hidden;
-    background: rgba(15, 23, 42, 0.95);
-    border: 2px solid rgba(245, 158, 11, 0.45);
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.7), inset 0 0 10px rgba(245, 158, 11, 0.2);
-    user-select: none;
-    -webkit-user-select: none;
+    border-radius: clamp(12px, 2.2vmin, 24px);
+    background: radial-gradient(circle at 50% 40%, rgba(30,41,59,0.85), rgba(3,7,18,0.92));
+    border: 2.5px solid rgba(245,158,11,0.55);
+    box-shadow: 0 0 28px rgba(0,0,0,0.7), inset 0 0 16px rgba(245,158,11,0.22);
+    user-select: none; -webkit-user-select: none;
   }
   .vmg-pack-img-bg {
-    position: absolute;
-    inset: 4px;
-    width: calc(100% - 8px);
-    height: calc(100% - 8px);
+    position: absolute; inset: 6px 6px 30px 6px;
+    width: calc(100% - 12px); height: calc(100% - 36px);
     object-fit: contain;
     filter: grayscale(1) brightness(0.35);
     opacity: 0.85;
     pointer-events: none;
   }
   .vmg-pack-water-wrap {
-    position: absolute;
-    inset: 4px;
-    width: calc(100% - 8px);
-    height: calc(100% - 8px);
-    overflow: hidden;
-    pointer-events: none;
+    position: absolute; inset: 6px 6px 30px 6px;
+    width: calc(100% - 12px); height: calc(100% - 36px);
+    overflow: hidden; pointer-events: none;
   }
   .vmg-pack-img-color {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
+    position: absolute; inset: 0; width: 100%; height: 100%;
     object-fit: contain;
     clip-path: inset(calc(100% - var(--p, 0%)) 0 0 0);
     transition: clip-path 0.45s cubic-bezier(0.4, 0, 0.2, 1);
   }
   .vmg-pack-wave {
-    position: absolute;
-    left: -50%;
-    width: 200%;
-    height: 10px;
+    position: absolute; left: -50%; width: 200%; height: 10px;
     bottom: calc(var(--p, 0%) - 5px);
     background: linear-gradient(90deg, rgba(56,189,248,0.7) 0%, rgba(245,158,11,0.85) 50%, rgba(56,189,248,0.7) 100%);
-    opacity: 0.85;
-    border-radius: 50%;
+    opacity: 0.85; border-radius: 50%;
     animation: vmg-wave-move 2.5s linear infinite;
     transition: bottom 0.45s cubic-bezier(0.4, 0, 0.2, 1);
     pointer-events: none;
   }
-  @keyframes vmg-wave-move {
-    0% { transform: translateX(0); }
-    100% { transform: translateX(25%); }
-  }
+  @keyframes vmg-wave-move { 0% { transform: translateX(0); } 100% { transform: translateX(25%); } }
   .vmg-pack-pct-badge {
-    position: absolute;
-    bottom: 4px;
-    left: 50%;
+    position: absolute; bottom: 6px; left: 50%;
     transform: translateX(-50%);
-    background: rgba(15, 23, 42, 0.88);
-    border: 1px solid rgba(255,255,255,0.25);
+    max-width: calc(100% - 12px);
+    padding: 3px 12px;
+    background: rgba(3,7,18,0.9);
+    border: 1px solid rgba(255,255,255,0.3);
     border-radius: 999px;
-    padding: 1px 7px;
-    font-size: 10px;
-    font-weight: 800;
+    font-size: clamp(12px, 1.9vmin, 18px);
+    font-weight: 900;
     color: #F8FAFC;
     z-index: 5;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.5);
-    letter-spacing: 0.4px;
-    white-space: nowrap;
+    text-align: center;
+    line-height: 1.2;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.55);
   }
   .vmg-pack-cell.is-ready {
     cursor: pointer;
     border-color: #F59E0B;
     animation: vmg-beat 1.1s ease-in-out infinite;
-    box-shadow: 0 0 25px rgba(245, 158, 11, 0.75), inset 0 0 14px rgba(245, 158, 11, 0.4);
+    box-shadow: 0 0 34px rgba(245,158,11,0.8), inset 0 0 18px rgba(245,158,11,0.45);
   }
-  @keyframes vmg-beat {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.08); }
-  }
+  @keyframes vmg-beat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.06); } }
   .vmg-pack-cell.is-ready .vmg-pack-pct-badge {
     background: linear-gradient(135deg, #F59E0B, #EF4444);
     color: #FFFFFF;
-    font-size: 10.5px;
-    box-shadow: 0 0 10px rgba(245, 158, 11, 0.8);
+    box-shadow: 0 0 12px rgba(245,158,11,0.85);
   }
-  .vmg-pack-cell.is-locked .vmg-pack-pct-badge {
-    background: rgba(30, 41, 59, 0.9);
-    color: #94A3B8;
-  }
+  .vmg-pack-cell.is-locked .vmg-pack-pct-badge { background: rgba(30,41,59,0.92); color: #CBD5E1; }
 
   /* GIỌT NƯỚC RƠI TỪ Ô GHÉP VÀO PACK */
   .vmg-droplet {
@@ -5461,16 +5399,8 @@
 
   /* RESPONSIVE CHO THIẾT BỊ NHỎ */
   @media (max-width: 640px) {
-    .vmg-grid {
-      gap: 4px;
-    }
-    .vmg-word-text {
-      font-size: 10.5px;
-      line-height: 1.15;
-    }
-    .vmg-cell {
-      padding: 2px;
-    }
+    .vmg-cell { padding: 4px; }
+    .vmg-pair-count, .vmg-streak-badge, .vmg-card-badge { padding: 4px 9px; }
     .vmg-entry-card {
       flex-direction: column;
       align-items: stretch;
@@ -26607,19 +26537,24 @@ function roadmapIcon(def, locked){
     vmgIsFetchingBank = true;
     try {
       if(typeof fetch === 'function' && typeof FIREBASE_BASE !== 'undefined'){
-        var res = await fetch(FIREBASE_BASE + '/kidchart_vocab_bank.json');
-        if(!res.ok){
-          res = await fetch(FIREBASE_BASE + '/kidchart_vocab.json');
+        // Ưu tiên kho v2 /kidchart_vocab (nơi Thêm/Sửa/Xóa ghi vào); chỉ dùng kho cũ khi kho v2 trống
+        var res = await fetch(FIREBASE_BASE + '/kidchart_vocab.json');
+        var data = res.ok ? await res.json() : null;
+        if(!data || typeof data !== 'object' || Object.keys(data).length === 0){
+          res = await fetch(FIREBASE_BASE + '/kidchart_vocab_bank.json');
+          data = res.ok ? await res.json() : null;
         }
         if(res && res.ok){
-          var data = await res.json();
           var wordList = [];
           if(data && typeof data === 'object'){
-            var rawList = Array.isArray(data.words) ? data.words : (Array.isArray(data) ? data : Object.values(data));
+            var rawKeys = null, rawList;
+            if(Array.isArray(data.words)) rawList = data.words;
+            else if(Array.isArray(data)) rawList = data;
+            else { rawKeys = Object.keys(data); rawList = rawKeys.map(function(kk){ return data[kk]; }); }
             rawList.forEach(function(item, idx){
               if(item && item.en){
                 wordList.push({
-                  k: item.id || item.k || vmgWordKey(item.en) || ('w-' + (idx + 1)),
+                  k: (rawKeys ? rawKeys[idx] : '') || item.id || item.k || vmgWordKey(item.en) || ('w-' + (idx + 1)),
                   en: String(item.en).trim(),
                   vi: String(item.vi || '').trim(),
                   ex: String(item.ex || '').trim(),
@@ -26797,45 +26732,52 @@ function roadmapIcon(def, locked){
 
   /* ---- PHÁT ÂM TIẾNG ANH (Hỗ trợ Promise & Fallback Safari) ---- */
   var vmgActiveUtterance = null;
+  var vmgSpeakToken = 0;
+  try{ if('speechSynthesis' in window) window.speechSynthesis.getVoices(); }catch(e){}
+
   function vmgSpeakAsync(text){
     return new Promise(function(resolve){
-      if(!('speechSynthesis' in window)){
-        resolve();
-        return;
-      }
+      var sy = ('speechSynthesis' in window) ? window.speechSynthesis : null;
+      if(!sy){ resolve(); return; }
       try {
-        window.speechSynthesis.cancel();
-        if(window.speechSynthesis.paused){
-          try{ window.speechSynthesis.resume(); }catch(e){}
-        }
-        var clean = String(text).replace(/[^\w\s'\-.,!?]/g, '').trim();
+        // Bỏ chú thích loại từ như (n), (v) để không bị đọc thành "n", "v"
+        var clean = String(text == null ? '' : text)
+          .replace(/\([^)]*\)/g, ' ')
+          .replace(/[\/_]+/g, ' ')
+          .replace(/[^A-Za-z0-9\u00C0-\u024F\s'\u2019\-.,!?]/g, ' ')
+          .replace(/\s+/g, ' ').trim();
         if(!clean){ resolve(); return; }
 
-        var u = new SpeechSynthesisUtterance(clean);
-        u.lang = 'en-GB';
-        var v = (typeof comGetVoice === 'function') ? comGetVoice() : null;
-        if(v) u.voice = v;
-        u.rate = 0.88;
-        u.pitch = 1.0;
+        var token = ++vmgSpeakToken;
+        var wasBusy = !!(sy.speaking || sy.pending);
+        if(wasBusy) sy.cancel();
+        if(sy.paused){ try{ sy.resume(); }catch(e){} }
 
-        vmgActiveUtterance = u;
-        var finished = false;
-        var timer = null;
-        function finish(){
-          if(finished) return;
-          finished = true;
-          if(timer) clearTimeout(timer);
-          if(vmgActiveUtterance === u) vmgActiveUtterance = null;
-          resolve();
-        }
+        // Safari/iPad hay nuốt câu mới nếu speak() ngay sau cancel(): chờ một nhịp ngắn
+        setTimeout(function(){
+          if(token !== vmgSpeakToken){ resolve(); return; } // đã có lần chạm mới hơn
+          var u = new SpeechSynthesisUtterance(clean);
+          var v = (typeof comGetVoice === 'function') ? comGetVoice() : null;
+          if(v && /^en/i.test(v.lang || '')){ u.voice = v; u.lang = v.lang; }
+          else { u.lang = 'en-GB'; } // không dùng giọng không phải tiếng Anh
+          u.rate = 0.88;
+          u.pitch = 1.0;
+          u.volume = 1;
 
-        u.onend = finish;
-        u.onerror = finish;
-        // Fallback timer nếu Safari / Webkit nuốt sự kiện onend
-        var estDuration = Math.max(1100, Math.min(4500, clean.length * 150));
-        timer = setTimeout(finish, estDuration);
-
-        window.speechSynthesis.speak(u);
+          vmgActiveUtterance = u;
+          var finished = false, timer = null;
+          function finish(){
+            if(finished) return;
+            finished = true;
+            if(timer) clearTimeout(timer);
+            if(vmgActiveUtterance === u) vmgActiveUtterance = null;
+            resolve();
+          }
+          u.onend = finish;
+          u.onerror = finish;
+          timer = setTimeout(finish, Math.max(1800, Math.min(7000, 1500 + clean.length * 130)));
+          try{ sy.speak(u); }catch(err){ finish(); }
+        }, wasBusy ? 90 : 0);
       } catch(e){
         resolve();
       }
@@ -27156,7 +27098,37 @@ function roadmapIcon(def, locked){
     vmgStartTimer();
 
     openModalTop('vmg-game-modal');
+    requestAnimationFrame(function(){
+      vmgFitText();
+      setTimeout(vmgFitText, 350);
+      try{ if(document.fonts && document.fonts.ready) document.fonts.ready.then(vmgFitText); }catch(e){}
+    });
   }
+
+  /* ---- Tự chọn cỡ chữ lớn nhất vừa khít từng ô (tiếng Anh, tiếng Việt, từ dài) ---- */
+  function vmgFitText(){
+    var gridEl = document.getElementById('vmg-grid');
+    if(!gridEl) return;
+    var cells = gridEl.querySelectorAll('.vmg-cell');
+    for(var i = 0; i < cells.length; i++){
+      var cell = cells[i];
+      var t = cell.querySelector('.vmg-word-text');
+      if(!t) continue;
+      var w = cell.clientWidth - 26, h = cell.clientHeight - 26;
+      if(w <= 0 || h <= 0) continue;
+      var isEn = cell.classList.contains('is-en');
+      var fs = Math.min(isEn ? 26 : 22, Math.floor(h * 0.30), Math.floor(w * 0.20));
+      t.style.overflowWrap = 'normal';
+      t.style.fontSize = fs + 'px';
+      while(fs > 12 && (t.scrollHeight > h + 1 || t.scrollWidth > w + 1)){
+        fs -= 1;
+        t.style.fontSize = fs + 'px';
+      }
+      if(t.scrollWidth > w + 1) t.style.overflowWrap = 'anywhere';
+    }
+  }
+  window.addEventListener('resize', function(){ vmgFitText(); });
+  window.addEventListener('orientationchange', function(){ setTimeout(vmgFitText, 300); });
 
   /* ---- ĐỒNG HỒ ĐẾM NGƯỢC & PHẠT THỜI GIAN ---- */
   function vmgStartTimer(){
@@ -27214,14 +27186,15 @@ function roadmapIcon(def, locked){
 
   /* ---- XỬ LÝ CHẠM Ô VMG v2 ---- */
   function vmgHandleCellClick(cellIndex, cellEl){
-    if(!vmgGame.active || vmgGame.locked) return;
+    if(!vmgGame.active) return;
     var cellData = vmgGame.cells[cellIndex];
-    if(!cellData || cellData.isMatched) return;
+    if(!cellData) return;
 
-    // Phát âm nếu là ô tiếng Anh
+    // Ô tiếng Anh luôn được đọc khi chạm: chạm trước, chạm sau, đang khóa do nối sai, hay đã nối xong
     if(cellData.lang === 'en'){
       vmgSpeak(cellData.text);
     }
+    if(cellData.isMatched || vmgGame.locked) return;
 
     // Chưa chọn ô nào trước đó
     if(!vmgGame.selectedCell){
@@ -27269,6 +27242,9 @@ function roadmapIcon(def, locked){
       vmgGame.wrongStreak = 0; // Đặt lại mức phạt luỹ tiến
 
       try{ seSfx('pass_clean'); }catch(e){}
+
+      // Nối đúng: nếu chạm ô tiếng Anh trước thì đọc lại để khắc sâu (chạm sau đã được đọc ở trên)
+      if(secondCell.lang === 'vi' && firstCell.lang === 'en'){ vmgSpeak(firstCell.text); }
 
       // Hiệu ứng giọt nước rơi từ 2 ô vào pack trung tâm
       vmgSpawnDroplet(firstEl);
@@ -27937,6 +27913,12 @@ function roadmapIcon(def, locked){
     var item = bank.find(function(w){ return w.k === wordKey; });
     if(!item) return;
 
+    var cacheChk = vmgGetCachedBank();
+    var inCloud = cacheChk && Array.isArray(cacheChk.words) && cacheChk.words.some(function(w){ return w.k === wordKey; });
+    if(!inCloud){
+      alert('Từ "' + item.en + '" là từ nhúng sẵn trong ứng dụng, chưa có trên Firebase nên không xóa được. Hãy nhập kho từ lên Firebase (Import) trước.');
+      return;
+    }
     if(!confirm('Bạn có chắc muốn xóa từ "' + item.en + '" khỏi kho chung trên Firebase?')){
       return;
     }
@@ -28727,6 +28709,8 @@ function roadmapIcon(def, locked){
   }
 
   // Expose VMG globals to window
+  window.vmgAdminDeleteWord = vmgAdminDeleteWord;
+  window.vmgAdminEditWord = vmgAdminEditWord;
   window.vmgOpenLobby = vmgOpenLobby;
   window.vmgStartGame = vmgStartGame;
   window.vmgRenderEntryCard = vmgRenderEntryCard;
