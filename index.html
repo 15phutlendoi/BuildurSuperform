@@ -18765,6 +18765,25 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
       + (chips ? '<div style="margin-top:3px">' + chips + '</div>' : '')
       + '</div></div>';
   }
+  /* Ảnh hưởng THỰC của HLV đang trang bị lên đội hình hiện tại — dùng đúng seSynergy() như khi vào trận */
+  function cpInfluenceHTML(cid){
+    try{
+      var lu = sLineup(), slots = lu.f.positions.map(function(x){ return x.pos; });
+      var team = {style:cid, fid:lu.f.id, slots:slots, pitch:[], bench:[], out:[]};
+      if(lu.ready) team = sTeamFromLineup(lu, null, cid);
+      var sy = seSynergy(team, cid), base = DEFAULT_COACH_SYN;
+      var fl = sy.form >= 0.75 ? 'rất hợp' : (sy.form >= 0.5 ? 'tạm ổn' : 'lệch');
+      var sl = !lu.ready ? 'chưa đủ 11 cầu thủ để tính' : (sy.stat > 0.25 ? 'hợp' : (sy.stat > -0.25 ? 'tạm ổn' : 'chưa hợp'));
+      var bonus = lu.ready ? sy.bonus : (sy.form - 0.5) * SE_P.synF - (sy.form < 0.5 ? (0.5 - sy.form) * 2 : 0);
+      var d = bonus - base, fmt = function(x){ return (x >= 0 ? '+' : '−') + Math.abs(x).toFixed(2); };
+      var cls = d > 0.15 ? 'g' : (d > -0.15 ? 'm' : 'b');
+      return '<div class="cp-infl" style="font-size:12px;line-height:1.5;margin:4px 0;padding:6px 10px;border-radius:10px;background:rgba(15,23,42,.45);border:1px solid rgba(148,163,184,.2)">'
+        + '<div><b style="color:#FDE047">⚙️ Ảnh hưởng thực tế lên sơ đồ ' + escHtml(lu.f.name) + '</b></div>'
+        + '<div>Sơ đồ: <b>' + fl + '</b> · Chỉ số cầu thủ: <b>' + sl + '</b></div>'
+        + '<div class="cp-fit ' + cls + '" style="margin-top:3px">Thưởng đồng đội: <b>' + fmt(bonus) + '</b> điểm sức mạnh/cầu thủ · so với HLV cơ bản (' + fmt(base) + '): <b>' + fmt(d) + '</b></div>'
+        + '</div>';
+    }catch(e){ if(window.console) console.warn('cpInfluence', e); return ''; }
+  }
   function renderCoachPanel(){
     var box = document.getElementById('coach-panel'); if(!box) return;
     var f = currentFormation(loadSquad()), st = sLoad(), cur = (st.styleBy && st.styleBy[f.id]) || 'default';
@@ -18797,7 +18816,7 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
       box.innerHTML = '<div class="cp-h" style="display:flex;align-items:center;justify-content:space-between"><span>🧭 HLV &amp; Phong Cách Thi Đấu</span><span style="font-size:11px;font-weight:700;color:#94A3B8;background:rgba(15,23,42,0.6);padding:2px 8px;border-radius:6px">Chưa chọn HLV</span></div>'
         + '<select class="cp-sel" id="cp-style" aria-label="Chọn phong cách thi đấu">' + opts + '</select>'
         + profHtml
-        + '<div class="cp-empty-hint" style="font-size:12px;color:#94A3B8;padding:4px 2px;line-height:1.4">👉 Chọn một HLV trong danh sách trên để kích hoạt phong cách thi đấu và nhận điểm thưởng đồng đội cho sơ đồ <b>' + escHtml(f.name) + '</b>.</div>';
+        + '<div class="cp-empty-hint" style="font-size:12px;color:#94A3B8;padding:4px 2px;line-height:1.4">Chưa có HLV chiến thuật: đội bị <b>' + String(DEFAULT_COACH_SYN).replace('-', '−') + '</b> điểm sức mạnh/cầu thủ khi vào trận.<br>👉 Chọn một HLV trong danh sách trên để kích hoạt phong cách thi đấu và nhận điểm thưởng đồng đội cho sơ đồ <b>' + escHtml(f.name) + '</b>.</div>';
 
       box.onchange = function(e){
         if(e.target && e.target.id === 'cp-style'){
@@ -18825,6 +18844,7 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
         + '<select class="cp-sel" id="cp-style" aria-label="Chọn phong cách thi đấu">' + opts + '</select>'
         + profHtml
         + '<div class="cp-fit ' + (open || fit >= 100 ? 'g' : (fit >= 75 ? 'm' : 'b')) + '">Sơ đồ <b>' + escHtml(f.name) + '</b>: ' + fitTxt + '</div>'
+        + cpInfluenceHTML(cur)
         + '<div class="cp-coach"><div class="cp-av" style="overflow:hidden">' + avHtml + '</div><div><b>' + escHtml(nw.c || '') + '</b><span>' + escHtml(nw.b || '') + '</span><small>' + escHtml(nw.cl || '') + '</small></div></div>'
       + '<p class="cp-lead" style="margin:4px 0;font-size:12px;color:#CBD5E1">' + escHtml(SEASON_STYLE_DESC[cur] || '') + '</p>'
       + '<details class="cp-details" style="background:rgba(15,23,42,0.35);border:1px solid rgba(148,163,184,0.2);border-radius:10px;padding:6px 10px;font-size:12px;margin-top:4px">'
@@ -32420,8 +32440,13 @@ function roadmapIcon(def, locked){
   function isCoachUnlocked(coachId, vId){
     if(coachId === 'default') return true;
     var un = getCoachUnlocks();
-    var k = coachId + '~' + (vId || coachId);
-    return !!(un[k] || un[coachId]);
+    if(vId) return !!(un[coachId + '~' + vId] || un[coachId]);
+    /* Không truyền phiên bản (danh sách chọn HLV ở Sân đấu): sở hữu bất kỳ phiên bản nào của HLV là đủ.
+       unlockCoach() lưu khóa dạng "id~phiênbản" (vd zidane~v1) nên không thể chỉ tra "id~id". */
+    if(un[coachId] || un[coachId + '~' + coachId]) return true;
+    var pre = coachId + '~';
+    for(var k in un){ if(k.indexOf(pre) === 0 && un[k]) return true; }
+    return false;
   }
 
   function unlockCoach(coachId, vId){
@@ -32457,7 +32482,13 @@ function roadmapIcon(def, locked){
         var v = c.versions[mv];
         if(!v.active) continue;
 
-        if(v.style) SE_STYLE[cid] = v.style;
+        if(v.style || !SE_STYLE[cid]){
+          var _base = SE_STYLE.flex || {poss:0.5, attN:4, defN:4, cnt:0.4, sig:1, drain:1, att:[0,0,0], stop:[0,0,0], ideal:null, w:null, attMod:{}, defMod:{}};
+          var _st = {}, _k;
+          for(_k in _base) _st[_k] = _base[_k];
+          if(v.style) for(_k in v.style) _st[_k] = v.style[_k];   // thiếu trường nào dùng giá trị trung tính của "Linh hoạt"
+          SE_STYLE[cid] = _st;
+        }
         if(v.desc) SEASON_STYLE_DESC[cid] = v.desc;
         if(v.proCon) SEASON_STYLE_PC[cid] = v.proCon;
         if(v.news) SE_NEWS[cid] = v.news;
