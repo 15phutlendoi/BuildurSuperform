@@ -4415,6 +4415,11 @@
   .cp{ display:grid; gap:8px; padding:12px; border-radius:16px; background:var(--glass-soft, rgba(15,23,42,.06)); border:1px solid rgba(148,163,184,.4); font-size:13px; line-height:1.45; }
   .cp-h{ font-weight:800; font-size:15px; }
   .cp-sel{ width:100%; padding:8px 10px; border-radius:10px; font:inherit; font-weight:700; }
+  .cp-pick{ display:grid; grid-template-columns:minmax(0,1.5fr) minmax(0,1fr); gap:8px; align-items:end; }
+  .cp-pk{ display:grid; gap:3px; min-width:0; }
+  .cp-pk > span{ font-size:11px; font-weight:700; color:#94A3B8; padding-left:2px; }
+  .cp-pick .cp-sel{ min-width:0; text-overflow:ellipsis; }
+  @media (max-width:380px){ .cp-pick{ grid-template-columns:1fr; } }
   .cp-fit{ padding:6px 10px; border-radius:10px; font-weight:700; background:rgba(148,163,184,.2); }
   .cp-fit.g{ background:rgba(52,211,153,.25); } .cp-fit.m{ background:rgba(251,191,36,.28); } .cp-fit.b{ background:rgba(248,113,113,.25); }
   .cp-coach{ display:flex; gap:10px; align-items:center; }
@@ -10754,10 +10759,6 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
         <b id="squad-power-value">0</b>
       </div>
       <div id="tab-pitch">
-        <div class="formation-select-row">
-          <span class="settings-label" style="margin:0">Sơ đồ chiến thuật</span>
-          <span id="formation-select-zone"></span>
-        </div>
         <div class="pitch-layout"><div class="pitch-scroll"><div class="pitch-wrap" id="pitch-wrap"></div></div><div class="pitch-side"><div class="bench-row" id="bench-row"></div><aside class="cp" id="coach-panel" aria-label="Huấn luyện viên và phong cách thi đấu"></aside></div></div>
       </div>
       <div id="tab-collection" style="display:none">
@@ -18784,6 +18785,48 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
         + '</div>';
     }catch(e){ if(window.console) console.warn('cpInfluence', e); return ''; }
   }
+  /* Đổi sơ đồ (chọn từ khung HLV & Sơ đồ): giữ nguyên luật cũ — xếp sân bị xoá, dự bị giữ nguyên */
+  function cpPickFormation(id){
+    var newF = FORMATIONS.find(function(f){ return f.id === id; });
+    var s2 = loadSquad();
+    if(!newF || newF.id === s2.formationId){ renderPitch(); return; }
+    var hasAssigned = s2.pitch.some(Boolean);
+    if(hasAssigned && !confirm('Đổi sơ đồ sẽ xoá cầu thủ đang xếp trên sân (dự bị vẫn giữ nguyên). Tiếp tục?')){
+      renderPitch();
+      return;
+    }
+    s2.formationId = newF.id;
+    s2.pitch = newF.positions.map(function(){ return null; });
+    saveSquad(s2);
+    renderPitch();
+  }
+  /* Danh sách sơ đồ theo HLV đang chọn: sơ đồ được cộng sức mạnh (hợp nhiều nhất) xếp lên đầu */
+  function cpFormationOptionsHTML(cid, curId){
+    var base = FORMATIONS.map(function(f, i){ return {f:f, c:fmCounts(f), i:i}; }).sort(function(a, b){ return (b.c[0] - a.c[0]) || (b.c[1] - a.c[1]) || (a.i - b.i); });
+    var st = SE_STYLE[cid], open = (cid === 'default' || !st || !st.ideal);
+    function opt(o, txt){ return '<option value="' + o.f.id + '"' + (o.f.id === curId ? ' selected' : '') + '>' + escHtml(txt) + '</option>'; }
+    if(open){   // HLV cơ bản / linh hoạt: mọi sơ đồ như nhau → giữ cách nhóm theo số hậu vệ
+      var out = '', grp = -1;
+      base.forEach(function(o){
+        if(o.c[0] !== grp){ if(grp !== -1) out += '</optgroup>'; grp = o.c[0]; out += '<optgroup label="' + grp + ' hậu vệ">'; }
+        out += opt(o, o.f.name);
+      });
+      return out + (grp !== -1 ? '</optgroup>' : '');
+    }
+    var rk = base.map(function(o, k){ o.p = cpFit(cid, o.f); o.a = cpAlt(cid, o.f); o.k = k; return o; })
+      .sort(function(a, b){ return (b.p - a.p) || (a.a - b.a) || (a.k - b.k); });
+    var good = rk.filter(function(o){ return o.p >= 75; }), rest = rk.filter(function(o){ return o.p < 75; });
+    var h = '';
+    if(good.length) h += '<optgroup label="Được cộng sức mạnh">' + good.map(function(o){ return opt(o, o.f.name + ' — hợp ' + o.p + '%' + (o.p >= 100 ? ' ★' : '')); }).join('') + '</optgroup>';
+    if(rest.length) h += '<optgroup label="Ít hợp hơn">' + rest.map(function(o){ return opt(o, o.f.name + ' — hợp ' + o.p + '%'); }).join('') + '</optgroup>';
+    return h;
+  }
+  function cpPickersHTML(cid, opts, f){
+    return '<div class="cp-pick">'
+      + '<label class="cp-pk"><span>HLV</span><select class="cp-sel" id="cp-style" aria-label="Chọn HLV và phong cách thi đấu">' + opts + '</select></label>'
+      + '<label class="cp-pk"><span>Sơ đồ</span><select class="cp-sel" id="cp-formation" aria-label="Chọn sơ đồ chiến thuật">' + cpFormationOptionsHTML(cid, f.id) + '</select></label>'
+      + '</div>';
+  }
   function renderCoachPanel(){
     try{ renderCoachPanelInner(); }
     catch(err){
@@ -18799,10 +18842,13 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
   function renderCoachPanelInner(){
     var box = document.getElementById('coach-panel'); if(!box) return;
     box.onchange = function(e){   // gắn trước khi dựng giao diện để luôn nhận được lựa chọn
-      if(e.target && e.target.id === 'cp-style'){
+      if(!e.target) return;
+      if(e.target.id === 'cp-style'){
         var s3 = sLoad(); if(!s3.styleBy) s3.styleBy = {};
         s3.styleBy[currentFormation(loadSquad()).id] = e.target.value; sSave(s3);
         renderCoachPanel(); cpSize();
+      } else if(e.target.id === 'cp-formation'){
+        cpPickFormation(e.target.value);
       }
     };
     var f = currentFormation(loadSquad()), st = sLoad(), cur = (st.styleBy && st.styleBy[f.id]) || 'default';
@@ -18818,11 +18864,10 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
       return (b.p - a.p) || (a.a - b.a) || (a.i - b.i);
     });
 
-    var opts = ranked.filter(function(r){ return r.un; }).map(function(r){
+    var opts = ranked.filter(function(r){ return r.un; }).sort(function(a, b){ return a.i - b.i; }).map(function(r){
       return '<option value="' + r.x.id + '"' + (r.x.id === cur ? ' selected' : '') + '>'
         + (r.x.id === 'default' ? '📋 ' : r.x.ic + ' ')
         + escHtml(r.x.name)
-        + (r.x.id === 'default' ? ' (Chưa chọn HLV chiến thuật)' : (r.op ? ' — hợp mọi sơ đồ' : ' — hợp ' + r.p + '%' + (r.p === 100 ? ' ★' : '')))
         + '</option>';
     }).join('');
 
@@ -18833,7 +18878,7 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
     if(!isChosen){
       // Khi CHƯA chọn HLV: Ẩn toàn bộ thông tin chi tiết HLV, chỉ hiển thị dropdown chọn
       box.innerHTML = '<div class="cp-h" style="display:flex;align-items:center;justify-content:space-between"><span>🧭 HLV &amp; Phong Cách Thi Đấu</span><span style="font-size:11px;font-weight:700;color:#94A3B8;background:rgba(15,23,42,0.6);padding:2px 8px;border-radius:6px">Đang dùng HLV cơ bản</span></div>'
-        + '<select class="cp-sel" id="cp-style" aria-label="Chọn phong cách thi đấu">' + opts + '</select>'
+        + cpPickersHTML(cur, opts, f)
         + profHtml
         + '<div class="cp-empty-hint" style="font-size:12px;line-height:1.5;padding:8px 10px;border-radius:10px;background:rgba(15,23,42,.45);border:1px solid rgba(148,163,184,.2);color:#CBD5E1">'
         +   '<div><b style="color:#FDE047">Sơ đồ ' + escHtml(f.name) + '</b> đang dùng HLV cơ bản (chưa có HLV chiến thuật riêng).</div>'
@@ -18860,7 +18905,7 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
         : ('<span>' + escHtml(nw.i || 'HLV') + '</span>');
 
       box.innerHTML = '<div class="cp-h" style="display:flex;align-items:center;justify-content:space-between"><span>🧭 HLV &amp; Phong Cách Thi Đấu</span><div style="display:flex;gap:6px;align-items:center"><button type="button" id="btn-coach-detail" class="btn-secondary" style="font-size:11px;padding:2px 8px;color:#38BDF8;font-weight:700" title="Xem hồ sơ chi tiết HLV">🔍 Chi tiết</button><button type="button" id="btn-unselect-coach" class="btn-secondary" style="font-size:11px;padding:2px 8px;color:#94A3B8" title="Bỏ chọn HLV này về cơ bản">Bỏ chọn</button></div></div>'
-        + '<select class="cp-sel" id="cp-style" aria-label="Chọn phong cách thi đấu">' + opts + '</select>'
+        + cpPickersHTML(cur, opts, f)
         + profHtml
         + '<div class="cp-fit ' + (open || fit >= 100 ? 'g' : (fit >= 75 ? 'm' : 'b')) + '">Sơ đồ <b>' + escHtml(f.name) + '</b>: ' + fitTxt + '</div>'
         + cpInfluenceHTML(cur)
@@ -18876,14 +18921,6 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
       +   '</div>'
       + '</details>';
 
-    box.onchange = function(e){
-      if(e.target && e.target.id === 'cp-style'){
-        var s3 = sLoad(); if(!s3.styleBy) s3.styleBy = {};
-        s3.styleBy[f.id] = e.target.value; sSave(s3);
-        renderCoachPanel();
-        cpSize();
-      }
-    };
 
     var unBtn = document.getElementById('btn-unselect-coach');
     if(unBtn){
@@ -19001,24 +19038,6 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
     squad.bench = squad.bench.map(dedupeSlot);
     if(cleaned){ try{ saveSquad(squad); }catch(e){} }
     if(dupCleared) triggerToast('low', 'Đã đưa ' + dupCleared + ' thẻ trùng cầu thủ ra khỏi đội hình (về lại kho) — mỗi cầu thủ chỉ được xếp 1 thẻ.');
-
-    var selZone = document.getElementById('formation-select-zone');
-    selZone.innerHTML = '<select id="formation-select" class="formation-select">'
-      + formationOptionsHTML(formation.id)
-      + '</select>';
-    document.getElementById('formation-select').addEventListener('change', function(e){
-      var newF = FORMATIONS.find(function(f){ return f.id===e.target.value; });
-      var s2 = loadSquad();
-      var hasAssigned = s2.pitch.some(Boolean);
-      if(hasAssigned && !confirm('Đổi sơ đồ sẽ xoá cầu thủ đang xếp trên sân (dự bị vẫn giữ nguyên). Tiếp tục?')){
-        renderPitch();
-        return;
-      }
-      s2.formationId = newF.id;
-      s2.pitch = newF.positions.map(function(){ return null; });
-      saveSquad(s2);
-      renderPitch();
-    });
 
     var wrap = document.getElementById('pitch-wrap');
     var linesSvg = '<svg class="pitch-lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">'
