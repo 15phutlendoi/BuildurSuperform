@@ -18761,7 +18761,7 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
       + rows.map(function(r){ return '<div><span style="color:#94A3B8">' + r[0] + ':</span> ' + escHtml(String(r[1])) + '</div>'; }).join('')
       + (c.bio ? '<div style="color:#CBD5E1;margin-top:3px"><i>' + escHtml(c.bio) + '</i></div>' : '')
       + (v.desc ? '<div style="color:#E2E8F0;margin-top:3px">' + escHtml(v.desc) + '</div>' : '')
-      + (ideal ? '<div style="margin-top:3px"><span style="color:#94A3B8">📐 Sơ đồ tối ưu:</span> <b>' + escHtml(ideal) + '</b></div>' : '')
+      + (ideal && cid !== 'default' ? '<div style="margin-top:3px"><span style="color:#94A3B8">📐 Sơ đồ tối ưu:</span> <b>' + escHtml(ideal) + '</b></div>' : '')
       + (chips ? '<div style="margin-top:3px">' + chips + '</div>' : '')
       + '</div></div>';
   }
@@ -18785,7 +18785,26 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
     }catch(e){ if(window.console) console.warn('cpInfluence', e); return ''; }
   }
   function renderCoachPanel(){
+    try{ renderCoachPanelInner(); }
+    catch(err){
+      if(window.console) console.warn('renderCoachPanel', err);
+      var bx = document.getElementById('coach-panel'); if(!bx) return;
+      bx.innerHTML = '<div class="cp-h"><span>🧭 HLV &amp; Phong Cách Thi Đấu</span></div>'
+        + '<div style="font-size:12px;color:#FCA5A5;padding:6px 2px">Không hiển thị được thông tin HLV này (dữ liệu HLV chưa đầy đủ).</div>'
+        + '<button type="button" id="btn-coach-reset" class="btn-secondary" style="font-size:12px;padding:4px 10px">Về HLV cơ bản</button>';
+      var rb = document.getElementById('btn-coach-reset');
+      if(rb) rb.onclick = function(){ var s9 = sLoad(); if(!s9.styleBy) s9.styleBy = {}; s9.styleBy[currentFormation(loadSquad()).id] = 'default'; sSave(s9); renderCoachPanel(); };
+    }
+  }
+  function renderCoachPanelInner(){
     var box = document.getElementById('coach-panel'); if(!box) return;
+    box.onchange = function(e){   // gắn trước khi dựng giao diện để luôn nhận được lựa chọn
+      if(e.target && e.target.id === 'cp-style'){
+        var s3 = sLoad(); if(!s3.styleBy) s3.styleBy = {};
+        s3.styleBy[currentFormation(loadSquad()).id] = e.target.value; sSave(s3);
+        renderCoachPanel(); cpSize();
+      }
+    };
     var f = currentFormation(loadSquad()), st = sLoad(), cur = (st.styleBy && st.styleBy[f.id]) || 'default';
     if(!isCoachUnlocked(cur)) cur = 'default';
     if(!SE_STYLE[cur]) cur = 'default';
@@ -18809,23 +18828,23 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
 
     // Kiểm tra đã chọn HLV chiến thuật chưa (khác 'default')
     var isChosen = (cur !== 'default' && !!SE_STYLE[cur]);
-    var profHtml = coachProfileHTML(cur);
+    var profHtml = coachProfileHTML(cur);   // HLV cơ bản luôn có sẵn → cũng hiện đầy đủ hồ sơ
 
     if(!isChosen){
       // Khi CHƯA chọn HLV: Ẩn toàn bộ thông tin chi tiết HLV, chỉ hiển thị dropdown chọn
-      box.innerHTML = '<div class="cp-h" style="display:flex;align-items:center;justify-content:space-between"><span>🧭 HLV &amp; Phong Cách Thi Đấu</span><span style="font-size:11px;font-weight:700;color:#94A3B8;background:rgba(15,23,42,0.6);padding:2px 8px;border-radius:6px">Chưa chọn HLV</span></div>'
+      box.innerHTML = '<div class="cp-h" style="display:flex;align-items:center;justify-content:space-between"><span>🧭 HLV &amp; Phong Cách Thi Đấu</span><span style="font-size:11px;font-weight:700;color:#94A3B8;background:rgba(15,23,42,0.6);padding:2px 8px;border-radius:6px">Đang dùng HLV cơ bản</span></div>'
         + '<select class="cp-sel" id="cp-style" aria-label="Chọn phong cách thi đấu">' + opts + '</select>'
         + profHtml
-        + '<div class="cp-empty-hint" style="font-size:12px;color:#94A3B8;padding:4px 2px;line-height:1.4">Chưa có HLV chiến thuật: đội bị <b>' + String(DEFAULT_COACH_SYN).replace('-', '−') + '</b> điểm sức mạnh/cầu thủ khi vào trận.<br>👉 Chọn một HLV trong danh sách trên để kích hoạt phong cách thi đấu và nhận điểm thưởng đồng đội cho sơ đồ <b>' + escHtml(f.name) + '</b>.</div>';
+        + '<div class="cp-empty-hint" style="font-size:12px;line-height:1.5;padding:8px 10px;border-radius:10px;background:rgba(15,23,42,.45);border:1px solid rgba(148,163,184,.2);color:#CBD5E1">'
+        +   '<div><b style="color:#FDE047">Sơ đồ ' + escHtml(f.name) + '</b> đang dùng HLV cơ bản (chưa có HLV chiến thuật riêng).</div>'
+        +   '<div style="color:#FCA5A5">Ảnh hưởng: <b>' + String(DEFAULT_COACH_SYN).replace('-', '−') + '</b> điểm sức mạnh/cầu thủ khi vào trận, không có thưởng đồng đội.</div>'
+        +   (function(){
+              var best = ranked.filter(function(r){ return r.un && r.x.id !== 'default'; })[0];
+              if(!best) return '<div style="color:#94A3B8;margin-top:2px">Bạn chưa sở hữu HLV nào khác — mở khóa HLV ở Lộ trình/Chợ.</div>';
+              return '<div style="margin-top:2px">💡 Gợi ý: <b>' + escHtml(best.x.ic + ' ' + best.x.name) + '</b>' + (best.op ? ' — hợp mọi sơ đồ' : ' — hợp ' + best.p + '% với sơ đồ này') + '</div>';
+            })()
+        + '</div>';
 
-      box.onchange = function(e){
-        if(e.target && e.target.id === 'cp-style'){
-          var s3 = sLoad(); if(!s3.styleBy) s3.styleBy = {};
-          s3.styleBy[f.id] = e.target.value; sSave(s3);
-          renderCoachPanel();
-          cpSize();
-        }
-      };
       return;
     }
 
@@ -32491,7 +32510,19 @@ function roadmapIcon(def, locked){
         }
         if(v.desc) SEASON_STYLE_DESC[cid] = v.desc;
         if(v.proCon) SEASON_STYLE_PC[cid] = v.proCon;
-        if(v.news) SE_NEWS[cid] = v.news;
+        if(v.news || cid !== 'default'){
+          var _n0 = v.news || {}, _nn = {}, _k2, _id = (v.style && v.style.ideal) || null;
+          for(_k2 in _n0) _nn[_k2] = _n0[_k2];
+          if(!_nn.i) _nn.i = '🎯';
+          if(!_nn.c) _nn.c = c.name || '';
+          if(_nn.b == null) _nn.b = v.label || c.country || '';
+          if(_nn.cl == null) _nn.cl = c.clubs || '';
+          if(!Array.isArray(_nn.st)) _nn.st = v.desc ? [v.desc] : [];
+          if(!Array.isArray(_nn.hn)) _nn.hn = [];
+          if(!Array.isArray(_nn.fm)) _nn.fm = (Array.isArray(_id) && Array.isArray(_id[0])) ? _id[0] : ((Array.isArray(_id) && _id.length === 3) ? _id : [4,3,3]);
+          if(!Array.isArray(_nn.ar)) _nn.ar = [];
+          SE_NEWS[cid] = _nn;
+        }
 
         var ic = (v.news && v.news.i) ? (v.news.i.indexOf(' ') >= 0 ? v.news.i : (cid === 'default' ? '📋' : '🎯')) : '🎯';
         if(cid === 'default') ic = '📋';
@@ -34286,9 +34317,9 @@ function roadmapIcon(def, locked){
   function sNewsSVG(n){
     var ys = n.ys || [104,74,42], P = [[50,128]], inv = {}, ar = '', bd = '', col = {p:'#FBBF24', m:'#F8FAFC', d:'#F87171'};
     function bg(x, y, s){ return '<circle cx="' + x.toFixed(1) + '" cy="' + y.toFixed(1) + '" r="2.8" fill="#FBBF24"/><text x="' + x.toFixed(1) + '" y="' + (y + 1.3).toFixed(1) + '" text-anchor="middle" font-size="3.6" font-weight="900" fill="#1c1305">' + s + '</text>'; }
-    n.fm.forEach(function(c, r){ for(var i = 0; i < c; i++) P.push([c < 4 ? (i + 1) * 100 / (c + 1) : 12 + 76 * i / (c - 1), ys[r]]); });
+    (n.fm || [4,3,3]).forEach(function(c, r){ for(var i = 0; i < c; i++) P.push([c < 4 ? (i + 1) * 100 / (c + 1) : 12 + 76 * i / (c - 1), ys[r]]); });
     var z = (n.z || []).map(function(q){ if(q[3]) bd += bg(q[0], q[1] - q[2], q[3]); return '<circle cx="' + q[0] + '" cy="' + q[1] + '" r="' + q[2] + '" fill="rgba(251,191,36,.12)" stroke="#FBBF24" stroke-width=".6" stroke-dasharray="2 1.6"/>'; }).join('');
-    n.ar.forEach(function(a){
+    (n.ar || []).forEach(function(a){
       var t = a[0], A = P[a[1]], B = t === 'p' ? P[a[2]] : [A[0] + a[2], A[1] + a[3]], dx = B[0] - A[0], dy = B[1] - A[1], L = Math.sqrt(dx * dx + dy * dy) || 1, ux = dx / L, uy = dy / L;
       var x1 = A[0] + ux * 4.4, y1 = A[1] + uy * 4.4, x2 = t === 'p' ? B[0] - ux * 5 : B[0], y2 = t === 'p' ? B[1] - uy * 5 : B[1];
       inv[a[1]] = 1; if(t === 'p') inv[a[2]] = 1;
