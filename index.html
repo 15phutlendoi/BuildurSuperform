@@ -607,6 +607,7 @@
   .cab-medal.k-perfect{ background:linear-gradient(135deg,#FBBF24,#D97706); --glow:rgba(251,191,36,.65); }
   /* Play Style */
   .cab-medal.ps{ background:radial-gradient(circle at 50% 35%,#24304d,#0c1324); }
+  .cab-medal.ps.purple{ border-color:#C084FC; --glow:rgba(168,85,247,.6); }
   .cab-medal.ps.gold{ border-color:#FBBF24; --glow:rgba(251,191,36,.55); }
   .cab-medal.ps.silver{ border-color:#CBD5E1; --glow:rgba(203,213,225,.45); }
   .cab-medal.ps img{ width:36px; height:36px; object-fit:contain; position:relative; z-index:1; }
@@ -976,6 +977,98 @@
   }
   .des-picked-item b{ color:var(--gold); }
   .des-picked-empty{ font-size:11.5px; color:var(--ink-soft); font-style:italic; }
+
+  /* ===== THẺ CHỈ ĐỊNH (#designated-card-modal): cùng giao diện màn hình mở pack (sân vận động + lưới 9 pack + lật thẻ) ===== */
+  .des-box h3{ text-align:center; margin:0 0 4px; font-family:var(--font-display); font-weight:900; }
+  .des-box .hint-text{ text-align:center; margin:0 auto 8px; max-width:560px; }
+  .des-bar{
+    position:relative; z-index:3; box-sizing:border-box; width:min(94vw, 560px); margin:0 auto 8px; padding:8px 10px;
+    display:grid; gap:6px; border-radius:16px;
+    background:rgba(15,23,42,.62); border:1px solid rgba(255,255,255,.18);
+    -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px); box-shadow:0 6px 18px rgba(0,0,0,.35);
+  }
+  .des-filters{ display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+  .des-f{ display:grid; gap:2px; min-width:0; }
+  .des-f > span{ font-size:11px; font-weight:800; color:#FDE68A; padding-left:6px; }
+  .des-f select{
+    width:100%; min-width:0; min-height:38px; padding:0 10px; border-radius:99px;
+    border:1px solid rgba(255,255,255,.28); background:rgba(2,6,23,.72); color:#fff;
+    font:inherit; font-size:12.5px; font-weight:700; text-overflow:ellipsis; cursor:pointer;
+  }
+  .des-f select:focus-visible{ outline:2px solid #FBBF24; outline-offset:1px; }
+  .des-status{ display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap; font-size:12px; font-weight:800; color:#E2E8F0; }
+  .des-box .des-turns-badge{ padding:3px 12px; font-size:12.5px; color:#FDE68A; }
+  .des-box .des-turns-badge b{ font-size:15px; }
+  .des-pips{ display:inline-flex; gap:5px; }
+  .des-pip{ width:11px; height:11px; border-radius:50%; background:rgba(148,163,184,.3); border:1.5px solid rgba(255,255,255,.35); }
+  .des-pip.on{ background:radial-gradient(circle at 35% 30%, #FEF08A, #F59E0B); border-color:#FDE68A; box-shadow:0 0 8px rgba(251,191,36,.75); }
+  .des-box .des-picked-wrap{
+    position:relative; z-index:3; box-sizing:border-box; width:min(94vw, 560px); margin:8px auto 0; padding:6px 10px;
+    border-radius:14px; background:rgba(15,23,42,.55); border:1px solid rgba(255,255,255,.16);
+    -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px);
+  }
+  .des-box .des-picked-title{ font-size:11.5px; margin-bottom:4px; color:#FDE68A; }
+  .des-box .des-picked-list{ flex-wrap:nowrap; overflow-x:auto; min-height:28px; padding-bottom:2px; -webkit-overflow-scrolling:touch; }
+  .des-box .des-picked-item{ flex:0 0 auto; white-space:nowrap; padding:3px 8px; }
+  .des-box .des-picked-empty{ font-size:11.5px; color:#CBD5E1; }
+  .des-box.is-done .des-bar, .des-box.is-done .des-picked-wrap{ display:none; }
+  .des-box.is-done{ cursor:pointer; }
+  .des-gallery-item{ position:relative; }
+  .des-tag{
+    display:block; margin-top:6px; padding:3px 4px; border-radius:10px; text-align:center; line-height:1.15;
+    font-size:clamp(8.5px, 1.6vw, 13px); font-weight:900; letter-spacing:.01em; color:#fff;
+    text-shadow:0 1px 2px rgba(0,0,0,.5); box-shadow:0 3px 8px rgba(0,0,0,.4);
+  }
+  .des-tag.signed, .des-outcome.signed{ background:linear-gradient(135deg, #10B981, #059669); }
+  .des-tag.frags, .des-outcome.frags{ background:linear-gradient(135deg, #0EA5E9, #0369A1); }
+  .des-outcome{
+    position:absolute; left:50%; bottom:4%; transform:translateX(-50%); z-index:6; white-space:nowrap;
+    padding:2px 8px; border-radius:99px; font-size:clamp(8px, 1.5vw, 11px); font-weight:900; color:#fff; box-shadow:0 2px 6px rgba(0,0,0,.5);
+  }
+  .des-picked-tag{ font-style:normal; font-size:10.5px; font-weight:900; padding:1px 7px; border-radius:99px; color:#fff; }
+  .des-picked-tag.signed{ background:#059669; } .des-picked-tag.frags{ background:#0369A1; }
+  .des-tap-hint{ display:block; margin-top:6px; font-weight:800; color:#FDE68A; animation:desTapPulse 1.6s ease-in-out infinite; }
+  @keyframes desTapPulse{ 0%,100%{ opacity:.65; transform:translateY(0); } 50%{ opacity:1; transform:translateY(-2px); } }
+  @media (prefers-reduced-motion:reduce){ .des-tap-hint{ animation:none; } }
+  /* lưới 9 pack (khi tắt hiệu ứng pack) và bộ sưu tập cuối đợt */
+  #des-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:8px; width:min(92%, 420px); margin:10px auto; }
+  #des-grid .daily-box-cell{ aspect-ratio:var(--fc-ar, .74); width:100%; min-width:0; font-size:26px; }
+  #des-grid .daily-box-cell.picked{ padding:0; overflow:visible; }
+  #des-grid .des-nomatch{ grid-column:1 / -1; text-align:center; padding:18px 10px; font-weight:700; line-height:1.4; color:#E2E8F0; text-shadow:0 2px 8px rgba(0,0,0,.9); }
+  /* Màn kết thúc: 5 thẻ cùng một hàng ngang, cân đối theo bề rộng màn hình */
+  #des-grid.gallery{ grid-template-columns:repeat(5, minmax(0, 1fr)); gap:clamp(6px, 1.6vw, 18px); width:min(96vw, 960px); margin:14px auto; align-items:center; }
+  #des-grid.gallery .des-gallery-item{ width:100%; min-width:0; justify-self:center; filter:drop-shadow(0 6px 14px rgba(0,0,0,.55)); animation:desGalleryPop .45s cubic-bezier(.34,1.56,.64,1) backwards; }
+  #des-grid.gallery .des-gallery-item:nth-child(2){ animation-delay:.08s; } #des-grid.gallery .des-gallery-item:nth-child(3){ animation-delay:.16s; }
+  #des-grid.gallery .des-gallery-item:nth-child(4){ animation-delay:.24s; } #des-grid.gallery .des-gallery-item:nth-child(5){ animation-delay:.32s; }
+  @keyframes desGalleryPop{ from{ opacity:0; transform:scale(.6) translateY(16px); } to{ opacity:1; transform:none; } }
+  @media (prefers-reduced-motion:reduce){ #des-grid.gallery .des-gallery-item{ animation:none; } }
+  /* toàn màn hình giống màn hình mở pack */
+  .modal-box.daily-box-modal.des-box.pk-mode{ overflow-y:auto !important; justify-content:flex-start !important; gap:6px; }
+  .des-box.pk-mode h3{
+    position:relative; z-index:3; flex:0 0 auto; margin:0; font-size:clamp(18px, 3.6vw, 26px); color:#fff;
+    text-shadow:0 2px 10px rgba(0,0,0,.9), 0 0 20px rgba(251,191,36,.3);
+  }
+  .des-box.pk-mode .hint-text{
+    position:relative; z-index:3; flex:0 0 auto; margin:0 auto; font-size:clamp(11.5px, 2.4vw, 14px); font-weight:600;
+    color:#E2E8F0; text-shadow:0 2px 8px rgba(0,0,0,.9); line-height:1.35;
+  }
+  .modal-box.des-box.pk-mode #des-grid.daily-box-grid{
+    width:max(210px, min(84vw, calc((100dvh - 350px) * 0.75), 400px)) !important; max-width:400px !important; flex:0 0 auto;
+  }
+  .modal-box.des-box.pk-mode #des-grid.daily-box-grid.gallery{
+    display:grid !important; grid-template-columns:repeat(5, minmax(0, 1fr)) !important;
+    gap:clamp(6px, 1.6vw, 18px) !important; align-items:center !important; justify-items:center !important;
+    width:min(96vw, 960px) !important; max-width:960px !important; margin:auto !important;
+  }
+  .des-box.pk-mode .modal-actions{ position:relative; z-index:3; flex:0 0 auto; margin:6px 0 0; padding:0; display:flex; justify-content:center; }
+  .des-box.pk-mode #des-finish-btn{
+    background:rgba(15,23,42,.75); color:#fff; border:1px solid rgba(255,255,255,.25);
+    -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px); border-radius:99px; padding:8px 28px;
+    font-size:14px; font-weight:700; cursor:pointer; box-shadow:0 4px 12px rgba(0,0,0,.4);
+    transition:transform .15s ease, background .15s ease;
+  }
+  .des-box.pk-mode #des-finish-btn:hover{ background:rgba(30,41,59,.9); transform:scale(1.05); }
+  @media (max-width:420px){ .des-filters{ grid-template-columns:1fr; } }
 
   /* ===== HIỆU ỨNG THẺ THEO PHẨM CHẤT (TRÊN SÂN MÙA GIẢI, ĐẤU TRƯỜNG & ĐỘI HÌNH) ===== */
   
@@ -2549,6 +2642,13 @@
      PHÒNG KỸ NĂNG v2 — Hộp quà Play Style (vàng / bạc / khích lệ)
      Dùng màu cố định (không theo theme) để chữ luôn đọc rõ trên mọi nền.
      ===================================================================== */
+  .skcfg-scroll{ overflow-x:auto; }
+  .skcfg{ width:100%; border-collapse:collapse; font-size:13px; }
+  .skcfg th, .skcfg td{ padding:6px 8px; text-align:left; border-bottom:1px solid rgba(148,163,184,.25); white-space:nowrap; }
+  .skcfg thead th{ font-weight:700; color:#94A3B8; font-size:12px; }
+  .skcfg tbody th{ font-weight:700; }
+  .skcfg input{ width:74px; }
+  .sk-purple { --t1:#F5EBFF; --t2:#C084FC; --t3:#9333EA; --t4:#581C87; --tink:#2E1065; --tglow:168,85,247; --tplate:#FAF5FF; --tflash:#E9D5FF; }
   .sk-gold   { --t1:#FFF6CC; --t2:#FFD24D; --t3:#E0A100; --t4:#8A5A00; --tink:#3D2500; --tglow:255,190,30;  --tplate:#FFF9E6; --tflash:#FFF3B8; }
   .sk-silver { --t1:#FFFFFF; --t2:#DCE4F1; --t3:#9AA9C2; --t4:#52617E; --tink:#1B2B45; --tglow:150,190,255; --tplate:#F8FAFF; --tflash:#EAF2FF; }
   .sk-cheer  { --t1:#E4FFEE; --t2:#6BE79A; --t3:#1FAE55; --t4:#0B6030; --tink:#053B1B; --tglow:80,225,140;  --tplate:#F3FFF7; --tflash:#DFFFEA; }
@@ -11118,22 +11218,34 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
           </div>
         </div>
       </div>
-      <div class="ap-card" data-save="1">
-        <h4>🥇 Điểm thưởng Play Style (Phòng Kỹ Năng)</h4>
-    <label>🥇 Điểm thưởng Play Style VÀNG (điểm thi từ 8/10 trở lên)
-      <input type="number" id="settings-skill-gold" min="0" step="50">
-    </label>
-    <label>🥈 Điểm thưởng Play Style BẠC (từ 7/10 đến dưới 8/10)
-      <input type="number" id="settings-skill-silver" min="0" step="10">
-    </label>
-    <label>💚 Điểm khích lệ (dưới 7/10) — nhận ngẫu nhiên trong khoảng
-      <span class="range-row">
-        <input type="number" id="settings-cheer-min" min="0" step="5">
-        <span class="range-sep">đến</span>
-        <input type="number" id="settings-cheer-max" min="0" step="5">
-      </span>
-    </label>
-    <p class="hint-text" style="margin:-6px 0 0">VD: 20 đến 50 nghĩa là mỗi lần mở hộp khích lệ, con nhận ngẫu nhiên một số điểm trong khoảng đó. Nhập 2 số bằng nhau nếu muốn cố định. Điểm đã mở rồi sẽ giữ nguyên khi đổi cài đặt.</p>
+      <div class="ap-card" data-save="1" id="skcfg-card">
+        <h4>🧠 Phòng Kỹ Năng — thang điểm &amp; mốc hạng của hồ sơ</h4>
+        <div class="skcfg-scroll">
+          <table class="skcfg" aria-label="Thang điểm và mốc hạng từng môn">
+            <thead><tr><th scope="col">Môn</th><th scope="col">Thang điểm</th><th scope="col">💜 Tím từ</th><th scope="col">🥇 Vàng từ</th><th scope="col">🥈 Bạc từ</th></tr></thead>
+            <tbody id="skcfg-body"></tbody>
+          </table>
+        </div>
+        <p class="hint-text" style="margin:0">Mốc tính trên <b>thang 10</b>: ví dụ thang 20 và mốc Tím 9 nghĩa là cần từ 18/20. Điểm dưới mốc Bạc nhận hộp khích lệ. Đổi cấu hình áp dụng cho điểm nhập từ bây giờ; hộp đã mở giữ nguyên hạng.</p>
+        <div class="skcfg-scroll">
+          <table class="skcfg" aria-label="Phần thưởng từng hạng">
+            <thead><tr><th scope="col">Hạng</th><th scope="col">Lượt mở thẻ cầu thủ</th><th scope="col">Điểm thưởng</th></tr></thead>
+            <tbody>
+              <tr><th scope="row">💜 Tím (lv3)</th><td><input type="number" id="settings-cards-purple" min="0" max="9" step="1" aria-label="Lượt mở thẻ hạng Tím"></td><td><input type="number" id="settings-skill-purple" min="0" step="50" aria-label="Điểm thưởng hạng Tím"></td></tr>
+              <tr><th scope="row">🥇 Vàng (lv2)</th><td><input type="number" id="settings-cards-gold" min="0" max="9" step="1" aria-label="Lượt mở thẻ hạng Vàng"></td><td><input type="number" id="settings-skill-gold" min="0" step="50" aria-label="Điểm thưởng hạng Vàng"></td></tr>
+              <tr><th scope="row">🥈 Bạc (lv1)</th><td><input type="number" id="settings-cards-silver" min="0" max="9" step="1" aria-label="Lượt mở thẻ hạng Bạc"></td><td><input type="number" id="settings-skill-silver" min="0" step="10" aria-label="Điểm thưởng hạng Bạc"></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <label>💚 Điểm khích lệ (dưới mốc Bạc) — nhận ngẫu nhiên trong khoảng
+          <span class="range-row">
+            <input type="number" id="settings-cheer-min" min="0" step="5">
+            <span class="range-sep">đến</span>
+            <input type="number" id="settings-cheer-max" min="0" step="5">
+          </span>
+        </label>
+        <p class="hint-text" style="margin:-6px 0 0">VD: 20 đến 50 nghĩa là mỗi lần mở hộp khích lệ, con nhận ngẫu nhiên một số điểm trong khoảng đó. Nhập 2 số bằng nhau nếu muốn cố định.</p>
+        <div class="reward-row"><button type="button" class="btn-secondary" id="skcfg-reset">↺ Về mặc định (Tím 9/9/10 · Vàng 8/8/9 · Bạc 7/7/8)</button></div>
       </div>
     </section>
     <section class="ap-pane" id="appane-rewards" role="tabpanel" aria-labelledby="aptab-rewards" hidden>
@@ -11608,70 +11720,45 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
 <!-- ========== MODAL CHỌN THẺ CHỈ ĐỊNH (5 LƯỢT) ========== -->
 <div id="designated-card-modal" class="modal">
   <div id="designated-card-backdrop" class="modal-backdrop"></div>
-  <div class="modal-box designated-modal">
-    <div class="des-head">
-      <span class="prize-kicker">THƯỞNG CHIẾN THẮNG QUYẾT ĐỊNH</span>
-      <h3 class="des-title">🎯 Chọn Thẻ Chỉ Định (5 Lượt)</h3>
-      <p class="des-desc">Lựa chọn tiêu chí vị trí thi đấu &amp; quốc gia/CLB để hệ thống hiển thị lưới tối đa 5x5 ô thẻ phù hợp. Con được lật mở 5 thẻ vào bộ sưu tập (có thể đổi tiêu chí bất cứ lúc nào nếu chưa hết lượt mở)!</p>
-      <div class="des-status-bar">
-        <span class="des-turns-badge" id="des-turns-badge">🎁 Còn lại: <b id="des-turns-count">5</b> / 5 lượt lật</span>
-        <span class="des-match-badge" id="des-match-badge">Tìm thấy: <b id="des-match-count">0</b> thẻ phù hợp</span>
-      </div>
-    </div>
-
-    <!-- Tiêu chí lọc -->
-    <div class="des-filters-card">
-      <div class="des-filter-col">
-        <label for="des-pos-filter">⚽ Tuyến / Vị trí thi đấu:</label>
-        <select id="des-pos-filter">
-          <option value="all">🌟 Tất cả vị trí (Toàn đội)</option>
-          <optgroup label="Tuyến thi đấu">
+  <div class="modal-box daily-box-modal skp-box des-box">
+    <h3 id="des-title">🎯 Chọn Thẻ Chỉ Định</h3>
+    <p class="hint-text" id="des-lead">Chọn tuyến &amp; khu vực, rồi chạm một pack để chiêu mộ cầu thủ vào bộ sưu tập!</p>
+    <div class="des-bar" id="des-bar">
+      <div class="des-filters">
+        <label class="des-f"><span>⚽ Tuyến thi đấu</span>
+          <select id="des-pos-filter">
+            <option value="all">🌟 Tất cả các tuyến (Toàn đội)</option>
             <option value="FW">⚡ Tiền đạo (ST, LW, RW, CF)</option>
             <option value="MID">🎼 Tiền vệ (CAM, CM, CDM, LM, RM)</option>
             <option value="DEF">🛡️ Hậu vệ (CB, LB, RB, LWB, RWB)</option>
             <option value="GK">🧤 Thủ môn (GK)</option>
-          </optgroup>
-          <optgroup label="Vị trí chi tiết">
-            <option value="ST">ST · Tiền đạo cắm</option>
-            <option value="LW">LW · Tiền đạo cánh trái</option>
-            <option value="RW">RW · Tiền đạo cánh phải</option>
-            <option value="CAM">CAM · Tiền vệ tấn công</option>
-            <option value="CM">CM · Tiền vệ trung tâm</option>
-            <option value="CDM">CDM · Tiền vệ phòng ngự</option>
-            <option value="CB">CB · Trung vệ</option>
-            <option value="LB">LB · Hậu vệ cánh trái</option>
-            <option value="RB">RB · Hậu vệ cánh phải</option>
-            <option value="GK">GK · Thủ môn</option>
-          </optgroup>
-        </select>
-      </div>
-
-      <div class="des-filter-col">
-        <label for="des-team-filter">🌍 Khu vực địa lý:</label>
-        <select id="des-team-filter">
+          </select>
+        </label>
+        <label class="des-f"><span>🌍 Khu vực</span>
+          <select id="des-team-filter">
           <option value="all">🌟 Tất cả khu vực</option>
           <option value="europe">🏰 Châu Âu</option>
           <option value="americas">🌎 Châu Mỹ</option>
           <option value="asia_africa_oceania">🌏 Châu Phi-Á-Úc</option>
         </select>
+        </label>
+      </div>
+      <div class="des-status">
+        <span class="des-turns-badge" id="des-turns-badge">🎁 Còn lại <b id="des-turns-count">5</b> / 5 lượt</span>
+        <span class="des-pips" id="des-pips" aria-hidden="true"></span>
+        <span class="des-match-badge" id="des-match-badge">Tìm thấy <b id="des-match-count">0</b> thẻ</span>
       </div>
     </div>
-
-    <!-- Lưới 5x5 ô thẻ -->
-    <div class="des-grid-wrap">
-      <div class="des-grid" id="des-grid"></div>
-    </div>
-
-    <!-- Thẻ đã nhận trong đợt này -->
+    <div class="daily-box-grid" id="des-grid"></div>
     <div class="des-picked-wrap" id="des-picked-wrap">
-      <div class="des-picked-title">🗂️ Thẻ đã lật trong đợt này (<span id="des-picked-num">0</span>/5):</div>
+      <div class="des-picked-title">🗂️ Đã nhận đợt này (<span id="des-picked-num">0</span>/5)</div>
       <div class="des-picked-list" id="des-picked-list"></div>
     </div>
-
-    <div class="modal-actions center" style="margin-top:14px">
-      <button type="button" id="des-finish-btn" class="btn-primary" style="min-width:140px">Hoàn tất</button>
+    <div class="modal-actions center">
+      <button type="button" id="des-finish-btn" class="btn-secondary">Hoàn tất</button>
     </div>
   </div>
+  <div id="des-stage" class="dbx-stage" aria-live="polite"></div>
 </div>
 
 
@@ -12067,12 +12154,53 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
     {key:'bonus',      emoji:'🌟', name:'Sao Học Tập'}
   ];
 
-  /* ================= PHÒNG KỸ NĂNG v2: Play Style làm phần thưởng =================
-     Điểm thi ≥ 8/10          -> mở hộp VÀNG: ngẫu nhiên 1 Play Style vàng (Play Style+)
-     Điểm thi 7/10 → < 8/10   -> mở hộp BẠC:  ngẫu nhiên 1 Play Style bạc
-     Điểm thi < 7/10          -> hộp KHÍCH LỆ: lời khen + bí quyết học theo môn, điểm tự do trong khoảng cài đặt
-     Muốn đổi mốc điểm: sửa SKILL_TIER_RULE (tính trên thang 10). */
-  var SKILL_TIER_RULE = { goldFrom: 8, silverFrom: 7 };
+  /* ================= PHÒNG KỸ NĂNG v3: Play Style làm phần thưởng, 3 hạng Tím / Vàng / Bạc =================
+     Mỗi môn có THANG ĐIỂM và MỐC HẠNG (tính trên thang 10) riêng, cấu hình theo từng hồ sơ ở trang Admin
+     (tab "Điểm & mốc" -> Phòng Kỹ Năng). Mặc định:
+       💜 Tím   (lv3): Toán & Tiếng Anh ≥ 9/10, Tiếng Việt 10/10  -> mở 5 thẻ cầu thủ
+       🥇 Vàng  (lv2): Toán & Tiếng Anh ≥ 8/10, Tiếng Việt ≥ 9/10 -> mở 3 thẻ cầu thủ
+       🥈 Bạc   (lv1): Toán & Tiếng Anh ≥ 7/10, Tiếng Việt ≥ 8/10 -> mở 1 thẻ cầu thủ
+       Dưới mốc Bạc: hộp KHÍCH LỆ (lời khen + bí quyết học + điểm tự do trong khoảng cài đặt). */
+  var SKILL_CFG_DEFAULT = {
+    subj: {
+      pass:   {scale:20,  purpleFrom:9,  goldFrom:8, silverFrom:7},
+      curve:  {scale:150, purpleFrom:9,  goldFrom:8, silverFrom:7},
+      tackle: {scale:20,  purpleFrom:10, goldFrom:9, silverFrom:8}
+    },
+    cards: {purple:5, gold:3, silver:1}
+  };
+  function skNum(v, def, min, max){
+    v = parseFloat(v);
+    if(isNaN(v)) return def;
+    return Math.min(max, Math.max(min, v));
+  }
+  /* Đọc cấu hình của hồ sơ đang dùng, luôn trả về dữ liệu đầy đủ và hợp lệ (Bạc ≤ Vàng ≤ Tím) */
+  function skillCfg(){
+    var raw = (typeof settings !== 'undefined' && settings && settings.skillCfg) || {};
+    var out = {subj:{}, cards:{}};
+    Object.keys(SKILL_CFG_DEFAULT.subj).forEach(function(k){
+      var d = SKILL_CFG_DEFAULT.subj[k], r = (raw.subj && raw.subj[k]) || {};
+      var sc = skNum(r.scale, d.scale, 1, 100000);
+      var si = skNum(r.silverFrom, d.silverFrom, 0, 10);
+      var go = Math.max(si, skNum(r.goldFrom, d.goldFrom, 0, 10));
+      var pu = Math.max(go, skNum(r.purpleFrom, d.purpleFrom, 0, 10));
+      out.subj[k] = {scale:sc, silverFrom:si, goldFrom:go, purpleFrom:pu};
+    });
+    ['purple','gold','silver'].forEach(function(t){
+      out.cards[t] = Math.round(skNum(raw.cards && raw.cards[t], SKILL_CFG_DEFAULT.cards[t], 0, 9));
+    });
+    return out;
+  }
+  function skillSubjCfg(key){ var c = skillCfg().subj; return c[key] || SKILL_CFG_DEFAULT.subj.pass; }
+  /* Số lượt mở thẻ cầu thủ của 1 hạng (đọc từ cấu hình hồ sơ) */
+  function skillCardCount(tier){
+    if(tier !== 'purple' && tier !== 'gold' && tier !== 'silver') return 0;
+    return skillCfg().cards[tier];
+  }
+  function isPsTier(t){ return t === 'purple' || t === 'gold' || t === 'silver'; }
+  function skillPtsFor(tier){
+    return tier === 'purple' ? settings.skillPurplePts : (tier === 'gold' ? settings.skillGoldPts : settings.skillSilverPts);
+  }
 
   /* key giữ nguyên ('pass' / 'curve' / 'tackle') để dữ liệu các tháng cũ vẫn đọc được */
   var SKILL_DEFS = [
@@ -12080,8 +12208,12 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
     {key:'curve',  subject:'Tiếng Anh',  scale:150, icon:'🔤'},
     {key:'tackle', subject:'Tiếng Việt', scale:20,  icon:'📖'}
   ];
+  SKILL_DEFS.forEach(function(d){   // thang điểm cấu hình theo hồ sơ (Admin); số ở trên chỉ là mặc định
+    Object.defineProperty(d, 'scale', {enumerable:true, configurable:true, get:function(){ return skillSubjCfg(d.key).scale; }});
+  });
 
   var SKILL_TIERS = {
+    purple: {label:'TÍM',      badge:'PLAY STYLE+ TÍM',  pack:'Hộp Tím',      emoji:'💜'},
     gold:   {label:'VÀNG',     badge:'PLAY STYLE+ VÀNG', pack:'Hộp Vàng',     emoji:'🥇'},
     silver: {label:'BẠC',      badge:'PLAY STYLE BẠC',   pack:'Hộp Bạc',      emoji:'🥈'},
     cheer:  {label:'KHÍCH LỆ', badge:'LỜI KHÍCH LỆ',     pack:'Hộp Khích Lệ', emoji:'💚'}
@@ -12892,6 +13024,7 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
   // Điểm thưởng theo hạng hộp quà: Vàng / Bạc / Khích lệ (tự do trong khoảng min-max)
   if(typeof settings.skillGoldPts !== 'number') settings.skillGoldPts = settings.skillPoints;
   if(typeof settings.skillSilverPts !== 'number') settings.skillSilverPts = 200;
+  if(typeof settings.skillPurplePts !== 'number') settings.skillPurplePts = Math.round(settings.skillGoldPts * 1.6);   // Tím mặc định = 1,6 × Vàng; chỉnh ở trang Admin
   if(typeof settings.cheerMin !== 'number') settings.cheerMin = 20;
   if(typeof settings.cheerMax !== 'number') settings.cheerMax = 50;
   if(typeof settings.periodStartDay !== 'number' || settings.periodStartDay<1 || settings.periodStartDay>31) settings.periodStartDay = 1;
@@ -13046,7 +13179,7 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
   function computeStats(){
     var S = {
       goalDays:0, tasks:0, dayPoints:0, streak:0, monthsWon:0, tier:{okay:0, great:0, excellent:0, perfect:0},
-      skillTotal:0, skillGold:0, skillSilver:0, skillPts:0, ps:{}, psOwned:0,
+      skillTotal:0, skillPurple:0, skillGold:0, skillSilver:0, skillPts:0, ps:{}, psOwned:0,
       cards:0, squadCount:0, uniqueCards:0, maxOvr:0, cardsThisPeriod:0, periodLabel:'', top:[], wtNations:0, wtCards:0
     };
     try{ var wcl = wtClaims(); Object.keys(wcl).forEach(function(k){ S.wtNations++; var c = wcl[k], arr = c && c.lv ? Object.keys(c.lv).map(function(q){ return c.lv[q]; }) : [c]; arr.forEach(function(x){ if(x && x.got === 'card') S.wtCards++; }); }); }catch(e){}
@@ -13083,10 +13216,10 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
         if(st && st.activated && typeof st.pts === 'number') S.skillPts += st.pts;
         if(!st || !st.activated || !st.reward || st.reward.type !== 'ps') return;
         S.skillTotal++;
-        if(st.tier === 'gold') S.skillGold++; else S.skillSilver++;
+        if(st.tier === 'purple') S.skillPurple++; else if(st.tier === 'gold') S.skillGold++; else S.skillSilver++;
         var rec = S.ps[st.reward.code] || (S.ps[st.reward.code] = {n:0, best:'silver'});
         rec.n++;
-        if(st.tier === 'gold') rec.best = 'gold';
+        if(st.tier === 'purple') rec.best = 'purple'; else if(st.tier === 'gold' && rec.best !== 'purple') rec.best = 'gold';
       });
     });
     S.streak = longestRun(goalDates);
@@ -13206,7 +13339,7 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
         : '<span class="sk-emoji">'+p.emoji+'</span>';
       return cabItemHTML({
         on:on, cls:'ps'+(on ? ' '+rec.best : ''), icon:ic, name:p.name, cnt: rec ? rec.n : 0,
-        sub: on ? (rec.best === 'gold' ? 'Vàng' : 'Bạc') : (p.gold ? 'Vàng hoặc Bạc' : 'Chỉ hộp Bạc'),
+        sub: on ? (rec.best === 'purple' ? 'Tím' : (rec.best === 'gold' ? 'Vàng' : 'Bạc')) : (p.gold ? 'Vàng hoặc Bạc' : 'Chỉ hộp Bạc'),
         tip: p.name+': '+p.desc
       });
     }).join('');
@@ -13214,6 +13347,7 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
       id:'skill', icon:'⚡', title:'Phòng Kỹ Năng', sub:'Play Style con đã chinh phục',
       total:S.skillTotal, totalLabel:'skill đạt được',
       tiles:[
+        cabTile(S.skillPurple, 'Play Style tím', 'từ hộp tím'),
         cabTile(S.skillGold, 'Play Style vàng', 'từ hộp vàng'),
         cabTile(S.skillSilver, 'Play Style bạc', 'từ hộp bạc'),
         cabTile(S.psOwned+'/'+PLAYSTYLES.length, 'Bộ sưu tập', 'loại khác nhau'),
@@ -13772,13 +13906,17 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
   /* Xếp hạng theo điểm thi: so sánh trên thang 10 (VD: thang 20 -> 16 điểm là vàng, 14 điểm là bạc;
      thang 150 -> 120 điểm là vàng, 105 điểm là bạc) */
   function tierOfScore(s, v){
-    var x = v*10 + 1e-9;
-    if(x >= s.scale*SKILL_TIER_RULE.goldFrom) return 'gold';
-    if(x >= s.scale*SKILL_TIER_RULE.silverFrom) return 'silver';
+    var c = skillSubjCfg(s.key), x = v*10 + 1e-9;
+    if(x >= c.scale*c.purpleFrom) return 'purple';
+    if(x >= c.scale*c.goldFrom) return 'gold';
+    if(x >= c.scale*c.silverFrom) return 'silver';
     return 'cheer';
   }
+  /* Điểm tối thiểu (trên thang của môn) để đạt 1 hạng */
   function skillNeed(s, tier){
-    return Math.round(s.scale*(tier==='gold' ? SKILL_TIER_RULE.goldFrom : SKILL_TIER_RULE.silverFrom))/10;
+    var c = skillSubjCfg(s.key);
+    var f = tier==='purple' ? c.purpleFrom : (tier==='gold' ? c.goldFrom : c.silverFrom);
+    return Math.round(c.scale*f*100)/1000;
   }
   function skillState(monthKey, key){
     var m = loadMonth(monthKey);
@@ -13809,7 +13947,28 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
     var a = Math.max(0, Math.round(settings.cheerMin)), b = Math.max(0, Math.round(settings.cheerMax));
     return a <= b ? [a, b] : [b, a];
   }
+  /* Các Play Style đã có bản lv3 (màu tím) trong CSDL cầu thủ — đọc trực tiếp từ dữ liệu, không cần khai báo tay */
+  var _lv3Cache = {n:-1, set:null};
+  function purpleCodes(){
+    if(typeof PLAYER_DB === 'undefined' || !PLAYER_DB || !PLAYER_DB.length) return null;
+    if(_lv3Cache.n === PLAYER_DB.length && _lv3Cache.set) return _lv3Cache.set;
+    var set = {};
+    PLAYER_DB.forEach(function(card){
+      (card.playstyles || []).forEach(function(code){ if(psLevelOf(card, code) === 3) set[psCanon(code)] = 1; });
+      ((card.battle && card.battle.skills) || []).forEach(function(k){
+        if(k && (k.grade === 'P' || k.grade === 'PURPLE')) set[psCanon(k.id)] = 1;
+      });
+    });
+    _lv3Cache = {n:PLAYER_DB.length, set:set};
+    return set;
+  }
   function playstylePool(tier){
+    if(tier === 'purple'){
+      var set = purpleCodes();
+      var pu = set ? PLAYSTYLES.filter(function(p){ return set[p.code]; }) : [];
+      if(pu.length) return pu;          // chưa đọc được CSDL lv3 -> dùng kho Vàng để không bao giờ rỗng
+      return PLAYSTYLES.filter(function(p){ return p.gold; });
+    }
     return PLAYSTYLES.filter(function(p){ return tier==='gold' ? p.gold : true; });
   }
   function usedPlaystyles(month, exceptKey){
@@ -16099,6 +16258,9 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
     } else if(context === 'skill'){
       var modal = document.getElementById('skill-player-modal');
       box = modal ? modal.querySelector('.modal-box') : null;
+    } else if(context === 'designated'){
+      var modal = document.getElementById('designated-card-modal');
+      box = modal ? modal.querySelector('.modal-box') : null;
     }
 
     if(!box){
@@ -16120,7 +16282,7 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
     box.style.setProperty('--pk-acc', colCfg.hex);
     box.style.setProperty('--pk-acc-rgb', colCfg.rgb);
 
-    var grid = document.getElementById(context === 'skill' ? 'skp-grid' : 'daily-box-grid');
+    var grid = document.getElementById(context === 'skill' ? 'skp-grid' : (context === 'designated' ? 'des-grid' : 'daily-box-grid'));
     var others = (grid && cell) ? [].slice.call(grid.querySelectorAll('.pk-cell')).filter(function(c){ return c !== cell; }) : [];
 
     function phase(n){
@@ -18327,10 +18489,10 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
 
   /* Số thẻ cầu thủ còn phải nhận cho 1 skill (tier bạc/vàng). cheer thì không cần thẻ nên luôn coi là đã xong. */
   function skillCardsPending(st){
-    if(!st || (st.tier !== 'silver' && st.tier !== 'gold')) return false;
+    if(!st || !isPsTier(st.tier)) return false;
     if(!st.activated) return false;
     if(st.cardsDone) return false;
-    var total = st.cardsTotal || (st.tier === 'gold' ? 3 : 1);
+    var total = st.cardsTotal || skillCardCount(st.tier);
     var got = st.cardsGot || 0;
     return got < total;
   }
@@ -18338,7 +18500,7 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
   /* Mở hộp quà 9 pack trong kỹ năng: đồng bộ hoàn toàn với mở thẻ nhiệm vụ hằng ngày */
   function openSkillPlayerModal(code, tier, monthKey, key){
     var st = (monthKey && key) ? skillState(monthKey, key) : null;
-    var total = (st && st.cardsTotal) ? st.cardsTotal : (tier === 'gold' ? 3 : 1);
+    var total = (st && st.cardsTotal) ? st.cardsTotal : skillCardCount(tier);
     var got = (st && st.cardsGot) ? st.cardsGot : 0;
     var remaining = Math.max(0, total - got);
     if(st && remaining <= 0){
@@ -18356,7 +18518,7 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
       if(st){ st.cardsDone = true; setSkillState(monthKey, key, st); }
       return false;
     }
-    var need = Math.min(remaining || (tier === 'gold' ? 3 : 1), picks.length);
+    var need = Math.min(remaining || skillCardCount(tier), picks.length);
     SKP_CTX = (monthKey && key) ? {monthKey:monthKey, key:key} : null;
     skpPicks = picks;
     skpNeeded = need;
@@ -18392,7 +18554,7 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
 
     var ps = psByCode(code);
     var psName = ps ? ps.name : playstyleLabel(code);
-    document.getElementById('skp-title').textContent = need >= 3 ? '🥇 3 Pack Cầu Thủ Bí Ẩn Đang Chờ!' : (need > 1 ? '🥇 '+need+' Pack Cầu Thủ Bí Ẩn Đang Chờ!' : '🥈 1 Pack Cầu Thủ Bí Ẩn Đang Chờ!');
+    document.getElementById('skp-title').textContent = (SKILL_TIERS[tier] ? SKILL_TIERS[tier].emoji : '🎁') + ' ' + need + ' Pack Cầu Thủ Bí Ẩn Đang Chờ!';
     document.getElementById('skp-lead').innerHTML = 'Đã hoàn thành xuất sắc kỹ năng ' + (psName ? '<b>' + escHtml(psName) + '</b>! ' : '! ')
       + (need > 1 ? 'Chọn mở <b>'+need+' pack bất kỳ</b> trong lưới 3x3 pack bí ẩn để chiêu mộ cầu thủ nhé!' : 'Chọn mở <b>1 pack bất kỳ</b> trong lưới 3x3 pack bí ẩn để chiêu mộ cầu thủ nhé!');
     renderSkpGrid();
@@ -18404,7 +18566,7 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
     if(!SKP_CTX || !skpPicks) return;
     var st = skillState(SKP_CTX.monthKey, SKP_CTX.key);
     if(!st) return;
-    var total = st.cardsTotal || (st.tier === 'gold' ? 3 : 1);
+    var total = st.cardsTotal || skillCardCount(st.tier);
     var got = st.cardsGot || 0;
     var needed = Math.max(0, total - got);
     if(needed <= 0) return;
@@ -18442,8 +18604,8 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
       Object.keys(month.skills).forEach(function(skKey){
         var st = month.skills[skKey];
         if(!st || !st.activated || st.cardsDone) return;
-        if(st.tier !== 'gold' && st.tier !== 'silver') return;
-        var total = st.cardsTotal || (st.tier === 'gold' ? 3 : 1);
+        if(!isPsTier(st.tier)) return;
+        var total = st.cardsTotal || skillCardCount(st.tier);
         var got = st.cardsGot || 0;
         var diff = total - got;
         if(diff > 0){
@@ -23715,6 +23877,8 @@ function roadmapIcon(def, locked){
   window.skIconFail = function(img){
     var sp = document.createElement('span');
     sp.className = 'sk-emoji';
+    var alt = img.getAttribute('data-alt');
+    if(alt && !img.__altTried){ img.__altTried = true; img.src = alt; return; }   // hạng Tím: chưa có ảnh _3 thì dùng ảnh _2
     sp.textContent = img.getAttribute('data-emoji') || '⚡';
     if(img.parentNode) img.parentNode.replaceChild(sp, img);
   };
@@ -23724,7 +23888,8 @@ function roadmapIcon(def, locked){
       var p = psByCode(r.code);
       var emoji = p ? p.emoji : '⚡';
       var url = playstyleIconUrl(r.code, st.tier);
-      if(url) return '<img src="'+url+'" alt="" data-emoji="'+emoji+'" onerror="window.skIconFail(this)">';
+      var altUrl = st.tier === 'purple' ? playstyleIconUrl(r.code, 'gold') : '';
+      if(url) return '<img src="'+url+'" alt="" data-emoji="'+emoji+'"'+(altUrl ? ' data-alt="'+altUrl+'"' : '')+' onerror="window.skIconFail(this)">';
       return '<span class="sk-emoji">'+emoji+'</span>';
     }
     return '<span class="sk-emoji">💚</span>';
@@ -23761,7 +23926,8 @@ function roadmapIcon(def, locked){
   }
   function readyCardHTML(s, st){
     var t = SKILL_TIERS[st.tier];
-    var blurb = st.tier==='gold' ? 'Bên trong chắc chắn có 1 Play Style <b>VÀNG</b> đang chờ con! ✨'
+    var blurb = st.tier==='purple' ? 'Bên trong có 1 Play Style <b>TÍM</b> huyền thoại đang chờ con! 💜'
+              : st.tier==='gold' ? 'Bên trong chắc chắn có 1 Play Style <b>VÀNG</b> đang chờ con! ✨'
               : (st.tier==='silver' ? 'Bên trong có 1 Play Style <b>BẠC</b> lấp lánh đang chờ con!'
               : 'Có lời khen, bí quyết học và điểm thưởng đang chờ con!');
     var cta = st.tier==='cheer' ? '💌 MỞ QUÀ KHÍCH LỆ' : '🎁 MỞ SKILL!';
@@ -23789,13 +23955,13 @@ function roadmapIcon(def, locked){
       h += '<p class="skill-desc">'+escHtml(rt.desc)+'</p>';
     }
     if(pending){
-      h += '<p class="skill-desc"><b>⏳ Còn '+((st.cardsTotal||(st.tier==='gold'?3:1)) - (st.cardsGot||0))+' thẻ cầu thủ chưa nhận!</b></p>';
+      h += '<p class="skill-desc"><b>⏳ Còn '+((st.cardsTotal||skillCardCount(st.tier)) - (st.cardsGot||0))+' thẻ cầu thủ chưa nhận!</b></p>';
     }
     h += '<span class="skill-pts">+'+st.pts+' điểm</span>'
       + '<div class="sk-actions-row">';
     if(pending){
       h += '<button type="button" class="btn-open" data-act="claim" data-skill="'+s.key+'">🎁 Nhận thưởng</button>';
-    } else if(st.tier === 'silver' || st.tier === 'gold'){
+    } else if(isPsTier(st.tier)){
       h += '<button type="button" class="btn-ghost" data-act="cards" data-skill="'+s.key+'">🎴 Xem thẻ đã nhận</button>';
     } else {
       h += '<button type="button" class="btn-ghost" data-act="replay" data-skill="'+s.key+'">✨ Xem lại</button>';
@@ -24438,6 +24604,7 @@ function roadmapIcon(def, locked){
      pháo hoa, mưa xu/confetti) -> thẻ lật ra + đóng dấu hạng + đếm điểm nhảy số.
      Phần thưởng được random và LƯU ngay khi bắt đầu mở, nên đóng cửa sổ giữa chừng cũng không mất/không random lại. */
   var SK_PAL = {
+    purple: ['#F3E8FF','#D8B4FE','#A855F7','#7E22CE','#FFFFFF'],
     gold:   ['#FFF3B0','#FFD54A','#FFB100','#FF8F00','#FFFFFF'],
     silver: ['#FFFFFF','#E3EAF6','#B8C4D6','#8FB4FF','#DDEBFF'],
     cheer:  ['#B9FFD3','#5FE38F','#22C55E','#FFE066','#FFFFFF']
@@ -24463,17 +24630,17 @@ function roadmapIcon(def, locked){
     o.start(t0); o.stop(t0 + dur + 0.03);
   }
   function skSoundCharge(tier, sec){
-    sweep(150, tier==='gold' ? 1100 : 760, sec, 'sawtooth', 0.05);
-    sweep(70, tier==='gold' ? 260 : 180, sec, 'triangle', 0.09);
+    sweep(150, (tier==='gold'||tier==='purple') ? 1100 : 760, sec, 'sawtooth', 0.05);
+    sweep(70, (tier==='gold'||tier==='purple') ? 260 : 180, sec, 'triangle', 0.09);
     var n = Math.round(sec*7);
-    for(var i=0;i<n;i++){ beep(380 + i*(tier==='gold' ? 65 : 45), 0.05, 'square', i*(sec/n), 0.035); }
+    for(var i=0;i<n;i++){ beep(380 + i*((tier==='gold'||tier==='purple') ? 65 : 45), 0.05, 'square', i*(sec/n), 0.035); }
   }
   function skSoundBurst(tier){
     beep(80, 0.5, 'sawtooth', 0, 0.2);
     beep(130, 0.35, 'triangle', 0.02, 0.14);
-    var chord = tier==='gold' ? [523,659,784,1046,1318] : (tier==='silver' ? [440,554,659,880] : [523,659,784]);
+    var chord = (tier==='gold'||tier==='purple') ? [523,659,784,1046,1318] : (tier==='silver' ? [440,554,659,880] : [523,659,784]);
     chord.forEach(function(f,i){ beep(f, 0.3, 'square', 0.12 + i*0.08, 0.1); });
-    if(tier==='gold'){ [1568,1976,2349].forEach(function(f,i){ beep(f, 0.18, 'triangle', 0.55 + i*0.09, 0.07); }); }
+    if((tier==='gold'||tier==='purple')){ [1568,1976,2349].forEach(function(f,i){ beep(f, 0.18, 'triangle', 0.55 + i*0.09, 0.07); }); }
   }
   function skSoundTick(){ beep(1100 + Math.random()*300, 0.035, 'square', 0, 0.04); }
 
@@ -24569,8 +24736,8 @@ function roadmapIcon(def, locked){
   }
   function skBurstFx(c, tier, small){
     var pal = SK_PAL[tier];
-    var n = (tier==='gold' ? 110 : (tier==='silver' ? 80 : 60)) * (small ? 0.45 : 1);
-    var speed = tier==='gold' ? 620 : 460;
+    var n = ((tier==='gold'||tier==='purple') ? 110 : (tier==='silver' ? 80 : 60)) * (small ? 0.45 : 1);
+    var speed = (tier==='gold'||tier==='purple') ? 620 : 460;
     var i, ang, sp;
     for(i=0;i<n;i++){
       ang = Math.random()*6.2832; sp = 180 + Math.random()*speed;
@@ -24580,14 +24747,14 @@ function roadmapIcon(def, locked){
       ang = Math.random()*6.2832; sp = 120 + Math.random()*320;
       skSpawn({t:'star', x:c.x, y:c.y, vx:Math.cos(ang)*sp, vy:Math.sin(ang)*sp, g:220, drag:1.2, size:7 + Math.random()*9, color:pickOne(pal), rot:Math.random()*6, vr:(Math.random()-0.5)*8, life:1.2 + Math.random()*0.9});
     }
-    if(tier==='gold' && !small){
+    if((tier==='gold'||tier==='purple') && !small){
       for(i=0;i<26;i++){
         skSpawn({t:'coin', x:c.x, y:c.y, vx:(Math.random()-0.5)*520, vy:-(480 + Math.random()*520), g:950, size:9 + Math.random()*5, rot:Math.random()*6, vr:6 + Math.random()*8, life:1.7 + Math.random()*0.8});
       }
     }
   }
   function skRain(tier){
-    var pal = SK_PAL[tier], n = tier==='gold' ? 90 : (tier==='silver' ? 60 : 44), i;
+    var pal = SK_PAL[tier], n = (tier==='gold'||tier==='purple') ? 90 : (tier==='silver' ? 60 : 44), i;
     for(i=0;i<n;i++){
       skSpawn({t:'conf', x:Math.random()*SKFX.w, y:-20, vx:(Math.random()-0.5)*80, vy:120 + Math.random()*170, g:40, size:8 + Math.random()*6, color:pickOne(pal), rot:Math.random()*6, vr:(Math.random()-0.5)*10, delay:Math.random()*0.9, life:2.4 + Math.random()*1.2});
     }
@@ -24632,9 +24799,10 @@ function roadmapIcon(def, locked){
     } else {
       out += skFact('⚡', '<b>'+escHtml(rt.name)+':</b> '+escHtml(rt.desc));
       out += skFact('📚', 'Nhờ điểm thi môn <b>'+s.subject+' '+st.score+'/'+s.scale+'</b>, con nhận được Play Style '+t.label.toLowerCase()+'!');
-      if(st.tier === 'silver'){
-        gap = Math.round((skillNeed(s,'gold') - st.score)*100)/100;
-        out += skFact('🚀', 'Cố thêm <b>'+gap+' điểm</b> nữa (đạt '+skillNeed(s,'gold')+'/'+s.scale+') là kỳ sau con mở được Play Style <b>Vàng</b>!');
+      var nextT = st.tier === 'silver' ? 'gold' : (st.tier === 'gold' ? 'purple' : '');
+      if(nextT){
+        gap = Math.round((skillNeed(s,nextT) - st.score)*100)/100;
+        out += skFact('🚀', 'Cố thêm <b>'+gap+' điểm</b> nữa (đạt '+skillNeed(s,nextT)+'/'+s.scale+') là kỳ sau con mở được Play Style <b>'+SKILL_TIERS[nextT].label.charAt(0)+SKILL_TIERS[nextT].label.slice(1).toLowerCase()+'</b> ('+skillCardCount(nextT)+' thẻ cầu thủ)!');
       }
       out += skFact('🎯', 'Đã cộng <b>+'+st.pts+' điểm</b> vào tổng điểm '+escHtml(periodLabel)+'!', true);
     }
@@ -24650,7 +24818,7 @@ function roadmapIcon(def, locked){
     } else if(phase === 'done'){
       var stDone = skillState(CE.monthKey, CE.key);
       var pendingDone = skillCardsPending(stDone);
-      var hasCards = (CE.tier === 'silver' || CE.tier === 'gold');
+      var hasCards = isPsTier(CE.tier);
       later.textContent = pendingDone ? '🎁 Nhận thẻ' : (hasCards ? '🎴 Xem thẻ đã nhận' : '✨ Xem lại');
       main.textContent = CE.fresh ? '🎉 NHẬN THƯỞNG!' : 'Đóng';
     }
@@ -24673,7 +24841,7 @@ function roadmapIcon(def, locked){
     var C = CE, st = skillState(C.monthKey, C.key);
     C.phase = 'idle';
     var modal = ceEl('skill-modal');
-    modal.classList.remove('sk-gold','sk-silver','sk-cheer');
+    modal.classList.remove('sk-purple','sk-gold','sk-silver','sk-cheer');
     modal.classList.add('sk-'+C.tier);
     ceEl('sk-box').className = 'modal-box skill-modal';
     ceEl('sk-kicker').textContent = SKILL_TIERS[C.tier].pack.toUpperCase() + ' · MÔN ' + C.s.subject.toUpperCase();
@@ -24708,7 +24876,7 @@ function roadmapIcon(def, locked){
       if(st.tier === 'cheer') triggerToast('okay', '+'+st.pts+' điểm khích lệ môn '+C.s.subject+' — con giỏi lắm! 💚');
       else triggerToast('perfect', 'Đã nhận Play Style '+SKILL_TIERS[st.tier].label.toLowerCase()+' “'+rt.name+'”! +'+st.pts+' điểm 🌟');
       renderWeek();
-      if(st.tier === 'silver' || st.tier === 'gold'){
+      if(isPsTier(st.tier)){
         try{ openSkillPlayerModal(st.reward.code, st.tier, C.monthKey, C.key); }
         catch(err){ console.warn('Khong mo duoc minigame cau thu bi an', err); }
       }
@@ -24724,8 +24892,8 @@ function roadmapIcon(def, locked){
       st.pts = randBetween(range[0], range[1]);
     } else {
       st.reward = {type:'ps', code:pickPlaystyle(st.tier, month, C.key)};
-      st.pts = st.tier === 'gold' ? settings.skillGoldPts : settings.skillSilverPts;
-      st.cardsTotal = st.tier === 'gold' ? 3 : 1;
+      st.pts = skillPtsFor(st.tier);
+      st.cardsTotal = skillCardCount(st.tier);
       st.cardsGot = 0;
       st.cardsDone = false;
       st.cardsDbIds = [];
@@ -24746,7 +24914,7 @@ function roadmapIcon(def, locked){
     ceEl('sk-hint').style.display = 'none';
     ceSetButtons('busy');
     if(reducedMotion()){ ceReveal(); return; }
-    var tier = C.tier, dur = tier==='gold' ? 2000 : (tier==='silver' ? 1500 : 1100);
+    var tier = C.tier, dur = tier==='purple' ? 2400 : (tier==='gold' ? 2000 : (tier==='silver' ? 1500 : 1100));
     var pack = ceEl('sk-pack'), center = ceCenter();
     pack.classList.add('charge-1');
     ceLater(function(){ pack.classList.remove('charge-1'); pack.classList.add('charge-2'); }, dur*0.35);
@@ -24769,15 +24937,15 @@ function roadmapIcon(def, locked){
     }
     ceRing(); ceLater(ceRing, 160);
     skBurstFx(center, tier); skRain(tier); skSoundBurst(tier);
-    if(tier === 'gold'){
-      for(var k=0;k<3;k++){
+    if(tier === 'gold' || tier === 'purple'){
+      for(var k=0;k<(tier==='purple' ? 5 : 3);k++){
         ceLater(function(){
-          skBurstFx({x:SKFX.w*(0.15 + Math.random()*0.7), y:SKFX.h*(0.15 + Math.random()*0.4)}, 'gold', true);
+          skBurstFx({x:SKFX.w*(0.15 + Math.random()*0.7), y:SKFX.h*(0.15 + Math.random()*0.4)}, tier === 'purple' ? 'purple' : 'gold', true);
           beep(520 + Math.random()*400, 0.16, 'square', 0, 0.07);
         }, 520 + k*280);
       }
     }
-    ceLater(ceReveal, tier==='gold' ? 460 : 380);
+    ceLater(ceReveal, (tier==='gold'||tier==='purple') ? 460 : 380);
   }
 
   function ceCountUp(el, target, ms){
@@ -24854,7 +25022,7 @@ function roadmapIcon(def, locked){
           setSkillState(mk, k, st2);
           renderWeek();
         }
-      } else if(C.tier === 'silver' || C.tier === 'gold'){
+      } else if(isPsTier(C.tier)){
         // "Xem thẻ đã nhận": đã nhận đủ thẻ trước đó -> mở lại đúng các thẻ đã chiêu mộ, KHÔNG random lại, KHÔNG cộng thêm điểm
         var mk2 = C.monthKey, k2 = C.key;
         closeSkillModal();
@@ -25049,62 +25217,131 @@ function roadmapIcon(def, locked){
     });
   }
 
-  function renderDesignatedGrid(){
-    var month = loadMonth(desCurrentMonthKey || currentPeriod.key);
-    var picks = (month && month.designatedPicks) || [];
-    var left = Math.max(0, 5 - picks.length);
+  /* ---- Giao diện: dùng đúng khung mở pack (sân vận động, lưới 9 pack, lật thẻ bằng openCardFlow) ---- */
+  var desOpenedIdx = [];      // các ô đã mở trong lưới hiện tại
+  var desBusy = false;        // đang chạy hiệu ứng mở pack
+  var desPoolSize = 0;
+  var desOutcomeIdx = {};     // ô -> 'signed' | 'frags' (kết quả chọn ở màn mở thẻ trong lưới hiện tại)
+  var desDoneAt = 0;          // thời điểm hiện màn các thẻ đã nhận (chặn chạm nhầm ngay lúc vừa hiện)
 
+  /* Thẻ đã KÝ HỢP ĐỒNG (còn trong kho) hay ĐỔI MẢNH (đã rút khỏi kho). Ưu tiên giá trị đã ghi lại; nếu thiếu thì suy từ kho cầu thủ. */
+  function desOutcomeOf(pk){
+    if(pk && pk.outcome) return pk.outcome;
+    var ok = false;
+    try{ ok = loadPlayers().some(function(x){ return x && x.id === pk.id; }); }catch(e){}
+    return ok ? 'signed' : 'frags';
+  }
+  function desTagText(pk){
+    return desOutcomeOf(pk) === 'frags'
+      ? '🧩 ĐỔI MẢNH' + (pk.frags ? ' +' + pk.frags : '')
+      : '✍️ KÝ HỢP ĐỒNG';
+  }
+  function desMonth(){ return loadMonth(desCurrentMonthKey || currentPeriod.key); }
+  function desLeftOf(month){ return Math.max(0, 5 - (((month && month.designatedPicks) || []).length)); }
+
+  function desApplyPackMode(){
+    var modal = document.getElementById('designated-card-modal');
+    var box = modal ? modal.querySelector('.modal-box') : null;
+    var usePackFx = (typeof PACK_FX !== 'undefined' && PACK_FX.enabled && !reducedMotion());
+    if(usePackFx && modal && box){
+      pkPreload();
+      modal.classList.add('pk-mode'); box.classList.add('pk-mode');
+      box.style.setProperty('--pk-stadium', 'url("' + PACK_FX.assets.stadium + '")');
+      box.style.backgroundImage = 'url("' + PACK_FX.assets.stadium + '")';
+      box.style.backgroundSize = 'cover'; box.style.backgroundPosition = 'center';
+      box.style.setProperty('--pk-mask', 'url("' + PACK_FX.assets.pack + '")');
+      box.style.setProperty('--pk-ar', PACK_FX.packAspect || 0.75);
+    } else {
+      if(modal) modal.classList.remove('pk-mode');
+      if(box){ box.classList.remove('pk-mode'); box.style.backgroundImage = ''; }
+    }
+    return usePackFx;
+  }
+
+  function desUpdateCounters(month){
+    var left = desLeftOf(month);
+    var elTurns = document.getElementById('des-turns-count'); if(elTurns) elTurns.textContent = left;
+    var elMatch = document.getElementById('des-match-count'); if(elMatch) elMatch.textContent = desPoolSize;
+    var pips = document.getElementById('des-pips');
+    if(pips){ var h = ''; for(var i = 0; i < 5; i++) h += '<span class="des-pip' + (i < left ? ' on' : '') + '"></span>'; pips.innerHTML = h; }
+    renderDesignatedPickedList((month && month.designatedPicks) || []);
+  }
+
+  /* Chia lại 9 thẻ theo tiêu chí đang chọn (mở popup hoặc đổi bộ lọc) */
+  function desReshuffle(){
+    var month = desMonth();
     var posFilter = (document.getElementById('des-pos-filter') && document.getElementById('des-pos-filter').value) || 'all';
     var teamFilter = (document.getElementById('des-team-filter') && document.getElementById('des-team-filter').value) || 'all';
-
     var pool = getMatchingDesignatedCards(posFilter, teamFilter, month);
-
-    // Xáo trộn ngẫu nhiên để tăng tính may mắn / thú vị
+    desPoolSize = pool.length;
     pool = pool.slice().sort(function(){ return Math.random() - 0.5; });
     var displayCards = [];
     if(pool.length >= 9){
       displayCards = pool.slice(0, 9);
     } else if(pool.length > 0){
-      // Cho trùng lặp để đủ 9 ô thẻ
-      while(displayCards.length < 9){
-        for(var pi = 0; pi < pool.length && displayCards.length < 9; pi++){
-          displayCards.push(pool[pi]);
-        }
+      while(displayCards.length < 9){            // thiếu thẻ thì cho lặp để đủ 9 ô
+        for(var pi = 0; pi < pool.length && displayCards.length < 9; pi++) displayCards.push(pool[pi]);
       }
     }
     desGridCards = displayCards;
+    desOpenedIdx = [];
+    desOutcomeIdx = {};
+    renderDesignatedGrid();
+  }
 
-    var elMatch = document.getElementById('des-match-count');
-    if(elMatch) elMatch.textContent = pool.length;
+  function renderDesignatedGallery(){
+    var month = desMonth(), picks = (month && month.designatedPicks) || [];
+    var box = document.querySelector('#designated-card-modal .modal-box');
+    var grid = document.getElementById('des-grid'); if(!grid) return;
+    if(box) box.classList.add('is-done');
+    document.getElementById('des-title').textContent = '🎉 Đã nhận đủ 5 thẻ chỉ định!';
+    desDoneAt = Date.now();
+    var nSigned = 0, nFrags = 0, sumFrags = 0;
+    var cards = picks.map(function(pk){
+      var base = (typeof PLAYER_DB_BY_ID !== 'undefined' && PLAYER_DB_BY_ID) ? PLAYER_DB_BY_ID[pk.dbId] : null;
+      var oc = desOutcomeOf(pk);
+      if(oc === 'frags'){ nFrags++; sumFrags += (pk.frags || 0); } else nSigned++;
+      return base ? '<div class="des-gallery-item">' + dbxCardHTML(base) + '<span class="des-tag ' + oc + '">' + desTagText(pk) + '</span></div>' : '';
+    }).join('');
+    document.getElementById('des-lead').innerHTML = '✍️ Ký hợp đồng: <b>' + nSigned + '</b> thẻ &nbsp;·&nbsp; 🧩 Đổi mảnh: <b>' + nFrags + '</b> thẻ' + (sumFrags ? ' (+' + sumFrags + ' mảnh)' : '')
+      + '<span class="des-tap-hint">👆 Chạm vào bất kỳ đâu để hoàn tất</span>';
+    grid.className = 'daily-box-grid gallery';
+    grid.innerHTML = cards || '<div class="des-nomatch">Chưa hiển thị được thẻ đã nhận. Con xem trong Bộ sưu tập nhé!</div>';
+    desUpdateCounters(month);
+  }
 
-    var elTurns = document.getElementById('des-turns-count');
-    if(elTurns) elTurns.textContent = left;
-
-    var grid = document.getElementById('des-grid');
-    if(!grid) return;
-    grid.classList.toggle('locked', left <= 0);
-
+  function renderDesignatedGrid(){
+    var month = desMonth(), left = desLeftOf(month);
+    var box = document.querySelector('#designated-card-modal .modal-box');
+    var grid = document.getElementById('des-grid'); if(!grid) return;
+    if(left <= 0 && !desBusy){ renderDesignatedGallery(); return; }
+    if(box) box.classList.remove('is-done');
+    document.getElementById('des-title').textContent = '🎯 Chọn Thẻ Chỉ Định';
+    var lead = document.getElementById('des-lead');
+    if(lead && !desBusy) lead.textContent = desGridCards.length
+      ? 'Chạm một pack để chiêu mộ cầu thủ — con còn ' + left + ' lượt. Muốn đổi tuyến hoặc khu vực cứ chọn lại nhé!'
+      : 'Chưa có thẻ nào hợp tiêu chí này. Hãy đổi tuyến hoặc khu vực nhé!';
+    var usePackFx = (typeof PACK_FX !== 'undefined' && PACK_FX.enabled && !reducedMotion());
+    grid.className = 'daily-box-grid' + (left <= 0 ? ' locked' : '');
     var html = '';
-    for(var i = 0; i < 9; i++){
-      if(i < displayCards.length){
-        var card = displayCards[i];
-        html += '<div class="des-cell" data-slot="' + i + '">'
-          + '<div class="des-card" id="des-card-' + i + '">'
-          + '<div class="des-card-back"><span class="des-back-ico">⚽</span><span class="des-back-lbl">LẬT THẺ</span></div>'
-          + '<div class="des-card-face">'
-          + (typeof fcCardHTML === 'function' ? fcCardHTML(card) : '')
-          + '<span class="des-card-got">✔ ĐÃ NHẬN</span>'
-          + '</div>'
-          + '</div>'
-          + '</div>';
-      } else {
-        html += '<div class="des-cell empty"></div>';
+    if(!desGridCards.length){
+      html = '<div class="des-nomatch">🔎 Không tìm thấy thẻ phù hợp.</div>';
+    } else {
+      for(var i = 0; i < desGridCards.length; i++){
+        if(desOpenedIdx.indexOf(i) >= 0){
+          var oc = desOutcomeIdx[i];
+          html += '<div class="daily-box-cell pk-cell picked pk-chosen" style="--i:' + i + '">' + dbxCardHTML(desGridCards[i])
+            + (oc ? '<span class="des-outcome ' + oc + '">' + (oc === 'frags' ? '🧩 ĐỔI MẢNH' : '✍️ ĐÃ KÝ') + '</span>' : '') + '</div>';
+        } else if(usePackFx){
+          html += packCellHTML(i).replace('data-box-index="' + i + '"', 'data-des-index="' + i + '"');
+        } else {
+          html += '<button type="button" class="daily-box-cell" data-des-index="' + i + '" style="--i:' + i + '" aria-label="Pack số ' + (i + 1) + '">⚽</button>';
+        }
       }
     }
     grid.innerHTML = html;
-    if(typeof pkWireGridTilt === 'function') pkWireGridTilt(grid);
-
-    renderDesignatedPickedList(picks);
+    if(usePackFx && desGridCards.length){ pkWireGridTilt(grid); pkScheduleWobbles(grid); }
+    desUpdateCounters(month);
   }
 
   function renderDesignatedPickedList(picks){
@@ -25113,87 +25350,97 @@ function roadmapIcon(def, locked){
     if(numEl) numEl.textContent = (picks || []).length;
     if(!listEl) return;
     if(!picks || !picks.length){
-      listEl.innerHTML = '<span class="des-picked-empty">Chưa có thẻ nào được lật mở. Hãy chạm vào một ô thẻ úp để nhận nhé!</span>';
+      listEl.innerHTML = '<span class="des-picked-empty">Chưa có thẻ nào — chạm một pack để bắt đầu nhé!</span>';
       return;
     }
     listEl.innerHTML = picks.map(function(p){
       return '<div class="des-picked-item">'
         + '<b>' + (p.ovr ? ('OVR ' + p.ovr) : '') + '</b>'
         + '<span>' + escHtml(p.name || '') + ' (' + escHtml(p.pos || '') + ')</span>'
+        + '<em class="des-picked-tag ' + desOutcomeOf(p) + '">' + (desOutcomeOf(p) === 'frags' ? '🧩 Đổi mảnh' : '✍️ Ký HĐ') + '</em>'
         + '</div>';
     }).join('');
   }
 
-  function handleDesignatedCardClick(slotIdx){
+  function desAfterReveal(isLast, owned, card, slotIdx){
+    dbxResetStage('des-stage');
+    desBusy = false;
+    // Ghi lại con chọn: ký hợp đồng (thẻ còn trong kho) hay đổi mảnh (thẻ đã rút khỏi kho)
+    try{
+      var monthKey = desCurrentMonthKey || currentPeriod.key, month = loadMonth(monthKey);
+      var pk = (month.designatedPicks || []).filter(function(x){ return owned && x.id === owned.id; })[0];
+      if(pk){
+        var still = loadPlayers().some(function(x){ return x && x.id === owned.id; });
+        pk.outcome = still ? 'signed' : 'frags';
+        if(!still && typeof fragPrice === 'function') pk.frags = fragPrice(card);
+        saveMonth(monthKey);
+        if(slotIdx != null) desOutcomeIdx[slotIdx] = pk.outcome;
+        desUpdateCounters(month);
+      }
+    }catch(err){ console.warn('Ghi kết quả thẻ chỉ định', err); }
+    if(isLast){
+      renderDesignatedGallery();
+      if(typeof triggerToast === 'function') triggerToast('okay', '🏆 Chúc mừng con đã hoàn thành đủ 5 lượt chọn thẻ chỉ định!');
+    } else {
+      renderDesignatedGrid();
+    }
+  }
+
+  function handleDesignatedCardClick(slotIdx, cell){
+    if(desBusy) return;
     var monthKey = desCurrentMonthKey || currentPeriod.key;
     var month = loadMonth(monthKey);
-    var picks = (month && month.designatedPicks) || [];
-    var left = Math.max(0, 5 - picks.length);
+    var left = desLeftOf(month);
     if(left <= 0){
       if(typeof triggerToast === 'function') triggerToast('low', 'Con đã dùng hết 5 lượt chọn thẻ của kỳ này rồi!');
       return;
     }
-
     var card = desGridCards[slotIdx];
-    if(!card) return;
+    if(!card || desOpenedIdx.indexOf(slotIdx) >= 0) return;
 
-    var cardEl = document.getElementById('des-card-' + slotIdx);
-    if(!cardEl || cardEl.classList.contains('flip')) return;
+    desBusy = true;
+    desOpenedIdx.push(slotIdx);
+    if(cell){ cell.classList.add('picked'); window.__sigCell = cell; }
 
-    // Lật thẻ
-    cardEl.classList.add('flip');
-    if(typeof beep === 'function') beep(600, 0.08, 'sine', 0, 0.1);
-
-    // Lưu thẻ vào kho cầu thủ của user
+    // Lưu thẻ vào kho cầu thủ của user (giữ nguyên cách lưu cũ)
     var owned = (typeof ownedPlayerFromBase === 'function') ? ownedPlayerFromBase(card) : {
       id: 'pl_' + Date.now() + '_' + Math.floor(Math.random()*1000),
-      dbId: card.dbId || '',
-      acquiredAt: Date.now(),
-      ovrBonus: 0,
-      energy: 0
+      dbId: card.dbId || '', acquiredAt: Date.now(), ovrBonus: 0, energy: 0
     };
-
+    var saved = false;
     try{
       var players = (typeof loadPlayers === 'function') ? loadPlayers() : [];
       players.push(owned);
-      if(typeof savePlayers === 'function') savePlayers(players);
+      if(typeof savePlayers === 'function') saved = (savePlayers(players) !== false);
     }catch(err){ console.warn('Lỗi lưu thẻ chỉ định', err); }
+    if(!saved){
+      desBusy = false; desOpenedIdx.pop();
+      if(cell) cell.classList.remove('picked');
+      if(typeof triggerToast === 'function') triggerToast('low', 'Chưa lưu được thẻ vào bộ sưu tập. Con thử lại nhé!');
+      return;
+    }
 
     // Ghi nhận lượt mở
     month.designatedPicks = month.designatedPicks || [];
     month.designatedPicks.push({
-      id: owned.id,
-      dbId: card.dbId,
-      name: card.name,
-      pos: card.pos,
-      ovr: card.realOvr || card.ovr,
-      image: card.image,
-      background: card.background,
-      rarity: card.rarity,
+      id: owned.id, dbId: card.dbId, name: card.name, pos: card.pos,
+      ovr: card.realOvr || card.ovr, image: card.image, background: card.background, rarity: card.rarity,
       date: typeof ymd === 'function' ? ymd(new Date()) : ''
     });
     saveMonth(monthKey);
-
-    var newLeft = Math.max(0, 5 - month.designatedPicks.length);
-    var elTurns = document.getElementById('des-turns-count');
-    if(elTurns) elTurns.textContent = newLeft;
-
-    renderDesignatedPickedList(month.designatedPicks);
+    var newLeft = desLeftOf(month), isLast = newLeft <= 0;
+    desUpdateCounters(month);
     updateDesignatedDraftButton(monthKey);
+    var lead = document.getElementById('des-lead');
+    if(lead) lead.innerHTML = '🎉 Con nhận được <b>' + escHtml(card.name || '') + '</b>!' + (isLast ? ' Đủ 5 thẻ rồi!' : ' Còn ' + newLeft + ' lượt nữa.');
 
-    if(typeof triggerCelebration === 'function'){
-      triggerCelebration('excellent', '🎉 Nhận được ' + card.name + ' (OVR ' + (card.realOvr || card.ovr || '') + ')!');
-    }
-    if(typeof bigExplosion === 'function'){
-      bigExplosion(window.innerWidth/2, window.innerHeight*0.35);
-    }
-
-    if(newLeft <= 0){
-      var grid = document.getElementById('des-grid');
-      if(grid) grid.classList.add('locked');
-      setTimeout(function(){
-        if(typeof triggerToast === 'function') triggerToast('okay', '🏆 Chúc mừng con đã hoàn thành đủ 5 lượt chọn thẻ chỉ định!');
-      }, 800);
+    // Mở thẻ bằng đúng hiệu ứng mở pack
+    try{
+      openCardFlow(card, { originCell: cell, playerObj: owned, context: 'designated', onDone: function(){ desAfterReveal(isLast, owned, card, slotIdx); } });
+    }catch(err2){
+      console.warn('openCardFlow designated', err2);
+      try{ sigRun(card, function(){ desAfterReveal(isLast, owned, card, slotIdx); }, false, 'result', { context: 'designated', playerObj: owned }); }
+      catch(err3){ desAfterReveal(isLast, owned, card, slotIdx); }
     }
   }
 
@@ -25203,7 +25450,11 @@ function roadmapIcon(def, locked){
     month.designatedPicks = month.designatedPicks || [];
     saveMonth(desCurrentMonthKey);
 
-    renderDesignatedGrid();
+    try{ dbxStop(); }catch(e){}
+    dbxResetStage('des-stage');
+    desBusy = false;
+    desApplyPackMode();
+    desReshuffle();
     if(typeof openModalTop === 'function'){
       openModalTop('designated-card-modal');
     } else {
@@ -25213,6 +25464,9 @@ function roadmapIcon(def, locked){
   }
 
   function closeDesignatedCardModal(){
+    try{ dbxStop(); }catch(e){}
+    dbxResetStage('des-stage');
+    desBusy = false;
     var m = document.getElementById('designated-card-modal');
     if(m) m.classList.remove('open');
   }
@@ -25228,22 +25482,29 @@ function roadmapIcon(def, locked){
     var btnClose = document.getElementById('des-finish-btn');
     if(btnClose) btnClose.addEventListener('click', closeDesignatedCardModal);
 
+    /* Màn các thẻ đã nhận: chạm vào bất kỳ đâu cũng hoàn tất */
+    var desModal = document.getElementById('designated-card-modal');
+    if(desModal) desModal.addEventListener('click', function(){
+      var bx = desModal.querySelector('.modal-box');
+      if(bx && bx.classList.contains('is-done') && !desBusy && Date.now() - desDoneAt > 700) closeDesignatedCardModal();
+    });
+
     var backdrop = document.getElementById('designated-card-backdrop');
     if(backdrop) backdrop.addEventListener('click', closeDesignatedCardModal);
 
     var selPos = document.getElementById('des-pos-filter');
-    if(selPos) selPos.addEventListener('change', renderDesignatedGrid);
+    if(selPos) selPos.addEventListener('change', function(){ if(!desBusy) desReshuffle(); });
 
     var selTeam = document.getElementById('des-team-filter');
-    if(selTeam) selTeam.addEventListener('change', renderDesignatedGrid);
+    if(selTeam) selTeam.addEventListener('change', function(){ if(!desBusy) desReshuffle(); });
 
     var grid = document.getElementById('des-grid');
     if(grid){
       grid.addEventListener('click', function(e){
-        var cell = e.target.closest('.des-cell');
-        if(!cell || cell.classList.contains('empty')) return;
-        var idx = parseInt(cell.getAttribute('data-slot'), 10);
-        if(!isNaN(idx)) handleDesignatedCardClick(idx);
+        var cell = e.target.closest('[data-des-index]');
+        if(!cell || cell.classList.contains('picked') || grid.classList.contains('locked')) return;
+        var idx = parseInt(cell.getAttribute('data-des-index'), 10);
+        if(!isNaN(idx)) handleDesignatedCardClick(idx, cell);
       });
     }
   }
@@ -25399,10 +25660,62 @@ function roadmapIcon(def, locked){
     }
   });
 
+  /* ---- Cấu hình Phòng Kỹ Năng theo hồ sơ (thang điểm + mốc hạng + lượt mở thẻ) ---- */
+  function skcfgFill(){
+    var cfg = skillCfg(), body = document.getElementById('skcfg-body');
+    if(!body) return;
+    body.innerHTML = SKILL_DEFS.map(function(d){
+      var c = cfg.subj[d.key];
+      function inp(f, v, step, min, max, label){
+        return '<input type="number" id="skcfg-' + d.key + '-' + f + '" value="' + v + '" step="' + step + '" min="' + min + '"' + (max ? ' max="' + max + '"' : '') + ' aria-label="' + label + ' môn ' + d.subject + '">';
+      }
+      return '<tr><th scope="row">' + d.icon + ' ' + d.subject + '</th>'
+        + '<td>' + inp('scale', c.scale, 1, 1, 100000, 'Thang điểm') + '</td>'
+        + '<td>' + inp('purple', c.purpleFrom, 0.5, 0, 10, 'Mốc Tím') + '<small> /10</small></td>'
+        + '<td>' + inp('gold', c.goldFrom, 0.5, 0, 10, 'Mốc Vàng') + '<small> /10</small></td>'
+        + '<td>' + inp('silver', c.silverFrom, 0.5, 0, 10, 'Mốc Bạc') + '<small> /10</small></td></tr>';
+    }).join('');
+    ['purple','gold','silver'].forEach(function(t){ var el = document.getElementById('settings-cards-' + t); if(el) el.value = cfg.cards[t]; });
+  }
+  /* Đọc + kiểm tra form; trả về null nếu sai (đã báo lỗi) */
+  function skcfgRead(){
+    var out = {subj:{}, cards:{}}, i, d, f, v;
+    for(i = 0; i < SKILL_DEFS.length; i++){
+      d = SKILL_DEFS[i];
+      var g = function(k){ return parseFloat((document.getElementById('skcfg-' + d.key + '-' + k) || {}).value); };
+      var sc = g('scale'), pu = g('purple'), go = g('gold'), si = g('silver');
+      if(!(sc >= 1)){ alert('Thang điểm môn ' + d.subject + ' phải từ 1 trở lên.'); return null; }
+      if([pu, go, si].some(function(x){ return isNaN(x) || x < 0 || x > 10; })){ alert('Mốc hạng môn ' + d.subject + ' phải nằm trong khoảng 0–10.'); return null; }
+      if(!(si <= go && go <= pu)){ alert('Môn ' + d.subject + ': mốc phải theo thứ tự Bạc ≤ Vàng ≤ Tím (hiện là ' + si + ' / ' + go + ' / ' + pu + ').'); return null; }
+      out.subj[d.key] = {scale:sc, purpleFrom:pu, goldFrom:go, silverFrom:si};
+    }
+    var ts = ['purple','gold','silver'];
+    for(i = 0; i < ts.length; i++){
+      v = parseInt((document.getElementById('settings-cards-' + ts[i]) || {}).value, 10);
+      if(isNaN(v) || v < 0 || v > 9){ alert('Lượt mở thẻ mỗi hạng phải từ 0 đến 9 (lưới mở thẻ có 9 ô).'); return null; }
+      out.cards[ts[i]] = v;
+    }
+    return out;
+  }
+  document.addEventListener('click', function(e){
+    if(e.target && e.target.id === 'skcfg-reset'){
+      var cfg0 = SKILL_CFG_DEFAULT;
+      SKILL_DEFS.forEach(function(d){
+        var c = cfg0.subj[d.key];
+        [['scale', c.scale], ['purple', c.purpleFrom], ['gold', c.goldFrom], ['silver', c.silverFrom]].forEach(function(kv){
+          var el = document.getElementById('skcfg-' + d.key + '-' + kv[0]); if(el) el.value = kv[1];
+        });
+      });
+      ['purple','gold','silver'].forEach(function(t){ var el = document.getElementById('settings-cards-' + t); if(el) el.value = cfg0.cards[t]; });
+      if(typeof apSetDirty === 'function') apSetDirty(true);
+    }
+  });
   function fillAdminFields(){
 
     document.getElementById('settings-goal').value = settings.monthlyGoal;
     document.getElementById('settings-skill-gold').value = settings.skillGoldPts;
+    document.getElementById('settings-skill-purple').value = settings.skillPurplePts;
+    skcfgFill();
     document.getElementById('settings-skill-silver').value = settings.skillSilverPts;
     document.getElementById('settings-cheer-min').value = settings.cheerMin;
     document.getElementById('settings-cheer-max').value = settings.cheerMax;
@@ -25921,7 +26234,7 @@ function roadmapIcon(def, locked){
     var dg = parseInt(set.dailyGoal, 10); if(!(dg >= 1 && dg <= 10)) dg = 9;
     var goal = Number(set.monthlyGoal); if(!(goal > 0)) goal = 2700;
     var S = {tasks:tasks, sd:sd, goal:goal, dailyTarget:dg * 10, taskPts:0, skillPts:0, taskDone:0, perTask:{}, activeDays:0, goalDays:0, perfectDays:0,
-      boxDaily:0, skillOpened:0, psGold:0, psSilver:0, cheer:0, byDay:{}, perTaskDays:0, byPT:{}, byPS:{}, entries:[]};
+      boxDaily:0, skillOpened:0, psPurple:0, psGold:0, psSilver:0, cheer:0, byDay:{}, perTaskDays:0, byPT:{}, byPS:{}, entries:[]};
     var goalDates = [];
     function dayRec(date){ return S.byDay[date] || (S.byDay[date] = {t:0, s:0}); }
     function addSkill(pts, date, pkey){
@@ -25957,7 +26270,7 @@ function roadmapIcon(def, locked){
       Object.keys(sk).forEach(function(s){
         var st = sk[s]; if(!st || !st.activated) return;
         S.skillOpened++;
-        if(st.reward && st.reward.type === 'ps'){ if(st.tier === 'gold') S.psGold++; else S.psSilver++; } else S.cheer++;
+        if(st.reward && st.reward.type === 'ps'){ if(st.tier === 'purple') S.psPurple++; else if(st.tier === 'gold') S.psGold++; else S.psSilver++; } else S.cheer++;
         if(typeof st.pts === 'number' && st.pts > 0){
           addSkill(st.pts, /^\d{4}-\d{2}-\d{2}$/.test(st.activatedAt || '') ? st.activatedAt : ymd(periodFromKey(key).start), key);
         }
@@ -26219,7 +26532,7 @@ function roadmapIcon(def, locked){
     var cards = '<div class="ap-card"><h4>🎴 Thẻ cầu thủ</h4><div class="st-tiles">'
       + stTile(stN(S.cards), 'Thẻ đang sở hữu', S.uniqueCards + ' cầu thủ khác nhau')
       + stTile(stN(S.boxTotal), 'Hộp đã mở', S.boxDaily + ' hộp quà ngày + ' + S.skillOpened + ' hộp skill', 'gold')
-      + stTile(stN(S.psGold) + ' / ' + stN(S.psSilver), 'Play Style vàng / bạc', S.cheer + ' lần nhận điểm khích lệ')
+      + stTile(stN(S.psPurple) + ' / ' + stN(S.psGold) + ' / ' + stN(S.psSilver), 'Play Style tím / vàng / bạc', S.cheer + ' lần nhận điểm khích lệ')
       + stTile(S.maxOvr ? stN(S.maxOvr) : '—', 'OVR cao nhất')
       + stTile(stN(S.squad), 'Thẻ trong đội hình', 'sân + dự bị')
       + stTile(stN(S.badges), 'Huy hiệu đã mở')
@@ -29184,6 +29497,11 @@ function roadmapIcon(def, locked){
     if(!isNaN(pg) && pg>=0) settings.skillGoldPts = pg;
     var psv = parseInt(document.getElementById('settings-skill-silver').value, 10);
     if(!isNaN(psv) && psv>=0) settings.skillSilverPts = psv;
+    var ppu = parseInt(document.getElementById('settings-skill-purple').value, 10);
+    if(!isNaN(ppu) && ppu>=0) settings.skillPurplePts = ppu;
+    var skc = skcfgRead();
+    if(!skc) return;   // báo lỗi rồi, giữ nguyên để người dùng sửa
+    settings.skillCfg = skc;
     var cmin = parseInt(document.getElementById('settings-cheer-min').value, 10);
     if(!isNaN(cmin) && cmin>=0) settings.cheerMin = cmin;
     var cmax = parseInt(document.getElementById('settings-cheer-max').value, 10);
@@ -29248,7 +29566,9 @@ function roadmapIcon(def, locked){
       var tier = tierOfScore(s, v);
       setSkillState(currentPeriod.key, key, {score:v, tier:tier, activated:false});
       renderSkills();
-      if(tier === 'gold'){
+      if(tier === 'purple'){
+        triggerCelebration('perfect', 'Hộp TÍM huyền thoại xuất hiện rồi! Ấn MỞ SKILL để nhận Play Style lv3 nhé! 💜', 3);
+      } else if(tier === 'gold'){
         triggerCelebration('excellent', 'Hộp VÀNG xuất hiện rồi! Ấn MỞ SKILL để xem Play Style nhé! ✨', 2);
       } else if(tier === 'silver'){
         triggerCelebration('great', 'Hộp BẠC lấp lánh đã sẵn sàng! Mở ra xem nào! ✨', 1);
