@@ -11431,7 +11431,7 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
           <label style="font-size:11.5px;color:#94A3B8;display:flex;flex-direction:column;gap:2px">Phạt lần 1 (s)<input type="number" id="vmg-cfg-pen1" min="1" max="20" step="1" value="5" style="background:#0F172A;border:1px solid #334155;color:#F8FAFC;padding:4px 6px;border-radius:6px;font-size:12px"></label>
           <label style="font-size:11.5px;color:#94A3B8;display:flex;flex-direction:column;gap:2px">Phạt lần 2 (s)<input type="number" id="vmg-cfg-pen2" min="1" max="25" step="1" value="8" style="background:#0F172A;border:1px solid #334155;color:#F8FAFC;padding:4px 6px;border-radius:6px;font-size:12px"></label>
           <label style="font-size:11.5px;color:#94A3B8;display:flex;flex-direction:column;gap:2px">Phạt từ lần 3 (s)<input type="number" id="vmg-cfg-pen3" min="1" max="30" step="1" value="12" style="background:#0F172A;border:1px solid #334155;color:#F8FAFC;padding:4px 6px;border-radius:6px;font-size:12px"></label>
-          <label style="font-size:11.5px;color:#94A3B8;display:flex;flex-direction:column;gap:2px">Thẻ nối từ tối đa/ngày<input type="number" id="vmg-cfg-maxc" min="1" max="10" step="1" value="3" style="background:#0F172A;border:1px solid #334155;color:#F8FAFC;padding:4px 6px;border-radius:6px;font-size:12px"></label>
+          <label style="font-size:11.5px;color:#94A3B8;display:flex;flex-direction:column;gap:2px">Thẻ tối đa/ngày<input type="number" id="vmg-cfg-maxc" min="1" max="10" step="1" value="3" style="background:#0F172A;border:1px solid #334155;color:#F8FAFC;padding:4px 6px;border-radius:6px;font-size:12px"></label>
         </div>
         <div style="margin-top:8px;display:flex;align-items:center;justify-content:space-between">
           <button type="button" id="btn-vbank-save-cfg" class="btn-primary" style="padding:5px 14px;font-size:12px">💾 Lưu thông số trò chơi</button>
@@ -25738,7 +25738,6 @@ function roadmapIcon(def, locked){
     tkLoad();
     updatePeriodPreview();
     renderRewardList();
-    try{ if(typeof window.vmgFillCfgFields === 'function') window.vmgFillCfgFields(); }catch(e){ console.warn('vmgFillCfgFields error', e); }
   }
   function apSetDirty(on, savedNow){
     apDirty = !!on;
@@ -27720,7 +27719,7 @@ function roadmapIcon(def, locked){
     if(vm.cards === 0 && vm.wins >= 1){
       vm.cards = 1;
       cardAwarded = true;
-    } else if(vm.cards >= 1 && vm.cards < maxCards && vm.streak >= 3){
+    } else if((vm.cards === 1 || vm.cards === 2) && vm.streak >= 3){
       vm.cards = vm.cards + 1;
       cardAwarded = true;
       vm.streak = 0; // Đặt lại chuỗi sau khi nhận thẻ
@@ -27865,8 +27864,7 @@ function roadmapIcon(def, locked){
       alertEl.innerHTML = '🎁 <b>Chúc mừng con!</b> Con vừa mở khóa thành công <b>1 thẻ cầu thủ mới</b>!';
       alertEl.style.display = 'block';
     } else if(vm.cards >= (settings.vmg.maxCards || 3)){
-      var _mx = (settings.vmg.maxCards || 3);
-      alertEl.innerHTML = '✨ Hôm nay con đã nhận đủ <b>' + _mx + '/' + _mx + ' thẻ</b>! Hãy chơi tiếp để rèn luyện phản xạ từ nhé!';
+      alertEl.innerHTML = '✨ Hôm nay con đã nhận đủ <b>3/3 thẻ</b>! Hãy chơi tiếp để rèn luyện phản xạ từ nhé!';
       alertEl.style.display = 'block';
     } else {
       var rem = 3 - (vm.streak % 3);
@@ -28886,21 +28884,6 @@ function roadmapIcon(def, locked){
     }
   }
 
-  /* ---- NẠP CẤU HÌNH TRÒ CHƠI VÀO FORM ADMIN ---- */
-  function vmgFillCfgFields(){
-    var v = settings.vmg || {};
-    var mix = v.mix || { confused: 50, fresh: 35, mastered: 15 };
-    var map = {
-      'vmg-cfg-dur': v.matchDuration, 'vmg-cfg-pen1': v.penalty1, 'vmg-cfg-pen2': v.penalty2,
-      'vmg-cfg-pen3': v.penalty3, 'vmg-cfg-maxc': v.maxCards,
-      'vmg-cfg-mix-confused': mix.confused, 'vmg-cfg-mix-fresh': mix.fresh, 'vmg-cfg-mix-mastered': mix.mastered
-    };
-    Object.keys(map).forEach(function(id){
-      var el = document.getElementById(id);
-      if(el && typeof map[id] === 'number') el.value = map[id];
-    });
-  }
-
   /* ---- LƯU CẤU HÌNH TRÒ CHƠI ---- */
   function vmgSaveGameConfig(){
     var durEl = document.getElementById('vmg-cfg-dur');
@@ -28916,13 +28899,7 @@ function roadmapIcon(def, locked){
     if(p1El) settings.vmg.penalty1 = parseInt(p1El.value, 10) || 5;
     if(p2El) settings.vmg.penalty2 = parseInt(p2El.value, 10) || 8;
     if(p3El) settings.vmg.penalty3 = parseInt(p3El.value, 10) || 12;
-    if(mcEl){
-      var mc = parseInt(mcEl.value, 10);
-      if(isNaN(mc)) mc = 3;
-      mc = Math.max(1, Math.min(10, mc));   // giới hạn 1–10 thẻ/ngày
-      settings.vmg.maxCards = mc;
-      mcEl.value = mc;
-    }
+    if(mcEl) settings.vmg.maxCards = parseInt(mcEl.value, 10) || 3;
 
     var c = mixConfEl ? (parseInt(mixConfEl.value, 10) || 0) : 50;
     var f = mixFreshEl ? (parseInt(mixFreshEl.value, 10) || 0) : 35;
@@ -28930,7 +28907,6 @@ function roadmapIcon(def, locked){
     settings.vmg.mix = { confused: c, fresh: f, mastered: m };
 
     if(typeof saveSettings === 'function') saveSettings();
-    try{ if(typeof vmgRenderEntryCard === 'function' && typeof currentDay !== 'undefined') vmgRenderEntryCard(currentDay); }catch(e){}
 
     var msg = document.getElementById('vbank-cfg-saved-msg');
     if(msg){
@@ -29109,7 +29085,6 @@ function roadmapIcon(def, locked){
   window.vmgOpenLobby = vmgOpenLobby;
   window.vmgStartGame = vmgStartGame;
   window.vmgRenderEntryCard = vmgRenderEntryCard;
-  window.vmgFillCfgFields = vmgFillCfgFields;
   window.getDay = getDay;
   window.saveDay = saveDay;
 
