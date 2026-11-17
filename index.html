@@ -6892,6 +6892,99 @@
     }
   }
 
+
+  /* ==== ĐỐI ĐẦU (PVP) - GĐ 3 & GĐ 4 ==== */
+  .duel-opts{ display:flex; gap:10px; align-items:center; justify-content:space-between; flex-wrap:wrap; margin:8px 0; font-size:12.5px; color:#CBD5E1; }
+  .duel-opts select{ background:#0F172A; color:#F8FAFC; border:1px solid #334155; border-radius:8px; padding:4px 8px; }
+  .duel-friends{ display:grid; gap:6px; margin:6px 0; }
+  .duel-frow{ display:flex; align-items:center; gap:8px; padding:6px 8px; border:1px solid #1E293B; border-radius:10px; background:rgba(15,23,42,.6); }
+  .duel-frow .nm{ flex:1; min-width:0; display:grid; }
+  .duel-frow .nm b{ font-size:13px; color:#F8FAFC; }
+  .duel-frow .nm small{ font-size:11px; color:#94A3B8; }
+  .duel-dot{ width:9px; height:9px; border-radius:50%; background:#64748B; flex:none; }
+  .duel-dot.on{ background:#22C55E; box-shadow:0 0 6px #22C55E; }
+  .duel-empty, .duel-quota{ font-size:11.5px; color:#94A3B8; margin-top:6px; }
+  .duel-ver{ font-size:10.5px; color:#64748B; text-align:right; margin-top:6px; }
+  #duel-invite{ position:fixed; left:10px; right:10px; bottom:76px; z-index:9999; max-width:420px; margin:0 auto; padding:12px 14px; border-radius:14px; background:#0F172A; border:1.5px solid #FBBF24; box-shadow:0 10px 30px rgba(0,0,0,.6); color:#F8FAFC; }
+  #duel-invite[hidden]{ display:none; }
+  .tv-q{ width:100%; box-sizing:border-box; margin:0 0 8px; padding:8px 10px; border-radius:10px; border:1px solid #334155; background:#0F172A; color:#F8FAFC; }
+  .tv-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(170px,1fr)); gap:8px; }
+  .tv-row{ display:flex; align-items:center; gap:10px; padding:10px; border:1px solid #1E293B; border-radius:12px; background:rgba(15,23,42,.6); color:#F8FAFC; text-align:left; cursor:pointer; }
+  .tv-row:hover{ border-color:#FBBF24; }
+  .tv-row span:last-child{ min-width:0; display:grid; }
+  .tv-row b{ font-size:13px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .tv-row small{ color:#94A3B8; font-size:11px; }
+  #tv-sheet{ position:fixed; inset:0; z-index:9998; background:rgba(2,6,23,.97); overflow:auto; -webkit-overflow-scrolling:touch; }
+  #tv-sheet[hidden]{ display:none; }
+  .tv-box{ max-width:980px; margin:0 auto; padding:0 12px 28px; }
+  .tv-head{ display:flex; align-items:center; justify-content:space-between; gap:10px; position:sticky; top:0; padding:10px 0; background:rgba(2,6,23,.95); z-index:2; }
+  .tv-title{ display:flex; align-items:center; gap:10px; font-weight:800; font-size:17px; color:#FDE047; min-width:0; }
+  .tv-chips{ display:flex; flex-wrap:wrap; gap:8px; margin:8px 0; }
+  .tv-chips span{ font-size:12px; padding:4px 10px; border-radius:999px; background:rgba(15,23,42,.7); border:1px solid #334155; color:#CBD5E1; }
+  .tv-chips b{ color:#F8FAFC; }
+  .tv-details{ margin-top:10px; background:rgba(15,23,42,.45); border:1px solid rgba(148,163,184,.2); border-radius:10px; padding:6px 10px; font-size:13px; }
+  .tv-details summary{ font-weight:700; color:#FDE047; cursor:pointer; }
+  .tv-roster{ display:grid; gap:4px; margin-top:8px; }
+  .tv-rr{ display:flex; align-items:center; gap:8px; }
+  .tv-pos{ width:38px; font-size:11px; font-weight:800; color:#94A3B8; }
+  .tv-nm{ flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .duel-lobby-card{
+    background: linear-gradient(160deg, rgba(15,23,42,.92), rgba(30,41,59,.88));
+    border: 1.5px solid rgba(56,189,248,.45);
+    border-radius: 16px;
+    padding: 14px 16px;
+    margin-bottom: 12px;
+    box-shadow: 0 8px 24px rgba(0,0,0,.35);
+    color: #F8FAFC;
+  }
+  .duel-lobby-head{
+    display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;
+    border-bottom: 1px solid rgba(255,255,255,.1); padding-bottom: 10px; margin-bottom: 10px;
+  }
+  .duel-room-code{
+    display: inline-flex; align-items: center; gap: 6px;
+    background: rgba(56,189,248,.16); border: 1px solid rgba(56,189,248,.5);
+    color: #7DD3FC; padding: 4px 10px; border-radius: 999px; font-weight: 900; font-size: 13px;
+    letter-spacing: 1px;
+  }
+  .duel-players-row{
+    display: grid; grid-template-columns: 1fr auto 1fr; gap: 10px; align-items: center;
+    margin-bottom: 10px;
+  }
+  .duel-p-box{
+    background: rgba(15,23,42,.65); border: 1px solid rgba(148,163,184,.25);
+    border-radius: 12px; padding: 8px 12px; display: flex; flex-direction: column; gap: 4px;
+  }
+  .duel-p-box.ready{ border-color: #10B981; background: rgba(16,185,129,.12); }
+  .duel-p-name{ font-weight: 800; font-size: 13.5px; color: #F8FAFC; display: flex; align-items: center; gap: 6px; }
+  .duel-p-status{ font-size: 11.5px; font-weight: 700; color: #94A3B8; }
+  .duel-p-box.ready .duel-p-status{ color: #6EE7B7; }
+  .duel-actions-row{
+    display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: space-between;
+  }
+  .duel-join-row{
+    display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-top: 8px;
+  }
+  .duel-code-inp{
+    background: rgba(15,23,42,.8); border: 1.5px solid rgba(148,163,184,.35);
+    color: #F8FAFC; border-radius: 10px; padding: 8px 12px; font-size: 14px; font-weight: 800;
+    letter-spacing: 1.5px; text-transform: uppercase; width: 140px;
+  }
+  .duel-mystery-card{
+    width: 100%; aspect-ratio: 0.74; border-radius: 12px;
+    background: linear-gradient(145deg, #1e293b 0%, #0f172a 100%);
+    border: 2px dashed rgba(148,163,184,.45);
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;
+    color: #94A3B8; font-weight: 800; font-size: 12px; text-align: center; padding: 8px;
+    box-shadow: inset 0 0 20px rgba(0,0,0,.45);
+  }
+  .duel-mystery-card .q-mark{ font-size: 28px; color: #FBBF24; line-height: 1; }
+  .battle-pick-grid.duel-locked .battle-pick-cell{ opacity: 0.65; cursor: not-allowed; }
+  .duel-warn-box{
+    background: rgba(239,68,68,.15); border: 1px solid rgba(239,68,68,.5);
+    color: #FCA5A5; border-radius: 10px; padding: 8px 12px; font-size: 12px; font-weight: 700; margin-top: 8px;
+  }
+
 </style>
 <style id="welcome-notice-css">
   /* ===== Thông báo chào mừng: popup cho User + tab soạn thảo trong Trang quản trị ===== */
@@ -10848,6 +10941,7 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
           <button type="button" class="squad-tab-btn active" id="tab-pitch-btn">⚽ Sân đấu</button>
           <button type="button" class="squad-tab-btn" id="tab-collection-btn">🗂️ Kho cầu thủ</button>
           <button type="button" class="squad-tab-btn" id="tab-market-btn">🏛️ Sàn giao dịch</button>
+          <button type="button" class="squad-tab-btn" id="tab-teams-btn">👥 Đội bạn</button>
           <button type="button" class="rules-btn" data-rules="squad">❓ Luật chơi</button>
         </div>
       </div>
@@ -10861,6 +10955,7 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
       <div id="tab-pitch">
         <div class="pitch-layout"><div class="pitch-scroll"><div class="pitch-wrap" id="pitch-wrap"></div></div><div class="pitch-side"><div class="bench-row" id="bench-row"></div><aside class="cp" id="coach-panel" aria-label="Huấn luyện viên và phong cách thi đấu"></aside></div></div>
       </div>
+      <div id="tab-teams" style="display:none"><div id="tv-list"></div></div>
       <div id="tab-collection" style="display:none">
         <div class="collection-element-filter" id="collection-element-filter" style="display:none"></div>
         <div class="collection-sort" id="collection-sort">
@@ -10957,7 +11052,7 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
         <button type="button" class="rules-btn" data-rules="battle">❓ Luật chơi</button>
       </div>
       <div class="rm-modes"><button type="button" class="rm-mode active" id="battle-mode-road">🗺️ Hành trình</button><button type="button" class="rm-mode" id="battle-mode-quick">🎲 Đấu nhanh</button><button type="button" class="rm-mode" id="battle-mode-season">🏆 Mùa giải</button><button type="button" class="rm-mode" id="battle-mode-wtour">🌍 World Tour</button></div>
-      <div class="rm-modes size-modes"><button type="button" class="rm-mode active" id="battle-size-1">⚔️ 1v1</button><button type="button" class="rm-mode" id="battle-size-3">🛡️ 3v3 · Đội 3 thẻ</button></div>
+      <div class="rm-modes size-modes"><button type="button" class="rm-mode active" id="battle-size-1">⚔️ 1v1</button><button type="button" class="rm-mode" id="battle-size-3">🛡️ 3v3 · Đội 3 thẻ</button><button type="button" class="rm-mode" id="battle-size-duel">⚔️ Đối đầu</button></div>
       <div class="rm-modes size-modes" id="season-subtabs" style="display:none"></div>
       <p class="battle-quota" id="battle-quota"></p>
     </div>
@@ -11112,6 +11207,7 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
       <button type="button" class="ap-tab" role="tab" id="aptab-notice" data-ap="notice" aria-controls="appane-notice" aria-selected="false" tabindex="-1"><span class="ap-tab-ico" aria-hidden="true">📣</span><span>Thông báo</span></button>
       <button type="button" class="ap-tab" role="tab" id="aptab-wtour" data-ap="wtour" aria-controls="appane-wtour" aria-selected="false" tabindex="-1"><span class="ap-tab-ico" aria-hidden="true">🌍</span><span>World Tour</span></button>
       <button type="button" class="ap-tab" role="tab" id="aptab-stats" data-ap="stats" aria-controls="appane-stats" aria-selected="false" tabindex="-1"><span class="ap-tab-ico" aria-hidden="true">📊</span><span>Thống kê</span></button>
+      <button type="button" class="ap-tab" role="tab" id="aptab-changelog" data-ap="changelog" aria-controls="appane-changelog" aria-selected="false" tabindex="-1"><span class="ap-tab-ico" aria-hidden="true">📜</span><span>Phiên bản</span></button>
     </nav>
     <div class="ap-body" id="ap-body">
     <section class="ap-pane" id="appane-system" role="tabpanel" aria-labelledby="aptab-system">
@@ -11645,6 +11741,10 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
         <p class="hint-text" style="margin:0">Bấm tiêu đề cột để sắp xếp, bấm một hàng để xem chi tiết hồ sơ đó ở bên dưới. Tab này không dùng nút «Lưu cài đặt».</p>
       </div>
       <div id="st-detail" class="ap-pane" style="max-width:none"></div>
+    </section>
+    <section class="ap-pane" id="appane-changelog" role="tabpanel" aria-labelledby="aptab-changelog" hidden>
+      <div><h3 class="ap-pane-title">📜 Phiên bản</h3><p class="ap-pane-desc">Lịch sử cập nhật của ứng dụng, ghi theo giờ hoàn thành (giờ Việt Nam) cùng nội dung chỉnh sửa. Chỉ quản trị viên xem được.</p></div>
+      <div id="changelog-list" style="display:grid;gap:10px"></div>
     </section>
     </div>
   </div>
@@ -19164,8 +19264,8 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
   /* OVR đội hình = tổng OVR của các cầu thủ đá chính / 11 vị trí. Vị trí còn trống tính 0 điểm
      (xếp chưa đủ 11 người thì OVR đội hình bị kéo xuống; chưa có ai thì = 0). Ghế dự bị không tính. */
   var SQUAD_OVR_SLOTS = 11;
-  function squadPower(squad){
-    var players = hydratePlayers(loadPlayers());
+  function squadPower(squad, playersArg){
+    var players = playersArg || hydratePlayers(loadPlayers());
     var sum = 0;
     squad.pitch.forEach(function(id){
       if(id){ var p = players.find(function(pl){ return pl.id===id; }); if(p){ var sp = (currentFormation(squad).positions[squad.pitch.indexOf(id)] || {}).pos; sum += (p.ovr || p.realOvr || 0) * (sp ? posFit(p, sp) : 1); } }
@@ -19820,10 +19920,649 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
       armorPct: Math.round(armor/(armor+(BATTLE_CONFIG.formula.armorK||400))*1000)/10
     });
   }
+
+  /* =====================================================================
+     CHẾ ĐỘ ĐỐI ĐẦU (PVP giữa bạn bè) — Đối đầu v1.1 · 16/11/2026
+     - Phòng nằm trong nhánh sẵn có kidchart_friendly/duel/rooms/<id>, lời mời ở kidchart_friendly/duel/inbox/<mã bạn>/<id>
+       (cùng gốc kidchart_friendly với Giao hữu → không cần thêm nút gốc mới trong Firebase Rules).
+     - Chỉ mời được bạn bè đang online (danh sách bạn + chấm online dùng lại của Giao hữu); độ khó câu hỏi do chủ phòng chọn.
+     - Mỗi người trả lời câu hỏi ở lượt của mình; kết quả {điểm, trượt, mục tiêu} ghi lên phòng, máy kia dựng lại đúng đòn đó
+       (seed → bên đánh trước + câu hỏi + rng Playstyle; opt.miss do bên đánh chốt). Đối chiếu HP sau mỗi lượt.
+     - Không cộng ⚡/OVR. Trừ 1 🎟️ khi cả hai vào trận. Nhịp tim hb + xử thua khi đối thủ mất kết nối / đầu hàng.
+     ===================================================================== */
+  var DUEL_VER = 'Đối đầu v1.1', DUEL_DATE = '16/11/2026';
+  var DUEL_QT = {easy:0.25, mid:0.55, hard:0.85}, DUEL_QN = {easy:'Dễ', mid:'Vừa', hard:'Khó'};
+  var duelQtKey = (function(){ try{ var v = localStorage.getItem('kidchart_duel_qt'); if(DUEL_QT[v]) return v; }catch(e){} return 'mid'; })();
+  var duelRoom = null;   // { id, code(=id), side:'host'|'guest', d, stream, hbTm, expTm, seen, launched, charged, sig, hadGuest, starting, dvBusy, dvDone, dvBad }
+  var duelInv = {}, duelInvGone = {}, duelInbox = null, duelPres = null, duelPresData = {}, duelTk = 0;
+
+  function duelNoop(){}
+  function duelCode(){ return (typeof syncId === 'string' && syncId) || ''; }
+  function duelMyName(){ try{ return sMyName(); }catch(e){ return 'Người chơi'; } }
+  function duelPath(R, p){ return 'duel/rooms/' + R.id + (p ? '/' + p : ''); }
+  function duelInboxPath(code, id){ return 'duel/inbox/' + encodeURIComponent(code) + (id ? '/' + id : ''); }
+  function duelDropMs(){ return Math.max(30000, ((settings.friendly && settings.friendly.dropAfterSecs) || 30) * 1000); }
+  function duelArr(x){
+    if(Array.isArray(x)) return x.filter(function(v){ return v != null; });
+    if(x && typeof x === 'object') return Object.keys(x).sort(function(a, b){ return a - b; }).map(function(k){ return x[k]; });
+    return [];
+  }
+  function duelIsLocked(){ return !!(duelRoom && duelRoom.d && duelRoom.d.ready && duelRoom.d.ready[duelRoom.side]); }
+  function duelHist(){ var v = safeGet('kidchart_duel_hist'); return Array.isArray(v) ? v : []; }
+  function duelHistAdd(e){ var h = duelHist(); h.push(e); safeSet('kidchart_duel_hist', h.slice(-100)); }
+  function duelRng(st, n){ return seRng(seHash(st.duel.seed + ':ps' + n)); }
+
+  // GĐ 3: Tạo gói dữ liệu tối giản để dựng trận (id thẻ, OVR thực, bonus đang có) + fingerprint frnDataFp
+  function duelBuildLineupPayload(cardsArr){
+    var pl = {}, list = [];
+    (cardsArr || []).forEach(function(c){
+      if(!c) return;
+      var dbId = c.dbId || c.id || '';
+      var ovr = c.realOvr || c.ovr || 100;
+      var bonus = c.ovrBonus || 0;
+      var energy = c.energy || 0;
+      pl[dbId] = { d: dbId, b: bonus, e: energy };
+      list.push({ id: c.id || dbId, dbId: dbId, ovr: ovr, bonus: bonus, energy: energy });
+    });
+    return { c: list, pl: pl, dv: frnDataFp(pl) };
+  }
+
+  // GĐ 3: Dựng lại thẻ đầy đủ từ lineup trên phòng (tra cứu PLAYER_DB_BY_ID + áp dụng bonus/ovr)
+  function duelHydrateFromLineupItem(item){
+    if(!item || !item.dbId) return null;
+    var base = PLAYER_DB_BY_ID[item.dbId] || (PLAYER_DB || []).find(function(x){ return x && x.dbId === item.dbId; });
+    if(!base) return null;
+    var copy = Object.assign({}, base, {
+      id: item.id || item.dbId,
+      dbId: item.dbId,
+      ovrBonus: item.bonus || 0,
+      energy: item.energy || 0
+    });
+    if(item.ovr && !copy.ovrBonus) copy.realOvr = item.ovr;
+    return hydratePlayer(copy);
+  }
+
+  // GĐ 3: Kiểm tra lệch dữ liệu hai máy bằng frnDataCheck / frnDataFp
+  function duelDataBad(d){
+    if(!d || !d.lineup) return false;
+    var bad = false;
+    ['host', 'guest'].forEach(function(k){
+      var sn = d.lineup[k];
+      if(sn && sn.dv != null && String(frnDataFp(sn.pl)) !== String(sn.dv)) bad = true;
+    });
+    return bad;
+  }
+  async function duelDataCheck(R){
+    var d = R && R.d;
+    if(!d || R.dvBusy || R.dvDone || !d.lineup || !d.lineup.host || !d.lineup.guest) return;
+    if(!duelDataBad(d)){ R.dvDone = true; R.dvBad = false; return; }
+    R.dvBusy = true;
+    await frnRefreshData();
+    R.dvBusy = false; R.dvDone = true;
+    if(duelRoom === R){
+      R.dvBad = duelDataBad(R.d || d);
+      if(battleMode === 'duel') renderBattlePick();
+    }
+  }
+
+
+  /* ---------- giao diện: danh sách bạn, phòng chờ, lời mời ---------- */
+  function duelFriendsHTML(){
+    var codes = frnFriendCodes(), on = {}, rec = {};
+    try{ frTeamPrime(Object.keys(frnFr), duelFriendsPaint); }catch(e){}
+    codes.forEach(function(c){ on[c] = frnOnline(duelPresData[c]); });
+    codes.sort(function(a, b){ return (on[b] ? 1 : 0) - (on[a] ? 1 : 0) || frTeamOf(a).localeCompare(frTeamOf(b)); });
+    duelHist().forEach(function(x){ var r = rec[x.code] || (rec[x.code] = {w:0, l:0}); if(x.won) r.w++; else r.l++; });
+    if(!codes.length) return '<div class="duel-empty">Chưa có bạn nào. Vào mục <b>👥 Bạn bè</b> trong tab Giao hữu để kết bạn trước nhé.</div>';
+    return codes.map(function(c){
+      var r = rec[c], sub = (on[c] ? 'Đang online' : 'Ngoại tuyến') + (r ? ' · đối đầu ' + r.w + 'T-' + r.l + 'B' : '');
+      return '<div class="duel-frow"><span class="duel-dot' + (on[c] ? ' on' : '') + '"></span><div class="nm"><b>' + escHtml(frTeamOf(c)) + '</b><small>' + escHtml(sub) + '</small></div>'
+        + '<button type="button" class="btn-gold" style="padding:5px 12px;font-size:12px" data-duel="invite" data-code="' + escHtml(c) + '"' + (on[c] ? '' : ' disabled') + '>' + (on[c] ? '⚔️ Mời' : 'Ngoại tuyến') + '</button></div>';
+    }).join('');
+  }
+  function duelFriendsPaint(){
+    var el = document.getElementById('duel-friends'); if(!el) return;
+    var h = duelFriendsHTML(); if(el.__h !== h){ el.__h = h; el.innerHTML = h; }
+  }
+  function duelRecordHTML(){
+    var h = duelHist(), w = 0; h.forEach(function(x){ if(x.won) w++; });
+    return h.length ? '<div class="duel-quota">Thành tích Đối đầu: <b>' + w + 'T–' + (h.length - w) + 'B</b> sau ' + h.length + ' trận</div>' : '';
+  }
+  function duelLobbyHTML(){
+    var ver = '<div class="duel-ver">' + appVerLine() + '</div>';
+    var quota = '<div class="duel-quota">🎟️ Còn <b>' + battleLeftToday() + '</b> lượt hôm nay · mỗi trận Đối đầu tốn 1 lượt · giao lưu, không tính ⚡/OVR</div>';
+    if(!duelRoom || !duelRoom.d){
+      var h = '<div class="duel-lobby-card"><div class="duel-lobby-head"><div><h3 style="margin:0;font-size:16px;color:#FDE047">⚔️ Đối Đầu với bạn bè</h3>'
+        + '<small style="color:#94A3B8">Chọn 1v1 hoặc 3v3 ở trên, chọn độ khó rồi mời một người bạn đang online</small></div></div>';
+      if(!frnEligible()) h += '<div class="duel-warn-box">Tính năng Bạn bè đang tắt hoặc tài khoản này chưa đủ điều kiện nên chưa thể Đối đầu.</div>';
+      else h += '<div class="duel-opts"><span>Thể thức: <b>' + (battleSize === 3 ? '3v3' : '1v1') + '</b></span>'
+        + '<label>Độ khó câu hỏi <select id="duel-qt">' + ['easy', 'mid', 'hard'].map(function(k){ return '<option value="' + k + '"' + (k === duelQtKey ? ' selected' : '') + '>' + DUEL_QN[k] + '</option>'; }).join('') + '</select></label></div>'
+        + '<div id="duel-friends" class="duel-friends">' + duelFriendsHTML() + '</div>';
+      return h + duelRecordHTML() + quota + ver + '</div>';
+    }
+    var d = duelRoom.d, me = duelRoom.side, rdy = d.ready || {}, meR = !!rdy[me];
+    var hName = (d.host && d.host.name) || 'Chủ phòng', gName = d.guest ? (d.guest.name || 'Bạn') : '';
+    var waitG = !d.guest ? '🕒 Chờ <b>' + escHtml(frTeamOf(d.invite)) + '</b> nhận lời…' : '';
+    return '<div class="duel-lobby-card"><div class="duel-lobby-head"><div><h3 style="margin:0;font-size:15px;color:#FDE047">⚔️ Phòng Đối Đầu ' + (d.size === 3 ? '3v3' : '1v1') + '</h3>'
+      + '<small style="color:#94A3B8">Độ khó câu hỏi: <b>' + (DUEL_QN[d.qk] || 'Vừa') + '</b> · cả hai Sẵn sàng thì mới lộ thẻ đối thủ</small></div>'
+      + '<button type="button" class="btn-secondary" data-duel="leave" style="font-size:12px;padding:5px 10px">' + (d.guest ? '🚪 Rời phòng' : '✖ Hủy mời') + '</button></div>'
+      + '<div class="duel-players-row"><div class="duel-p-box ' + (rdy.host ? 'ready' : '') + '"><div class="duel-p-name">🟦 ' + escHtml(hName) + (me === 'host' ? ' <small style="color:#38BDF8">(Bạn)</small>' : '') + '</div>'
+      + '<div class="duel-p-status">' + (rdy.host ? '✅ Đã khóa thẻ &amp; Sẵn sàng' : '⏳ Đang chọn thẻ…') + '</div></div>'
+      + '<div class="duel-p-box ' + (rdy.guest ? 'ready' : '') + '"><div class="duel-p-name">🟪 ' + (d.guest ? escHtml(gName) + (me === 'guest' ? ' <small style="color:#38BDF8">(Bạn)</small>' : '') : 'Chưa vào') + '</div>'
+      + '<div class="duel-p-status">' + (waitG || (rdy.guest ? '✅ Đã khóa thẻ &amp; Sẵn sàng' : '⏳ Đang chọn thẻ…')) + '</div></div></div>'
+      + (duelRoom.dvBad ? '<div class="duel-warn-box">⚠️ Dữ liệu thẻ giữa hai máy đang lệch! Hãy tải lại trang để đồng bộ phiên bản mới nhất trước khi đấu.</div>' : '')
+      + '<div class="duel-actions-row"><button type="button" class="' + (meR ? 'btn-secondary' : 'btn-gold') + '" id="duel-ready-btn" data-duel="ready">' + (meR ? '🔓 Bỏ Sẵn sàng' : '✅ Sẵn sàng') + '</button></div>'
+      + quota + ver + '</div>';
+  }
+  function duelWireLobbyEvents(){ /* sự kiện được ủy quyền ở document (data-duel) */ }
+
+  function duelHeadHTML(myCard){
+    myCard = myCard || window.__pickCard1;
+    var myOvr = myCard ? (myCard.realOvr || myCard.ovr || 0) : 0;
+    var myEl = (myCard && myCard.battle && myCard.battle.element) ? (' · ' + elementName(myCard.battle.element)) : '';
+    var userSlotHTML = myCard ? playerCardHTML(myCard, false) : '<div class="t1-card-placeholder">Chưa chọn</div>';
+    var userDescHTML = myCard ? ('<b>' + escHtml(myCard.name || '') + '</b><small>OVR ' + myOvr + myEl + '</small>') : '<b>Chưa chọn thẻ</b><small>Chạm thẻ bên dưới</small>';
+    var mysteryOpp = '<div class="duel-mystery-card"><span class="q-mark">❓</span><span>Thẻ đối thủ<br>đang ẩn</span></div>';
+
+    return '<div class="t1-vs-board" id="t1-vs-board">'
+      + '<div class="t1-vs-side t1-user">'
+      +   '<div class="t1-side-lbl user">🟦 THẺ CỦA BẠN</div>'
+      +   '<div class="t1-card-slot" id="t1-user-card-slot">' + userSlotHTML + '</div>'
+      +   '<div class="t1-card-desc" id="t1-user-desc">' + userDescHTML + '</div>'
+      + '</div>'
+      + '<div class="t1-vs-mid">'
+      +   '<div class="t1-mid-stage">⚔️ Đối Đầu 1v1</div>'
+      +   '<div class="t1-vs-badge">VS</div>'
+      +   '<div class="t1-matchup-slot" id="t1-matchup-slot"><small style="color:#94A3B8">Lộ thẻ khi cả 2 Sẵn sàng</small></div>'
+      + '</div>'
+      + '<div class="t1-vs-side t1-opp">'
+      +   '<div class="t1-side-lbl opp">🟪 ĐỐI THỦ</div>'
+      +   '<div class="t1-card-slot" id="t1-opp-card-slot">' + mysteryOpp + '</div>'
+      +   '<div class="t1-card-desc" id="t1-opp-desc"><b>Ẩn danh</b><small>Chỉ lộ khi vào trận</small></div>'
+      + '</div>'
+      + '</div>';
+  }
+
+  function duelUpdateReadyBtnState(){
+    var btn = document.getElementById('duel-ready-btn');
+    if(!btn || !duelRoom) return;
+    if(duelIsLocked()) return;
+    var hasSel = (battleSize === 3) ? (pickTeam3 && pickTeam3.length === 3) : !!window.__pickCard1;
+    btn.disabled = !hasSel;
+    btn.style.opacity = hasSel ? '1' : '0.5';
+  }
+
+
+  document.addEventListener('click', function(e){
+    var t = e.target && e.target.closest ? e.target.closest('[data-duel]') : null; if(!t) return;
+    var a = t.getAttribute('data-duel');
+    if(a === 'invite') duelInvite(t.getAttribute('data-code'));
+    else if(a === 'ready') duelToggleReady();
+    else if(a === 'leave') duelLeaveRoom();
+    else if(a === 'inv-yes') duelAccept(t.getAttribute('data-id'));
+    else if(a === 'inv-no') duelDecline(t.getAttribute('data-id'));
+  });
+  document.addEventListener('change', function(e){
+    var t = e.target; if(t && t.id === 'duel-qt' && DUEL_QT[t.value]){ duelQtKey = t.value; try{ localStorage.setItem('kidchart_duel_qt', t.value); }catch(x){} }
+  });
+
+  /* ---------- hộp thư lời mời + online của bạn ---------- */
+  function duelInvDrop(id){
+    if(duelInvGone[id]) return; duelInvGone[id] = 1;
+    frnReq('DELETE', duelInboxPath(duelCode(), id)).catch(duelNoop);
+  }
+  function duelInboxStart(){
+    if(duelInbox || !duelCode()) return; frnFrStart();
+    duelInbox = frnStream(duelInboxPath(duelCode()), function(d){ duelInv = (d && typeof d === 'object') ? d : {}; duelInvPaint(); });
+  }
+  function duelInboxStop(){ if(duelInbox){ duelInbox.close(); duelInbox = null; } duelInv = {}; duelInvPaint(); }
+  function duelInvTop(){
+    var now = frnNow(), best = null;
+    Object.keys(duelInv).forEach(function(id){
+      var v = duelInv[id]; if(duelInvGone[id]) return;
+      if(!v || typeof v !== 'object' || !v.from || !(v.exp > now)){ duelInvDrop(id); return; }
+      if(frnFrS && frnFrSt(v.from) !== 'ok') return;
+      if(!best || (v.t || 0) > (best.v.t || 0)) best = {id:id, v:v};
+    });
+    return best;
+  }
+  function duelInvBox(){
+    var b = document.getElementById('duel-invite');
+    if(!b){ b = document.createElement('div'); b.id = 'duel-invite'; b.setAttribute('role', 'alertdialog'); b.hidden = true; document.body.appendChild(b); }
+    return b;
+  }
+  function duelInvPaint(){
+    var b = duelInvBox(), busy = !!(duelRoom || (typeof frnRoom !== 'undefined' && frnRoom) || (battleState && battleState.duel && !battleState.b.finished));
+    var top = (!busy && frnEligible()) ? duelInvTop() : null;
+    if(!top){ if(!b.hidden){ b.hidden = true; b.innerHTML = ''; b.removeAttribute('data-id'); } return; }
+    var cd = Math.max(0, Math.ceil((top.v.exp - frnNow()) / 1000));
+    if(!b.hidden && b.getAttribute('data-id') === top.id){ var el = document.getElementById('duel-inv-cd'); if(el) el.textContent = cd + 's'; return; }
+    b.setAttribute('data-id', top.id); b.hidden = false;
+    b.innerHTML = '<div style="font-weight:800">⚔️ <b>' + escHtml(top.v.name || frTeamOf(top.v.from)) + '</b> mời bạn Đối đầu ' + (top.v.size === 3 ? '3v3' : '1v1') + '</div>'
+      + '<div style="font-size:12px;color:#94A3B8;margin:3px 0 8px">Độ khó ' + (DUEL_QN[top.v.qk] || 'Vừa') + ' · tốn 1 lượt đấu, không tính ⚡/OVR · còn <span id="duel-inv-cd">' + cd + 's</span></div>'
+      + '<div style="display:flex;gap:8px;justify-content:flex-end"><button type="button" class="btn-secondary" data-duel="inv-no" data-id="' + escHtml(top.id) + '">Từ chối</button>'
+      + '<button type="button" class="btn-gold" data-duel="inv-yes" data-id="' + escHtml(top.id) + '">Nhận lời</button></div>';
+  }
+  function duelPresSync(){
+    var want = battleMode === 'duel' && !duelRoom && !document.hidden && frnEligible();
+    if(want && !duelPres){
+      frnFrStart();
+      duelPres = frnStream('presence', function(d){ duelPresData = (d && typeof d === 'object') ? d : {}; duelFriendsPaint(); });
+      try{ fetchUserDirectory().then(duelFriendsPaint); }catch(e){}
+    } else if(!want && duelPres){ duelPres.close(); duelPres = null; }
+  }
+  function duelSync(){
+    if(frnEligible() && !document.hidden) duelInboxStart(); else duelInboxStop();
+    duelPresSync();
+  }
+  document.addEventListener('visibilitychange', duelSync);
+  setInterval(function(){ duelTk++; if(duelTk % 5 === 0) duelSync(); duelInvPaint(); if(duelTk % 3 === 0 && duelPres) duelFriendsPaint(); }, 1000);
+  setTimeout(duelSync, 2000);
+  window.addEventListener('pagehide', function(){   // đóng tab ở phòng chờ: báo hủy / rời (trận đang đấu dựa vào nhịp hb)
+    var R = duelRoom; if(!R || R.launched) return;
+    if(R.side === 'host') frnReq('PATCH', duelPath(R), {status:'cancel', by:'host'}, true).catch(duelNoop);
+    else frnReq('PUT', duelPath(R, 'guest'), null, true).catch(duelNoop);
+  });
+
+  /* ---------- phòng: mời, nhận lời, vào, rời ---------- */
+  async function duelInvite(code){
+    if(duelRoom || !code) return;
+    if(!frnEligible()){ triggerToast('low', 'Tính năng Bạn bè đang tắt hoặc tài khoản chưa đủ điều kiện.'); return; }
+    if(battleAlreadyPlayedToday()){ triggerToast('low', '🎟️ Hôm nay đã hết lượt đấu — mai quay lại nhé!'); return; }
+    if(frnFrSt(code) !== 'ok'){ triggerToast('low', 'Hai bạn chưa là bạn bè.'); return; }
+    if(!frnOnline(duelPresData[code])){ triggerToast('low', 'Bạn này đang ngoại tuyến.'); return; }
+    var id = frnNewId(), now = frnNow(), size = (battleSize === 3 ? 3 : 1);
+    var room = {id:id, size:size, qk:duelQtKey, qt:DUEL_QT[duelQtKey] || 0.55, seed:Math.floor(Math.random() * 2147483647), status:'lobby', createdAt:now, invite:code,
+      host:{code:duelCode(), name:duelMyName()}, ready:{host:false, guest:false}, v:DUEL_VER};
+    try{
+      await frnReq('PUT', 'duel/rooms/' + id, room);
+      await frnReq('PUT', duelInboxPath(code, id), {from:duelCode(), name:duelMyName(), room:id, size:size, qk:duelQtKey, t:now, exp:now + 120000});
+      window.__pickCard1 = null; pickTeam3 = []; pickKey3 = '';
+      duelEnter(id, 'host', room);
+      renderBattlePick();
+      triggerToast('high', '📨 Đã mời ' + frTeamOf(code) + ' Đối đầu ' + (size === 3 ? '3v3' : '1v1'));
+    }catch(e){
+      frnReq('DELETE', 'duel/rooms/' + id).catch(duelNoop);
+      triggerToast('low', 'Không gửi được lời mời — kiểm tra mạng nhé!');
+    }
+  }
+  async function duelAccept(id){
+    var v = duelInv[id]; if(!v || duelRoom) return;
+    if(battleAlreadyPlayedToday()){ triggerToast('low', '🎟️ Hôm nay đã hết lượt đấu — mai quay lại nhé!'); return; }
+    try{
+      var d = await frnReq('GET', 'duel/rooms/' + v.room);
+      if(!d || d.status !== 'lobby' || d.invite !== duelCode() || d.guest || !(frnNow() - d.createdAt < 600000)){ triggerToast('low', 'Lời mời đã hết hạn hoặc phòng đã đóng.'); duelInvDrop(id); return; }
+      var gi = {code:duelCode(), name:duelMyName()};
+      await frnReq('PUT', 'duel/rooms/' + d.id + '/guest', gi);
+      d.guest = gi; duelInvDrop(id);
+      battleMode = 'duel'; battleSize = (d.size === 3 ? 3 : 1);
+      window.__pickCard1 = null; pickTeam3 = []; pickKey3 = '';
+      duelEnter(d.id, 'guest', d);
+      try{ if(typeof window.appSwitchTab === 'function') window.appSwitchTab('battle'); }catch(e){}
+      renderBattlePick();
+    }catch(e){ triggerToast('low', 'Không vào được phòng — thử lại nhé!'); }
+  }
+  function duelDecline(id){
+    var v = duelInv[id]; duelInvDrop(id); duelInvPaint();
+    if(v && v.room) frnReq('PATCH', 'duel/rooms/' + v.room, {status:'cancel', by:'guest', reason:'decline'}).catch(duelNoop);
+  }
+  function duelEnter(id, side, d){
+    var R = duelRoom = {id:id, code:id, side:side, d:d, stream:null, hbTm:0, expTm:0, seen:false, launched:false, charged:false, sig:'', hadGuest:!!d.guest, starting:false, dvBusy:false, dvDone:false, dvBad:false};
+    R.stream = frnStream(duelPath(R), function(x){ duelOnRoom(R, x); }, 1000);
+    R.expTm = setInterval(function(){ duelRoomTick(R); }, 2000);
+    duelPresSync();
+  }
+  function duelClear(R){
+    if(!R) return;
+    if(R.stream){ R.stream.close(); R.stream = null; }
+    clearInterval(R.expTm); clearInterval(R.hbTm);
+    var was = (duelRoom === R);
+    if(was) duelRoom = null;
+    window.__pickCard1 = null; pickTeam3 = []; pickKey3 = '';
+    if(was && battleMode === 'duel' && !(battleState && battleState.duel && !battleState.b.finished)){
+      var pv = document.getElementById('battle-pick-view');
+      if(pv && pv.style.display !== 'none') renderBattlePick();
+    }
+    duelPresSync();
+  }
+  function duelRoomTick(R){
+    if(duelRoom !== R || R.launched || !R.d) return;
+    var age = frnNow() - (R.d.createdAt || frnNow());
+    if(R.side === 'host' && !R.d.guest && age > 150000){ triggerToast('low', 'Bạn bè chưa nhận lời — đã đóng phòng.'); duelLeaveRoom(); }
+    else if(age > 1800000){ duelLeaveRoom(); }
+  }
+  function duelSig(d){
+    var lu = d.lineup || {}, rd = d.ready || {};
+    return [d.status, d.guest ? 1 : 0, rd.host ? 1 : 0, rd.guest ? 1 : 0, lu.host ? 1 : 0, lu.guest ? 1 : 0].join('|');
+  }
+  function duelOnRoom(R, x){
+    if(duelRoom !== R) return;
+    if(x == null){
+      if(R.seen && !R.launched){ triggerToast('low', 'Phòng Đối đầu đã đóng.'); duelClear(R); }
+      return;
+    }
+    R.seen = true; R.d = x;
+    if(x.status === 'cancel' && !R.launched){ triggerToast('low', x.reason === 'decline' ? 'Bạn bè đã từ chối lời mời.' : 'Phòng Đối đầu đã bị hủy.'); duelClear(R); return; }
+    if(x.status === 'live' && !R.launched){ duelLaunch(R); return; }
+    if(x.status !== 'lobby' || R.launched) return;
+    if(R.side === 'host' && R.hadGuest && !x.guest){ triggerToast('low', 'Bạn bè đã rời phòng.'); duelLeaveRoom(); return; }
+    if(x.guest) R.hadGuest = true;
+    duelCheckStart(R);
+    var sg = duelSig(x);
+    if(sg !== R.sig){
+      R.sig = sg;
+      if(battleMode === 'duel'){ var pv = document.getElementById('battle-pick-view'); if(pv && pv.style.display !== 'none') renderBattlePick(); }
+    }
+  }
+  function duelLeaveRoom(){
+    var R = duelRoom; if(!R || R.launched) return;
+    if(R.side === 'host'){
+      frnReq('PATCH', duelPath(R), {status:'cancel', by:'host'}).catch(duelNoop);
+      if(R.d && R.d.invite) frnReq('DELETE', duelInboxPath(R.d.invite, R.id)).catch(duelNoop);
+      setTimeout(function(){ frnReq('DELETE', duelPath(R)).catch(duelNoop); }, 20000);
+    } else {
+      frnReq('PUT', duelPath(R, 'ready/guest'), false).catch(duelNoop);
+      frnReq('PUT', duelPath(R, 'lineup/guest'), null).catch(duelNoop);
+      frnReq('PUT', duelPath(R, 'guest'), null).catch(duelNoop);
+    }
+    duelClear(R);
+  }
+  async function duelToggleReady(){
+    var R = duelRoom; if(!R || !R.d || R.launched) return;
+    var me = R.side, opp = (me === 'host' ? 'guest' : 'host'), d = R.d, rdy = d.ready || {};
+    try{
+      if(rdy[me]){   // bỏ Sẵn sàng → chỉ được khi đối thủ chưa khóa (không đổi thẻ sau khi biết đối thủ đã khóa)
+        if(rdy[opp] && !R.dvBad){ triggerToast('low', 'Cả hai đã Sẵn sàng — không đổi thẻ được nữa!'); return; }
+        await frnReq('PUT', duelPath(R, 'ready/' + me), false);
+        await frnReq('PUT', duelPath(R, 'lineup/' + me), null);
+        R.dvDone = false; R.dvBad = false;
+        return;
+      }
+      if(!d.guest){ triggerToast('low', 'Chờ bạn nhận lời mời đã nhé!'); return; }
+      if(battleAlreadyPlayedToday()){ triggerToast('low', '🎟️ Hôm nay đã hết lượt đấu — mai quay lại nhé!'); return; }
+      var sel = [];
+      if(d.size === 3){ sel = selCards3(battleOwnedCards()); if(sel.length !== 3){ triggerToast('low', 'Chọn đủ 3 thẻ trước khi Sẵn sàng!'); return; } }
+      else { if(!window.__pickCard1){ triggerToast('low', 'Chọn 1 thẻ trước khi Sẵn sàng!'); return; } sel = [window.__pickCard1]; }
+      await frnReq('PUT', duelPath(R, 'lineup/' + me), duelBuildLineupPayload(sel));
+      await frnReq('PUT', duelPath(R, 'ready/' + me), true);
+      R.dvDone = false;
+    }catch(e){ triggerToast('low', 'Lỗi gửi đội hình — thử lại nhé!'); }
+  }
+  async function duelCheckStart(R){
+    var d = R.d; if(!d || R.launched || R.starting || R.side !== 'host' || d.status !== 'lobby') return;
+    var rdy = d.ready || {};
+    if(!(rdy.host && rdy.guest && frlGet(d, 'lineup', 'host') && frlGet(d, 'lineup', 'guest'))) return;
+    R.starting = true;
+    try{
+      await duelDataCheck(R);
+      if(duelRoom !== R) return;
+      if(R.dvBad){ if(battleMode === 'duel') renderBattlePick(); return; }
+      await frnReq('PUT', duelPath(R, 'status'), 'live');
+    }catch(e){} finally{ R.starting = false; }
+  }
+
+  /* ---------- vào trận (1v1 hoặc 3v3) ---------- */
+  function duelBeat(R){ frnReq('PUT', duelPath(R, 'hb/' + R.side), frnNow(), false, 1, 4000).catch(duelNoop); }
+  function duelOpenArena(st){
+    document.getElementById('battle-pick-view').style.display = 'none';
+    var rv = document.getElementById('battle-road-view'); if(rv) rv.style.display = 'none';
+    document.getElementById('battle-arena-view').style.display = '';
+    arenaBgChange(0);
+    document.getElementById('battle-result-zone').innerHTML = '';
+    document.getElementById('battle-log').innerHTML = '';
+    document.getElementById('bt-fx').innerHTML = '';
+    document.getElementById('bt-turn').textContent = '⚔️ Lộ diện thẻ đấu!';
+    document.getElementById('bt-die').className = 'bt-die';
+    document.getElementById('bt-die').textContent = '?';
+    btSlotHide(true);
+    document.getElementById('bt-dnote').textContent = '';
+    document.getElementById('bt-calc').innerHTML = '';
+    if(st.is3) renderArena3(); else renderBattleArena();
+    try{ document.getElementById('battle-arena-view').scrollIntoView({block:'start'}); }catch(e){}
+  }
+  async function duelLaunch(R){
+    if(!R || R.launched || !R.d) return;
+    var d = R.d, me = R.side, opp = (me === 'host' ? 'guest' : 'host'), lu = d.lineup || {};
+    if(!lu[me] || !lu[opp]) return;
+    var is3 = (d.size === 3), n = is3 ? 3 : 1;
+    var mine = duelArr(lu[me].c).map(duelHydrateFromLineupItem), theirs = duelArr(lu[opp].c).map(duelHydrateFromLineupItem);
+    if(mine.length !== n || theirs.length !== n || mine.indexOf(null) >= 0 || theirs.indexOf(null) >= 0 || mine.some(function(x){ return !x; }) || theirs.some(function(x){ return !x; })){
+      R.launched = true;
+      triggerToast('low', 'Không dựng được thẻ trận đấu (lệch dữ liệu) — đã hủy phòng.');
+      if(me === 'host') frnReq('PATCH', duelPath(R), {status:'cancel', by:'host', reason:'data'}).catch(duelNoop);
+      duelClear(R); return;
+    }
+    R.launched = true;
+    if(!R.charged){ R.charged = true; markBattlePlayedToday(); try{ renderBattleQuota(); }catch(e){} }   // trừ 1 🎟️ khi cả hai đã vào trận
+    var hostFirst = (seRng(seHash(d.seed + ':first'))() < 0.5);
+    var first = (me === 'host') ? (hostFirst ? 0 : 1) : (hostFirst ? 1 : 0);   // side/team 0 luôn là "mình"
+    var st;
+    if(is3){
+      var b3 = createBattle3(mine, theirs, first, true);
+      st = battleState = {b:b3, is3:true, mine:mine, theirs:theirs, cardA:mine[0], cardB:theirs[0], timer:null, revealed:0, rewardApplied:true,
+        shown:b3.sides.map(function(u){ return u.hp; }), speed:1, skipping:false, dead:false, waiters:[], skillIdx:[0, 0, 0, 0, 0, 0], road:0};
+    } else {
+      var b1 = createBattle1v1(mine[0], theirs[0], first);
+      st = battleState = {b:b1, cardA:mine[0], cardB:theirs[0], timer:null, revealed:0, rewardApplied:true,
+        shown:[b1.sides[0].hpMax, b1.sides[1].hpMax], speed:1, skipping:false, dead:false, waiters:[], skillIdx:[0, 0], road:0};
+    }
+    st.duel = {room:R, seed:d.seed, me:me, opp:opp, usedQ:[], t0:frnNow(), size:d.size, oppCode:(d[opp] && d[opp].code) || '', oppName:(d[opp] && d[opp].name) || 'Bạn bè', ended:false, forfeit:''};
+    st.quizSeconds = settings.quizSeconds || 15;
+    st.b.quizMode = true;
+    st.b.quizT = (typeof d.qt === 'number') ? d.qt : 0.55;
+    st.b.machineHigh = 0;
+    duelBeat(R); R.hbTm = setInterval(function(){ duelBeat(R); }, 3000);
+    duelOpenArena(st);
+    if(is3) bt3Entrance(st).then(function(){ if(battleState === st) battleRun3(st); });
+    else btEntrance(st).then(function(){ if(battleState === st) battleRun(st); });
+  }
+
+  /* ---------- đồng bộ lượt: chờ đối thủ, xử thua, đối chiếu ---------- */
+  async function duelRefresh(R){
+    try{ var f = await frnReq('GET', duelPath(R), undefined, false, 1, 4000); if(f && typeof f === 'object') R.d = f; }catch(e){}
+  }
+  function duelFinishLocal(st, winnerSide, reason, push){
+    var b = st.b, D = st.duel; if(b.finished) return;
+    b.finished = true; b.winner = winnerSide; D.forfeit = reason;
+    if(push){
+      var role = (winnerSide === 0 ? D.me : D.opp);
+      frnReq('PUT', duelPath(D.room, 'end'), {w:role, by:D.me, reason:(reason === 'meresign' ? 'resign' : 'drop')}, false, 3, 5000).catch(duelNoop);
+    }
+  }
+  function duelCheckEnd(st){
+    var D = st.duel, e = D && D.room && D.room.d && D.room.d.end;
+    if(st.b.finished) return true;
+    if(e && e.w){
+      var mineWon = (e.w === D.me);
+      duelFinishLocal(st, mineWon ? 0 : 1, e.by === D.me ? 'drop' : (e.reason === 'resign' ? 'oppresign' : 'dropped'), false);
+      return true;
+    }
+    return false;
+  }
+  async function duelWaitTurn(st, n){
+    var D = st.duel, R = D.room, lastGet = 0;
+    while(btAlive(st)){
+      var t = frlGet(R.d, 'turns', n);
+      if(t && typeof t === 'object') return t;
+      if(duelCheckEnd(st)) return null;
+      var hb = frlGet(R.d, 'hb', D.opp), ref = (typeof hb === 'number') ? hb : D.t0;
+      if(frnNow() - ref > duelDropMs()){ duelFinishLocal(st, 0, 'drop', true); return null; }
+      if(Date.now() - lastGet > 2500){ lastGet = Date.now(); await duelRefresh(R); }
+      await new Promise(function(r){ setTimeout(r, 250); });
+    }
+    return null;
+  }
+  async function duelWaitFor(st, getter, ms){
+    var R = st.duel.room, t0 = Date.now(), lastGet = 0;
+    while(btAlive(st) && Date.now() - t0 < ms){
+      var v = getter(R.d); if(v != null) return v;
+      if(Date.now() - lastGet > 2500){ lastGet = Date.now(); await duelRefresh(R); }
+      await new Promise(function(r){ setTimeout(r, 250); });
+    }
+    return null;
+  }
+  async function duelPublishTurn(st, n, obj){
+    obj.by = st.duel.me;
+    try{ await frnReq('PUT', duelPath(st.duel.room, 'turns/' + n), obj, false, 5, 6000); }
+    catch(e){ triggerToast('low', 'Mạng chập chờn — đang gửi lại kết quả lượt…'); }
+  }
+  async function duelReconcile(st, n){
+    var b = st.b, D = st.duel, R = D.room, isHost = (D.me === 'host'), k = st.is3 ? 3 : 1;
+    function hp(a, z){ var o = []; for(var i = a; i < z; i++) o.push(Math.round(b.sides[i].hp)); return o; }
+    var mineHp = hp(0, k), oppHp = hp(k, 2 * k), hostHp = isHost ? mineHp : oppHp, guestHp = isHost ? oppHp : mineHp;
+    var winRole = b.finished ? (b.winner === 0 ? D.me : D.opp) : '';
+    if(isHost){
+      try{ await frnReq('PUT', duelPath(R, 'checks/' + n), {h:hostHp, g:guestHp, f:b.finished ? 1 : 0, w:winRole}, false, 3, 5000); }catch(e){}
+      return;
+    }
+    var chk = await duelWaitFor(st, function(d){ var c = frlGet(d, 'checks', n); return (c && typeof c === 'object') ? c : null; }, 8000);
+    if(!btAlive(st) || !chk) return;
+    var cH = duelArr(chk.h), cG = duelArr(chk.g), bad = (!!chk.f !== !!b.finished), i;
+    for(i = 0; i < k; i++){ if(cG[i] !== mineHp[i] || cH[i] !== oppHp[i]) bad = true; }
+    if(!bad) return;
+    for(i = 0; i < k; i++){ b.sides[i].hp = cG[i]; b.sides[k + i].hp = cH[i]; }   // guest lấy lại HP từ host
+    b.finished = !!chk.f;
+    if(chk.w) b.winner = (chk.w === 'guest' ? 0 : 1);
+    b.sides.forEach(function(u, j){ st.shown[j] = u.hp; });
+    if(st.is3){ try{ refresh3(st); }catch(e){} }
+    else if(typeof btSetHp === 'function'){ btSetHp(st, 0, b.sides[0].hp, b.sides[0].hpMax); btSetHp(st, 1, b.sides[1].hp, b.sides[1].hpMax); }
+  }
+
+  // GĐ 4: Vòng lượt duelPlayTurn(st) tách hai nhánh: lượt mình & lượt đối phương
+  async function duelPlayTurn(st){
+    var b = st.b, duel = st.duel, R = duel.room;
+    if(b.finished) return;
+    if(duelCheckEnd(st)) return;
+    var n = b.turn;
+    var A = b.side, Dn = 1 - b.side, sa = b.sides[A], sd = b.sides[Dn], evt = null, c = null;
+    var myTurn = (A === 0);
+    var names = [st.cardA.name, st.cardB.name], el = sa.battle.element;
+    var con = btEl('bt-console'), turnEl = btEl('bt-turn'), dnote = btEl('bt-dnote'), die = btEl('bt-die'), calc = btEl('bt-calc');
+    if(!con || !turnEl || !die || !calc) return;
+
+    function w(ms){ return bwait(st, ms); }
+    function row(icon, label, val, cls){
+      var d = document.createElement('div'); d.className = 'bt-row '+(cls || '');
+      d.innerHTML = '<span>'+icon+' '+label+'</span><b>'+val+'</b>'; calc.appendChild(d); calc.scrollTop = calc.scrollHeight; return d;
+    }
+
+    // 1) Báo lượt
+    con.setAttribute('data-side', A);
+    turnEl.innerHTML = 'Lượt <b>' + (n + 1) + '</b> · ' + (myTurn ? '🟦' : '🟪') + ' <b>' + escHtml(names[A]) + '</b> ra đòn!';
+    btMarkSides(A);
+    calc.innerHTML = ''; die.className = 'bt-die'; die.removeAttribute('data-v'); die.textContent = '?'; btSlotHide(true);
+    dnote.textContent = myTurn ? 'Lượt của bạn — trả lời đúng và nhanh!' : '⏳ Đang chờ đối thủ trả lời câu hỏi…';
+    await w(550); if(!btAlive(st)) return;
+
+    // 2) Tách 2 nhánh: lượt mình vs lượt đối phương
+    if(myTurn){
+      var q = quizPickSeeded(b.quizT, seRng(seHash(duel.seed + ':qz' + n)), { used: duel.usedQ });
+      var qres = await btAskQuestion(st, { q: q });
+      if(!btAlive(st)) return;
+      if(duelCheckEnd(st)) return;
+      var zero = !(qres.score > 0);
+      var roll = zero ? 1 : Math.max(1, qres.score | 0);
+      var miss = zero ? (Math.random() < battleMissChance(b, 0, 1)) : false;
+      evt = battleStep(b, roll, { zero: zero, miss: miss, rng: duelRng(st, n) });
+      if(!evt) return;
+      evt.quiz = { ok: !!qres.ok, secLeft: qres.secLeft || 0, timeout: !!qres.timeout, skipped: !!qres.skipped };
+      c = evt.calc;
+
+      // Ghi turns/<n> lên phòng (có thử lại)
+      await duelPublishTurn(st, n, {p: zero ? 0 : roll, ok: !!qres.ok, miss: !!evt.miss, secLeft: qres.secLeft || 0, timeout: !!qres.timeout, skipped: !!qres.skipped});
+
+      await btRollDice(st, evt.shown != null ? evt.shown : evt.roll); if(!btAlive(st)) return;
+      dnote.innerHTML = (qres.ok ? '✅ Đúng! Còn <b>'+qres.secLeft+'s</b>' : (qres.timeout ? '⏰ Hết giờ' : '❌ Chưa đúng'))
+        + ' → <b>'+evt.roll+' điểm</b> (×'+c.d10.toFixed(1)+')' + (evt.crit ? '<br>🎯 <b>CHÍ MẠNG!</b>' : '');
+      if(evt.crit){
+        var cq = btCenter(A);
+        if(cq){ btRing(st, cq.x, cq.y, '#FDE047'); btBurst(st, cq.x, cq.y, '#FDE047', 10); }
+      }
+      await w(evt.crit ? 950 : 750); if(!btAlive(st)) return;
+    } else {
+      // Nhánh lượt đối phương: chờ turns/<n> rồi phát hiệu ứng, dùng opt.miss ép sẵn
+      var tData = await duelWaitTurn(st, n);
+      if(!btAlive(st) || !tData) return;
+      var tZero = !(tData.p > 0);
+      var tRoll = tZero ? 1 : Math.max(1, tData.p | 0);
+      evt = battleStep(b, tRoll, { zero: tZero, miss: !!tData.miss, rng: duelRng(st, n) });
+      if(!evt) return;
+      c = evt.calc;
+
+      await btRollDice(st, evt.shown != null ? evt.shown : evt.roll); if(!btAlive(st)) return;
+      dnote.innerHTML = (tData.ok ? '✅ Đối thủ trả lời đúng' : (tData.timeout ? '⏰ Đối thủ hết giờ' : '❌ Đối thủ trả lời sai'))
+        + ' → <b>'+evt.roll+' điểm</b> (×'+c.d10.toFixed(1)+')' + (evt.crit ? '<br>🎯 <b>CHÍ MẠNG!</b>' : '');
+      if(evt.crit){
+        var cc = btCenter(A);
+        if(cc){ btRing(st, cc.x, cc.y, '#FDE047'); btBurst(st, cc.x, cc.y, '#FDE047', 10); }
+      }
+      await w(evt.crit ? 950 : 750); if(!btAlive(st)) return;
+    }
+
+    // 3) Hiệu ứng tính sát thương & trừ HP
+    row('⚔️', 'Sức đánh gốc <small>(Lực chiến '+btF1(c.cp)+')</small>', btF1(c.base)); await w(220); if(!btAlive(st)) return;
+    row('⏱️', 'Điểm trả lời '+evt.roll, '×'+c.d10.toFixed(1)); await w(220); if(!btAlive(st)) return;
+    if(c.atkMod !== 1){ row(elementIconInline(el), 'Hệ '+escHtml(elementName(el)), '×'+c.atkMod); await w(220); if(!btAlive(st)) return; }
+    if(c.elemM !== 1){ row('🌀', c.elemM > 1 ? 'KHẮC HỆ!' : 'Bị khắc hệ', '×'+c.elemM, c.elemM > 1 ? 'good' : 'bad'); await w(240); if(!btAlive(st)) return; }
+    if(c.bonusM !== 1){ row('⏱️', 'Bù giờ (đánh sau)', '×'+c.bonusM.toFixed(2), 'good'); await w(220); if(!btAlive(st)) return; }
+    var tot = row('💪', 'UY LỰC', '0', 'total'); btCount(st, tot.querySelector('b'), 0, c.raw, 550, Math.round);
+    await w(700); if(!btAlive(st)) return;
+    row('🛡️', 'Giáp '+escHtml(names[Dn]), '−'+c.reducePct+'%'); await w(220); if(!btAlive(st)) return;
+    if(c.iconCut){ row('👑', 'Huyền Thoại đỡ đòn đầu', '−20%', 'bad'); await w(240); if(!btAlive(st)) return; }
+    if(c.rareGuard){ row('🌟', 'Đặc biệt Hiếm giảm khắc Hệ', '−15%', 'bad'); await w(240); if(!btAlive(st)) return; }
+    if(c.sigBoost){ row('✍️', 'Khoảnh khắc Chữ ký', '+15%', 'ok'); await w(240); if(!btAlive(st)) return; }
+
+    var fin = row('💥', evt.miss ? 'BỊ TRƯỢT!' : 'SÁT THƯƠNG', '0', evt.miss ? 'bad' : 'dmg');
+    if(!evt.miss) btCount(st, fin.querySelector('b'), 0, evt.dmg, 420, Math.round);
+    await w(480); if(!btAlive(st)) return;
+
+    await btFireHit(st, A, Dn, evt); if(!btAlive(st)) return;
+    st.shown[Dn] = sd.hp;
+    if(typeof btSetHp === 'function') btSetHp(st, Dn, sd.hp, sd.hpMax);
+    if(evt.heal > 0){
+      st.shown[A] = sa.hp;
+      if(typeof btSetHp === 'function') btSetHp(st, A, sa.hp, sa.hpMax);
+    }
+
+    // 4) Kiểm chứng đồng bộ HP hai bên sau mỗi lượt
+    await duelReconcile(st, n);
+  }
+
+
+  function duelResign(){
+    var st = battleState; if(!st || !st.duel || st.b.finished) return;
+    if(!confirm('Đầu hàng và nhận thua trận này?')) return;
+    duelFinishLocal(st, 1, 'meresign', true);
+    st.dead = true; try{ btWake(st); }catch(e){}
+    duelOnMatchEnd(st);
+    if(st.is3) renderArena3(); else renderBattleArena();
+  }
+  function duelEndNote(st){
+    var D = st.duel, why = {drop:'📡 Đối thủ mất kết nối nên bạn thắng.', oppresign:'🏳️ Đối thủ đã đầu hàng.', meresign:'🏳️ Bạn đã đầu hàng.', dropped:'📡 Bạn mất kết nối quá lâu nên bị xử thua.'}[D.forfeit] || '';
+    return '<p class="hint-text">🤝 Trận giao lưu với <b>' + escHtml(D.oppName) + '</b> — không tính ⚡/OVR cho thẻ.' + (why ? '<br>' + why : '') + '</p>'
+      + '<div class="duel-ver">' + appVerLine() + '</div>';
+  }
+  function duelOnMatchEnd(st){
+    if(!st || !st.duel || st.duel.ended) return;
+    var D = st.duel, R = D.room; D.ended = true;
+    if(R){
+      clearInterval(R.hbTm); clearInterval(R.expTm);
+      if(R.stream){ R.stream.close(); R.stream = null; }
+      if(D.me === 'host'){
+        frnReq('PATCH', duelPath(R), {status:'done'}).catch(duelNoop);
+        setTimeout(function(){ frnReq('DELETE', duelPath(R)).catch(duelNoop); }, 90000);
+      }
+      if(duelRoom === R) duelRoom = null;
+    }
+    duelHistAdd({t:Date.now(), size:D.size, code:D.oppCode, name:D.oppName, won:(st.b.winner === 0), why:D.forfeit});
+    window.__pickCard1 = null; pickTeam3 = []; pickKey3 = '';
+    duelPresSync();
+  }
+
   function createBattle1v1(cardA, cardB, firstSide){
     var cfg = BATTLE_CONFIG;
     var battleA = effectiveBattleStats(cardA);   // thẻ của mình — có thể đã nâng cấp OVR
-    var battleB = cardB.battle;                  // đối thủ random từ CSDL chung — luôn ★0
+    var battleB = effectiveBattleStats(cardB);   // hỗ trợ đối thủ nâng cấp OVR (PvP Đối đầu) hoặc ★0 (Đấu máy)
     var b = {
       cfg: cfg, mode: cfg.modes['1v1'],
       sides: [
@@ -19896,7 +20635,7 @@ html.dbcd-loading #auth-screen .lg-admin-btn{ bottom:calc(68px + env(safe-area-i
     if(psFx && psFx.enabled){
       psRes = psResolve(A, D, shown, {
         b: b, cfg: cfg, mode: mode, missed: missed, zero: (opt && opt.zero),
-        bonusHit: bonusHit, d10: d10, rawDmg: raw
+        bonusHit: bonusHit, d10: d10, rawDmg: raw, rng: (opt && opt.rng) || undefined
       });
 
       if(psRes){
@@ -21278,7 +22017,7 @@ function roadmapIcon(def, locked){
     if(a) a.style.display = jOk ? '' : 'none';
     if(!jOk && battleMode === 'road'){ battleMode = 'quick'; roadPickStage = 0; }
     if(a) a.classList.toggle('active', battleMode === 'road');
-    if(b) b.classList.toggle('active', battleMode === 'quick');
+    if(b) b.classList.toggle('active', battleMode === 'quick' || battleMode === 'duel');
     if(c) c.classList.toggle('active', battleMode === 'season');
     var wb = document.getElementById('battle-mode-wtour'); if(wb) wb.classList.toggle('active', battleMode === 'wtour');
   }
@@ -21287,7 +22026,15 @@ function roadmapIcon(def, locked){
     if(!t) return;
     var m = t.closest('#battle-mode-road, #battle-mode-quick, #battle-mode-season, #battle-mode-wtour');
     if(m && m.id === 'battle-mode-road' && !journeyAllowed()) return;
-    if(m){ battleMode = (m.id === 'battle-mode-road') ? 'road' : (m.id === 'battle-mode-season' ? 'season' : (m.id === 'battle-mode-wtour' ? 'wtour' : 'quick')); roadPickStage = 0; renderBattlePick(); return; }
+    if(m){
+      if(duelRoom && !duelRoom.launched) duelLeaveRoom();   // rời phòng Đối đầu khi đổi chế độ
+      battleMode = (m.id === 'battle-mode-road') ? 'road'
+        : (m.id === 'battle-mode-season' ? 'season'
+        : (m.id === 'battle-mode-wtour' ? 'wtour' : 'quick'));
+      roadPickStage = 0;
+      renderBattlePick();
+      return;
+    }
     var nd = t.closest('.rm-node, .rm-pg, .cm-node');
     if(nd){ roadmapNodeTap(parseInt(nd.getAttribute('data-n'), 10)); return; }
     if(t.closest('#rm-back')){ roadPickStage = 0; renderBattlePick(); }
@@ -21347,8 +22094,16 @@ function roadmapIcon(def, locked){
   }
   function syncBattleSortUI(){
     var sel = document.getElementById('battle-sort-key'), btn = document.getElementById('battle-sort-dir');
-    if(sel) sel.value = battleSort.key;
-    if(btn) btn.textContent = (battleSort.desc ? '⬇️ ' : '⬆️ ') + BATTLE_SORTS[battleSort.key][battleSort.desc ? 'desc' : 'asc'];
+    var isDuel = (battleMode === 'duel');
+    if(sel){
+      var matchOpt = sel.querySelector('option[value="match"]');
+      if(matchOpt) matchOpt.style.display = isDuel ? 'none' : '';
+      var activeKey = (isDuel && battleSort.key === 'match') ? 'ovr' : battleSort.key;
+      sel.value = activeKey;
+      if(btn) btn.textContent = (battleSort.desc ? '⬇️ ' : '⬆️ ') + BATTLE_SORTS[activeKey][battleSort.desc ? 'desc' : 'asc'];
+    } else if(btn){
+      btn.textContent = (battleSort.desc ? '⬇️ ' : '⬆️ ') + BATTLE_SORTS[battleSort.key][battleSort.desc ? 'desc' : 'asc'];
+    }
   }
   function quickHeadHTML(myCard){
     var opp = quickOpp;
@@ -21404,6 +22159,7 @@ function roadmapIcon(def, locked){
     clearBattleTimer();
     document.getElementById('battle-arena-view').style.display = 'none';
     syncBattleModeButtons();
+    duelPresSync();
     roadApplySize();
     wtHide();
     if(battleMode === 'wtour'){ seasonHide(); wtRender(); return; }
@@ -21422,7 +22178,8 @@ function roadmapIcon(def, locked){
     var sortBar = document.getElementById('battle-pick-sort');
     if(sortBar) sortBar.style.display = 'none';
     syncBattleSizeButtons();
-    if(!(battleMode === 'road' && roadPickStage) && battleReady() && !battleAlreadyPlayedToday()){
+    var isDuel = (battleMode === 'duel');
+    if(!isDuel && !(battleMode === 'road' && roadPickStage) && battleReady() && !battleAlreadyPlayedToday()){
       if(battleSize === 3){ if(!quickTeam3) quickTeam3 = quickPickTeam3(); }
       else if(!quickOpp) quickOpp = quickPickOpp();
     }
@@ -21433,11 +22190,18 @@ function roadmapIcon(def, locked){
       hint.textContent = 'Đấu Trường đang được chuẩn bị — quay lại sau nhé!';
       return;
     }
-    if(battleAlreadyPlayedToday()){
+    if(!isDuel && battleAlreadyPlayedToday()){
       pickHead.innerHTML = '';
       grid.innerHTML = '';
       hint.style.display = '';
       hint.innerHTML = '⏰ '+battleOutOfTurnsText()+battleTail(' — mai quay lại đấu tiếp để tích thêm Năng Lượng nâng cấp OVR nhé!');
+      return;
+    }
+    if(isDuel && (!duelRoom || !duelRoom.d || duelRoom.d.status !== 'lobby')){
+      pickHead.innerHTML = duelLobbyHTML();
+      duelWireLobbyEvents();
+      grid.innerHTML = '';
+      hint.style.display = 'none';
       return;
     }
     var cards = battleOwnedCards();
@@ -21450,6 +22214,7 @@ function roadmapIcon(def, locked){
     }
     if(battleSize === 3){
       pickHead.innerHTML = head3HTML();
+      if(isDuel) duelWireLobbyEvents();
       renderTeamPick3(cards, grid, hint);
       return;
     }
@@ -21458,16 +22223,19 @@ function roadmapIcon(def, locked){
     hint.textContent = '';
     hint.style.display = 'none';
 
-    var opp = battlePreviewOpp(), scores = {}, bestId = null, bestS = -1;
-    cards.forEach(function(p){
-      var m = opp ? battleMatchup(p, opp) : null;
-      scores[p.dbId] = m;
-      if(m && m.score > bestS){ bestS = m.score; bestId = p.dbId; }
-    });
+    var opp = isDuel ? null : battlePreviewOpp(), scores = {}, bestId = null, bestS = -1;
+    if(!isDuel){
+      cards.forEach(function(p){
+        var m = opp ? battleMatchup(p, opp) : null;
+        scores[p.dbId] = m;
+        if(m && m.score > bestS){ bestS = m.score; bestId = p.dbId; }
+      });
+    }
     if(sortBar) sortBar.style.display = '';
     syncBattleSortUI();
 
-    var sorted = sortBattleCards(cards, battleSort.key, battleSort.desc, scores);
+    var effectiveSortKey = (isDuel && battleSort.key === 'match') ? 'ovr' : battleSort.key;
+    var sorted = sortBattleCards(cards, effectiveSortKey, battleSort.desc, scores);
     // YÊU CẦU 8: Không tự động gán thẻ khi vừa vào chế độ, bắt buộc người chơi tự chọn thẻ
     if(window.__lastBattleModeRendered !== battleMode + '_' + (roadPickStage || 0)){
       window.__lastBattleModeRendered = battleMode + '_' + (roadPickStage || 0);
@@ -21477,8 +22245,13 @@ function roadmapIcon(def, locked){
       window.__pickCard1 = null;
     }
 
-    // Vẽ khung đối đầu 1v1: Ô user placeholder 'Chưa chọn', đối thủ và nhãn so sánh chỉ hiện khi đã chọn
-    pickHead.innerHTML = (battleMode === 'road' && roadPickStage) ? roadHeadHTML(roadPickStage, window.__pickCard1) : quickHeadHTML(window.__pickCard1);
+    // Vẽ khung đối đầu 1v1: nếu là Đối đầu (PvP) thì vẽ lobby + thẻ đối phương ẩn
+    if(isDuel){
+      pickHead.innerHTML = duelLobbyHTML() + duelHeadHTML(window.__pickCard1);
+      duelWireLobbyEvents();
+    } else {
+      pickHead.innerHTML = (battleMode === 'road' && roadPickStage) ? roadHeadHTML(roadPickStage, window.__pickCard1) : quickHeadHTML(window.__pickCard1);
+    }
 
     function wireT1Go(card){
       var btn = document.getElementById('t1-go');
@@ -21528,17 +22301,22 @@ function roadmapIcon(def, locked){
     }
 
     // Lưới thẻ cầu thủ: Hiển thị trực tiếp các thẻ, không cần bar phụ chiếm diện tích
+    grid.classList.toggle('duel-locked', !!(isDuel && duelIsLocked()));
     grid.innerHTML = sorted.map(function(p){
       var isSel = (window.__pickCard1 && window.__pickCard1.dbId === p.dbId);
       return '<div class="battle-pick-cell' + (isSel ? ' t1-sel' : '') + '" data-db-id="'+escHtml(p.dbId)+'">'
         + playerCardHTML(p, false)
-        + matchBadgeHTML(scores[p.dbId], cards.length > 1 && p.dbId === bestId)
+        + (isDuel ? '' : matchBadgeHTML(scores[p.dbId], cards.length > 1 && p.dbId === bestId))
         + battleStarProgressHTML(p)
         + '</div>';
     }).join('');
 
     grid.querySelectorAll('.battle-pick-cell[data-db-id]').forEach(function(el){
       el.addEventListener('click', function(){
+        if(isDuel && duelIsLocked()){
+          triggerToast('low', '🔒 Thẻ đã khóa — bấm "Bỏ Sẵn sàng" để đổi thẻ!');
+          return;
+        }
         var id = el.getAttribute('data-db-id');
         var card = cards.find(function(p){ return p.dbId === id; });
         if(card){
@@ -21546,6 +22324,7 @@ function roadmapIcon(def, locked){
             c.classList.toggle('t1-sel', c.getAttribute('data-db-id') === id);
           });
           updateT1Selection(card);
+          if(isDuel) duelUpdateReadyBtnState();
         }
       });
     });
@@ -21955,9 +22734,9 @@ function roadmapIcon(def, locked){
     btSlotLand(st, finalVal);
   }
 
-  async function btAskQuestion(st){
+  async function btAskQuestion(st, opt){
     var streak = st.b.quizStreak || 0;   // số câu đúng liên tiếp trong trận này → câu càng khó dần
-    var q = quizPick(st.b.quizT, {streak:streak}), secs = st.quizSeconds || 15;
+    var q = (opt && opt.q) ? opt.q : quizPick(st.b.quizT, {streak:streak}), secs = st.quizSeconds || 15;
     var box = btEl('bt-quiz'), mid = document.querySelector('#bt-console .bt-mid');
     var subj = QUIZ_SUBJECTS[q.subject] || QUIZ_SUBJECTS.khac;
     var optsEl = btEl('bt-quiz-opts'), timeEl = btEl('bt-quiz-time'), bar = btEl('bt-quiz-barfill'), fb = btEl('bt-quiz-fb');
@@ -22200,7 +22979,7 @@ function roadmapIcon(def, locked){
     btEl('bt-turn').innerHTML = '⚔️ Vào trận! <b>'+escHtml(names[st.b.firstSide])+'</b> được đánh trước' + (st.b.quizMode ? '<br><small>🧠 Đến lượt con: trả lời nhanh để đánh mạnh!</small>' : '');
     btEl('bt-console').setAttribute('data-side', st.b.firstSide);
     await bwait(st, 1300);
-    while(btAlive(st) && !st.b.finished){ await battlePlayTurn(st); }
+    while(btAlive(st) && !st.b.finished){ if(st.duel) await duelPlayTurn(st); else await battlePlayTurn(st); }
     if(!btAlive(st)) return;
     // kết thúc: người thắng sáng lên, mưa bóng nếu mình thắng
     var win = st.b.winner;
@@ -22216,11 +22995,12 @@ function roadmapIcon(def, locked){
     }
     await bwait(st, 1700);
     if(!btAlive(st)) return;
+    if(st.duel && typeof duelOnMatchEnd === 'function'){ duelOnMatchEnd(st); }
     renderBattleArena();
   }
   function battleSkipToEnd(){
     var st = battleState;
-    if(!st || st.skipping) return;
+    if(!st || st.skipping || st.duel) return;
     if(st.is3){ battleSkipToEnd3(); return; }
     if(st.b.quizMode && !st.b.finished){
       var held = performance.now();   // dừng đồng hồ câu hỏi trong lúc hỏi xác nhận
@@ -22585,14 +23365,14 @@ function roadmapIcon(def, locked){
     var h = (wipeHits(0) + wipeHits(1)) / 2;
     return Math.max(0.5, Math.min(12, h / T3.targetHits));
   }
-  function createBattle3(cardsA, cardsB, firstTeam){
+  function createBattle3(cardsA, cardsB, firstTeam, pvp){
     var cfg = BATTLE_CONFIG, m1 = (cfg.modes && cfg.modes['1v1']) || {tempo:1, secondMoverBonus:0}, m3 = cfg.modes && cfg.modes['3v3'];
     function mk(card, team, slot, bt){
       return {card:card, battle:bt, hp:bt.hp, hpMax:bt.hp, team:team, slot:slot, firstHitTaken:false, rage:0, burn:0, slow:false, dealt:0, venge:0};
     }
     var dead = {element:'', cp:0, hp:0, armor:0, rarity:''};   // ô trống (chỉ dùng khi xem trước đội đang chọn dở)
     var sides = cardsA.map(function(c, i){ return c ? mk(c, 0, i, effectiveBattleStats(c)) : mk({name:''}, 0, i, dead); })
-      .concat(cardsB.map(function(c, i){ return c ? mk(c, 1, i, c.battle) : mk({name:''}, 1, i, dead); }));
+      .concat(cardsB.map(function(c, i){ return c ? mk(c, 1, i, pvp ? effectiveBattleStats(c) : c.battle) : mk({name:''}, 1, i, dead); }));
     var b = {is3:true, cfg:cfg, sides:sides, side:firstTeam, firstSide:firstTeam, secondMoverBonusUsed:false, rot:[0, 0],
              turn:0, round:0, finished:false, winner:null, log:[], lastHit:[null, null], mode:{tempo:1, secondMoverBonus:0}};
     var t1 = m1.tempo || 1;
@@ -22855,6 +23635,9 @@ function roadmapIcon(def, locked){
   function eleName3(c){ return c && c.battle && c.battle.element ? elementName(c.battle.element) : ''; }
   /* ---- màn hình chọn đội 3 thẻ ---- */
   function head3HTML(){
+    if(battleMode === 'duel'){
+      return duelLobbyHTML();
+    }
     var enemy = enemyTeam3();
     var trio = enemy ? '<div class="t3-enemy">'+enemy.map(function(c, k){
       return '<div class="t3-ecell"><div class="t3-ecard"><span class="t3-eord">'+ORD3[k]+'</span>'+playerCardHTML(c, false)+'</div>'
@@ -22897,8 +23680,9 @@ function roadmapIcon(def, locked){
     setTimeout(function(){ if(ov.parentNode) ov.parentNode.removeChild(ov); }, 1200);
   }
   function refreshTeamPick3(cards){
-    var enemy = enemyTeam3(), panel = document.getElementById('t3-panel');
-    if(!panel || !enemy) return;
+    var isDuel = (battleMode === 'duel');
+    var enemy = isDuel ? null : enemyTeam3(), panel = document.getElementById('t3-panel');
+    if(!panel || (!enemy && !isDuel)) return;
     var sel = selCards3(cards);
     var slots = '';
     for(var i = 0; i < 3; i++){
@@ -22909,15 +23693,16 @@ function roadmapIcon(def, locked){
                    + statLine3(c)+'</div>'
                  : '<div class="t3-slot"><b>'+ORD3[i]+'</b> <span>trống</span></div>';
     }
-    var tb = previewBattle3(sel, enemy);
-    var chips = sel.length >= 2 ? synChips3(tb, 0) : '<span class="t3-chip">Chọn đủ thẻ để xem liên kết Ngũ hành</span>';
+    var tb = sel.length >= 2 ? previewBattle3(sel, enemy || sel) : null;
+    var chips = (tb && sel.length >= 2) ? synChips3(tb, 0) : '<span class="t3-chip">Chọn đủ thẻ để xem liên kết Ngũ hành</span>';
     var score = '';
-    if(sel.length === 3){
+    if(!isDuel && enemy && sel.length === 3){
       var sc = teamScore3(sel, enemy), t = matchTier(sc);
       score = '<div class="bp-match '+t.cls+'">'+t.label+' <small>×'+sc.toFixed(2)+'</small></div>';
     }
     panel.innerHTML = '<div class="t3-title">🛡️ Đội của con <small>(thứ tự chọn = thứ tự ra đòn)</small></div>'
       + '<div class="t3-slots">'+slots+'</div><div class="t3-syn">'+chips+'</div>'+score;
+    if(isDuel) duelUpdateReadyBtnState();
     var bar = document.getElementById('t3-bar');
     if(bar){
       if(sel.length === 3){
@@ -22959,17 +23744,18 @@ function roadmapIcon(def, locked){
     });
   }
   function renderTeamPick3(cards, grid, hint){
+    var isDuel = (battleMode === 'duel');
     if(cards.length < 3){
       grid.innerHTML = '';
       hint.style.display = '';
       hint.innerHTML = '🛡️ Đấu 3v3 cần ít nhất <b>3 thẻ</b> (con đang có '+cards.length+'). Bấm <b>1v1</b> để đấu ngay, hoặc mở thêm thẻ rồi quay lại nhé!';
       return;
     }
-    var enemy = enemyTeam3();
-    if(!enemy){
+    var enemy = isDuel ? null : enemyTeam3();
+    if(!isDuel && !enemy){
       grid.innerHTML = ''; hint.style.display = ''; hint.textContent = 'Chưa tìm được đội đối thủ phù hợp, thử lại sau nhé!'; return;
     }
-    var key = battleMode + ':' + roadPickStage;
+    var key = battleMode + ':' + (isDuel && duelRoom ? duelRoom.code : roadPickStage);
     if(key !== pickKey3){ pickKey3 = key; pickTeam3 = []; }
     pickTeam3 = pickTeam3.filter(function(id){ return cards.some(function(c){ return c.id === id; }); });
     (function(){   // đội đang chọn dở không được có 2 thẻ cùng cầu thủ
@@ -22984,22 +23770,30 @@ function roadmapIcon(def, locked){
     })();
     hint.style.display = 'none';
     var scores = {};
-    cards.forEach(function(p){
-      var tot = 0, up = 0, down = 0;
-      enemy.forEach(function(e){
-        var m = battleMatchup(p, e); if(!m) return;
-        tot += m.score; if(m.elemM > 1) up++; else if(m.elemM < 1) down++;
+    if(!isDuel && enemy){
+      cards.forEach(function(p){
+        var tot = 0, up = 0, down = 0;
+        enemy.forEach(function(e){
+          var m = battleMatchup(p, e); if(!m) return;
+          tot += m.score; if(m.elemM > 1) up++; else if(m.elemM < 1) down++;
+        });
+        scores[p.dbId] = {score:tot / 3, elemM:(up > down ? 1.2 : (down > up ? 0.85 : 1))};
       });
-      scores[p.dbId] = {score:tot / 3, elemM:(up > down ? 1.2 : (down > up ? 0.85 : 1))};
-    });
+    }
     var sortBar = document.getElementById('battle-pick-sort'); if(sortBar) sortBar.style.display = '';
     syncBattleSortUI();
-    grid.innerHTML = '<div class="t3-bar" id="t3-bar"></div><div class="t3-panel" id="t3-panel"></div>' + sortBattleCards(cards, battleSort.key, battleSort.desc, scores).map(function(p){
+    var effKey3 = (isDuel && battleSort.key === 'match') ? 'ovr' : battleSort.key;
+    grid.classList.toggle('duel-locked', !!(isDuel && duelIsLocked()));
+    grid.innerHTML = '<div class="t3-bar" id="t3-bar"></div><div class="t3-panel" id="t3-panel"></div>' + sortBattleCards(cards, effKey3, battleSort.desc, scores).map(function(p){
       return '<div class="battle-pick-cell" data-id="'+escHtml(p.id)+'"><span class="t3-ord"></span>'
-        + playerCardHTML(p, false) + tagsHTML3(p) + matchBadgeHTML(scores[p.dbId], false) + battleStarProgressHTML(p) + '</div>';
+        + playerCardHTML(p, false) + tagsHTML3(p) + (isDuel ? '' : matchBadgeHTML(scores[p.dbId], false)) + battleStarProgressHTML(p) + '</div>';
     }).join('');
     grid.querySelectorAll('.battle-pick-cell').forEach(function(cell){
       cell.addEventListener('click', function(){
+        if(isDuel && duelIsLocked()){
+          triggerToast('low', '🔒 Thẻ đã khóa — bấm "Bỏ Sẵn sàng" để đổi thẻ!');
+          return;
+        }
         var id = cell.getAttribute('data-id'), k = pickTeam3.indexOf(id);
         if(k >= 0) pickTeam3.splice(k, 1);
         else {
@@ -23294,7 +24088,7 @@ function roadmapIcon(def, locked){
       resultZone.innerHTML = '<div class="battle-result '+(won ? 'win' : 'lose')+(reward && reward.cards.some(function(c){ return c.levels; }) ? ' evolved' : '')+'">'
         + '<h3>'+(won ? '🏆 Đội con thắng rồi!' : '💪 Thua ván này!')+'</h3>'
         + '<p>'+(won ? 'Đội con' : 'Đội đối thủ')+' hạ gục cả 3 thẻ bên kia sau '+b.turn+' lượt, còn '+left+' thẻ đứng vững.</p>'
-        + html
+        + html + (st.duel ? duelEndNote(st) : '')
         + '<p class="hint-text">'+(battleLeftToday() > 0 ? '🎟️ Hôm nay còn '+battleLeftToday()+' lượt đấu — đấu tiếp nào!' : (battleLimit() <= 0 ? 'Hôm nay chưa có lượt đấu — làm nhiệm vụ để ghi điểm nhé!' : (battleNextMilestone(battleTodayScore()) ? 'Hết lượt rồi — ghi thêm điểm ở tab Nhiệm Vụ để nhận thêm lượt đấu nhé!' : 'Hôm nay đấu vậy là đủ rồi — mai quay lại đấu tiếp nhé!')))+'</p></div>';
       controls.innerHTML = '<button type="button" class="btn-primary" id="battle-btn-back">🗂️ Về Đấu Trường</button>';
       document.getElementById('battle-btn-back').addEventListener('click', function(){ roadPickStage = 0; pickTeam3 = []; quickTeam3 = null; renderBattlePick(); });
@@ -23303,7 +24097,7 @@ function roadmapIcon(def, locked){
       resultZone.innerHTML = '';
       controls.innerHTML = '<button type="button" class="btn-secondary" id="battle-btn-speed">'+(st.speed > 1 ? '🐢 Chậm lại' : '⏩ Tăng tốc ×2')+'</button>'
         + '<button type="button" class="btn-secondary" id="battle-btn-skip">⏭️ Bỏ qua, xem kết quả luôn</button>';
-      document.getElementById('battle-btn-skip').addEventListener('click', battleSkipToEnd);
+      (function(){ var sk = document.getElementById('battle-btn-skip'); if(battleState && battleState.duel){ sk.textContent = '🏳️ Đầu hàng'; sk.addEventListener('click', duelResign); } else sk.addEventListener('click', battleSkipToEnd); })();
       document.getElementById('battle-btn-speed').addEventListener('click', function(){
         if(!battleState) return;
         battleState.speed = battleState.speed > 1 ? 1 : 2;
@@ -23385,6 +24179,8 @@ function roadmapIcon(def, locked){
       var d = document.createElement('div'); d.className = 'bt-row '+(cls || '');
       d.innerHTML = '<span>'+icon+' '+label+'</span><b>'+val+'</b>'; calc.appendChild(d); calc.scrollTop = calc.scrollHeight; return d;
     }
+    if(st.duel && duelCheckEnd(st)) return;
+    var n3 = b.turn, tData = null;
     var quizTurn = !!(b.quizMode && team === 0);
     con.setAttribute('data-side', team);
     refresh3(st);
@@ -23396,6 +24192,10 @@ function roadmapIcon(def, locked){
       dnote.textContent = '🎯 Chọn thẻ đối thủ để tấn công!';
       turnEl.innerHTML += '<br><small>🎯 Chạm vào thẻ đối thủ để chọn mục tiêu</small>';
       target = await btPickTarget3(st, ai); if(!btAlive(st) || target < 0) return;
+    } else if(st.duel){
+      dnote.textContent = '⏳ Đối thủ đang chọn mục tiêu và trả lời câu hỏi…';
+      tData = await duelWaitTurn(st, n3); if(!btAlive(st) || !tData) return;
+      target = (tData.t | 0);   // ô thẻ CỦA MÌNH (đội 0) bị nhắm: 0..2
     } else {
       dnote.textContent = 'Đối thủ đang chọn mục tiêu…';
       await w(600); if(!btAlive(st)) return;
@@ -23407,12 +24207,23 @@ function roadmapIcon(def, locked){
     var evt, c, qres = null;
     if(quizTurn){
       dnote.textContent = 'Trả lời đúng và nhanh để đánh mạnh!';
-      qres = await btAskQuestion(st); if(!btAlive(st)) return;
-      evt = battleStep3(b, target, Math.max(1, qres.score | 0), { zero: !(qres.score > 0) }); if(!evt) return;
+      qres = await btAskQuestion(st, st.duel ? {q: quizPickSeeded(b.quizT, seRng(seHash(st.duel.seed + ':qz' + n3)), {used: st.duel.usedQ})} : undefined); if(!btAlive(st)) return;
+      if(st.duel && duelCheckEnd(st)) return;
+      var zero3 = !(qres.score > 0);
+      evt = battleStep3(b, target, Math.max(1, qres.score | 0), st.duel ? {zero: zero3, miss: (zero3 && Math.random() < battleMissChance(b, ai, target)), rng: duelRng(st, n3)} : { zero: zero3 }); if(!evt) return;
       evt.quiz = {ok:qres.ok, secLeft:qres.secLeft || 0, timeout:!!qres.timeout, skipped:!!qres.skipped};
+      if(st.duel) await duelPublishTurn(st, n3, {p: zero3 ? 0 : Math.max(1, qres.score | 0), ok: !!qres.ok, miss: !!evt.miss, secLeft: qres.secLeft || 0, timeout: !!qres.timeout, skipped: !!qres.skipped, t: target - 3});
       c = evt.calc;
       await btRollDice(st, evt.shown != null ? evt.shown : evt.roll); if(!btAlive(st)) return;
       dnote.innerHTML = (qres.ok ? '✅ Đúng! Còn <b>'+qres.secLeft+'s</b>' : (qres.timeout ? '⏰ Hết giờ' : '❌ Chưa đúng'))
+        + ' → <b>'+evt.roll+' điểm</b> (×'+c.d10.toFixed(1)+')' + (evt.crit ? '<br>🎯 <b>CHÍ MẠNG!</b>' : '');
+      await w(evt.crit ? 800 : 500); if(!btAlive(st)) return;
+    } else if(st.duel){
+      var tz3 = !(tData.p > 0);
+      evt = battleStep3(b, target, tz3 ? 1 : Math.max(1, tData.p | 0), {zero: tz3, miss: !!tData.miss, rng: duelRng(st, n3)}); if(!evt) return;
+      c = evt.calc;
+      await btRollDice(st, evt.shown != null ? evt.shown : evt.roll); if(!btAlive(st)) return;
+      dnote.innerHTML = (tData.ok ? '✅ Đối thủ trả lời đúng' : (tData.timeout ? '⏰ Đối thủ hết giờ' : '❌ Đối thủ trả lời sai'))
         + ' → <b>'+evt.roll+' điểm</b> (×'+c.d10.toFixed(1)+')' + (evt.crit ? '<br>🎯 <b>CHÍ MẠNG!</b>' : '');
       await w(evt.crit ? 800 : 500); if(!btAlive(st)) return;
     } else {
@@ -23431,7 +24242,7 @@ function roadmapIcon(def, locked){
     // bảng tính gọn
     var el = A.battle.element, gap = 170;
     row('⚔️', 'Sức đánh gốc <small>(Lực chiến '+btF1(c.cp)+')</small>', btF1(c.base)); await w(gap); if(!btAlive(st)) return;
-    row(quizTurn ? '⏱️' : '🎲', quizTurn ? 'Điểm trả lời '+evt.roll : 'Xúc xắc '+evt.roll, '×'+c.d10.toFixed(1)); await w(gap); if(!btAlive(st)) return;
+    row((quizTurn || !!st.duel) ? '⏱️' : '🎲', (quizTurn || !!st.duel) ? 'Điểm trả lời '+evt.roll : 'Xúc xắc '+evt.roll, '×'+c.d10.toFixed(1)); await w(gap); if(!btAlive(st)) return;
     if(c.atkMod !== 1) row(elementIconInline(el), 'Hệ '+escHtml(elementName(el)), '×'+c.atkMod);
     if(c.elemM !== 1){ row('🌀', c.elemM > 1 ? 'KHẮC HỆ!' : 'Bị khắc hệ', '×'+c.elemM, c.elemM > 1 ? 'good' : 'bad'); await w(gap); if(!btAlive(st)) return; }
     if(Math.abs(c.synM - 1) > 0.001){ row('🔗', 'Liên kết Ngũ hành', '×'+(Math.round(c.synM*1000)/1000), c.synM > 1 ? 'good' : 'bad'); await w(gap); if(!btAlive(st)) return; }
@@ -23536,6 +24347,7 @@ function roadmapIcon(def, locked){
     refresh3(st);
     mark3(-1, -1);
     await w(evt.ko.length ? 900 : 350);
+    if(st.duel){ if(!btAlive(st)) return; await duelReconcile(st, n3); }
   }
   async function battleRun3(st){
     var b = st.b;
@@ -23559,11 +24371,12 @@ function roadmapIcon(def, locked){
     }
     await bwait(st, 1700);
     if(!btAlive(st)) return;
+    if(st.duel) duelOnMatchEnd(st);
     renderArena3();
   }
   function battleSkipToEnd3(){
     var st = battleState;
-    if(!st || st.skipping) return;
+    if(!st || st.skipping || st.duel) return;
     var b = st.b;
     if(b.quizMode && !b.finished){
       var held = performance.now();
@@ -23585,7 +24398,7 @@ function roadmapIcon(def, locked){
   /* Thưởng 3v3: mỗi thẻ nhận ⚡ như hiến thẻ đối thủ cùng thứ tự × REWARD3.base (thắng); MVP (gây nhiều sát thương nhất) nhận thêm. Thưởng mốc Hành trình chia đều 3 thẻ. */
   function applyBattleReward3(){
     var st = battleState;
-    if(!st || st.rewardApplied) return null;
+    if(!st || st.rewardApplied || st.duel) return null;   // Đối đầu: không cộng ⚡/OVR
     st.rewardApplied = true;
     var b = st.b, won = (b.winner === 0), road = null, roadGain = 0;
     if(st.road){
@@ -23629,13 +24442,16 @@ function roadmapIcon(def, locked){
     var a = document.getElementById('battle-size-1'), c = document.getElementById('battle-size-3');
     if(a) a.classList.toggle('active', battleSize === 1);
     if(c) c.classList.toggle('active', battleSize === 3);
+    var du = document.getElementById('battle-size-duel'); if(du) du.classList.toggle('active', battleMode === 'duel');
   }
   document.addEventListener('click', function(e){
     var t = e.target && e.target.closest ? e.target : null;
     if(!t) return;
-    var m = t.closest('#battle-size-1, #battle-size-3');
+    var m = t.closest('#battle-size-1, #battle-size-3, #battle-size-duel');
     if(m){
       if(battleMode === 'road') return;   // Hành trình: loại trận do ải quyết định
+      if(m.id === 'battle-size-duel'){ if(duelRoom) return; battleMode = 'duel'; roadPickStage = 0; pickTeam3 = []; pickKey3 = ''; renderBattlePick(); return; }
+      if(duelRoom){ triggerToast('low', 'Rời phòng Đối đầu trước khi đổi 1v1/3v3 nhé!'); return; }
       battleSize = (m.id === 'battle-size-3') ? 3 : 1;
       try{ localStorage.setItem(BATTLE_SIZE_KEY, String(battleSize)); }catch(err){}
       pickTeam3 = []; pickKey3 = ''; quickOpp = null; quickTeam3 = null;
@@ -23646,7 +24462,7 @@ function roadmapIcon(def, locked){
   /* Cộng Năng Lượng cho ĐÚNG thẻ vừa ra sân + tự +OVR (không giới hạn) nếu đủ, lưu lại vào kho.
      Chỉ chạy đúng 1 lần/trận (chặn bằng battleState.rewardApplied). */
   function applyBattleReward(){
-    if(!battleState || battleState.rewardApplied) return null;
+    if(!battleState || battleState.rewardApplied || battleState.duel) return null;   // Đối đầu: giao lưu, không cộng ⚡/OVR
     battleState.rewardApplied = true;
     var won = (battleState.b.winner === 0);
     var fz = fuseAnalyze(battleState.cardA, battleState.cardB); fz.v = Math.min(fz.v, BATTLE_FRAC_CAP);   // đối thủ coi như "thẻ hiến" cho thẻ ra sân (tối đa +1 cấp/trận)
@@ -23832,7 +24648,7 @@ function roadmapIcon(def, locked){
       resultZone.innerHTML = '<div class="battle-result '+(youWon?'win':'lose')+(reward&&reward.levels?' evolved':'')+'">'
         + '<h3>'+(youWon ? '🏆 Thắng rồi!' : '💪 Thua ván này!')+'</h3>'
         + '<p>'+escHtml(names[b.winner])+' đã hạ gục '+escHtml(names[1-b.winner])+' sau '+b.turn+' lượt.</p>'
-        + rewardHTML
+        + rewardHTML + (battleState.duel ? duelEndNote(battleState) : '')
         + '<p class="hint-text">'+(battleLeftToday() > 0 ? '🎟️ Hôm nay còn '+battleLeftToday()+' lượt đấu — đấu tiếp nào!' : (battleLimit() <= 0 ? 'Hôm nay chưa có lượt đấu — làm nhiệm vụ để ghi điểm nhé!' : (battleNextMilestone(battleTodayScore()) ? 'Hết lượt rồi — ghi thêm điểm ở tab Nhiệm Vụ để nhận thêm lượt đấu nhé!' : 'Hôm nay đấu vậy là đủ rồi — mai quay lại đấu tiếp nhé!')))+'</p>'
         + '</div>';
       controls.innerHTML = '<button type="button" class="btn-primary" id="battle-btn-back">🗂️ Về Đấu Trường</button>';
@@ -23842,7 +24658,7 @@ function roadmapIcon(def, locked){
       resultZone.innerHTML = '';
       controls.innerHTML = '<button type="button" class="btn-secondary" id="battle-btn-speed">'+(battleState.speed > 1 ? '🐢 Chậm lại' : '⏩ Tăng tốc ×2')+'</button>'
         + '<button type="button" class="btn-secondary" id="battle-btn-skip">⏭️ Bỏ qua, xem kết quả luôn</button>';
-      document.getElementById('battle-btn-skip').addEventListener('click', battleSkipToEnd);
+      (function(){ var sk = document.getElementById('battle-btn-skip'); if(battleState && battleState.duel){ sk.textContent = '🏳️ Đầu hàng'; sk.addEventListener('click', duelResign); } else sk.addEventListener('click', battleSkipToEnd); })();
       document.getElementById('battle-btn-speed').addEventListener('click', function(){
         if(!battleState) return;
         battleState.speed = battleState.speed > 1 ? 1 : 2;
@@ -23858,10 +24674,185 @@ function roadmapIcon(def, locked){
   }
   /* Mục "Đội Hình Trong Mơ" là một tab: mỗi lần mở tab sẽ vẽ lại sân đấu + kho cầu thủ */
   window.appRenderSquad = function(){ renderPitch(); renderCollection(); if(typeof renderMarket === 'function') renderMarket(); };
+  /* =====================================================================
+     LỊCH SỬ PHIÊN BẢN (chỉ admin xem được: Trang quản trị › 📜 Phiên bản)
+     Mỗi lần cập nhật: thêm 1 mục LÊN ĐẦU mảng, ghi giờ hoàn thành (giờ Việt Nam) + nội dung chỉnh sửa.
+     ===================================================================== */
+  var APP_CHANGELOG = [
+    {v:'1.2', t:'2026-11-17 10:31', items:[
+      'Thêm tab con "👥 Đội bạn" trong Đội Hình Trong Mơ: xem đội hình (sơ đồ, 11 đá chính, dự bị), OVR đội hình và HLV của người dùng khác — chỉ xem, không chỉnh sửa; không hiện hồ sơ admin đã ẩn.',
+      'Danh sách chọn người để ➕ Kết bạn không còn hiện hồ sơ bị admin ẩn.',
+      'Thêm mục "📜 Phiên bản" trong Trang quản trị để theo dõi lịch sử cập nhật.',
+      'Dòng phiên bản ở màn Đối đầu lấy theo bản mới nhất trong lịch sử này.'
+    ]},
+    {v:'1.1', t:'2026-11-16 16:17', items:[
+      'Đối đầu (giao lưu giữa bạn bè) 1v1 và 3v3: mời bạn đang online, chủ phòng chọn độ khó, chỉ lộ thẻ đối thủ khi cả hai Sẵn sàng.',
+      'Không cộng ⚡/OVR cho thẻ; trừ 1 lượt đấu khi cả hai vào trận; xử thua khi đối thủ mất kết nối; thêm nút 🏳️ Đầu hàng.',
+      'Đồng bộ trận hai máy: rng Playstyle theo seed, sửa lỗi gửi "trượt" (evt.miss) gây lệch trận.',
+      'Phòng và lời mời nằm trong nhánh kidchart_friendly/duel (không cần thêm nút gốc mới trong Firebase Rules).'
+    ]}
+  ];
+  function appVerTime(t){ var m = /^(\d{4})-(\d{2})-(\d{2})(?: (\d{2}):(\d{2}))?/.exec(t || ''); return m ? (m[3] + '/' + m[2] + '/' + m[1] + (m[4] ? ' ' + m[4] + ':' + m[5] : '')) : (t || ''); }
+  function appVerLine(){ var c = APP_CHANGELOG[0]; return 'Phiên bản ' + c.v + ' · cập nhật ' + appVerTime(c.t); }
+  function renderChangelog(){
+    var box = document.getElementById('changelog-list'); if(!box) return;
+    box.innerHTML = APP_CHANGELOG.map(function(c, i){
+      return '<div class="ap-card"><h4>📦 Phiên bản ' + escHtml(c.v) + (i === 0 ? ' <span class="ap-chip-now">Mới nhất</span>' : '') + '</h4>'
+        + '<p class="hint-text" style="margin:0 0 6px">🕒 Hoàn thành lúc ' + escHtml(appVerTime(c.t)) + '</p>'
+        + '<ul style="margin:0;padding-left:18px;display:grid;gap:4px;font-size:13px">' + c.items.map(function(x){ return '<li>' + escHtml(x) + '</li>'; }).join('') + '</ul></div>';
+    }).join('');
+  }
+
+  /* =====================================================================
+     👥 ĐỘI BẠN — xem đội hình của người dùng khác (chỉ đọc)
+     - Danh sách = userDirectory trừ chính mình và hồ sơ admin đã ẩn (cờ hide); kiểm tra lại cờ này khi mở từng đội.
+     - Dữ liệu: /kidchart/<mã>/kidchart_squad + kidchart_players + kidchart_season/styleBy (cùng cách Giao hữu đang đọc đội bạn).
+     ===================================================================== */
+  var tvCache = {}, tvToken = 0;
+  function tvIsHidden(c){ return !!(userDirectory[c] && userDirectory[c].hide); }
+  function tvPub(c){ return (userDirectory[c] && userDirectory[c].pub) || {}; }
+  function tvName(c){ var p = tvPub(c); return (p.n && String(p.n).trim()) || (typeof userNameOf === 'function' ? userNameOf(c) : c); }
+  function tvLogo(c){
+    var p = tvPub(c), col = /^#[0-9a-fA-F]{3,8}$/.test(p.c || '') ? p.c : '#334155';
+    return '<span class="tm-logo" style="--tm:' + col + ';--tm-ink:' + teamTextOn(col) + '">' + (p.i ? escHtml(String(p.i)) : '⚽') + '</span>';
+  }
+  function tvCodes(){ return Object.keys(userDirectory).filter(function(c){ return c !== syncId && !tvIsHidden(c); }); }
+  async function tvRender(){
+    var box = document.getElementById('tv-list'); if(!box) return;
+    box.innerHTML = '<p class="hint-text">Đang tải danh sách…</p>';
+    try{ await fetchUserDirectory(); }catch(e){}
+    var codes = tvCodes();
+    if(!codes.length){ box.innerHTML = '<p class="hint-text">Chưa có đội nào khác để xem.</p>'; return; }
+    codes.sort(function(a, b){ return tvName(a).localeCompare(tvName(b)); });
+    box.innerHTML = '<p class="hint-text" style="margin:0 0 6px">Chạm vào một đội để xem đội hình (chỉ xem, không chỉnh sửa được).</p>'
+      + '<input type="search" id="tv-q" class="tv-q" placeholder="Tìm tên đội…" autocomplete="off">'
+      + '<div class="tv-grid" id="tv-grid">' + codes.map(function(c){
+        return '<button type="button" class="tv-row" data-tv="open" data-code="' + escHtml(c) + '" data-k="' + escHtml(tvName(c).toLowerCase()) + '">' + tvLogo(c)
+          + '<span><b>' + escHtml(tvName(c)) + '</b><small>👁 Xem đội hình</small></span></button>';
+      }).join('') + '</div>';
+  }
+  async function tvLoad(code){
+    var c = tvCache[code]; if(c && Date.now() - c.at < 300000) return c.d;
+    var got = await Promise.all([frFetch(code, 'kidchart_squad'), frFetch(code, 'kidchart_players'), frFetch(code, SEASON_KEY + '/styleBy').catch(function(){ return null; })]);
+    var rawSq = got[0], rawPl = got[1], styleBy = got[2] || {};
+    if(typeof rawSq === 'string'){ try{ rawSq = JSON.parse(rawSq); }catch(e){ rawSq = null; } }
+    if(typeof rawPl === 'string'){ try{ rawPl = JSON.parse(rawPl); }catch(e){ rawPl = null; } }
+    if(!rawSq || typeof rawSq !== 'object') return {empty:true};
+    var f = FORMATIONS.filter(function(fo){ return fo.id === rawSq.formationId; })[0] || FORMATIONS[0], same = (rawSq.formationId === f.id);
+    var list = Array.isArray(rawPl) ? rawPl : ((rawPl && typeof rawPl === 'object') ? Object.keys(rawPl).map(function(k){ return rawPl[k]; }) : []);
+    var players = hydratePlayers(list.filter(Boolean)).filter(Boolean);
+    var sq = {formationId:f.id, pitch:same ? toSlotArray(rawSq.pitch, f.positions.length) : f.positions.map(function(){ return ''; }), bench:toSlotArray(rawSq.bench, BENCH_SIZE)};
+    var cur = (styleBy && styleBy[f.id]) || 'default'; if(!SE_STYLE[cur]) cur = 'default';
+    var d = {f:f, squad:sq, players:players, cur:cur, power:squadPower(sq, players)};
+    tvCache[code] = {at:Date.now(), d:d};
+    return d;
+  }
+  function tvSlotInner(p){
+    if(!p) return '<span class="slot-plus">+</span>';
+    if(cdnReady()) return slotArtHTML(p);
+    var ini = String(p.name || '?').trim().split(/\s+/).slice(-2).map(function(w){ return w.charAt(0); }).join('').toUpperCase();
+    return '<span style="font-size:11px;font-weight:800;color:#F8FAFC">' + escHtml(ini) + '</span>';
+  }
+  function tvPitchHTML(d){
+    var f = d.f, byId = {}; d.players.forEach(function(p){ if(p && p.id) byId[p.id] = p; });
+    var lines = '<svg class="pitch-lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">'
+      + '<rect x="2" y="2" width="96" height="96" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width="0.5"/>'
+      + '<line x1="2" y1="50" x2="98" y2="50" stroke="#fff" stroke-opacity=".55" stroke-width="0.5"/>'
+      + '<ellipse cx="50" cy="50" rx="9" ry="5.4" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width="0.5"/>'
+      + '<rect x="22" y="2" width="56" height="16" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width="0.5"/>'
+      + '<rect x="38" y="2" width="24" height="6" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width="0.5"/>'
+      + '<rect x="22" y="82" width="56" height="16" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width="0.5"/>'
+      + '<rect x="38" y="92" width="24" height="6" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width="0.5"/></svg>';
+    var sp = f.positions.map(function(p){ return {x:Math.max(9, Math.min(91, p.x)), y:Math.max(9, Math.min(91, p.y)), pos:p.pos}; }), it, a, b;
+    for(it = 0; it < 4; it++){ for(a = 0; a < sp.length; a++){ for(b = a + 1; b < sp.length; b++){
+      var dx = sp[b].x - sp[a].x, dy = sp[b].y - sp[a].y, dist = Math.sqrt(dx * dx + dy * dy);
+      if(dist < 12 && dist > 0.001){ var ov = (12 - dist) / 2, nx = dx / dist, ny = dy / dist;
+        sp[a].x = Math.max(9, Math.min(91, sp[a].x - nx * ov)); sp[a].y = Math.max(9, Math.min(91, sp[a].y - ny * ov));
+        sp[b].x = Math.max(9, Math.min(91, sp[b].x + nx * ov)); sp[b].y = Math.max(9, Math.min(91, sp[b].y + ny * ov)); }
+    } } }
+    var slots = f.positions.map(function(po, i){
+      var id = d.squad.pitch[i], p = id ? byId[id] : null, fx = p ? playerFx(p) : [], pen = p ? posPen(p, po.pos) : 0, art = !!(p && cdnReady());
+      return '<div class="pitch-slot' + (p ? ' filled' : '') + (fx.length ? ' has-fx fx-' + fx[0] : '') + '" style="left:' + sp[i].x + '%;top:' + sp[i].y + '%;cursor:default" title="' + escHtml(p ? (p.name + ' · ' + (p.ovr || p.realOvr || 0)) : 'Trống') + '">'
+        + '<div class="slot-circle' + (art ? ' has-art' : '') + '">' + tvSlotInner(p) + '</div>'
+        + (pen ? '<div class="slot-off ' + posSev(pen) + '">−' + pen + '%</div>' : '')
+        + '<div class="slot-label">' + po.pos + '</div></div>';
+    }).join('');
+    return lines + slots;
+  }
+  function tvBenchHTML(d){
+    var byId = {}; d.players.forEach(function(p){ if(p && p.id) byId[p.id] = p; });
+    return d.squad.bench.map(function(id, i){
+      var p = id ? byId[id] : null, art = !!(p && cdnReady());
+      return '<div class="bench-slot' + (p ? ' filled' : '') + '" style="cursor:default" title="' + escHtml(p ? (p.name + ' · ' + (p.ovr || p.realOvr || 0)) : 'Trống') + '"><div class="slot-circle small' + (art ? ' has-art' : '') + '">' + tvSlotInner(p) + '</div><div class="slot-label">Dự bị ' + (i + 1) + '</div></div>';
+    }).join('');
+  }
+  function tvCoachHTML(d){
+    var cur = d.cur, f = d.f, nw = SE_NEWS[cur] || SE_NEWS['default'] || SE_NEWS.flex || {}, st = SE_STYLE[cur];
+    var h = '<div class="cp-h"><span>🧭 HLV &amp; Phong Cách Thi Đấu</span></div>';
+    if(cur === 'default' || !st){
+      return h + '<div class="cp-empty-hint" style="font-size:12px;line-height:1.5;padding:8px 10px;border-radius:10px;background:rgba(15,23,42,.45);border:1px solid rgba(148,163,184,.2);color:#CBD5E1">Sơ đồ <b style="color:#FDE047">' + escHtml(f.name) + '</b> đang dùng HLV cơ bản.</div>';
+    }
+    var open = !st.ideal, fit = cpFit(cur, f);
+    var fitTxt = open ? 'Linh hoạt: hợp với mọi sơ đồ' : (fit >= 100 ? '✅ Hợp 100% – HLV phát huy tối đa sức mạnh' : (fit >= 75 ? '👍 Hợp ' + fit + '% – khá tốt' : '⚠️ Hợp ' + fit + '%'));
+    var cObj = (typeof COACHES_DB !== 'undefined' && COACHES_DB && COACHES_DB[cur]) || {}, ver = (cObj.versions && cObj.versions[cObj.mainVersion || Object.keys(cObj.versions || {})[0] || 'v1']) || {}, img = ver.image || '';
+    var av = img ? '<img src="' + escHtml(img) + '" alt="" referrerpolicy="no-referrer" style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block">' : '<span>' + escHtml(nw.i || 'HLV') + '</span>';
+    var prof = ''; try{ prof = coachProfileHTML(cur); }catch(e){}
+    return h + prof
+      + '<div class="cp-fit ' + (open || fit >= 100 ? 'g' : (fit >= 75 ? 'm' : 'b')) + '">Sơ đồ <b>' + escHtml(f.name) + '</b>: ' + fitTxt + '</div>'
+      + '<div class="cp-coach"><div class="cp-av" style="overflow:hidden">' + av + '</div><div><b>' + escHtml(nw.c || '') + '</b><span>' + escHtml(nw.b || '') + '</span><small>' + escHtml(nw.cl || '') + '</small></div></div>'
+      + '<p class="cp-lead" style="margin:4px 0;font-size:12px;color:#CBD5E1">' + escHtml(SEASON_STYLE_DESC[cur] || '') + '</p>';
+  }
+  function tvBodyHTML(d){
+    if(d.empty) return '<p class="hint-text" style="padding:14px 4px">Đội này chưa lập đội hình nào.</p>';
+    var byId = {}; d.players.forEach(function(p){ if(p && p.id) byId[p.id] = p; });
+    var coachName = (d.cur !== 'default' && SE_STYLE[d.cur]) ? ((SE_NEWS[d.cur] && SE_NEWS[d.cur].c) || 'HLV') : 'HLV cơ bản';
+    var roster = d.f.positions.map(function(po, i){
+      var p = d.squad.pitch[i] ? byId[d.squad.pitch[i]] : null;
+      return '<div class="tv-rr"><span class="tv-pos">' + po.pos + '</span><span class="tv-nm">' + escHtml(p ? p.name : '— trống —') + '</span><b>' + (p ? (p.ovr || p.realOvr || 0) : '') + '</b></div>';
+    }).join('');
+    return '<div class="tv-chips"><span>🧩 Sơ đồ <b>' + escHtml(d.f.name) + '</b></span><span>⚡ OVR đội hình <b>' + d.power + '</b></span><span>🧭 <b>' + escHtml(coachName) + '</b></span></div>'
+      + '<div class="pitch-layout"><div class="pitch-scroll"><div class="pitch-wrap">' + tvPitchHTML(d) + '</div></div>'
+      + '<div class="pitch-side"><div class="bench-row">' + tvBenchHTML(d) + '</div><aside class="cp">' + tvCoachHTML(d) + '</aside></div></div>'
+      + '<details class="tv-details"><summary>📋 Danh sách 11 cầu thủ đá chính</summary><div class="tv-roster">' + roster + '</div></details>';
+  }
+  function tvSheet(){
+    var s = document.getElementById('tv-sheet');
+    if(!s){ s = document.createElement('div'); s.id = 'tv-sheet'; s.hidden = true; s.setAttribute('role', 'dialog'); s.setAttribute('aria-modal', 'true'); document.body.appendChild(s); }
+    return s;
+  }
+  function tvClose(){ tvToken++; var s = document.getElementById('tv-sheet'); if(s){ s.hidden = true; s.innerHTML = ''; } document.documentElement.style.overflow = ''; }
+  async function tvOpen(code){
+    var tok = ++tvToken, s = tvSheet();
+    try{ await fetchUserDirectory(); }catch(e){}
+    if(tvIsHidden(code) || !userDirectory[code]){ tvClose(); triggerToast('low', 'Hồ sơ này không xem được.'); tvRender(); return; }
+    s.hidden = false; document.documentElement.style.overflow = 'hidden';
+    s.innerHTML = '<div class="tv-box"><div class="tv-head"><div class="tv-title">' + tvLogo(code) + '<span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + escHtml(tvName(code)) + '</span></div>'
+      + '<button type="button" class="btn-secondary" data-tv="close">✕ Đóng</button></div><div id="tv-body"><p class="hint-text" style="padding:14px 4px">Đang tải đội hình…</p></div></div>';
+    var d;
+    try{ d = await tvLoad(code); }catch(e){ if(tok === tvToken){ var b0 = document.getElementById('tv-body'); if(b0) b0.innerHTML = '<p class="hint-text" style="padding:14px 4px">Không tải được đội hình — kiểm tra mạng rồi thử lại nhé.</p>'; } return; }
+    if(tok !== tvToken) return;
+    var b = document.getElementById('tv-body'); if(b) b.innerHTML = tvBodyHTML(d);
+  }
+  document.addEventListener('click', function(e){
+    var t = e.target && e.target.closest ? e.target.closest('[data-tv]') : null; if(!t) return;
+    var a = t.getAttribute('data-tv');
+    if(a === 'open') tvOpen(t.getAttribute('data-code'));
+    else if(a === 'close') tvClose();
+  });
+  document.addEventListener('input', function(e){
+    var t = e.target; if(!t || t.id !== 'tv-q') return;
+    var q = String(t.value || '').trim().toLowerCase();
+    document.querySelectorAll('#tv-grid .tv-row').forEach(function(r){ r.style.display = (!q || (r.getAttribute('data-k') || '').indexOf(q) >= 0) ? '' : 'none'; });
+  });
+  document.addEventListener('keydown', function(e){ if(e.key === 'Escape'){ var s = document.getElementById('tv-sheet'); if(s && !s.hidden) tvClose(); } });
+
   function switchSquadTab(tab){
     var p = document.getElementById('tab-pitch');
     var c = document.getElementById('tab-collection');
     var m = document.getElementById('tab-market');
+    var tm = document.getElementById('tab-teams'), tmb = document.getElementById('tab-teams-btn');
+    if(tm) tm.style.display = tab==='teams' ? '' : 'none';
+    if(tmb) tmb.classList.toggle('active', tab==='teams');
     if(p) p.style.display = tab==='pitch' ? '' : 'none';
     if(c) c.style.display = tab==='collection' ? '' : 'none';
     if(m) m.style.display = tab==='market' ? '' : 'none';
@@ -25626,7 +26617,7 @@ function roadmapIcon(def, locked){
      - Mọi cấu hình nằm ở đây, chia tab theo nhóm chức năng. Chỉ phiên đăng nhập Quản trị viên mới mở được.
      - Quản trị viên đăng nhập xong vào thẳng trang này (cờ phiên 'dbcd_admin_landing'); nút 🛡️ trên đầu trang để quay lại.
      - Thẻ có data-save="1" cần bấm "Lưu cài đặt"; các thẻ "Có tác dụng ngay" (dữ liệu, hồ sơ, mật khẩu) thực hiện tức thì. */
-  var AP_TABS = ['system','tasks','points','rewards','battle','data','coaches','notice','wtour','stats'];
+  var AP_TABS = ['system','tasks','points','rewards','battle','data','coaches','notice','wtour','stats','changelog'];
   var apTab = 'system', apDirty = false, apRewardsBackup = null, apOpener = null;
 
   
@@ -25757,6 +26748,7 @@ function roadmapIcon(def, locked){
     var body = document.getElementById('ap-body'); if(body) body.scrollTop = 0;
     if(key === 'stats' && typeof stOpen === 'function') stOpen();
     if(key === 'coaches'){ renderAdminCoaches(); initCoachAdminEvents(); }
+    if(key === 'changelog') renderChangelog();
   }
   
   /* ===== CẤU HÌNH PLAYSTYLE FX TRONG TAB ADMIN (Giai đoạn 6) ===== */
@@ -30433,6 +31425,8 @@ function roadmapIcon(def, locked){
   document.getElementById('tab-collection-btn').addEventListener('click', function(){ switchSquadTab('collection'); renderCollection(); });
   var mktBtn = document.getElementById('tab-market-btn');
   if(mktBtn) mktBtn.addEventListener('click', function(){ switchSquadTab('market'); renderMarket(); });
+  var tvBtn = document.getElementById('tab-teams-btn');
+  if(tvBtn) tvBtn.addEventListener('click', function(){ switchSquadTab('teams'); tvRender(); });
 
   // Bộ lọc & tìm kiếm Sàn giao dịch
   var mSearch = document.getElementById('market-search');
@@ -37764,7 +38758,7 @@ function roadmapIcon(def, locked){
   async function frnFrAddOpen(){
     sModalOpen('<h3>➕ Kết bạn</h3><p class="sl-intro">Đang tải danh sách…</p>');
     await fetchUserDirectory();
-    var codes = Object.keys(userDirectory).filter(function(c){ return c !== syncId && !frnFr[c]; });
+    var codes = Object.keys(userDirectory).filter(function(c){ return c !== syncId && !frnFr[c] && !(userDirectory[c] && userDirectory[c].hide); });   // không hiện hồ sơ admin đã ẩn
     if(!codes.length){ frMsg('➕ Kết bạn', 'Không còn đội nào để mời: đã kết bạn hoặc đã gửi lời mời hết rồi.'); return; }
     await frTeamLoad(codes);
     codes.sort(function(a, b){ return frTeamOf(a).localeCompare(frTeamOf(b)); });
